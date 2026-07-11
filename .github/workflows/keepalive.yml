@@ -1,0 +1,29 @@
+name: Keep-alive
+
+# Mantém o projeto Supabase (plano gratuito) acordado, evitando a suspensão
+# por inatividade (~7 dias). Faz um pedido leve à Edge Function `health`.
+# Reforçado externamente por um monitor UptimeRobot ao mesmo endpoint.
+on:
+  schedule:
+    - cron: '0 8,20 * * *' # 08:00 e 20:00 UTC, todos os dias
+  workflow_dispatch: {} # permite disparar manualmente para testar
+
+jobs:
+  ping:
+    name: Ping ao endpoint de saúde
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar /functions/v1/health
+        env:
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          URL="https://${PROJECT_REF}.supabase.co/functions/v1/health"
+          echo "Ping → $URL"
+          code=$(curl -sS -o /tmp/resp.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${ANON_KEY}" \
+            "$URL")
+          echo "HTTP $code"
+          cat /tmp/resp.json || true
+          test "$code" = "200"

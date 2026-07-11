@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git config *)",
+      "Bash(npm -v)",
+      "Bash(echo \"npm: $\\(npm -v 2>&1\\)\")",
+      "Bash(git --version)",
+      "Bash(echo \"git: $\\(git --version 2>&1\\)\")",
+      "Bash(supabase --version)",
+      "Bash(git init *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(git -C /c/Users/vasco/Projetos/Peladinhas remote -v)",
+      "Bash(npm test *)",
+      "Bash(VITE_SUPABASE_URL=https://example.supabase.co VITE_SUPABASE_ANON_KEY=local-build-key npm run build)",
+      "Bash(git -C /c/Users/vasco/Projetos/Peladinhas log --oneline)",
+      "Bash(git -C /c/Users/vasco/Projetos/Peladinhas status --short)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)"
+    ]
+  }
+}
