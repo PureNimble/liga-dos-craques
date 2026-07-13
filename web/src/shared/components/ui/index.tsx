@@ -17,3 +17,4 @@ export { Skeleton, CardSkeleton } from './Skeleton/Skeleton';
 export { Alert } from './Alert/Alert';
 export { EmptyState } from './EmptyState/EmptyState';
 export { Page, PageTitle } from './Page/Page';
+export { Loading } from './Loading/Loading';

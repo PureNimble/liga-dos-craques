@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { BottomNav } from './BottomNav';
 import { useProfileSuspense } from '@/features/profile/profileHooks';
+import { Loading } from '@/shared/components/ui';
 import s from './AppLayout.module.css';
 
 function AppShell() {
@@ -15,13 +16,7 @@ function AppShell() {
       <Navbar profile={profile} />
 
       <main className={s.main}>
-        <Suspense
-          fallback={
-            <div className={`${s.loading} ${s.loadingInline}`}>
-              <span className={s.spinner} />
-            </div>
-          }
-        >
+        <Suspense fallback={<Loading />}>
           <Outlet context={{ profile }} />
         </Suspense>
       </main>
@@ -34,13 +29,7 @@ function AppShell() {
 export function AppLayout() {
   return (
     <div className={s.app}>
-      <Suspense
-        fallback={
-          <div className={`${s.loading} ${s.loadingFull}`}>
-            <span className={s.spinner} />
-          </div>
-        }
-      >
+      <Suspense fallback={<Loading full />}>
         <AppShell />
       </Suspense>
     </div>
