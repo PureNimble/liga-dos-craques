@@ -2,7 +2,6 @@ name: 🐛 Reportar um bug
 description: Algo não está a funcionar como esperado
 title: "[NIMBLE-#] "
 labels: ["bug", "triage"]
-type: ["Bug"]
 body:
   - type: markdown
     attributes:
