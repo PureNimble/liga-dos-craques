@@ -1,15 +1,15 @@
 import { Link, useParams } from 'react-router-dom';
 import { Alert } from '@/shared/components/ui';
 import { ChevronLeftIcon } from '@/shared/components/ui/icons';
-import { usePlayerStats } from '@/features/stats/useStats';
+import { usePlayerStats } from '@/features/stats/statsHooks';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { PlayerCharts } from '@/features/stats/PlayerCharts';
 import { RecentMatches } from '@/features/stats/RecentMatches';
-import { usePlayerXp } from '@/features/xp/useXp';
+import { usePlayerXp } from '@/features/xp/xpHooks';
 import { XpBar } from '@/features/xp/XpBar';
 import { AchievementsGrid } from '@/features/achievements/AchievementsGrid';
 import { useAchievements } from '@/features/achievements/achievementHooks';
-import { usePublicProfile } from './usePublicProfile';
+import { usePublicProfile } from './profileHooks';
 import { PlayerCard } from './PlayerCard';
 import { PlayerHeader } from './PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from './cardStats';

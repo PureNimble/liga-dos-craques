@@ -1,4 +1,4 @@
-import type { PlayerStats } from './useStats';
+import type { PlayerStats } from './statsHooks';
 
 interface StatTileProps {
   label: string;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Alert, Button, Card, Field, Input, PillTabs, Select } from '@/shared/components/ui';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfilesList } from '@/features/profile/useProfilesList';
+import { useProfilesList } from '@/features/profile/profileHooks';
 import { RankingList, type RankingRow } from '@/features/rankings/RankingList';
 import { formatDate } from '@/shared/lib/datetime';
 import type { ChallengeResult } from '@/types/database';

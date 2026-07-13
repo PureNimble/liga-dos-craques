@@ -1,4 +1,4 @@
-import { useHealthCheck } from './useHealthCheck';
+import { useHealthCheck } from './healthHooks';
 
 /**
  * Cartão que mostra o estado da ligação ao Supabase.

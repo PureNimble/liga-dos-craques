@@ -1,5 +1,5 @@
 import type { PositionCategory } from '@/types/database';
-import type { PlayerStats } from '@/features/stats/useStats';
+import type { PlayerStats } from '@/features/stats/statsHooks';
 import { computeRating } from '@/features/teams/playerRating';
 
 export interface CardAttribute {

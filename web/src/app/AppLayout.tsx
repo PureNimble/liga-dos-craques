@@ -1,7 +1,7 @@
 import { Suspense, type ComponentType, type SVGProps } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfile } from '@/features/profile/useProfile';
+import { useProfile } from '@/features/profile/profileHooks';
 import { Avatar, IconButton } from '@/shared/components/ui';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import {

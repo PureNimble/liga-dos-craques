@@ -4,7 +4,7 @@ import { Alert, Button, Card, Modal } from '@/shared/components/ui';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { ChevronLeftIcon, WhistleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfile } from '@/features/profile/useProfile';
+import { useProfile } from '@/features/profile/profileHooks';
 import {
   pickFormatForCount,
   useGame,

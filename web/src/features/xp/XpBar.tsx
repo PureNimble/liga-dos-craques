@@ -1,4 +1,4 @@
-import type { PlayerXp } from './useXp';
+import type { PlayerXp } from './xpHooks';
 
 /** Barra de nível/XP com progresso para o nível seguinte. */
 export function XpBar({ xp }: { xp: PlayerXp }) {

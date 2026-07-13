@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert, Avatar, Badge, Button, Card, Select } from '@/shared/components/ui';
-import { useProfilesList } from '@/features/profile/useProfilesList';
+import { useProfilesList } from '@/features/profile/profileHooks';
 import type { GamePlayerStatus } from '@/types/database';
 import {
   useAddGamePlayer,

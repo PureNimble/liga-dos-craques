@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
-import type { Database } from '@/types/database';
+import type { Database, PositionCategory, PreferredFoot } from '@/types/database';
 
 export type Profile = Database['public']['Tables']['profile']['Row'];
 export type ProfileUpdate = Database['public']['Tables']['profile']['Update'];
 export type ProfilePrivate = Database['public']['Tables']['profile_private']['Row'];
+export type Position = Database['public']['Tables']['position']['Row'];
 
 /** Perfil do próprio: campos públicos + privados (só o dono os lê) + secundárias. */
 export interface FullProfile extends Profile {
@@ -86,5 +87,70 @@ export function useUpdateProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile', userId] });
     },
+  });
+}
+
+export interface ProfileSummary {
+  id: string;
+  name: string;
+  photo_url: string | null;
+}
+
+/** Lista resumida de todos os perfis — usada para escolher jogadores. */
+export function useProfilesList() {
+  return useQuery({
+    queryKey: ['profiles_list'],
+    queryFn: async (): Promise<ProfileSummary[]> => {
+      const { data, error } = await supabase
+        .from('profile')
+        .select('id, name, photo_url')
+        .order('name');
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+}
+
+export interface PublicProfile {
+  id: string;
+  name: string;
+  photo_url: string | null;
+  locality: string | null;
+  preferred_foot: PreferredFoot | null;
+  featured_achievement_id: number | null;
+  main_position: { label: string; category: PositionCategory } | null;
+}
+
+/** Perfil público (campos não sensíveis) de um jogador qualquer. */
+export function usePublicProfile(playerId: string | undefined) {
+  return useQuery({
+    queryKey: ['public_profile', playerId],
+    enabled: Boolean(playerId),
+    queryFn: async (): Promise<PublicProfile> => {
+      const { data, error } = await supabase
+        .from('profile')
+        .select(
+          'id, name, photo_url, locality, preferred_foot, featured_achievement_id, main_position:main_position_id(label, category)',
+        )
+        .eq('id', playerId as string)
+        .single();
+      if (error) throw error;
+      return data as unknown as PublicProfile;
+    },
+  });
+}
+
+async function fetchPositions(): Promise<Position[]> {
+  const { data, error } = await supabase.from('position').select('*').order('sort_order');
+  if (error) throw error;
+  return data ?? [];
+}
+
+export function usePositions() {
+  return useQuery({
+    queryKey: ['positions'],
+    queryFn: fetchPositions,
+    staleTime: Infinity, // lookup estável
   });
 }
