@@ -1,12 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfile } from '@/features/profile/profileHooks';
-import { usePlayerStats } from '@/features/stats/statsHooks';
-import { StatsGrid } from '@/features/stats/StatsGrid';
-import { usePlayerXp } from '@/features/xp/xpHooks';
-import { XpBar } from '@/features/xp/XpBar';
-import { ConnectionStatus } from '@/features/health/ConnectionStatus';
+import type { FullProfile } from '@/features/profile/profileHooks';
+import { usePlayerStatsSuspense } from '@/features/stats/statsHooks';
+import { usePlayerXpSuspense } from '@/features/xp/xpHooks';
 import { Avatar, Card } from '@/shared/components/ui';
+import { XpBar } from '@/features/xp/XpBar';
+import { StatsGrid } from '@/features/stats/StatsGrid';
 import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
 
 const quickActions = [
@@ -16,31 +15,36 @@ const quickActions = [
 
 export function HomePage() {
   const { user } = useAuth();
-  const { data: profile } = useProfile();
-  const { data: stats } = usePlayerStats(profile?.id);
-  const { data: xp } = usePlayerXp(profile?.id);
 
-  const displayName = profile?.name || user?.email?.split('@')[0] || 'jogador';
+  const { profile } = useOutletContext<{ profile: FullProfile }>();
+  const { data: stats } = usePlayerStatsSuspense(profile.id);
+  const { data: xp } = usePlayerXpSuspense(profile.id);
+
+  const displayName = profile.name || user?.email?.split('@')[0] || 'jogador';
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6">
       {/* Saudação */}
       <header className="flex items-center gap-3.5">
         <Link to="/profile" aria-label="Ver perfil" className="shrink-0">
-          <Avatar name={profile?.name} src={profile?.photo_url} size="lg" />
+          <Avatar name={profile.name} src={profile.photo_url} size="lg" />
         </Link>
         <div>
           <p className="text-sm text-slate-400">Bem-vindo de volta</p>
-          <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">{displayName}</h1>
+          <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">
+            {displayName}
+          </h1>
         </div>
       </header>
 
-      {xp && <XpBar xp={xp} />}
+      <XpBar xp={xp} />
 
-      {stats && stats.games > 0 && (
+      {stats.games > 0 && (
         <section>
           <div className="mb-2.5 flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">O teu resumo</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">
+              O teu resumo
+            </h2>
             <Link
               to="/profile"
               className="flex items-center gap-0.5 text-xs font-semibold text-pitch-400 hover:text-pitch-300"
@@ -53,7 +57,7 @@ export function HomePage() {
       )}
 
       {/* Novo jogador: onboarding */}
-      {(!stats || stats.games === 0) && (
+      {stats.games === 0 && (
         <Card className="bg-gradient-to-br from-pitch-900/40 to-navy-900">
           <h2 className="font-bold text-white">Começa por aqui</h2>
           <p className="mt-1 text-sm text-slate-300">
@@ -71,7 +75,9 @@ export function HomePage() {
 
       {/* Acessos rápidos */}
       <section className="flex flex-col gap-2.5">
-        <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">Acessos rápidos</h2>
+        <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">
+          Acessos rápidos
+        </h2>
         {quickActions.map((a) => (
           <Link key={a.to} to={a.to}>
             <Card interactive className="flex items-center gap-3.5">
@@ -88,7 +94,6 @@ export function HomePage() {
         ))}
       </section>
 
-      <ConnectionStatus />
     </div>
   );
 }
