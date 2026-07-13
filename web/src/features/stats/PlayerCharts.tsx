@@ -58,7 +58,20 @@ function ChartHead({ title, hint }: { title: string; hint: string }) {
 }
 
 /** Pictograma por jogo: uma barra única — bolas (golos) em baixo, botas (assists) por cima. */
+// Altura fixa da área de ícones (px) — tem de bater com `.stack` no CSS.
+const STACK_BOX = 84;
+const STACK_GAP = 2;
+const ICON_MAX = 15;
+
 function ContributionBars({ data }: { data: GameContribution[] }) {
+  // O jogo com mais contribuições define o tamanho do ícone, para que ATÉ a
+  // pilha mais alta caiba na caixa (altura fixa) — os dados nunca transbordam.
+  const maxStack = Math.max(1, ...data.map((d) => d.goals + d.assists));
+  const iconSize = Math.max(
+    6,
+    Math.min(ICON_MAX, Math.floor((STACK_BOX - (maxStack - 1) * STACK_GAP) / maxStack)),
+  );
+
   return (
     <div className={s.bars}>
       {data.map((d) => (
@@ -68,10 +81,10 @@ function ContributionBars({ data }: { data: GameContribution[] }) {
             title={`${d.goals} golo${d.goals === 1 ? '' : 's'} · ${d.assists} assist.`}
           >
             {Array.from({ length: d.goals }).map((_, i) => (
-              <BallIcon key={`g${i}`} width={15} height={15} className={s.iconGoal} />
+              <BallIcon key={`g${i}`} width={iconSize} height={iconSize} className={s.iconGoal} />
             ))}
             {Array.from({ length: d.assists }).map((_, i) => (
-              <BootIcon key={`a${i}`} width={15} height={15} className={s.iconAssist} />
+              <BootIcon key={`a${i}`} width={iconSize} height={iconSize} className={s.iconAssist} />
             ))}
             {d.goals === 0 && d.assists === 0 && <span className={s.empty}>·</span>}
           </div>

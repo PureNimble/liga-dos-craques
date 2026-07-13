@@ -61,9 +61,11 @@
 }
 .stack {
   display: flex;
+  height: 5.25rem; /* 84px — bate com STACK_BOX em PlayerCharts.tsx */
   flex-direction: column-reverse;
   align-items: center;
-  gap: 0.125rem;
+  justify-content: flex-start; /* empilha a partir do fundo */
+  gap: 0.125rem; /* 2px — bate com STACK_GAP */
 }
 .empty {
   padding-bottom: var(--space-xs);
