@@ -1,0 +1,52 @@
+name: DB Check
+
+# Valida a base de dados numa instância limpa: aplica TODAS as migrações + seed
+# (apanha erros de SQL antes do deploy) e corre os testes pgTAP (RLS/invariantes).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/db-check.yml'
+  pull_request:
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/db-check.yml'
+
+concurrency:
+  group: db-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  db:
+    name: Migrações + pgTAP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Arrancar Supabase local (Docker)
+        run: supabase start
+
+      - name: Aplicar migrações + seed numa BD limpa
+        run: supabase db reset
+
+      - name: Testes de BD/RLS (pgTAP)
+        run: supabase test db
+
+      # Verificação de drift de tipos (informativa — o ficheiro é mantido à mão).
+      # Quando migrarmos para tipos gerados, tornar este passo bloqueante.
+      - name: Drift de tipos (informativo)
+        continue-on-error: true
+        run: |
+          supabase gen types typescript --local > /tmp/generated.ts
+          echo "Tipos gerados a partir do schema (referência):"
+          wc -l /tmp/generated.ts
+
+      - name: Parar Supabase
+        if: always()
+        run: supabase stop

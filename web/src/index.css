@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  /* Tema "estádio": near-black com um brilho de relvado muito subtil e frio. */
+  background-color: theme('colors.navy.975');
+  background-image:
+    radial-gradient(115% 55% at 50% -12%, rgba(16, 185, 129, 0.06), transparent 62%),
+    radial-gradient(90% 40% at 100% 0%, rgba(56, 189, 248, 0.035), transparent 55%);
+  background-attachment: fixed;
+  color: theme('colors.slate.100');
+  font-family: theme('fontFamily.sans');
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* Títulos com a fonte display (Sora) e tracking apertado — ar mais editorial. */
+h1,
+h2,
+h3 {
+  font-family: theme('fontFamily.display');
+  letter-spacing: -0.02em;
+}
+
+/* Ajusta o calendário/spinners nativos ao tema escuro. */
+input[type='date'],
+input[type='datetime-local'],
+input[type='number'] {
+  color-scheme: dark;
+}
+
+/* Acessibilidade: foco visível por teclado em toda a app. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid theme('colors.pitch.500');
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Bloqueia o scroll do body quando um modal está aberto. */
+body.modal-open {
+  overflow: hidden;
+}
+
+@layer utilities {
+  /* Respeita o notch / barra inferior em iOS. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  /* Superfície "vidro" para cabeçalhos / barras fixas. */
+  .glass {
+    background-color: rgba(16, 18, 22, 0.78);
+    backdrop-filter: saturate(130%) blur(14px);
+    -webkit-backdrop-filter: saturate(130%) blur(14px);
+  }
+  /* Realce superior subtil (topo iluminado) — profundidade "EA FC". */
+  .gloss {
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 12px 32px -16px rgba(0, 0, 0, 0.8);
+  }
+  /* Relvado listado para o campo do alinhamento. */
+  .turf {
+    background-color: #0d3b24;
+    background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 12%),
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.045) 0px,
+        rgba(255, 255, 255, 0.045) 1px,
+        transparent 1px,
+        transparent 9%
+      );
+  }
+}
+
+/* Scrollbar discreta, coerente com o tema. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.navy.700') transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: theme('colors.navy.700');
+  border-radius: 9999px;
+}
