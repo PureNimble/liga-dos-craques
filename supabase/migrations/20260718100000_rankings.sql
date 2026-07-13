@@ -1,10 +1,11 @@
 -- =============================================================================
 -- F8 · Rankings (derivados)
 -- =============================================================================
--- Três vistas cobrem todos os âmbitos pedidos:
+-- Vistas cobrem todos os âmbitos pedidos:
 --   v_ranking_overall    → geral e por posição (filtro por categoria no cliente)
 --   v_ranking_by_format  → por formato (5v5, 7v7, 11v11, …)
---   v_ranking_by_period  → mensal (ano+mês) e anual (agregado por ano no cliente)
+--   v_ranking_by_period  → mensal (ano+mês)
+--   v_ranking_annual     → anual (ver 20260804100000_ranking_annual_view.sql)
 -- Tudo derivado de eventos/resultados — consistente por construção.
 -- "points" = 3*vitórias + empates (pontos à moda de liga).
 -- =============================================================================
