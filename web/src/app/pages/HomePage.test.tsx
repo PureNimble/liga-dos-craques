@@ -7,6 +7,18 @@ import { HomePage } from './HomePage';
 vi.mock('@/features/auth/useAuth', () => ({
   useAuth: () => ({ user: { email: 'vasco@example.com' }, session: {}, loading: false }),
 }));
+vi.mock('@/features/profile/useProfile', () => ({
+  useProfile: () => ({ data: { id: 'u1', name: 'Vasco' } }),
+}));
+vi.mock('@/features/stats/useStats', () => ({
+  usePlayerStats: () => ({ data: undefined }),
+}));
+vi.mock('@/features/xp/useXp', () => ({
+  usePlayerXp: () => ({ data: undefined }),
+}));
+vi.mock('@/features/health/ConnectionStatus', () => ({
+  ConnectionStatus: () => <div>estado</div>,
+}));
 
 describe('HomePage', () => {
   it('saúda o utilizador pelo nome', () => {

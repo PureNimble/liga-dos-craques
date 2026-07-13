@@ -9,6 +9,21 @@ import { AppLayout } from './AppLayout';
 
 // Páginas autenticadas carregadas sob procura (code-splitting) → arranque leve.
 const HomePage = lazyWithReload(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
+const ProfilePage = lazyWithReload(() =>
+  import('@/features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
+const PlayerDetailPage = lazyWithReload(() =>
+  import('@/features/profile/PlayerDetailPage').then((m) => ({ default: m.PlayerDetailPage })),
+);
+const GamesListPage = lazyWithReload(() =>
+  import('@/features/games/GamesListPage').then((m) => ({ default: m.GamesListPage })),
+);
+const CreateGamePage = lazyWithReload(() =>
+  import('@/features/games/CreateGamePage').then((m) => ({ default: m.CreateGamePage })),
+);
+const GameDetailPage = lazyWithReload(() =>
+  import('@/features/games/GameDetailPage').then((m) => ({ default: m.GameDetailPage })),
+);
 
 export const router = createBrowserRouter([
   // Rotas públicas
@@ -23,7 +38,14 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <AppLayout />,
-        children: [{ path: '/', element: <HomePage /> }],
+        children: [
+          { path: '/', element: <HomePage /> },
+          { path: '/profile', element: <ProfilePage /> },
+          { path: '/players/:id', element: <PlayerDetailPage /> },
+          { path: '/games', element: <GamesListPage /> },
+          { path: '/games/new', element: <CreateGamePage /> },
+          { path: '/games/:id', element: <GameDetailPage /> },
+        ],
       },
     ],
   },
