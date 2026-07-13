@@ -1,6 +1,6 @@
 name: 🔧 Tarefa técnica / manutenção
 description: Refactor, dívida técnica, dependências, CI/CD, infraestrutura
-title: "[NIMBLE-#]: "
+title: "[NIMBLE-#] "
 labels: ["chore", "triage"]
 body:
   - type: textarea
