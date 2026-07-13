@@ -2,6 +2,7 @@ name: ✨ Pedido de funcionalidade
 description: Sugerir uma nova funcionalidade ou melhoria
 title: "[NIMBLE-#] "
 labels: ["enhancement", "triage"]
+type: ["Feature"]
 body:
   - type: markdown
     attributes:
