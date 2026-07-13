@@ -1,7 +1,8 @@
 import { Suspense, type ComponentType, type SVGProps } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
-import { IconButton } from '@/components/ui';
+import { useProfile } from '@/features/profile/useProfile';
+import { Avatar, IconButton } from '@/components/ui';
 import { useConfirm } from '@/components/ui/ConfirmDialog';
 import { HomeIcon, BallIcon, TrophyIcon, TargetIcon, UserIcon, LogoutIcon } from '@/components/ui/icons';
 
@@ -22,6 +23,7 @@ const navItems: NavItem[] = [
 
 export function AppLayout() {
   const { signOut } = useAuth();
+  const { data: profile } = useProfile();
   const navigate = useNavigate();
   const confirm = useConfirm();
 
@@ -73,6 +75,9 @@ export function AppLayout() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <Link to="/profile" aria-label="Ver perfil" className="hidden sm:block">
+              <Avatar name={profile?.name} src={profile?.photo_url} size="sm" />
+            </Link>
             <IconButton label="Terminar sessão" onClick={handleSignOut}>
               <LogoutIcon width={18} height={18} />
             </IconButton>
