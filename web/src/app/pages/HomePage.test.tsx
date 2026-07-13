@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
 import { HomePage } from './HomePage';
 
@@ -7,26 +7,43 @@ import { HomePage } from './HomePage';
 vi.mock('@/features/auth/useAuth', () => ({
   useAuth: () => ({ user: { email: 'vasco@example.com' }, session: {}, loading: false }),
 }));
-vi.mock('@/features/profile/profileHooks', () => ({
-  useProfile: () => ({ data: { id: 'u1', name: 'Vasco' } }),
-}));
 vi.mock('@/features/stats/statsHooks', () => ({
-  usePlayerStats: () => ({ data: undefined }),
+  usePlayerStatsSuspense: () => ({
+    data: {
+      player_id: 'u1',
+      name: 'Vasco',
+      games: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goals: 0,
+      assists: 0,
+      saves: 0,
+      mvps: 0,
+      flops: 0,
+      avg_rating: null,
+    },
+  }),
 }));
 vi.mock('@/features/xp/xpHooks', () => ({
-  usePlayerXp: () => ({ data: undefined }),
+  usePlayerXpSuspense: () => ({
+    data: { player_id: 'u1', total_xp: 0, level: 1, level_min_xp: 0, next_level_xp: 50 },
+  }),
 }));
-vi.mock('@/features/health/ConnectionStatus', () => ({
-  ConnectionStatus: () => <div>estado</div>,
-}));
+
+const profile = { id: 'u1', name: 'Vasco', photo_url: null };
 
 describe('HomePage', () => {
   it('saúda o utilizador pelo nome', () => {
-    render(
-      <MemoryRouter>
-        <HomePage />
-      </MemoryRouter>,
-    );
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: <Outlet context={{ profile }} />,
+        children: [{ index: true, element: <HomePage /> }],
+      },
+    ]);
+
+    render(<RouterProvider router={router} />);
     expect(screen.getByRole('heading', { name: /vasco/i })).toBeInTheDocument();
   });
 });

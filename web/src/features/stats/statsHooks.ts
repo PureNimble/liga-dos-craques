@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import type { Database } from '@/types/database';
 
@@ -17,21 +17,31 @@ const EMPTY: Omit<PlayerStats, 'player_id' | 'name'> = {
   avg_rating: null,
 };
 
+async function fetchPlayerStats(playerId: string): Promise<PlayerStats> {
+  const { data, error } = await supabase
+    .from('v_player_stats')
+    .select('*')
+    .eq('player_id', playerId)
+    .maybeSingle();
+  if (error) throw error;
+  // Se ainda não houver linha (jogador sem jogos), devolve zeros.
+  return data ?? { player_id: playerId, name: '', ...EMPTY };
+}
+
 /** Estatísticas de um jogador (derivadas da vista v_player_stats). */
 export function usePlayerStats(playerId: string | undefined) {
   return useQuery({
     queryKey: ['player_stats', playerId],
     enabled: Boolean(playerId),
-    queryFn: async (): Promise<PlayerStats> => {
-      const { data, error } = await supabase
-        .from('v_player_stats')
-        .select('*')
-        .eq('player_id', playerId as string)
-        .maybeSingle();
-      if (error) throw error;
-      // Se ainda não houver linha (jogador sem jogos), devolve zeros.
-      return data ?? { player_id: playerId as string, name: '', ...EMPTY };
-    },
+    queryFn: () => fetchPlayerStats(playerId as string),
+  });
+}
+
+/** Variante Suspense: usar apenas quando o playerId já está garantidamente disponível. */
+export function usePlayerStatsSuspense(playerId: string) {
+  return useSuspenseQuery({
+    queryKey: ['player_stats', playerId],
+    queryFn: () => fetchPlayerStats(playerId),
   });
 }
 

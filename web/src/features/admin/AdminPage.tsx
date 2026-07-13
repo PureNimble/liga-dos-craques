@@ -4,6 +4,7 @@ import { Alert, Button, Card, Field, Input, Select } from '@/shared/components/u
 import { AssistIcon, BallIcon, StarIcon, TrophyIcon, UsersIcon } from '@/shared/components/ui/icons';
 import { useProfile, useProfilesList } from '@/features/profile/profileHooks';
 import { useToast } from '@/shared/components/toast/useToast';
+import { ConnectionStatus } from '@/features/health/ConnectionStatus';
 import {
   useActiveXpRules,
   useAdminSetPassword,
@@ -42,10 +43,20 @@ export function AdminPage() {
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6">
       <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">Administração</h1>
+      <ConnectionStatusCard />
       <ResetPasswordCard />
       <BackfillCard />
       <XpRulesCard />
     </div>
+  );
+}
+
+function ConnectionStatusCard() {
+  return (
+    <Card>
+      <h2 className="mb-2 font-bold text-slate-100">Estado da ligação</h2>
+      <ConnectionStatus />
+    </Card>
   );
 }
 
@@ -149,7 +160,9 @@ function XpRulesCard() {
         Alterar cria uma nova versão — o histórico de XP fica intacto.
       </p>
       <ul className="flex flex-col gap-2">
-        {rules?.map((rule) => <XpRuleRow key={rule.id} rule={rule} />)}
+        {rules?.map((rule) => (
+          <XpRuleRow key={rule.id} rule={rule} />
+        ))}
       </ul>
     </Card>
   );

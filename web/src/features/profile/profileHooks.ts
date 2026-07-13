@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import type { Database, PositionCategory, PreferredFoot } from '@/types/database';
@@ -42,6 +42,15 @@ export function useProfile() {
     queryKey: ['profile', userId],
     queryFn: () => fetchProfile(userId as string),
     enabled: Boolean(userId),
+  });
+}
+
+/** Variante Suspense: usar apenas em rotas protegidas, onde a sessão já está garantida. */
+export function useProfileSuspense() {
+  const { user } = useAuth();
+  return useSuspenseQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: () => fetchProfile(user?.id as string),
   });
 }
 
