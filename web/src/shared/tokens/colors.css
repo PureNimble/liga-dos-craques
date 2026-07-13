@@ -61,6 +61,8 @@
 
   --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
   --accent-ring: rgb(16 185 129 / 0.25);
+  --accent-border: rgb(16 185 129 / 0.4);
+  --danger-border: rgb(239 68 68 / 0.25);
   --accent-glow: rgb(16 185 129 / 0.13); /* brilho de relvado (cabeçalho de jogo) */
 
   /* Equipas (A verde, B azul) — reutilizado em cabeçalho, campo e painel */
