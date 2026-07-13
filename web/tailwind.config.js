@@ -1,3 +1,5 @@
+import containerQueries from '@tailwindcss/container-queries';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -9,6 +11,23 @@ export default {
       },
       letterSpacing: {
         tightest: '-0.03em',
+      },
+      // Escala tipográfica FLUIDA: cada tamanho interpola suavemente entre o
+      // valor de telemóvel (~360px) e o de desktop (~1280px) via clamp(). Assim
+      // o texto adapta-se a qualquer ecrã sem "saltos" e sem mudar o layout.
+      // (No topo bate no valor default do Tailwind; em baixo encolhe o suficiente
+      // para caber sem quebrar.) line-height unitless para escalar com a fonte.
+      fontSize: {
+        xs: ['clamp(0.75rem, 0.726rem + 0.11vw, 0.8125rem)', { lineHeight: '1.4' }],
+        sm: ['clamp(0.8125rem, 0.788rem + 0.11vw, 0.875rem)', { lineHeight: '1.45' }],
+        base: ['clamp(0.9063rem, 0.87rem + 0.16vw, 1rem)', { lineHeight: '1.55' }],
+        lg: ['clamp(1rem, 0.951rem + 0.22vw, 1.125rem)', { lineHeight: '1.5' }],
+        xl: ['clamp(1.125rem, 1.076rem + 0.22vw, 1.25rem)', { lineHeight: '1.4' }],
+        '2xl': ['clamp(1.3125rem, 1.239rem + 0.33vw, 1.5rem)', { lineHeight: '1.25' }],
+        '3xl': ['clamp(1.5625rem, 1.44rem + 0.54vw, 1.875rem)', { lineHeight: '1.2' }],
+        '4xl': ['clamp(1.8125rem, 1.641rem + 0.76vw, 2.25rem)', { lineHeight: '1.15' }],
+        '5xl': ['clamp(2.125rem, 1.783rem + 1.52vw, 3rem)', { lineHeight: '1.05' }],
+        '6xl': ['clamp(2.625rem, 2.185rem + 1.96vw, 3.75rem)', { lineHeight: '1' }],
       },
       colors: {
         // Verde "relvado" — cor de marca / acção. Emerald refinado (menos "doce").
@@ -63,5 +82,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Container queries: um componente adapta-se à largura do SEU contentor
+    // (não do viewport) — `@container` + variantes `@sm:`/`@lg:`. Deixa as caixas
+    // saberem viver no espaço que recebem, em vez de dependerem do ecrã inteiro.
+    containerQueries,
+  ],
 };

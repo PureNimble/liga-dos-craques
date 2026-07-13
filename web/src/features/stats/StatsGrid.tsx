@@ -26,12 +26,16 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
   const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
 
   if (compact) {
+    // @container + @xs: adapta as colunas à largura do PRÓPRIO bloco (não do
+    // ecrã) — 2 colunas quando estreito, 4 quando há espaço.
     return (
-      <div className="grid grid-cols-4 gap-2">
-        <StatTile label="Jogos" value={stats.games} />
-        <StatTile label="Golos" value={stats.goals} accent />
-        <StatTile label="Assist." value={stats.assists} />
-        <StatTile label="Vitórias" value={stats.wins} />
+      <div className="@container">
+        <div className="grid grid-cols-2 gap-2 @xs:grid-cols-4">
+          <StatTile label="Jogos" value={stats.games} />
+          <StatTile label="Golos" value={stats.goals} accent />
+          <StatTile label="Assist." value={stats.assists} />
+          <StatTile label="Vitórias" value={stats.wins} />
+        </div>
       </div>
     );
   }
@@ -55,7 +59,7 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
   ];
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="@container flex flex-col gap-3">
       {/* Registo V-E-D */}
       <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
         <div className="mb-2 flex items-center justify-between text-xs font-semibold">
@@ -70,8 +74,8 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
         </div>
       </div>
 
-      {/* Tiles */}
-      <div className="grid grid-cols-3 gap-2">
+      {/* Tiles — 2 colunas quando estreito, 3 quando há espaço (por container). */}
+      <div className="grid grid-cols-2 gap-2 @sm:grid-cols-3">
         {tiles.map((d) => (
           <StatTile key={d.label} {...d} />
         ))}

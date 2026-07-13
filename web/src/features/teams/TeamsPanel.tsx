@@ -322,13 +322,13 @@ export function TeamsPanel({
           <p className="mb-2 text-xs font-medium text-slate-400">Por atribuir</p>
           <ul className="flex flex-col gap-1">
             {unassigned.map((p) => (
-              <li key={p.player_id} className="flex items-center justify-between text-sm">
-                <span>
+              <li key={p.player_id} className="flex items-center justify-between gap-2 text-sm">
+                <span className="min-w-0 truncate">
                   {p.profile?.name ?? 'Jogador'}{' '}
                   <span className="text-slate-500">({ratingOf(p.player_id)})</span>
                 </span>
                 {canManage && (
-                  <span className="flex gap-2">
+                  <span className="flex shrink-0 gap-2">
                     <button
                       onClick={() => setPlayerTeam.mutate({ playerId: p.player_id, team: 'A' })}
                       className="text-xs text-pitch-400 hover:underline"
@@ -410,15 +410,15 @@ function TeamColumn({
       </div>
       <ul className="flex flex-col gap-1">
         {list.map((p) => (
-          <li key={p.player_id} className="flex items-center justify-between text-sm">
-            <span>
+          <li key={p.player_id} className="flex items-center justify-between gap-2 text-sm">
+            <span className="min-w-0 truncate">
               {p.profile?.name ?? 'Jogador'}{' '}
               <span className="text-slate-500">({ratingOf(p.player_id)})</span>
             </span>
             {canManage && (
               <button
                 onClick={() => onMove(p.player_id)}
-                className="text-xs text-slate-400 hover:text-slate-200 hover:underline"
+                className="shrink-0 text-xs text-slate-400 hover:text-slate-200 hover:underline"
               >
                 {moveLabel}
               </button>

@@ -256,8 +256,11 @@ export function GameDetailPage() {
       {/* Equipas à esquerda e informação à direita no desktop; empilham no telemóvel */}
       {showTeams ? (
         <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-          <div className="flex flex-col gap-4">{teamsSection}</div>
-          <div className="flex flex-col gap-4">{infoSection}</div>
+          {/* min-w-0: sem isto, os filhos da grelha assumem min-width:auto e
+              recusam encolher abaixo do seu conteúdo (ex.: o <select> de convidar
+              pelo nome mais longo), empurrando a coluna para lá do ecrã. */}
+          <div className="flex min-w-0 flex-col gap-4">{teamsSection}</div>
+          <div className="flex min-w-0 flex-col gap-4">{infoSection}</div>
         </div>
       ) : (
         infoSection

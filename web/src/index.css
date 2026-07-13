@@ -12,6 +12,23 @@ body,
   height: 100%;
 }
 
+/* Rede de segurança contra scroll horizontal: nenhum elemento largo deve
+   empurrar a página para lá da largura do ecrã. `clip` (em vez de `hidden`)
+   não cria contexto de scroll, por isso não parte o `position: sticky` do
+   cabeçalho. Conteúdo genuinamente largo (tabelas, etc.) deve ter o seu
+   próprio `overflow-x-auto` local. */
+html {
+  overflow-x: clip;
+}
+
+/* Media nunca ultrapassa o contentor. */
+img,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
 body {
   margin: 0;
   /* Tema "estádio": near-black com um brilho de relvado muito subtil e frio. */
@@ -62,6 +79,15 @@ body.modal-open {
   }
   .pt-safe {
     padding-top: env(safe-area-inset-top);
+  }
+  /* Esconde a scrollbar mantendo o scroll (para faixas de scroll horizontal
+     intencionais, ex.: filtros/abas em telemóvel — sem barra visível). */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
   /* Superfície "vidro" para cabeçalhos / barras fixas. */
   .glass {

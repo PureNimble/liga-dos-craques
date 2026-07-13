@@ -133,7 +133,7 @@ function PlayerGrid({
   ];
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="@container flex flex-col gap-3">
       {META.map(({ key, label, dot }) => {
         const list = groups[key].filter((p) => p.player_id !== excludeId);
         if (list.length === 0) return null;
@@ -144,7 +144,7 @@ function PlayerGrid({
                 <span className={`h-2 w-2 rounded-full ${dot}`} /> {label}
               </p>
             )}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 @sm:grid-cols-3">
               {list.map((gp) => {
                 const on = selectedId === gp.player_id;
                 return (

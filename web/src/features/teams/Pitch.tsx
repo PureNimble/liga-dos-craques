@@ -30,6 +30,14 @@ const TEAM_TOKEN: Record<Team, string> = {
 
 const firstName = (name?: string | null) => (name ?? 'Jogador').trim().split(/\s+/)[0];
 
+// Tamanhos relativos AO CAMPO (container queries): `cqw` = 1% da largura do
+// campo, por isso os círculos, slots e rótulos escalam com o campo e mantêm a
+// mesma proporção em qualquer ecrã (nunca ficam "colados" num campo pequeno).
+// O clamp garante um mínimo legível e um máximo igual ao tamanho original.
+const TOKEN_SIZE = 'h-[clamp(1.4rem,8.5cqw,2.25rem)] w-[clamp(1.4rem,8.5cqw,2.25rem)]';
+const SLOT_SIZE = 'h-[clamp(1.6rem,9.5cqw,2.5rem)] w-[clamp(1.6rem,9.5cqw,2.5rem)]';
+const TOKEN_TEXT = 'text-[clamp(0.5rem,2.4cqw,0.625rem)]';
+
 interface DragState {
   id: string;
   dx: number;
@@ -107,12 +115,12 @@ export function Pitch({
     <div className="mx-auto flex w-full max-w-md flex-col gap-2">
       <div
         ref={fieldRef}
-        className="turf relative aspect-[3/4] w-full touch-none select-none overflow-hidden rounded-2xl border border-white/10 shadow-elevated"
+        className="turf relative @container aspect-[3/4] w-full touch-none select-none overflow-hidden rounded-2xl border border-white/10 shadow-elevated"
       >
         {/* Marcações */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/25" />
-          <div className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25" />
+          <div className="absolute left-1/2 top-1/2 h-[18cqw] w-[18cqw] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25" />
           <div className="absolute inset-2 rounded-lg border border-white/15" />
           <div className="absolute left-1/2 top-0 h-[14%] w-[52%] -translate-x-1/2 rounded-b-md border border-t-0 border-white/20" />
           <div className="absolute bottom-0 left-1/2 h-[14%] w-[52%] -translate-x-1/2 rounded-t-md border border-b-0 border-white/20" />
@@ -127,7 +135,7 @@ export function Pitch({
               <div
                 key={`slot-${i}`}
                 style={{ left: `${s.x}%`, top: `${s.y}%` }}
-                className={`pointer-events-none absolute z-0 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed transition ${
+                className={`pointer-events-none absolute z-0 ${SLOT_SIZE} -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed transition ${
                   near
                     ? 'scale-125 border-white bg-white/20'
                     : isOccupied
@@ -162,18 +170,18 @@ export function Pitch({
                   ? `translate(-50%, -50%) translate(${drag!.dx}px, ${drag!.dy}px)`
                   : 'translate(-50%, -50%)',
               }}
-              className={`absolute h-9 w-9 ${
+              className={`absolute ${TOKEN_SIZE} ${
                 subTarget ? 'cursor-pointer' : canManage ? 'cursor-grab active:cursor-grabbing' : ''
               } ${dragging ? 'z-20 scale-110' : 'z-10 transition-[left,top] duration-300'}`}
             >
               <span
-                className={`flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-black uppercase shadow-md ring-2 ${
+                className={`flex ${TOKEN_SIZE} items-center justify-center rounded-full ${TOKEN_TEXT} font-black uppercase shadow-md ring-2 ${
                   TEAM_TOKEN[team]
                 } ${subTarget ? 'animate-pulse ring-white' : ''}`}
               >
                 {positionCode(at.x, at.y)}
               </span>
-              <span className="absolute left-1/2 top-full mt-0.5 max-w-[64px] -translate-x-1/2 truncate rounded bg-black/50 px-1 text-[10px] font-medium leading-tight text-white">
+              <span className="absolute left-1/2 top-full mt-0.5 max-w-[16cqw] -translate-x-1/2 truncate rounded bg-black/50 px-1 text-[clamp(0.5rem,2.4cqw,0.625rem)] font-medium leading-tight text-white">
                 {firstName(p.profile?.name)}
               </span>
             </div>
