@@ -2,3 +2,12 @@
   display: flex;
   gap: var(--space-sm);
 }
+.skeletons {
+  display: grid;
+  gap: var(--space-sm);
+}
+@media (min-width: 1024px) {
+  .skeletons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

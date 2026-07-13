@@ -12,6 +12,7 @@
   --gray-300: #cbd5e1;
   --gray-200: #e2e8f0;
   --gray-100: #f1f5f9;
+  --orange-300: #fdba74;
   --orange-400: #fb923c;
   --orange-600: #ea580c;
   /* Primitivos: verde (marca) e vermelho (perigo) */
@@ -58,6 +59,7 @@
   --surface-ghost-hover: rgb(255 255 255 / 0.06);
 
   --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
+  --accent-ring: rgb(16 185 129 / 0.25);
   --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
   --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
   --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */
@@ -127,6 +129,17 @@
   --podium-3-to: var(--orange-600);
   --podium-3-fg: var(--white);
   --podium-3-ring: rgb(249 115 22 / 0.2);
+
+  /* Escalão do cartão de jogador (estilo FIFA): anel + destaque + brilho */
+  --tier-gold-ring: rgb(252 211 77 / 0.6);
+  --tier-gold-accent: var(--amber-300);
+  --tier-gold-glow: rgb(252 211 77 / 0.25);
+  --tier-silver-ring: rgb(226 232 240 / 0.5);
+  --tier-silver-accent: var(--gray-100);
+  --tier-silver-glow: rgb(226 232 240 / 0.18);
+  --tier-bronze-ring: rgb(251 146 60 / 0.5);
+  --tier-bronze-accent: var(--orange-300);
+  --tier-bronze-glow: rgb(251 146 60 / 0.2);
 
   /* Gráficos (SVG feito à mão) */
   --chart-line: var(--accent-strong);

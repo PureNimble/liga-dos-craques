@@ -196,7 +196,7 @@ export function RankingsPage() {
       )}
 
       {isLoading && (
-        <div className="grid gap-2 lg:grid-cols-2">
+        <div className={s.skeletons}>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
