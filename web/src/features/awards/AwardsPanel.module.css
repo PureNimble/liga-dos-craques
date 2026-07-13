@@ -1,0 +1,124 @@
+.head {
+  margin-bottom: var(--space-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+.card {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-faint);
+  background-color: var(--surface-translucent);
+  padding: var(--space-md);
+}
+.cardAccent {
+  border-color: var(--accent-border);
+  background-color: var(--accent-surface-faint);
+}
+.cardTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.cardRow {
+  margin-top: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.cardName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+.cardEmpty {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-faint);
+}
+
+.ratings {
+  margin-top: var(--space-lg);
+  border-top: 1px solid var(--border-faint);
+  padding-top: var(--space-lg);
+}
+.ratingsLabel {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-subtle);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+.rowName {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--gray-200);
+}
+.tagMvp,
+.tagFlop {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.tagMvp {
+  background-color: var(--accent-surface);
+  color: var(--accent-soft);
+}
+.tagFlop {
+  background-color: var(--surface-ghost-hover);
+  color: var(--text-subtle);
+}
+
+.badge {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.badgeNull {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+.badgeTop {
+  background-color: var(--tone-green-bg);
+  color: var(--tone-green-fg);
+}
+.badgeGood {
+  background-color: var(--tone-sky-bg);
+  color: var(--tone-sky-fg);
+}
+.badgeMid {
+  background-color: var(--tone-amber-bg);
+  color: var(--tone-amber-fg);
+}
+.badgeLow {
+  background-color: var(--tone-red-bg);
+  color: var(--tone-red-fg);
+}
