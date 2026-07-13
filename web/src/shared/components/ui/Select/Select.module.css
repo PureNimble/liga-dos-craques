@@ -1,0 +1,4 @@
+/* O select usa exatamente o mesmo controlo do input — composto, sem duplicar. */
+.control {
+  composes: control from '../Input/Input.module.css';
+}

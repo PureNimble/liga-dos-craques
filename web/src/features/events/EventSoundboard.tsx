@@ -12,6 +12,7 @@ import {
   type EventType,
   type GoalVariant,
 } from './eventHooks';
+import s from './EventSoundboard.module.css';
 
 interface EventSoundboardProps {
   gameId: string;
@@ -36,7 +37,7 @@ export function EventSoundboard({ gameId, players, currentMinute }: EventSoundbo
 
   if (players.length === 0) {
     return (
-      <p className="text-sm text-slate-400">Adiciona jogadores para poderes registar eventos.</p>
+      <p className={s.emptyMsg}>Adiciona jogadores para poderes registar eventos.</p>
     );
   }
 
@@ -66,20 +67,16 @@ export function EventSoundboard({ gameId, players, currentMinute }: EventSoundbo
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2">
+      <div className={s.actions}>
         {actions.map((a) => (
           <button
             key={a.key}
             type="button"
             onClick={a.onClick}
-            className={`flex flex-col items-center gap-2 rounded-2xl border p-3.5 text-center transition active:scale-[0.97] ${
-              a.danger
-                ? 'border-red-500/25 bg-red-500/10 text-red-300 hover:bg-red-500/15'
-                : 'border-white/[0.07] bg-white/[0.03] text-pitch-300 hover:border-pitch-500/40 hover:bg-white/[0.06]'
-            }`}
+            className={`${s.action} ${a.danger ? s.actionDanger : ''}`}
           >
             <a.Icon width={26} height={26} aria-hidden />
-            <span className="text-xs font-semibold leading-tight text-slate-200">{a.label}</span>
+            <span className={s.actionLabel}>{a.label}</span>
           </button>
         ))}
       </div>
@@ -127,24 +124,24 @@ function PlayerGrid({
   }, [players]);
 
   const META: { key: 'A' | 'B' | 'none'; label: string; dot: string }[] = [
-    { key: 'A', label: 'Equipa A', dot: 'bg-pitch-500' },
-    { key: 'B', label: 'Equipa B', dot: 'bg-sky-500' },
-    { key: 'none', label: 'Sem equipa', dot: 'bg-slate-500' },
+    { key: 'A', label: 'Equipa A', dot: s.dotA },
+    { key: 'B', label: 'Equipa B', dot: s.dotB },
+    { key: 'none', label: 'Sem equipa', dot: s.dotNone },
   ];
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={s.grid}>
       {META.map(({ key, label, dot }) => {
         const list = groups[key].filter((p) => p.player_id !== excludeId);
         if (list.length === 0) return null;
         return (
           <div key={key}>
             {teamsAssigned && (
-              <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                <span className={`h-2 w-2 rounded-full ${dot}`} /> {label}
+              <p className={s.groupLabel}>
+                <span className={`${s.dot} ${dot}`} /> {label}
               </p>
             )}
-            <div className="grid grid-cols-2 gap-2">
+            <div className={s.players}>
               {list.map((gp) => {
                 const on = selectedId === gp.player_id;
                 return (
@@ -152,16 +149,10 @@ function PlayerGrid({
                     key={gp.id}
                     type="button"
                     onClick={() => onPick(gp)}
-                    className={`flex items-center gap-2.5 rounded-xl border p-2.5 text-left transition active:scale-[0.98] ${
-                      on
-                        ? 'border-pitch-500 bg-pitch-500/15'
-                        : 'border-navy-700 bg-navy-850 hover:border-pitch-500/50 hover:bg-navy-800'
-                    }`}
+                    className={`${s.player} ${on ? s.playerActive : ''}`}
                   >
                     <Avatar name={gp.profile?.name} src={gp.profile?.photo_url} size="sm" />
-                    <span className="min-w-0 truncate text-sm font-medium text-slate-100">
-                      {gp.profile?.name ?? 'Jogador'}
-                    </span>
+                    <span className={s.playerName}>{gp.profile?.name ?? 'Jogador'}</span>
                   </button>
                 );
               })}
@@ -195,17 +186,25 @@ function GoalModal({
   onClose: () => void;
 }) {
   const logGoal = useLogGoal(gameId);
+  const { data: tags } = useTags();
   const toast = useToast();
 
   const [variant, setVariant] = useState<GoalVariant>('normal');
   const [minute, setMinute] = useState(String(currentMinute));
   const [scorer, setScorer] = useState<GamePlayerWithProfile | null>(null);
   const [assistId, setAssistId] = useState<string | null>(null);
+  const [tagIds, setTagIds] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const isOwn = variant === 'own_goal';
   // Assistência só existe em golo normal (não em penálti, livre ou autogolo).
   const allowsAssist = variant === 'normal';
+  // Tags de técnica só fazem sentido em golo de bola corrida (normal ou livre).
+  const allowsTags = variant === 'normal' || variant === 'freekick';
+
+  function toggleTag(id: number) {
+    setTagIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
 
   async function submit() {
     if (!scorer) return;
@@ -218,6 +217,7 @@ function GoalModal({
         variant,
         team,
         minute: minute === '' ? null : Number(minute),
+        tagIds: allowsTags ? tagIds : [],
       });
       toast.show(`${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'} ✓`, 'success');
       onClose();
@@ -232,7 +232,7 @@ function GoalModal({
       onClose={onClose}
       variant="sheet"
       title={
-        <span className="flex items-center gap-2">
+        <span className={s.titleRow}>
           <BallIcon width={18} height={18} /> Registar golo
         </span>
       }
@@ -247,12 +247,17 @@ function GoalModal({
         </>
       }
     >
-      <div className="flex flex-col gap-4">
+      <div className={s.body}>
         {error && <Alert kind="error">{error}</Alert>}
 
-        <SegmentedTabs<GoalVariant> value={variant} onChange={setVariant} items={VARIANTS} className="w-full" />
+        <SegmentedTabs<GoalVariant>
+          value={variant}
+          onChange={setVariant}
+          items={VARIANTS}
+          className={s.fullWidth}
+        />
 
-        <label className="text-sm text-slate-400">
+        <label className={s.minute}>
           Minuto
           <Input
             type="number"
@@ -260,14 +265,12 @@ function GoalModal({
             max={200}
             value={minute}
             onChange={(e) => setMinute(e.target.value)}
-            className="mt-1 w-24"
+            className={s.minuteInput}
           />
         </label>
 
         <div>
-          <p className="mb-2 text-sm font-semibold text-slate-200">
-            {isOwn ? 'Quem marcou na própria baliza' : 'Marcador'}
-          </p>
+          <p className={s.sectionLabel}>{isOwn ? 'Quem marcou na própria baliza' : 'Marcador'}</p>
           <PlayerGrid
             players={players}
             selectedId={scorer?.player_id}
@@ -280,8 +283,8 @@ function GoalModal({
 
         {allowsAssist && scorer && (
           <div>
-            <p className="mb-2 text-sm font-semibold text-slate-200">
-              Assistência <span className="font-normal text-slate-500">(opcional · mesma equipa)</span>
+            <p className={s.sectionLabel}>
+              Assistência <span className={s.sectionHint}>(opcional · mesma equipa)</span>
             </p>
             <PlayerGrid
               players={players.filter((p) => p.team === scorer.team)}
@@ -291,8 +294,30 @@ function GoalModal({
             />
           </div>
         )}
+        {allowsTags && tags && tags.length > 0 && (
+          <div>
+            <p className={s.sectionLabel}>
+              Como foi o golo <span className={s.sectionHint}>(opcional)</span>
+            </p>
+            <div className={s.tags}>
+              {tags.map((tag) => {
+                const on = tagIds.includes(tag.id);
+                return (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => toggleTag(tag.id)}
+                    className={`${s.tag} ${on ? s.tagActive : ''}`}
+                  >
+                    {tag.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
         {isOwn && (
-          <p className="text-xs text-slate-500">
+          <p className={s.note}>
             O autogolo credita a equipa adversária e não conta como golo do jogador.
           </p>
         )}
@@ -348,10 +373,10 @@ function SimpleEventModal({
 
   return (
     <Modal open onClose={onClose} variant="sheet" title={eventType.label} description="Escolhe quem">
-      <div className="flex flex-col gap-4">
+      <div className={s.body}>
         {error && <Alert kind="error">{error}</Alert>}
 
-        <label className="text-sm text-slate-400">
+        <label className={s.minute}>
           Minuto
           <Input
             type="number"
@@ -359,12 +384,12 @@ function SimpleEventModal({
             max={200}
             value={minute}
             onChange={(e) => setMinute(e.target.value)}
-            className="mt-1 w-24"
+            className={s.minuteInput}
           />
         </label>
 
         {eventType.supports_tags && tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className={s.tags}>
             {tags.map((tag) => {
               const on = tagIds.includes(tag.id);
               return (
@@ -372,11 +397,7 @@ function SimpleEventModal({
                   key={tag.id}
                   type="button"
                   onClick={() => toggleTag(tag.id)}
-                  className={`rounded-full border px-3 py-1 text-sm font-medium transition ${
-                    on
-                      ? 'border-pitch-500 bg-pitch-500 text-navy-975 shadow-glow'
-                      : 'border-navy-700 text-slate-300 hover:bg-navy-800'
-                  }`}
+                  className={`${s.tag} ${on ? s.tagActive : ''}`}
                 >
                   {tag.label}
                 </button>

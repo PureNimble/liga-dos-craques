@@ -6,6 +6,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
 import { AuthLayout } from './AuthLayout';
 import { updatePasswordSchema, type UpdatePasswordValues } from './auth.schemas';
+import s from './auth.module.css';
 
 /**
  * Define uma nova password. Serve dois casos:
@@ -36,7 +37,7 @@ export function UpdatePasswordPage() {
       {done ? (
         <Alert kind="success">Password atualizada. A redirecionar…</Alert>
       ) : (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
           <Field
             label="Nova password"
             htmlFor="password"

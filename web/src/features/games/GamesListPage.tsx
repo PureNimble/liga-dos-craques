@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Card, CardSkeleton, EmptyState, Modal, SegmentedTabs } from '@/shared/components/ui';
+import {
+  Alert,
+  Button,
+  Card,
+  CardSkeleton,
+  EmptyState,
+  Modal,
+  Page,
+  PageTitle,
+  SegmentedTabs,
+} from '@/shared/components/ui';
 import { BallIcon, CalendarIcon, PinIcon, PlusIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
 import { formatGameDateTime } from '@/shared/lib/datetime';
 import { useGames, type GameWithFormat } from './gameHooks';
 import { StatusBadge } from './StatusBadge';
 import { UPCOMING_STATUSES } from './gameStatus';
 import { CreateGameForm } from './CreateGameForm';
+import s from './GamesListPage.module.css';
 
 type Tab = 'upcoming' | 'past';
 
@@ -21,10 +32,10 @@ export function GamesListPage() {
   );
 
   return (
-    <div className="flex flex-col gap-4 p-4 sm:p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">Jogos</h1>
-        <Button onClick={() => setCreateOpen(true)} className="gap-1.5">
+    <Page>
+      <div className={s.headerRow}>
+        <PageTitle>Jogos</PageTitle>
+        <Button onClick={() => setCreateOpen(true)}>
           <PlusIcon width={18} height={18} />
           Criar jogo
         </Button>
@@ -40,7 +51,7 @@ export function GamesListPage() {
       />
 
       {isLoading && (
-        <div className="flex flex-col gap-3">
+        <div className={s.skeletons}>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
@@ -65,7 +76,7 @@ export function GamesListPage() {
         />
       )}
 
-      <ul className="flex flex-col gap-3">
+      <ul className={s.list}>
         {filtered.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
@@ -87,7 +98,7 @@ export function GamesListPage() {
           onCancel={() => setCreateOpen(false)}
         />
       </Modal>
-    </div>
+    </Page>
   );
 }
 
@@ -96,38 +107,34 @@ function GameCard({ game }: { game: GameWithFormat }) {
   return (
     <li>
       <Link to={`/games/${game.id}`}>
-        <Card interactive className="flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pitch-500/10 text-pitch-300 ring-1 ring-pitch-500/15">
+        <Card interactive className={s.card}>
+          <span className={s.icon}>
             <BallIcon width={22} height={22} />
           </span>
 
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <p className="truncate font-semibold capitalize text-slate-100">
-                {formatGameDateTime(game.scheduled_at)}
-              </p>
-            </div>
-            <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-slate-400">
+          <div className={s.info}>
+            <p className={s.date}>{formatGameDateTime(game.scheduled_at)}</p>
+            <p className={s.meta}>
               <CalendarIcon width={13} height={13} />
               {game.game_format?.label ?? '—'}
               {game.location && (
                 <>
-                  <PinIcon width={13} height={13} className="ml-1" />
-                  <span className="truncate">{game.location}</span>
+                  <PinIcon width={13} height={13} className={s.metaLoc} />
+                  <span className={s.locText}>{game.location}</span>
                 </>
               )}
             </p>
             {hasScore && (
-              <p className="mt-1.5 text-sm font-bold tabular-nums text-slate-100">
-                {game.team_a_score ?? 0} <span className="text-slate-500">–</span>{' '}
+              <p className={s.score}>
+                {game.team_a_score ?? 0} <span className={s.scoreDash}>–</span>{' '}
                 {game.team_b_score ?? 0}
               </p>
             )}
           </div>
 
-          <div className="flex shrink-0 flex-col items-end gap-2">
+          <div className={s.side}>
             <StatusBadge status={game.status} />
-            <ChevronRightIcon width={16} height={16} className="text-slate-600" />
+            <ChevronRightIcon width={16} height={16} className={s.chevron} />
           </div>
         </Card>
       </Link>

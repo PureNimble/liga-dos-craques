@@ -1,0 +1,14 @@
+.app {
+  min-height: 100vh;
+  background-color: var(--surface-page);
+}
+.main {
+  margin-inline: auto;
+  max-width: var(--width-content);
+  padding-bottom: 6rem;
+}
+@media (min-width: 640px) {
+  .main {
+    padding-bottom: var(--space-2xl);
+  }
+}

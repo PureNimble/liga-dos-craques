@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Alert, Avatar, Badge, Button, Card, Select } from '@/shared/components/ui';
+import { Alert, Avatar, Badge, Button, Card, Select, type BadgeTone } from '@/shared/components/ui';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import type { GamePlayerStatus } from '@/types/database';
 import {
@@ -8,6 +8,7 @@ import {
   useSetGamePlayerStatus,
   type GamePlayerWithProfile,
 } from './gameHooks';
+import s from './PlayerRoster.module.css';
 
 interface PlayerRosterProps {
   gameId: string;
@@ -25,11 +26,11 @@ const STATUS_LABEL: Record<GamePlayerStatus, string> = {
   no_show: 'Faltou',
 };
 
-const STATUS_STYLE: Record<GamePlayerStatus, string> = {
-  invited: 'bg-amber-500/15 text-amber-300',
-  confirmed: 'bg-pitch-500/15 text-pitch-400',
-  played: 'bg-slate-500/20 text-slate-200',
-  no_show: 'bg-red-500/15 text-red-300',
+const STATUS_TONE: Record<GamePlayerStatus, BadgeTone> = {
+  invited: 'amber',
+  confirmed: 'green',
+  played: 'gray',
+  no_show: 'red',
 };
 
 export function PlayerRoster({
@@ -81,45 +82,41 @@ export function PlayerRoster({
 
   return (
     <Card>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-slate-100">Jogadores</h2>
-        <span className="rounded-full bg-navy-800 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-slate-400">
+      <div className={s.head}>
+        <h2 className={s.title}>Jogadores</h2>
+        <span className={s.count}>
           {players.length} inscritos · {confirmedCount} conf.
-          {subs > 0 && <span className="text-amber-400"> · {subs} supl.</span>}
+          {subs > 0 && <span className={s.countSubs}> · {subs} supl.</span>}
         </span>
       </div>
 
       {error && (
-        <div className="mb-3">
+        <div className={s.errorSlot}>
           <Alert kind="error">{error}</Alert>
         </div>
       )}
 
       {players.length === 0 ? (
-        <p className="text-sm text-slate-400">Ainda ninguém está inscrito.</p>
+        <p className={s.empty}>Ainda ninguém está inscrito.</p>
       ) : (
-        <ul className="flex flex-col divide-y divide-navy-800">
+        <ul className={s.list}>
           {players.map((gp) => {
             const isSelf = gp.player_id === currentUserId;
             return (
-              <li key={gp.id} className="flex items-center justify-between gap-2 py-2">
-                <div className="flex min-w-0 items-center gap-2">
+              <li key={gp.id} className={s.item}>
+                <div className={s.player}>
                   <Avatar name={gp.profile?.name ?? '?'} src={gp.profile?.photo_url ?? null} size="sm" />
-                  <span className="truncate text-sm font-medium text-slate-100">
-                    {gp.profile?.name ?? 'Jogador'}
-                  </span>
-                  {gp.team && (
-                    <Badge className="bg-navy-800 text-slate-300">{gp.team}</Badge>
-                  )}
-                  <Badge className={STATUS_STYLE[gp.status]}>{STATUS_LABEL[gp.status]}</Badge>
+                  <span className={s.name}>{gp.profile?.name ?? 'Jogador'}</span>
+                  {gp.team && <Badge tone="gray">{gp.team}</Badge>}
+                  <Badge tone={STATUS_TONE[gp.status]}>{STATUS_LABEL[gp.status]}</Badge>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-2">
+                <div className={s.actions}>
                   {/* Confirmar/recusar a própria presença */}
                   {editable && isSelf && gp.status !== 'confirmed' && (
                     <button
                       onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'confirmed' })}
-                      className="text-xs text-pitch-400 hover:underline"
+                      className={`${s.link} ${s.linkConfirm}`}
                     >
                       Confirmar
                     </button>
@@ -127,16 +124,13 @@ export function PlayerRoster({
                   {editable && isSelf && gp.status === 'confirmed' && (
                     <button
                       onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'invited' })}
-                      className="text-xs text-slate-400 hover:underline"
+                      className={`${s.link} ${s.linkNeutral}`}
                     >
                       Desmarcar
                     </button>
                   )}
                   {editable && (canManage || isSelf) && (
-                    <button
-                      onClick={() => handleRemove(gp.id)}
-                      className="text-xs text-red-400 hover:underline"
-                    >
+                    <button onClick={() => handleRemove(gp.id)} className={`${s.link} ${s.linkDanger}`}>
                       Remover
                     </button>
                   )}
@@ -148,9 +142,9 @@ export function PlayerRoster({
       )}
 
       {editable && (
-        <div className="mt-4 flex flex-col gap-2 border-t border-navy-800 pt-4">
+        <div className={s.addRow}>
           {canManage && (
-            <div className="flex gap-2">
+            <div className={s.invite}>
               <Select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
                 <option value="">Convidar jogador…</option>
                 {availableProfiles.map((p) => (
@@ -173,7 +167,7 @@ export function PlayerRoster({
 
           {!canManage &&
             (isInGame ? (
-              <p className="text-sm text-slate-400">Estás neste jogo.</p>
+              <p className={s.note}>Estás neste jogo.</p>
             ) : (
               <Button
                 type="button"
