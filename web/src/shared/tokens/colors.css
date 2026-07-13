@@ -24,6 +24,7 @@
   --red-500: #ef4444;
   /* Primitivos: tons de etiqueta (estado/categoria) */
   --sky-300: #7dd3fc;
+  --sky-500: #0ea5e9;
   --indigo-300: #a5b4fc;
   --amber-300: #fcd34d;
   --amber-400: #fbbf24;
@@ -60,6 +61,13 @@
 
   --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
   --accent-ring: rgb(16 185 129 / 0.25);
+  --accent-glow: rgb(16 185 129 / 0.13); /* brilho de relvado (cabeçalho de jogo) */
+
+  /* Equipas (A verde, B azul) — reutilizado em cabeçalho, campo e painel */
+  --team-a: var(--green-500);
+  --team-a-ring: rgb(16 185 129 / 0.6);
+  --team-b: var(--sky-500);
+  --team-b-ring: rgb(14 165 233 / 0.6);
   --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
   --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
   --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */

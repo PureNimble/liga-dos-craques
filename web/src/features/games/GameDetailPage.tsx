@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Button, Card, Modal } from '@/shared/components/ui';
+import { Alert, Button, Card, Loading, Modal, Page } from '@/shared/components/ui';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { ChevronLeftIcon, WhistleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
@@ -27,6 +27,7 @@ import { TeamsPanel } from '@/features/teams/TeamsPanel';
 import { usePlayerRatings, useAssignTeams } from '@/features/teams/teamHooks';
 import { balanceTeams } from '@/features/teams/teamBalancer';
 import type { GameStatus } from '@/types/database';
+import s from './GameDetailPage.module.css';
 
 const TEAMS_GENERATABLE: GameStatus[] = ['scheduled', 'open', 'teams_generated'];
 
@@ -61,17 +62,12 @@ export function GameDetailPage() {
   const [manageOpen, setManageOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center p-16 text-slate-400">
-        <span className="h-6 w-6 animate-spin rounded-full border-2 border-navy-700 border-t-pitch-500" />
-      </div>
-    );
+  if (isLoading) return <Loading />;
   if (isError || !game) {
     return (
-      <div className="p-4 sm:p-6">
+      <div className={s.errorPage}>
         <Alert kind="error">Jogo não encontrado.</Alert>
-        <Link to="/games" className="mt-3 inline-block text-sm text-pitch-400 hover:underline">
+        <Link to="/games" className={s.errorBack}>
           ← Voltar aos jogos
         </Link>
       </div>
@@ -193,9 +189,9 @@ export function GameDetailPage() {
       {/* Eventos (golos, assistências, defesas, …) */}
       {EVENTS_VISIBLE.includes(game.status) && (
         <Card>
-          <h2 className="mb-3 font-bold text-slate-100">Eventos</h2>
+          <h2 className={s.sectionHead}>Eventos</h2>
           {game.status === 'finished' && isOrganizer && (
-            <div className="mb-4">
+            <div className={s.infoSlot}>
               <Alert kind="info">
                 Fase de revisão: adiciona ou corrige eventos em falta. Ao apurar o MVP/Flop, os
                 eventos ficam fechados.
@@ -203,10 +199,10 @@ export function GameDetailPage() {
             </div>
           )}
           {(game.status === 'voting_open' || game.status === 'closed') && (
-            <p className="mb-3 text-xs text-slate-500">Jogo apurado — os eventos estão fechados.</p>
+            <p className={s.closedNote}>Jogo apurado — os eventos estão fechados.</p>
           )}
           {eventsEditable && (
-            <div className="mb-4 border-b border-navy-800 pb-4">
+            <div className={s.soundboardWrap}>
               <EventSoundboard gameId={game.id} players={roster} currentMinute={clock.minute} />
             </div>
           )}
@@ -232,20 +228,15 @@ export function GameDetailPage() {
   );
 
   return (
-    <div className="flex flex-col gap-4 p-4 sm:p-6">
-      <Link
-        to="/games"
-        className="inline-flex w-fit items-center gap-1 text-sm text-slate-400 transition hover:text-slate-200"
-      >
+    <Page>
+      <Link to="/games" className={s.back}>
         <ChevronLeftIcon width={16} height={16} /> Jogos
       </Link>
 
       {/* Cabeçalho / placar em destaque (estilo transmissão) */}
       <MatchHeader game={game} clock={clock} />
 
-      {game.notes && (
-        <Card className="text-sm text-slate-300">{game.notes}</Card>
-      )}
+      {game.notes && <Card className={s.notes}>{game.notes}</Card>}
 
       {isOrganizer && (
         <Button variant="secondary" block onClick={() => setManageOpen(true)}>
@@ -255,12 +246,12 @@ export function GameDetailPage() {
 
       {/* Equipas à esquerda e informação à direita no desktop; empilham no telemóvel */}
       {showTeams ? (
-        <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-          {/* min-w-0: sem isto, os filhos da grelha assumem min-width:auto e
-              recusam encolher abaixo do seu conteúdo (ex.: o <select> de convidar
+        <div className={s.grid}>
+          {/* .col tem min-width:0 — sem isso os filhos da grelha assumem
+              min-width:auto e recusam encolher (ex.: o <select> de convidar
               pelo nome mais longo), empurrando a coluna para lá do ecrã. */}
-          <div className="flex min-w-0 flex-col gap-4">{teamsSection}</div>
-          <div className="flex min-w-0 flex-col gap-4">{infoSection}</div>
+          <div className={s.col}>{teamsSection}</div>
+          <div className={s.col}>{infoSection}</div>
         </div>
       ) : (
         infoSection
@@ -274,7 +265,7 @@ export function GameDetailPage() {
         description={GAME_STATUS_LABELS[game.status]}
         variant="sheet"
       >
-        <div className="flex flex-col gap-4">
+        <div className={s.modalBody}>
           {updateStatus.isError && <Alert kind="error">Não foi possível atualizar o estado.</Alert>}
 
           {DETAILS_EDITABLE.includes(game.status) ? (
@@ -289,9 +280,7 @@ export function GameDetailPage() {
               Editar detalhes
             </Button>
           ) : (
-            <p className="rounded-xl border border-navy-800 bg-navy-950 px-3 py-2 text-center text-xs text-slate-500">
-              O jogo já começou — os detalhes estão bloqueados.
-            </p>
+            <p className={s.lockedNote}>O jogo já começou — os detalhes estão bloqueados.</p>
           )}
 
           {(game.status === 'scheduled' || game.status === 'open') && (
@@ -306,10 +295,10 @@ export function GameDetailPage() {
 
           {/* Terminar (o placar segue os eventos registados) */}
           {game.status === 'in_progress' && (
-            <div className="rounded-xl border border-navy-800 bg-navy-950 p-4 text-center">
-              <p className="text-sm text-slate-400">Resultado atual (dos eventos)</p>
-              <p className="my-2 text-3xl font-black tabular-nums text-white">
-                {game.team_a_score ?? 0} <span className="text-slate-600">–</span>{' '}
+            <div className={s.resultBox}>
+              <p className={s.resultLabel}>Resultado atual (dos eventos)</p>
+              <p className={s.resultScore}>
+                {game.team_a_score ?? 0} <span className={s.resultDash}>–</span>{' '}
                 {game.team_b_score ?? 0}
               </p>
               <Button block onClick={finishGame} loading={updateStatus.isPending}>
@@ -327,7 +316,7 @@ export function GameDetailPage() {
 
           {/* Outras transições */}
           {transitions.filter((t) => t !== 'finished').length > 0 && (
-            <div className="flex flex-col gap-2">
+            <div className={s.btnGroup}>
               {transitions
                 .filter((t) => t !== 'finished')
                 .map((t) => (
@@ -345,9 +334,7 @@ export function GameDetailPage() {
           )}
 
           {noManageActions && (
-            <p className="py-2 text-center text-sm text-slate-400">
-              Sem ações disponíveis neste estado.
-            </p>
+            <p className={s.emptyNote}>Sem ações disponíveis neste estado.</p>
           )}
         </div>
       </Modal>
@@ -362,6 +349,6 @@ export function GameDetailPage() {
       >
         <CreateGameForm game={game} onSuccess={() => setEditOpen(false)} onCancel={() => setEditOpen(false)} />
       </Modal>
-    </div>
+    </Page>
   );
 }

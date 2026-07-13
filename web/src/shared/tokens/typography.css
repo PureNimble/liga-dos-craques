@@ -1,6 +1,7 @@
 /* Tipografia — tamanhos (escala fluida via clamp) e pesos. */
 :root {
   --font-display: 'Sora', 'Inter', system-ui, sans-serif; /* números/títulos de destaque */
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace; /* cronómetro */
   --font-size-2xs: 0.6875rem; /* rótulos muito pequenos (nav inferior) */
   --font-size-xs: clamp(0.75rem, 0.726rem + 0.11vw, 0.8125rem);
   --font-size-sm: clamp(0.8125rem, 0.788rem + 0.11vw, 0.875rem);
@@ -9,6 +10,7 @@
   --font-size-2xl: clamp(1.3125rem, 1.239rem + 0.33vw, 1.5rem);
   --font-size-3xl: clamp(1.5625rem, 1.44rem + 0.54vw, 1.875rem);
   --font-size-4xl: clamp(1.8125rem, 1.641rem + 0.76vw, 2.25rem);
+  --font-size-5xl: clamp(2.125rem, 1.783rem + 1.52vw, 3rem);
   --font-size-6xl: clamp(2.625rem, 2.185rem + 1.96vw, 3.75rem);
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
