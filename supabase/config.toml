@@ -1,0 +1,41 @@
+# Configuração do projeto Supabase (backend as code).
+# project_id deve corresponder ao "reference id" do projeto remoto
+# (Painel Supabase → Project Settings → General → Reference ID).
+project_id = "liga-dos-craques"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+# URL base do site para links de confirmação/recuperação (ajustar ao domínio Vercel).
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+# App entre amigos: NÃO exigir confirmação de email (limites de envio muito
+# baixos no plano gratuito bloqueariam o registo/login). Ver docs/AUTH-SEM-EMAIL.md.
+# NOTA: em produção isto controla-se no painel (Authentication → Email), não aqui.
+enable_confirmations = false
+
+[functions.health]
+verify_jwt = false  # endpoint público de saúde, usado pelo keep-alive
+
+[analytics]
+enabled = false

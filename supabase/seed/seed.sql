@@ -1,0 +1,22 @@
+-- =============================================================================
+-- Seed de dados de referência (lookup tables).
+-- =============================================================================
+-- PLACEHOLDER (F0). A partir da F2/F3 este ficheiro popula dados que são
+-- código de negócio, não conteúdo do utilizador, por exemplo:
+--   - game_format (1v1 … 11v11)
+--   - position (GK, DEF, MID, FWD, …)
+--   - event_type (goal, assist, save, penalty_scored, …)
+--   - tag (bicycle, header, left_foot, …)
+--   - xp_rule (participation, win, goal, assist, mvp, …)
+--   - achievement (first_game, 10_games, hat_trick, …)
+--
+-- Manter idempotente (INSERT ... ON CONFLICT DO NOTHING) para poder correr
+-- várias vezes sem duplicar.
+-- =============================================================================
+
+-- Nota: dados de referência (position, e futuramente game_format, event_type,
+-- tag, xp_rule, achievement) vivem nas MIGRAÇÕES, não aqui — só assim chegam a
+-- produção (`supabase db push` não corre o seed). Este ficheiro fica reservado
+-- a dados de teste úteis apenas em desenvolvimento local.
+
+-- (sem dados de teste locais por agora)

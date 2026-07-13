@@ -1,0 +1,19 @@
+{
+  "name": "Peladinhas",
+  "short_name": "Peladinhas",
+  "description": "Jogos de futebol entre amigos: estatísticas, rankings, desafios e evolução.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1122",
+  "theme_color": "#0a1122",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

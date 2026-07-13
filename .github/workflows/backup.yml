@@ -1,0 +1,42 @@
+name: Backup (pg_dump)
+
+# Rede de segurança: o plano gratuito não garante recuperação a ponto no tempo.
+# Faz um dump semanal do schema + dados e guarda-o como artefacto privado.
+on:
+  schedule:
+    - cron: '30 3 * * 0' # Domingos, 03:30 UTC
+  workflow_dispatch: {}
+
+jobs:
+  dump:
+    name: Dump semanal da base de dados
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Ligar ao projeto
+        run: supabase link --project-ref "$PROJECT_REF"
+
+      - name: Dump (roles + schema + dados)
+        run: |
+          set -euo pipefail
+          STAMP=$(date -u +'%Y%m%d')
+          mkdir -p backup
+          supabase db dump --file "backup/schema_${STAMP}.sql"
+          supabase db dump --data-only --file "backup/data_${STAMP}.sql"
+
+      - name: Guardar artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup
+          path: backup/
+          retention-days: 90
