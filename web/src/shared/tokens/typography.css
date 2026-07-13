@@ -7,9 +7,11 @@
   --font-size-base: clamp(0.9063rem, 0.87rem + 0.16vw, 1rem);
   --font-size-lg: clamp(1rem, 0.951rem + 0.22vw, 1.125rem);
   --font-size-2xl: clamp(1.3125rem, 1.239rem + 0.33vw, 1.5rem);
+  --font-size-3xl: clamp(1.5625rem, 1.44rem + 0.54vw, 1.875rem);
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-black: 900;
   --tracking-tight: -0.02em;
+  --tracking-tightest: -0.03em;
 }

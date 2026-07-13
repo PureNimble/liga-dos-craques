@@ -16,3 +16,4 @@ export { PillTabs } from './PillTabs/PillTabs';
 export { Skeleton, CardSkeleton } from './Skeleton/Skeleton';
 export { Alert } from './Alert/Alert';
 export { EmptyState } from './EmptyState/EmptyState';
+export { Page, PageTitle } from './Page/Page';

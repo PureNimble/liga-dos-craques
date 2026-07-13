@@ -10,7 +10,10 @@
   --gray-500: #64748b;
   --gray-400: #94a3b8;
   --gray-300: #cbd5e1;
+  --gray-200: #e2e8f0;
   --gray-100: #f1f5f9;
+  --orange-400: #fb923c;
+  --orange-600: #ea580c;
   /* Primitivos: verde (marca) e vermelho (perigo) */
   --green-300: #6ee7b7;
   --green-400: #34d399;
@@ -110,6 +113,20 @@
   --rating-mid-text: var(--amber-400);
   --rating-low-text: var(--danger-hover);
   --rating-none-text: var(--text-muted);
+
+  /* Pódio (rankings 1º/2º/3º) — gradiente do emblema + anel da linha */
+  --podium-1-from: var(--amber-300);
+  --podium-1-to: var(--amber-500);
+  --podium-1-fg: var(--text-on-accent);
+  --podium-1-ring: rgb(251 191 36 / 0.3);
+  --podium-2-from: var(--gray-200);
+  --podium-2-to: var(--gray-400);
+  --podium-2-fg: var(--text-on-accent);
+  --podium-2-ring: rgb(203 213 225 / 0.2);
+  --podium-3-from: var(--orange-400);
+  --podium-3-to: var(--orange-600);
+  --podium-3-fg: var(--white);
+  --podium-3-ring: rgb(249 115 22 / 0.2);
 
   /* Gráficos (SVG feito à mão) */
   --chart-line: var(--accent-strong);

@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
-import { PillTabs, Select } from '@/shared/components/ui';
+import { Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
 import { useGameFormats } from '@/features/games/gameHooks';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';
 import { useRankingByFormat, useRankingByPeriod, useRankingOverall } from './rankingHooks';
+import s from './RankingsPage.module.css';
 
 type Scope = 'geral' | 'posicao' | 'formato' | 'mensal' | 'anual';
 
@@ -127,8 +128,8 @@ export function RankingsPage() {
   }, [scope, overall.data, byFormat.data, byPeriod.data, position]);
 
   return (
-    <div className="flex flex-col gap-4 p-4 sm:p-6">
-      <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">Rankings</h1>
+    <Page>
+      <PageTitle>Rankings</PageTitle>
 
       {/* Seletor de âmbito */}
       <PillTabs<Scope>
@@ -157,7 +158,7 @@ export function RankingsPage() {
         </Select>
       )}
       {(scope === 'mensal' || scope === 'anual') && (
-        <div className="flex gap-2">
+        <div className={s.filters}>
           <Select value={year} onChange={(e) => setYear(Number(e.target.value))}>
             {years.map((y) => (
               <option key={y} value={y}>
@@ -178,6 +179,6 @@ export function RankingsPage() {
       )}
 
       <RankingList rows={rows} />
-    </div>
+    </Page>
   );
 }
