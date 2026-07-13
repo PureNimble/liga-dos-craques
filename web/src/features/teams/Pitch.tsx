@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import type { Team } from '@/types/database';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
 import { positionCode, type PitchPos } from './pitchLayout';
-import s from './Pitch.module.css';
 
 interface PitchProps {
   /** Titulares da equipa em campo (a que está selecionada). */
@@ -24,9 +23,10 @@ interface PitchProps {
   onSubstitute: (inId: string, outId: string) => void;
 }
 
-// Classe do "crest" por equipa. Os tamanhos (círculos, slots, rótulos) escalam
-// com o campo via container queries (`cqw`) — ver Pitch.module.css.
-const CREST: Record<Team, string> = { A: s.crestA, B: s.crestB };
+const TEAM_TOKEN: Record<Team, string> = {
+  A: 'bg-pitch-500 text-navy-975 ring-pitch-300/50',
+  B: 'bg-sky-500 text-navy-975 ring-sky-300/50',
+};
 
 const firstName = (name?: string | null) => (name ?? 'Jogador').trim().split(/\s+/)[0];
 
@@ -104,27 +104,36 @@ export function Pitch({
     });
 
   return (
-    <div className={s.wrap}>
-      <div ref={fieldRef} className={s.field}>
+    <div className="mx-auto flex w-full max-w-md flex-col gap-2">
+      <div
+        ref={fieldRef}
+        className="turf relative aspect-[3/4] w-full touch-none select-none overflow-hidden rounded-2xl border border-white/10 shadow-elevated"
+      >
         {/* Marcações */}
-        <div className={s.markings}>
-          <div className={s.halfway} />
-          <div className={s.centerCircle} />
-          <div className={s.box} />
-          <div className={s.goalTop} />
-          <div className={s.goalBottom} />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/25" />
+          <div className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25" />
+          <div className="absolute inset-2 rounded-lg border border-white/15" />
+          <div className="absolute left-1/2 top-0 h-[14%] w-[52%] -translate-x-1/2 rounded-b-md border border-t-0 border-white/20" />
+          <div className="absolute bottom-0 left-1/2 h-[14%] w-[52%] -translate-x-1/2 rounded-t-md border border-b-0 border-white/20" />
         </div>
 
         {/* Slots-alvo enquanto arrasta */}
         {drag &&
-          slots.map((slot, i) => {
+          slots.map((s, i) => {
             const near = drag.nearIdx === i;
-            const isOccupied = occupied(slot, drag.id);
+            const isOccupied = occupied(s, drag.id);
             return (
               <div
                 key={`slot-${i}`}
-                style={{ left: `${slot.x}%`, top: `${slot.y}%` }}
-                className={`${s.slot} ${near ? s.slotNear : isOccupied ? s.slotOccupied : ''}`}
+                style={{ left: `${s.x}%`, top: `${s.y}%` }}
+                className={`pointer-events-none absolute z-0 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed transition ${
+                  near
+                    ? 'scale-125 border-white bg-white/20'
+                    : isOccupied
+                      ? 'border-white/25'
+                      : 'border-white/45 bg-white/5'
+                }`}
               />
             );
           })}
@@ -153,14 +162,20 @@ export function Pitch({
                   ? `translate(-50%, -50%) translate(${drag!.dx}px, ${drag!.dy}px)`
                   : 'translate(-50%, -50%)',
               }}
-              className={`${s.token} ${
-                subTarget ? s.tokenPointer : canManage ? s.tokenGrab : ''
-              } ${dragging ? s.tokenDragging : ''}`}
+              className={`absolute h-9 w-9 ${
+                subTarget ? 'cursor-pointer' : canManage ? 'cursor-grab active:cursor-grabbing' : ''
+              } ${dragging ? 'z-20 scale-110' : 'z-10 transition-[left,top] duration-300'}`}
             >
-              <span className={`${s.crest} ${CREST[team]} ${subTarget ? s.crestSub : ''}`}>
+              <span
+                className={`flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-black uppercase shadow-md ring-2 ${
+                  TEAM_TOKEN[team]
+                } ${subTarget ? 'animate-pulse ring-white' : ''}`}
+              >
                 {positionCode(at.x, at.y)}
               </span>
-              <span className={s.label}>{firstName(p.profile?.name)}</span>
+              <span className="absolute left-1/2 top-full mt-0.5 max-w-[64px] -translate-x-1/2 truncate rounded bg-black/50 px-1 text-[10px] font-medium leading-tight text-white">
+                {firstName(p.profile?.name)}
+              </span>
             </div>
           );
         })}
@@ -168,19 +183,19 @@ export function Pitch({
 
       {/* Banco (suplentes) */}
       {bench.length > 0 && (
-        <div className={s.bench}>
+        <div className="flex flex-col gap-1.5">
           {subIn && (
-            <p className={s.subHint}>
+            <p className="text-center text-xs font-medium text-pitch-400">
               Escolhe o titular que sai (toca num jogador em campo) ·{' '}
-              <button type="button" className={s.subCancel} onClick={() => setSubIn(null)}>
+              <button type="button" className="underline" onClick={() => setSubIn(null)}>
                 cancelar
               </button>
             </p>
           )}
-          <div className={s.benchRow}>
-            <span className={`${s.benchDot} ${team === 'A' ? s.benchDotA : s.benchDotB}`} />
-            <span className={s.benchLabel}>Banco</span>
-            <div className={s.benchList}>
+          <div className="flex items-center gap-2">
+            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${team === 'A' ? 'bg-pitch-500' : 'bg-sky-500'}`} />
+            <span className="w-14 shrink-0 text-[11px] font-semibold text-slate-400">Banco</span>
+            <div className="flex flex-wrap gap-1.5">
               {bench.map((b) => {
                 const selected = subIn === b.player_id;
                 return (
@@ -189,7 +204,11 @@ export function Pitch({
                     type="button"
                     disabled={!canSubstitute}
                     onClick={() => setSubIn(selected ? null : b.player_id)}
-                    className={`${s.benchBtn} ${selected ? s.benchBtnActive : ''}`}
+                    className={`flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium transition ${
+                      selected
+                        ? 'border-pitch-500 bg-pitch-500 text-navy-975 shadow-glow'
+                        : 'border-navy-700 bg-navy-850 text-slate-200 hover:bg-navy-800'
+                    }`}
                   >
                     {firstName(b.profile?.name)}
                   </button>

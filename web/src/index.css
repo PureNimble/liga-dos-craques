@@ -1,97 +1,39 @@
-/* ==========================================================================
-   Base global (sem Tailwind). Reset mínimo + estilos de base da app.
-   Os design tokens vivem em shared/tokens (importados antes deste ficheiro
-   em main.tsx). Os componentes estilizam-se via `*.module.css`.
-   ========================================================================== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* -------------------------------- Reset --------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+:root {
+  color-scheme: dark;
 }
-* {
-  margin: 0;
-}
-html {
-  overflow-x: clip; /* rede de segurança contra scroll horizontal */
-  -webkit-text-size-adjust: 100%;
-}
+
 html,
 body,
 #root {
   height: 100%;
 }
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-}
-img,
-video,
-canvas {
-  height: auto;
-}
-input,
-button,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
-button {
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-ul,
-ol {
-  list-style: none;
-  padding: 0;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-:root {
-  color-scheme: dark;
-}
 
-/* ------------------------------ Base da app ----------------------------- */
 body {
-  line-height: 1.5;
-  color: var(--text-color);
-  font-family: var(--font-sans);
-  font-feature-settings: 'cv11', 'ss01';
+  margin: 0;
+  /* Tema "estádio": near-black com um brilho de relvado muito subtil e frio. */
+  background-color: theme('colors.navy.975');
+  background-image:
+    radial-gradient(115% 55% at 50% -12%, rgba(16, 185, 129, 0.06), transparent 62%),
+    radial-gradient(90% 40% at 100% 0%, rgba(56, 189, 248, 0.035), transparent 55%);
+  background-attachment: fixed;
+  color: theme('colors.slate.100');
+  font-family: theme('fontFamily.sans');
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Tema "estádio": near-black com um brilho de relvado subtil e frio. */
-  background-color: var(--gray-950);
-  background-image:
-    radial-gradient(115% 55% at 50% -12%, rgb(16 185 129 / 0.06), transparent 62%),
-    radial-gradient(90% 40% at 100% 0%, rgb(56 189 248 / 0.035), transparent 55%);
-  background-attachment: fixed;
+  font-feature-settings: 'cv11', 'ss01';
 }
 
-/* Títulos com a fonte display (Sora) e tracking apertado. */
+/* Títulos com a fonte display (Sora) e tracking apertado — ar mais editorial. */
 h1,
 h2,
 h3 {
-  font-family: var(--font-display);
-  letter-spacing: var(--tracking-tight);
+  font-family: theme('fontFamily.display');
+  letter-spacing: -0.02em;
 }
 
 /* Ajusta o calendário/spinners nativos ao tema escuro. */
@@ -103,7 +45,7 @@ input[type='number'] {
 
 /* Acessibilidade: foco visível por teclado em toda a app. */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid theme('colors.pitch.500');
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -113,16 +55,51 @@ body.modal-open {
   overflow: hidden;
 }
 
+@layer utilities {
+  /* Respeita o notch / barra inferior em iOS. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  /* Superfície "vidro" para cabeçalhos / barras fixas. */
+  .glass {
+    background-color: rgba(16, 18, 22, 0.78);
+    backdrop-filter: saturate(130%) blur(14px);
+    -webkit-backdrop-filter: saturate(130%) blur(14px);
+  }
+  /* Realce superior subtil (topo iluminado) — profundidade "EA FC". */
+  .gloss {
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 12px 32px -16px rgba(0, 0, 0, 0.8);
+  }
+  /* Relvado listado para o campo do alinhamento. */
+  .turf {
+    background-color: #0d3b24;
+    background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 12%),
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.045) 0px,
+        rgba(255, 255, 255, 0.045) 1px,
+        transparent 1px,
+        transparent 9%
+      );
+  }
+}
+
 /* Scrollbar discreta, coerente com o tema. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--gray-700) transparent;
+  scrollbar-color: theme('colors.navy.700') transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: var(--gray-700);
+  background-color: theme('colors.navy.700');
   border-radius: 9999px;
 }

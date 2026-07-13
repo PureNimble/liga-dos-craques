@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Loading } from '@/shared/components/ui';
+import { Alert } from '@/shared/components/ui';
 import { ChevronLeftIcon } from '@/shared/components/ui/icons';
 import { usePlayerStats } from '@/features/stats/statsHooks';
 import { StatsGrid } from '@/features/stats/StatsGrid';
@@ -14,7 +14,6 @@ import { PlayerCard } from './PlayerCard';
 import { PlayerHeader } from './PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from './cardStats';
 import { FOOT_LABELS } from './profile.schemas';
-import s from './profileLayout.module.css';
 
 export function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,10 +22,15 @@ export function PlayerDetailPage() {
   const { data: stats } = usePlayerStats(id);
   const { data: achievements } = useAchievements();
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center p-16 text-slate-400">
+        <span className="h-6 w-6 animate-spin rounded-full border-2 border-navy-700 border-t-pitch-500" />
+      </div>
+    );
   if (isError || !profile) {
     return (
-      <div className={s.errorPage}>
+      <div className="p-4 sm:p-6">
         <Alert kind="error">Jogador não encontrado.</Alert>
       </div>
     );
@@ -37,15 +41,18 @@ export function PlayerDetailPage() {
   const featured = achievements?.find((a) => a.id === profile.featured_achievement_id) ?? null;
 
   return (
-    <div className={s.page}>
-      <Link to="/rankings" className={s.back}>
+    <div className="mx-auto flex max-w-3xl flex-col gap-5 p-4 sm:p-6">
+      <Link
+        to="/rankings"
+        className="inline-flex w-fit items-center gap-1 text-sm text-slate-400 transition hover:text-slate-200"
+      >
         <ChevronLeftIcon width={16} height={16} /> Rankings
       </Link>
 
       {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
-      <div className={s.hero}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
         {stats && (
-          <div className={s.cardCol}>
+          <div className="w-full sm:w-[300px] sm:shrink-0">
             <PlayerCard
               name={profile.name}
               photoUrl={profile.photo_url}
@@ -67,12 +74,14 @@ export function PlayerDetailPage() {
       {xp && <XpBar xp={xp} />}
       {stats && (
         <section>
-          <h2 className={s.sectionTitle}>Estatísticas</h2>
+          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+            Estatísticas
+          </h2>
           <StatsGrid stats={stats} />
         </section>
       )}
 
-      <div className={s.grid2}>
+      <div className="grid gap-4 sm:grid-cols-2">
         <RecentMatches playerId={profile.id} />
         <PlayerCharts playerId={profile.id} />
       </div>

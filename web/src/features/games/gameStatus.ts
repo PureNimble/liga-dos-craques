@@ -1,5 +1,4 @@
 import type { GameStatus } from '@/types/database';
-import type { BadgeTone } from '@/shared/components/ui';
 
 export const GAME_STATUS_LABELS: Record<GameStatus, string> = {
   draft: 'Rascunho',
@@ -24,16 +23,16 @@ export const GAME_TRANSITION_LABELS: Partial<Record<GameStatus, string>> = {
   cancelled: 'Cancelar jogo',
 };
 
-export const GAME_STATUS_TONE: Record<GameStatus, BadgeTone> = {
-  draft: 'gray',
-  scheduled: 'sky',
-  open: 'green',
-  teams_generated: 'indigo',
-  in_progress: 'amber',
-  finished: 'gray',
-  voting_open: 'purple',
-  closed: 'gray',
-  cancelled: 'red',
+export const GAME_STATUS_STYLES: Record<GameStatus, string> = {
+  draft: 'bg-slate-500/15 text-slate-300',
+  scheduled: 'bg-sky-500/15 text-sky-300',
+  open: 'bg-pitch-500/15 text-pitch-400',
+  teams_generated: 'bg-indigo-500/15 text-indigo-300',
+  in_progress: 'bg-amber-500/15 text-amber-300',
+  finished: 'bg-slate-500/20 text-slate-200',
+  voting_open: 'bg-purple-500/15 text-purple-300',
+  closed: 'bg-slate-500/15 text-slate-400',
+  cancelled: 'bg-red-500/15 text-red-300',
 };
 
 /**

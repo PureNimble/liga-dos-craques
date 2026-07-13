@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Page, PageTitle, Alert, CardSkeleton, PillTabs, Select } from '@/shared/components/ui';
+import { Alert, CardSkeleton, PillTabs, Select } from '@/shared/components/ui';
 import { useGameFormats } from '@/features/games/gameHooks';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';
 import { useRankingAnnual, useRankingByFormat, useRankingByPeriod, useRankingOverall } from './rankingHooks';
-import s from './RankingsPage.module.css';
 
 type Scope = 'geral' | 'posicao' | 'formato' | 'mensal' | 'anual';
 
@@ -145,8 +144,8 @@ export function RankingsPage() {
   ]);
 
   return (
-    <Page>
-      <PageTitle>Rankings</PageTitle>
+    <div className="flex flex-col gap-4 p-4 sm:p-6">
+      <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">Rankings</h1>
 
       {/* Seletor de âmbito */}
       <PillTabs<Scope>
@@ -175,7 +174,7 @@ export function RankingsPage() {
         </Select>
       )}
       {(scope === 'mensal' || scope === 'anual') && (
-        <div className={s.filters}>
+        <div className="flex gap-2">
           <Select value={year} onChange={(e) => setYear(Number(e.target.value))}>
             {years.map((y) => (
               <option key={y} value={y}>
@@ -196,7 +195,7 @@ export function RankingsPage() {
       )}
 
       {isLoading && (
-        <div className={s.skeletons}>
+        <div className="grid gap-2 lg:grid-cols-2">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
@@ -204,6 +203,6 @@ export function RankingsPage() {
       )}
       {isError && <Alert kind="error">Não foi possível carregar o ranking.</Alert>}
       {!isLoading && !isError && <RankingList rows={rows} />}
-    </Page>
+    </div>
   );
 }
