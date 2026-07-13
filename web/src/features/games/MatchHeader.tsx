@@ -1,5 +1,5 @@
-import { CalendarIcon, PinIcon } from '@/components/ui/icons';
-import { formatGameDateTime } from '@/lib/datetime';
+import { CalendarIcon, PinIcon } from '@/shared/components/ui/icons';
+import { formatGameDateTime } from '@/shared/lib/datetime';
 import { StatusBadge } from './StatusBadge';
 import type { MatchClock } from './useMatchClock';
 import type { GameWithFormat } from './gameHooks';

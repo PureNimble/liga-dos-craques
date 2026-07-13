@@ -1,9 +1,7 @@
-import { Card } from '@/components/ui';
-import { BallIcon, BootIcon } from '@/components/ui/icons';
-import { useRatingTrend } from './useRatingTrend';
+import { Card } from '@/shared/components/ui';
+import { BallIcon, BootIcon } from '@/shared/components/ui/icons';
+import { useRatingTrend, useContributions, useXpBreakdown, type GameContribution } from './statsHooks';
 import { RatingTrend } from './RatingTrend';
-import { useContributions, type GameContribution } from './useContributions';
-import { useXpBreakdown } from './useXpBreakdown';
 
 /** Cartões de gráficos do jogador — devolvidos como fragmento para caber num grid. */
 export function PlayerCharts({ playerId }: { playerId: string }) {

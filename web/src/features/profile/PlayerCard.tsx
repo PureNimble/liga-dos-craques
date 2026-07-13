@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/ui';
+import { Avatar } from '@/shared/components/ui';
 import type { CardAttribute } from './cardStats';
 
 interface PlayerCardProps {

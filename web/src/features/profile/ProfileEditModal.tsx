@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Field, Input, Modal, Select } from '@/components/ui';
-import { useToast } from '@/components/toast/useToast';
+import { Alert, Button, Field, Input, Modal, Select } from '@/shared/components/ui';
+import { useToast } from '@/shared/components/toast/useToast';
 import { AvatarUpload } from './AvatarUpload';
-import { useUpdateProfile, type FullProfile } from './useProfile';
-import { usePositions } from './usePositions';
+import { useUpdateProfile, usePositions, type FullProfile } from './profileHooks';
 import {
   profileFormSchema,
   type ProfileFormValues,

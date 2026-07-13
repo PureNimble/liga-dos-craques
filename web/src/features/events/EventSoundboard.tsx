@@ -1,7 +1,7 @@
 import { useMemo, useState, type ComponentType, type SVGProps } from 'react';
-import { Alert, Avatar, Button, Input, Modal, SegmentedTabs } from '@/components/ui';
-import { BallIcon, GloveIcon, XCircleIcon } from '@/components/ui/icons';
-import { useToast } from '@/components/toast/useToast';
+import { Alert, Avatar, Button, Input, Modal, SegmentedTabs } from '@/shared/components/ui';
+import { BallIcon, GloveIcon, XCircleIcon } from '@/shared/components/ui/icons';
+import { useToast } from '@/shared/components/toast/useToast';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
 import type { Team } from '@/types/database';
 import {

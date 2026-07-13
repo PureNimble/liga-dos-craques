@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui';
-import { useRecentGames, type MatchResult } from './useRecentGames';
+import { Card } from '@/shared/components/ui';
+import { useRecentGames, type MatchResult } from './statsHooks';
 import { ratingPill } from './ratingColor';
 
 const RESULT_STYLE: Record<MatchResult, string> = {

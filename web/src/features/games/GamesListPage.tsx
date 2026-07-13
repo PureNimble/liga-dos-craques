@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Card, CardSkeleton, EmptyState, Modal, SegmentedTabs } from '@/components/ui';
-import { BallIcon, CalendarIcon, PinIcon, PlusIcon, ChevronRightIcon } from '@/components/ui/icons';
-import { formatGameDateTime } from '@/lib/datetime';
+import { Alert, Button, Card, CardSkeleton, EmptyState, Modal, SegmentedTabs } from '@/shared/components/ui';
+import { BallIcon, CalendarIcon, PinIcon, PlusIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
+import { formatGameDateTime } from '@/shared/lib/datetime';
 import { useGames, type GameWithFormat } from './gameHooks';
 import { StatusBadge } from './StatusBadge';
 import { UPCOMING_STATUSES } from './gameStatus';

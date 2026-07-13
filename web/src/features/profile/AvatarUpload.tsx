@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
-import { Alert, Button } from '@/components/ui';
+import { Alert, Button } from '@/shared/components/ui';
 import { compressImage } from './imageCompression';
 
 interface AvatarUploadProps {

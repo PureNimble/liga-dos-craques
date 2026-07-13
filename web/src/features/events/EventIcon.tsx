@@ -7,7 +7,7 @@ import {
   SwapIcon,
   TargetIcon,
   XCircleIcon,
-} from '@/components/ui/icons';
+} from '@/shared/components/ui/icons';
 
 type IconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 

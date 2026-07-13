@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import type { PositionCategory, Team } from '@/types/database';
 import { computeRating } from './playerRating';

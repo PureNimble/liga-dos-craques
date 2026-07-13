@@ -7,13 +7,13 @@ import { HomePage } from './HomePage';
 vi.mock('@/features/auth/useAuth', () => ({
   useAuth: () => ({ user: { email: 'vasco@example.com' }, session: {}, loading: false }),
 }));
-vi.mock('@/features/profile/useProfile', () => ({
+vi.mock('@/features/profile/profileHooks', () => ({
   useProfile: () => ({ data: { id: 'u1', name: 'Vasco' } }),
 }));
-vi.mock('@/features/stats/useStats', () => ({
+vi.mock('@/features/stats/statsHooks', () => ({
   usePlayerStats: () => ({ data: undefined }),
 }));
-vi.mock('@/features/xp/useXp', () => ({
+vi.mock('@/features/xp/xpHooks', () => ({
   usePlayerXp: () => ({ data: undefined }),
 }));
 vi.mock('@/features/health/ConnectionStatus', () => ({

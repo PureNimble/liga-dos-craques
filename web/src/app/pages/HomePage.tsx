@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfile } from '@/features/profile/useProfile';
-import { usePlayerStats } from '@/features/stats/useStats';
+import { useProfile } from '@/features/profile/profileHooks';
+import { usePlayerStats } from '@/features/stats/statsHooks';
 import { StatsGrid } from '@/features/stats/StatsGrid';
-import { usePlayerXp } from '@/features/xp/useXp';
+import { usePlayerXp } from '@/features/xp/xpHooks';
 import { XpBar } from '@/features/xp/XpBar';
 import { ConnectionStatus } from '@/features/health/ConnectionStatus';
-import { Avatar, Card } from '@/components/ui';
-import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/components/ui/icons';
+import { Avatar, Card } from '@/shared/components/ui';
+import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
 
 const quickActions = [
   { to: '/games', label: 'Ver jogos', hint: 'Próximos e resultados', icon: BallIcon },

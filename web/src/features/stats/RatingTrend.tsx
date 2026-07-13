@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import type { RatingPoint } from './useRatingTrend';
+import type { RatingPoint } from './statsHooks';
 
 const LINE = '#34d399'; // emerald-400 — bom contraste na superfície escura
 const AREA_TOP = 'rgba(16, 185, 129, 0.28)';
