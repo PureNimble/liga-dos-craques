@@ -82,8 +82,7 @@ body:
     id: logs
     attributes:
       label: Logs / screenshots
-      description: Cola aqui mensagens de erro, logs da consola ou screenshots relevantes.
-      render: shell
+      description: Cola aqui mensagens de erro, logs da consola ou screenshots/vídeos relevantes.
     validations:
       required: false
 
