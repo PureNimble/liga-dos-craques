@@ -1,5 +1,6 @@
 /* Tipografia — tamanhos (escala fluida via clamp) e pesos. */
 :root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Sora', 'Inter', system-ui, sans-serif; /* números/títulos de destaque */
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace; /* cronómetro */
   --font-size-2xs: 0.6875rem; /* rótulos muito pequenos (nav inferior) */
