@@ -1,0 +1,117 @@
+.chartCard {
+  display: flex;
+  flex-direction: column;
+}
+.trendRow {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.legend {
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.iconGoal {
+  color: var(--accent-soft);
+}
+.iconAssist {
+  color: var(--sky-300);
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+}
+.barCol {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.stack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.125rem;
+}
+.empty {
+  padding-bottom: var(--space-xs);
+  color: var(--text-faint);
+}
+.barLabel {
+  font-size: var(--font-size-2xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+}
+
+.hbars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.hbarRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.hbarLabel {
+  width: 6rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.hbarTrack {
+  height: 0.625rem;
+  flex: 1;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-ghost-hover);
+}
+.hbarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-image: linear-gradient(to right, var(--emerald-600), var(--accent-strong));
+}
+.hbarValue {
+  width: 3rem;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}

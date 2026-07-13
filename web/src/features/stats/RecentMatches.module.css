@@ -1,0 +1,86 @@
+.heading {
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
+  border-top: 1px solid var(--border-faint);
+}
+.item:first-child {
+  border-top: 0;
+}
+.label {
+  width: 2.5rem;
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+}
+.result {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+}
+.resultWin {
+  background-color: var(--accent-surface);
+  color: var(--accent-soft);
+}
+.resultDraw {
+  background-color: var(--surface-ghost-hover);
+  color: var(--text-muted);
+}
+.resultLoss {
+  background-color: var(--danger-surface);
+  color: var(--red-300);
+}
+.resultEmpty {
+  width: 1.5rem;
+  flex-shrink: 0;
+}
+.score {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+.scoreValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}
+.format {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+.rating {
+  width: 2.25rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  padding-block: var(--space-2xs);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}

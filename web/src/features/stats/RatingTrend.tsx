@@ -1,14 +1,12 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { RatingPoint } from './statsHooks';
-
-const LINE = '#34d399'; // emerald-400 — bom contraste na superfície escura
-const AREA_TOP = 'rgba(16, 185, 129, 0.28)';
-const AREA_BOT = 'rgba(16, 185, 129, 0)';
+import s from './RatingTrend.module.css';
 
 /**
  * Evolução das avaliações (0–10) por jogo — série única (change-over-time):
  * área + linha 2px, linha de referência aos 6.0, pontos, rótulo do último e
  * tooltip no hover. Largura medida para render nítido (sem distorção de escala).
+ * As cores vivem em RatingTrend.module.css (tokens `--chart-*`).
  */
 export function RatingTrend({ points }: { points: RatingPoint[] }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -72,7 +70,7 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
   const active = hover != null ? points[hover] : null;
 
   return (
-    <div ref={wrapRef} className="relative w-full touch-none select-none">
+    <div ref={wrapRef} className={s.container}>
       {w > 0 && (
         <svg
           width={w}
@@ -83,23 +81,16 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
         >
           <defs>
             <linearGradient id="ratingArea" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={AREA_TOP} />
-              <stop offset="100%" stopColor={AREA_BOT} />
+              <stop offset="0%" className={s.areaTop} />
+              <stop offset="100%" className={s.areaBottom} />
             </linearGradient>
           </defs>
 
           {/* Grelha recessiva */}
           {gridVals.map((v, i) => (
             <g key={i}>
-              <line
-                x1={padX}
-                x2={w - padX}
-                y1={yOf(v)}
-                y2={yOf(v)}
-                stroke="rgba(255,255,255,0.06)"
-                strokeWidth={1}
-              />
-              <text x={4} y={yOf(v) + 3} fill="rgba(148,163,184,0.7)" fontSize={9}>
+              <line className={s.grid} x1={padX} x2={w - padX} y1={yOf(v)} y2={yOf(v)} strokeWidth={1} />
+              <text className={s.axis} x={4} y={yOf(v) + 3} fontSize={9}>
                 {v.toFixed(0)}
               </text>
             </g>
@@ -108,27 +99,29 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
           {/* Referência 6.0 */}
           {showRef && (
             <line
+              className={s.ref}
               x1={padX}
               x2={w - padX}
               y1={yOf(6)}
               y2={yOf(6)}
-              stroke="rgba(148,163,184,0.35)"
               strokeWidth={1}
               strokeDasharray="3 3"
             />
           )}
 
           {areaPath && <path d={areaPath} fill="url(#ratingArea)" />}
-          {linePath && <path d={linePath} fill="none" stroke={LINE} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />}
+          {linePath && (
+            <path className={s.line} d={linePath} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          )}
 
           {/* Crosshair */}
           {active && (
             <line
+              className={s.crosshair}
               x1={xOf(hover!)}
               x2={xOf(hover!)}
               y1={padTop - 6}
               y2={padTop + innerH}
-              stroke="rgba(255,255,255,0.18)"
               strokeWidth={1}
             />
           )}
@@ -139,24 +132,16 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             const isHover = hover === i;
             const r = isHover ? 5 : isLast ? 4 : 3;
             return (
-              <circle
-                key={p.gameId}
-                cx={xOf(i)}
-                cy={yOf(p.rating)}
-                r={r}
-                fill={LINE}
-                stroke="#131519"
-                strokeWidth={2}
-              />
+              <circle className={s.point} key={p.gameId} cx={xOf(i)} cy={yOf(p.rating)} r={r} strokeWidth={2} />
             );
           })}
 
           {/* Rótulo do último valor */}
           {n > 0 && hover == null && (
             <text
+              className={s.lastLabel}
               x={Math.min(w - padX, xOf(n - 1))}
               y={yOf(points[n - 1].rating) - 9}
-              fill={LINE}
               fontSize={11}
               fontWeight={700}
               textAnchor="end"
@@ -170,14 +155,7 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             const step = n > 6 ? 2 : 1;
             if (i % step !== 0 && i !== n - 1) return null;
             return (
-              <text
-                key={`x-${p.gameId}`}
-                x={xOf(i)}
-                y={H - 8}
-                fill="rgba(148,163,184,0.75)"
-                fontSize={9}
-                textAnchor="middle"
-              >
+              <text className={s.axis} key={`x-${p.gameId}`} x={xOf(i)} y={H - 8} fontSize={9} textAnchor="middle">
                 {p.label}
               </text>
             );
@@ -187,12 +165,9 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
 
       {/* Tooltip */}
       {active && (
-        <div
-          className="pointer-events-none absolute z-10 -translate-x-1/2 rounded-lg border border-white/10 bg-navy-850/95 px-2.5 py-1.5 text-center shadow-elevated"
-          style={{ left: xOf(hover!), top: 0 }}
-        >
-          <p className="text-sm font-bold tabular-nums text-pitch-300">{active.rating.toFixed(1)}</p>
-          <p className="text-[10px] text-slate-400">{active.label}</p>
+        <div className={s.tooltip} style={{ left: xOf(hover!), top: 0 }}>
+          <p className={s.tooltipValue}>{active.rating.toFixed(1)}</p>
+          <p className={s.tooltipLabel}>{active.label}</p>
         </div>
       )}
     </div>

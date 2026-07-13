@@ -2,6 +2,7 @@ import { Card } from '@/shared/components/ui';
 import { BallIcon, BootIcon } from '@/shared/components/ui/icons';
 import { useRatingTrend, useContributions, useXpBreakdown, type GameContribution } from './statsHooks';
 import { RatingTrend } from './RatingTrend';
+import s from './PlayerCharts.module.css';
 
 /** Cartões de gráficos do jogador — devolvidos como fragmento para caber num grid. */
 export function PlayerCharts({ playerId }: { playerId: string }) {
@@ -14,9 +15,9 @@ export function PlayerCharts({ playerId }: { playerId: string }) {
   return (
     <>
       {trend && trend.length >= 2 && (
-        <Card className="flex flex-col">
+        <Card className={s.chartCard}>
           <ChartHead title="Forma" hint={`Últimos ${trend.length} jogos`} />
-          <div className="flex flex-1 items-center">
+          <div className={s.trendRow}>
             <RatingTrend points={trend} />
           </div>
         </Card>
@@ -26,12 +27,12 @@ export function PlayerCharts({ playerId }: { playerId: string }) {
         <Card>
           <ChartHead title="Golos e assistências" hint="Por jogo" />
           <ContributionBars data={contrib ?? []} />
-          <div className="mt-3 flex items-center justify-center gap-4 text-xs text-slate-400">
-            <span className="flex items-center gap-1.5">
-              <BallIcon width={14} height={14} className="text-pitch-300" /> Golos
+          <div className={s.legend}>
+            <span className={s.legendItem}>
+              <BallIcon width={14} height={14} className={s.iconGoal} /> Golos
             </span>
-            <span className="flex items-center gap-1.5">
-              <BootIcon width={14} height={14} className="text-sky-300" /> Assist.
+            <span className={s.legendItem}>
+              <BootIcon width={14} height={14} className={s.iconAssist} /> Assist.
             </span>
           </div>
         </Card>
@@ -49,9 +50,9 @@ export function PlayerCharts({ playerId }: { playerId: string }) {
 
 function ChartHead({ title, hint }: { title: string; hint: string }) {
   return (
-    <div className="mb-2 flex items-baseline justify-between">
-      <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">{title}</h2>
-      <span className="text-xs text-slate-500">{hint}</span>
+    <div className={s.head}>
+      <h2 className={s.title}>{title}</h2>
+      <span className={s.hint}>{hint}</span>
     </div>
   );
 }
@@ -59,22 +60,22 @@ function ChartHead({ title, hint }: { title: string; hint: string }) {
 /** Pictograma por jogo: uma barra única — bolas (golos) em baixo, botas (assists) por cima. */
 function ContributionBars({ data }: { data: GameContribution[] }) {
   return (
-    <div className="flex items-end gap-2">
+    <div className={s.bars}>
       {data.map((d) => (
-        <div key={d.gameId} className="flex flex-1 flex-col items-center gap-1.5">
+        <div key={d.gameId} className={s.barCol}>
           <div
-            className="flex flex-col-reverse items-center gap-0.5"
+            className={s.stack}
             title={`${d.goals} golo${d.goals === 1 ? '' : 's'} · ${d.assists} assist.`}
           >
             {Array.from({ length: d.goals }).map((_, i) => (
-              <BallIcon key={`g${i}`} width={15} height={15} className="text-pitch-300" />
+              <BallIcon key={`g${i}`} width={15} height={15} className={s.iconGoal} />
             ))}
             {Array.from({ length: d.assists }).map((_, i) => (
-              <BootIcon key={`a${i}`} width={15} height={15} className="text-sky-300" />
+              <BootIcon key={`a${i}`} width={15} height={15} className={s.iconAssist} />
             ))}
-            {d.goals === 0 && d.assists === 0 && <span className="pb-1 text-slate-700">·</span>}
+            {d.goals === 0 && d.assists === 0 && <span className={s.empty}>·</span>}
           </div>
-          <span className="text-[9px] tabular-nums text-slate-500">{d.label}</span>
+          <span className={s.barLabel}>{d.label}</span>
         </div>
       ))}
     </div>
@@ -85,17 +86,14 @@ function ContributionBars({ data }: { data: GameContribution[] }) {
 function HBars({ items, suffix = '' }: { items: { label: string; value: number }[]; suffix?: string }) {
   const max = Math.max(1, ...items.map((i) => i.value));
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className={s.hbars}>
       {items.map((i) => (
-        <div key={i.label} className="flex items-center gap-3">
-          <span className="w-24 shrink-0 truncate text-xs text-slate-400">{i.label}</span>
-          <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/[0.05]">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-pitch-600 to-pitch-400"
-              style={{ width: `${(i.value / max) * 100}%` }}
-            />
+        <div key={i.label} className={s.hbarRow}>
+          <span className={s.hbarLabel}>{i.label}</span>
+          <div className={s.hbarTrack}>
+            <div className={s.hbarFill} style={{ width: `${(i.value / max) * 100}%` }} />
           </div>
-          <span className="w-12 shrink-0 text-right text-sm font-bold tabular-nums text-slate-200">
+          <span className={s.hbarValue}>
             {i.value}
             {suffix}
           </span>

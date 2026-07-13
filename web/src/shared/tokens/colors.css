@@ -20,13 +20,12 @@
   --red-500: #ef4444;
   /* Primitivos: tons de etiqueta (estado/categoria) */
   --sky-300: #7dd3fc;
-  --sky-500: #0ea5e9;
   --indigo-300: #a5b4fc;
-  --indigo-500: #6366f1;
   --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
   --amber-500: #f59e0b;
+  --emerald-600: #059669;
   --purple-300: #d8b4fe;
-  --purple-500: #a855f7;
   --white: #ffffff;
 
   /* Texto */
@@ -59,6 +58,7 @@
   --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
   --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
   --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */
+  --surface-tooltip: rgb(25 28 34 / 0.95);
   --overlay: rgb(0 0 0 / 0.6); /* fundo escurecido atrás de modais */
 
   /* Bordas */
@@ -93,4 +93,31 @@
   --tone-purple-fg: var(--purple-300);
   --tone-red-bg: var(--danger-surface);
   --tone-red-fg: var(--red-300);
+
+  /* Escala de rating (0–10) — pílula sólida (bg + fg) e texto */
+  --rating-top-bg: var(--accent);
+  --rating-top-fg: var(--text-on-accent);
+  --rating-good-bg: var(--emerald-600);
+  --rating-good-fg: var(--white);
+  --rating-mid-bg: var(--amber-500);
+  --rating-mid-fg: var(--text-on-accent);
+  --rating-low-bg: var(--danger);
+  --rating-low-fg: var(--white);
+  --rating-none-bg: var(--gray-700);
+  --rating-none-fg: var(--text-muted);
+  --rating-top-text: var(--accent-strong);
+  --rating-good-text: var(--green-400);
+  --rating-mid-text: var(--amber-400);
+  --rating-low-text: var(--danger-hover);
+  --rating-none-text: var(--text-muted);
+
+  /* Gráficos (SVG feito à mão) */
+  --chart-line: var(--accent-strong);
+  --chart-area-top: rgb(16 185 129 / 0.28);
+  --chart-area-bottom: rgb(16 185 129 / 0);
+  --chart-grid: rgb(255 255 255 / 0.06);
+  --chart-axis: rgb(148 163 184 / 0.7);
+  --chart-ref: rgb(148 163 184 / 0.35);
+  --chart-crosshair: rgb(255 255 255 / 0.18);
+  --chart-point-stroke: var(--gray-850);
 }
