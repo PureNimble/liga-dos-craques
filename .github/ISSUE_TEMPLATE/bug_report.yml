@@ -1,0 +1,96 @@
+name: 🐛 Reportar um bug
+description: Algo não está a funcionar como esperado
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por reportares um problema! Preenche os campos abaixo com o máximo de detalhe possível — isso acelera muito a resolução.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do bug
+      description: O que aconteceu? O que esperavas que acontecesse?
+      placeholder: Descreve o problema de forma clara e concisa.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Como podemos reproduzir o problema?
+      placeholder: |
+        1. Ir para '...'
+        2. Clicar em '...'
+        3. Ver o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      placeholder: O que devia acontecer em vez disso?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      description: Onde ocorre o problema?
+      options:
+        - Frontend (web)
+        - Backend / Supabase (BD, RLS, funções)
+        - Auth
+        - Rankings
+        - Jogos
+        - Admin
+        - CI/CD
+        - Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidade
+      options:
+        - Crítica — bloqueia utilização da app
+        - Alta — funcionalidade principal afetada
+        - Média — funcionalidade secundária afetada
+        - Baixa — cosmético / menor
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente
+      description: Browser, sistema operativo, dispositivo, etc.
+      placeholder: |
+        - Browser: Chrome 126
+        - SO: Windows 11
+        - Dispositivo: Desktop
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Cola aqui mensagens de erro, logs da consola ou screenshots relevantes.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: Confirmei que este bug ainda não foi reportado noutra issue
+          required: true
