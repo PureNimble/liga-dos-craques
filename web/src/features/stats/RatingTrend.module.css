@@ -1,0 +1,62 @@
+.container {
+  position: relative;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Elementos SVG — só cor via classe; geometria fica nos atributos. */
+.grid {
+  stroke: var(--chart-grid);
+}
+.axis {
+  fill: var(--chart-axis);
+}
+.ref {
+  stroke: var(--chart-ref);
+}
+.areaTop {
+  stop-color: var(--chart-area-top);
+}
+.areaBottom {
+  stop-color: var(--chart-area-bottom);
+}
+.line {
+  fill: none;
+  stroke: var(--chart-line);
+}
+.crosshair {
+  stroke: var(--chart-crosshair);
+}
+.point {
+  fill: var(--chart-line);
+  stroke: var(--chart-point-stroke);
+}
+.lastLabel {
+  fill: var(--chart-line);
+}
+
+/* Tooltip (HTML sobreposto) */
+.tooltip {
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+  transform: translateX(-50%);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background-color: var(--surface-tooltip);
+  padding: var(--space-xs) var(--space-sm);
+  text-align: center;
+  box-shadow: var(--shadow-elevated);
+}
+.tooltipValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-soft);
+}
+.tooltipLabel {
+  font-size: var(--font-size-2xs);
+  color: var(--text-subtle);
+}
