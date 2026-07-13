@@ -24,6 +24,12 @@ const CreateGamePage = lazyWithReload(() =>
 const GameDetailPage = lazyWithReload(() =>
   import('@/features/games/GameDetailPage').then((m) => ({ default: m.GameDetailPage })),
 );
+const RankingsPage = lazyWithReload(() =>
+  import('@/features/rankings/RankingsPage').then((m) => ({ default: m.RankingsPage })),
+);
+const ChallengesPage = lazyWithReload(() =>
+  import('@/features/challenges/ChallengesPage').then((m) => ({ default: m.ChallengesPage })),
+);
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
@@ -48,6 +54,8 @@ export const router = createBrowserRouter([
           { path: '/games', element: <GamesListPage /> },
           { path: '/games/new', element: <CreateGamePage /> },
           { path: '/games/:id', element: <GameDetailPage /> },
+          { path: '/rankings', element: <RankingsPage /> },
+          { path: '/challenges', element: <ChallengesPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],
       },
