@@ -1,5 +1,4 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { Loading } from '@/shared/components/ui';
 import { useAuth } from './useAuth';
 
 /**
@@ -11,7 +10,9 @@ export function ProtectedRoute() {
   const location = useLocation();
 
   if (loading) {
-    return <Loading full />;
+    return (
+      <div className="flex min-h-screen items-center justify-center text-slate-400">A carregar…</div>
+    );
   }
 
   if (!session) {

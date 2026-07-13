@@ -4,7 +4,6 @@ import { Alert, Button, Field, Input, Select } from '@/shared/components/ui';
 import { isoToLocalInput, localInputToISO } from '@/shared/lib/datetime';
 import { useCreateGame, useGameFormats, useUpdateGame, type GameWithFormat } from './gameHooks';
 import { createGameSchema, type CreateGameValues } from './game.schemas';
-import s from './CreateGameForm.module.css';
 
 interface CreateGameFormProps {
   onSuccess: (gameId: string) => void;
@@ -51,7 +50,7 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Field
         label="Data e hora"
         htmlFor="scheduled_at"
@@ -88,7 +87,7 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
         <Alert kind="error">Não foi possível guardar o jogo.</Alert>
       )}
 
-      <div className={s.footer}>
+      <div className="flex justify-end gap-2 pt-1">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>

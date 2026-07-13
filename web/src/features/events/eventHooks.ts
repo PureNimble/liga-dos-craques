@@ -118,8 +118,6 @@ export interface LogGoalInput {
   /** Equipa creditada: a do marcador (no autogolo, a adversária). */
   team: Team | null;
   minute: number | null;
-  /** Tags de técnica do golo (bicicleta, cabeceamento, …). */
-  tagIds: number[];
 }
 
 export function useAddEvent(gameId: string) {
@@ -177,10 +175,8 @@ export function useLogGoal(gameId: string) {
       const goalTypeId = idByCode.get(goalCode);
       if (!goalTypeId) throw new Error(`Tipo de evento em falta: ${goalCode}`);
 
-      // Insere a linha do golo primeiro (com id) para lhe poder ligar as tags.
-      const { data: goalEvent, error: goalErr } = await supabase
-        .from('event')
-        .insert({
+      const rows: Database['public']['Tables']['event']['Insert'][] = [
+        {
           game_id: gameId,
           player_id: input.scorerId,
           event_type_id: goalTypeId,
@@ -192,23 +188,14 @@ export function useLogGoal(gameId: string) {
               ? { variant: input.variant, assist_by: input.assistId }
               : { variant: input.variant },
           created_by: user!.id,
-        })
-        .select()
-        .single();
-      if (goalErr) throw goalErr;
-
-      // Tags de técnica (só nas variantes que as suportam — normal e livre).
-      if (input.tagIds.length > 0) {
-        const tagRows = input.tagIds.map((tag_id) => ({ event_id: goalEvent.id, tag_id }));
-        const { error: tagErr } = await supabase.from('event_tag').insert(tagRows);
-        if (tagErr) throw tagErr;
-      }
+        },
+      ];
 
       // Assistência: só em golo normal, e no evento próprio (conta nas stats do
       // assistente). A mesma-equipa é garantida na UI.
       const assistTypeId = idByCode.get('assist');
       if (input.assistId && input.variant === 'normal' && assistTypeId) {
-        const { error: assistErr } = await supabase.from('event').insert({
+        rows.push({
           game_id: gameId,
           player_id: input.assistId,
           event_type_id: assistTypeId,
@@ -217,8 +204,10 @@ export function useLogGoal(gameId: string) {
           meta: { assist_for: input.scorerId },
           created_by: user!.id,
         });
-        if (assistErr) throw assistErr;
       }
+
+      const { error } = await supabase.from('event').insert(rows);
+      if (error) throw error;
 
       await recomputeGameScore(gameId);
     },

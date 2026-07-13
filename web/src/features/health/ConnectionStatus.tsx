@@ -1,5 +1,4 @@
 import { useHealthCheck } from './healthHooks';
-import s from './ConnectionStatus.module.css';
 
 /**
  * Cartão que mostra o estado da ligação ao Supabase.
@@ -10,10 +9,10 @@ export function ConnectionStatus() {
 
   const state = isLoading ? 'loading' : isError || data?.status === 'error' ? 'error' : 'ok';
 
-  const stateClass: Record<typeof state, string> = {
-    loading: s.loading,
-    ok: s.ok,
-    error: s.error,
+  const styles: Record<typeof state, string> = {
+    loading: 'border-navy-700 bg-navy-900 text-slate-400',
+    ok: 'border-pitch-500/40 bg-pitch-500/10 text-pitch-400',
+    error: 'border-red-500/40 bg-red-500/10 text-red-300',
   };
 
   const label: Record<typeof state, string> = {
@@ -26,9 +25,9 @@ export function ConnectionStatus() {
     state === 'error' ? (error instanceof Error ? error.message : data?.message) : data?.message;
 
   return (
-    <div className={`${s.card} ${stateClass[state]}`} role="status">
-      <p className={s.title}>{label[state]}</p>
-      {detail && <p className={s.detail}>{detail}</p>}
+    <div className={`rounded-xl border p-4 text-sm ${styles[state]}`} role="status">
+      <p className="font-semibold">{label[state]}</p>
+      {detail && <p className="mt-1 opacity-80">{detail}</p>}
     </div>
   );
 }

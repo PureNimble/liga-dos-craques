@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button, Loading } from '@/shared/components/ui';
+import { Alert, Button } from '@/shared/components/ui';
 import { useProfile, usePositions } from './profileHooks';
 import { ProfileEditModal } from './ProfileEditModal';
 import { PlayerCard } from './PlayerCard';
@@ -15,7 +15,6 @@ import { usePlayerXp } from '@/features/xp/xpHooks';
 import { XpBar } from '@/features/xp/XpBar';
 import { AchievementsGrid } from '@/features/achievements/AchievementsGrid';
 import { useAchievements, useSetFeaturedAchievement } from '@/features/achievements/achievementHooks';
-import s from './profileLayout.module.css';
 
 export function ProfilePage() {
   const { data: profile, isLoading, isError } = useProfile();
@@ -27,11 +26,15 @@ export function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex items-center justify-center p-16 text-slate-400">
+        <span className="h-6 w-6 animate-spin rounded-full border-2 border-navy-700 border-t-pitch-500" />
+      </div>
+    );
   }
   if (isError || !profile) {
     return (
-      <div className={s.errorPage}>
+      <div className="p-4 sm:p-6">
         <Alert kind="error">Não foi possível carregar o teu perfil.</Alert>
       </div>
     );
@@ -44,11 +47,11 @@ export function ProfilePage() {
   const featured = achievements?.find((a) => a.id === profile.featured_achievement_id) ?? null;
 
   return (
-    <div className={s.page}>
+    <div className="mx-auto flex max-w-3xl flex-col gap-5 p-4 sm:p-6">
       {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
-      <div className={s.hero}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
         {stats && (
-          <div className={s.cardCol}>
+          <div className="w-full sm:w-[300px] sm:shrink-0">
             <PlayerCard
               name={profile.name}
               photoUrl={profile.photo_url}
@@ -67,7 +70,7 @@ export function ProfilePage() {
         />
       </div>
 
-      <div className={s.actions}>
+      <div className="flex gap-2">
         <Button block onClick={() => setEditOpen(true)}>
           Editar perfil
         </Button>
@@ -80,12 +83,14 @@ export function ProfilePage() {
 
       {stats && (
         <section>
-          <h2 className={s.sectionTitle}>Estatísticas</h2>
+          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+            Estatísticas
+          </h2>
           <StatsGrid stats={stats} />
         </section>
       )}
 
-      <div className={s.grid2}>
+      <div className="grid gap-4 sm:grid-cols-2">
         <RecentMatches playerId={profile.id} />
         <PlayerCharts playerId={profile.id} />
       </div>

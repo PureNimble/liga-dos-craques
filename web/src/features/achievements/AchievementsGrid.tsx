@@ -1,5 +1,4 @@
 import { useAchievements, usePlayerAchievements } from './achievementHooks';
-import s from './AchievementsGrid.module.css';
 
 interface AchievementsGridProps {
   playerId: string;
@@ -19,17 +18,19 @@ export function AchievementsGrid({ playerId, editable, featuredId, onSelect }: A
 
   return (
     <section>
-      <div className={s.head}>
-        <h2 className={s.title}>Conquistas</h2>
-        <span className={s.count}>
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-slate-400">Conquistas</h2>
+        <span className="rounded-full bg-white/[0.06] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-slate-400">
           {unlockedCount}/{achievements.length}
         </span>
       </div>
       {editable && (
-        <p className={s.hint}>Toca numa conquista desbloqueada para a destacares no cartão.</p>
+        <p className="mb-2 text-xs text-slate-500">
+          Toca numa conquista desbloqueada para a destacares no cartão.
+        </p>
       )}
 
-      <div className={s.grid}>
+      <div className="flex flex-wrap gap-2">
         {achievements.map((a) => {
           const isUnlocked = unlocked?.has(a.id) ?? false;
           const isFeatured = featuredId === a.id;
@@ -40,9 +41,13 @@ export function AchievementsGrid({ playerId, editable, featuredId, onSelect }: A
               type="button"
               onClick={clickable ? () => onSelect?.(isFeatured ? null : a.id) : undefined}
               title={`${a.label} — ${a.description}`}
-              className={`${s.item} ${isFeatured ? s.featured : ''} ${
-                !isFeatured && !isUnlocked ? s.locked : ''
-              } ${clickable ? s.clickable : ''}`}
+              className={`flex h-14 w-14 items-center justify-center rounded-xl border text-2xl transition ${
+                isFeatured
+                  ? 'border-pitch-500 bg-pitch-500/15 shadow-glow'
+                  : isUnlocked
+                    ? 'border-white/[0.08] bg-white/[0.04]'
+                    : 'border-white/[0.05] bg-white/[0.01] opacity-40 grayscale'
+              } ${clickable ? 'cursor-pointer hover:border-pitch-500/50' : 'cursor-default'}`}
             >
               <span aria-hidden>{a.icon}</span>
             </button>

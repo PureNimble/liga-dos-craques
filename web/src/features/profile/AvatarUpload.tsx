@@ -3,7 +3,6 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import { Alert, Button } from '@/shared/components/ui';
 import { compressImage } from './imageCompression';
-import s from './AvatarUpload.module.css';
 
 interface AvatarUploadProps {
   photoUrl: string | null;
@@ -54,20 +53,22 @@ export function AvatarUpload({ photoUrl, name, onUploaded }: AvatarUploadProps) 
   const initial = name.trim().charAt(0).toUpperCase() || '?';
 
   return (
-    <div className={s.wrap}>
-      <div className={s.avatar}>
+    <div className="flex items-center gap-4">
+      <div className="h-20 w-20 overflow-hidden rounded-full bg-navy-800">
         {photoUrl ? (
-          <img src={photoUrl} alt="Foto de perfil" className={s.image} />
+          <img src={photoUrl} alt="Foto de perfil" className="h-full w-full object-cover" />
         ) : (
-          <div className={s.fallback}>{initial}</div>
+          <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-slate-300">
+            {initial}
+          </div>
         )}
       </div>
-      <div className={s.controls}>
+      <div className="flex flex-col gap-2">
         <input
           ref={inputRef}
           type="file"
           accept="image/*"
-          className={s.hiddenInput}
+          className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) void handleFile(file);

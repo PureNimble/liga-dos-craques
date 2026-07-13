@@ -11,7 +11,6 @@ import {
   GENDER_LABELS,
   FOOT_LABELS,
 } from './profile.schemas';
-import s from './ProfileEditModal.module.css';
 
 interface ProfileEditModalProps {
   profile: FullProfile;
@@ -95,8 +94,8 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         </>
       }
     >
-      <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
-        <div className={s.avatarCenter}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <div className="flex justify-center">
           <AvatarUpload photoUrl={photoUrl} name={profile.name} onUploaded={setPhotoUrl} />
         </div>
 
@@ -104,7 +103,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           <Input id="name" {...form.register('name')} />
         </Field>
 
-        <div className={s.grid2}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Data de nascimento" htmlFor="birth_date" hint="Visível só para ti">
             <Input id="birth_date" type="date" {...form.register('birth_date')} />
           </Field>
@@ -113,7 +112,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Field>
         </div>
 
-        <div className={s.grid2}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Peso (kg)"
             htmlFor="weight_kg"
@@ -132,7 +131,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Field>
         </div>
 
-        <div className={s.grid2}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Género" htmlFor="gender">
             <Select id="gender" {...form.register('gender')}>
               <option value="">—</option>
@@ -167,8 +166,8 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         </Field>
 
         <fieldset>
-          <legend className={s.legend}>Posições secundárias</legend>
-          <div className={s.chips}>
+          <legend className="mb-2 text-sm font-medium text-slate-200">Posições secundárias</legend>
+          <div className="flex flex-wrap gap-2">
             {positions
               ?.filter((p) => p.id !== mainPositionId)
               .map((p) => {
@@ -178,7 +177,11 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
                     key={p.id}
                     type="button"
                     onClick={() => toggleSecondary(p.id)}
-                    className={`${s.chip} ${active ? s.chipActive : ''}`}
+                    className={`rounded-full border px-3 py-1 text-sm font-medium transition ${
+                      active
+                        ? 'border-pitch-500 bg-pitch-500 text-navy-975 shadow-glow'
+                        : 'border-navy-700 text-slate-300 hover:bg-navy-800'
+                    }`}
                   >
                     {p.label}
                   </button>

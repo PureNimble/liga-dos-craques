@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Alert, Button, Card, Field, Input, Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
+import { Alert, Button, Card, Field, Input, PillTabs, Select } from '@/shared/components/ui';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import { RankingList, type RankingRow } from '@/features/rankings/RankingList';
@@ -13,7 +13,6 @@ import {
   type Challenge,
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
-import s from './ChallengesPage.module.css';
 
 export function ChallengesPage() {
   const { data: challenges } = useChallenges();
@@ -22,10 +21,12 @@ export function ChallengesPage() {
   const selected = challenges?.find((c) => c.id === selectedId) ?? challenges?.[0];
 
   return (
-    <Page>
+    <div className="flex flex-col gap-4 p-4 sm:p-6">
       <div>
-        <PageTitle>Desafios</PageTitle>
-        <p className={s.note}>Área separada — não conta para as estatísticas dos jogos.</p>
+        <h1 className="text-2xl font-bold tracking-tightest text-white sm:text-3xl">Desafios</h1>
+        <p className="mt-1 text-xs text-slate-500">
+          Área separada — não conta para as estatísticas dos jogos.
+        </p>
       </div>
 
       {challenges && (
@@ -44,7 +45,7 @@ export function ChallengesPage() {
       )}
 
       {selected && <ChallengeView challenge={selected} />}
-    </Page>
+    </div>
   );
 }
 
@@ -82,40 +83,42 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
   }));
 
   return (
-    <div className={s.body}>
+    <div className="flex flex-col gap-4">
       {/* Recorde */}
-      <Card className={s.recordCard}>
-        <p className={s.recordLabel}>Recorde</p>
+      <Card className="bg-gradient-to-br from-navy-850 to-navy-900">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Recorde</p>
         {record ? (
-          <p className={s.recordValue}>
+          <p className="mt-1 text-lg font-bold text-slate-100">
             {isVersus ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
-            <span className={s.recordSub}>· {record.name}</span>
+            <span className="text-sm font-normal text-slate-400">· {record.name}</span>
           </p>
         ) : (
-          <p className={s.recordEmpty}>Ainda sem registos.</p>
+          <p className="mt-1 text-sm text-slate-500">Ainda sem registos.</p>
         )}
       </Card>
 
       <AddAttemptForm challenge={challenge} />
 
       <div>
-        <h2 className={s.sectionTitle}>Ranking</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">Ranking</h2>
         <RankingList rows={rankingRows} />
       </div>
 
       {attempts && attempts.length > 0 && (
         <div>
-          <h2 className={s.sectionTitle}>Histórico recente</h2>
-          <ul className={s.historyList}>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+            Histórico recente
+          </h2>
+          <ul className="flex flex-col divide-y divide-navy-800 rounded-2xl border border-navy-800 bg-navy-900 shadow-card">
             {attempts.map((a) => (
-              <li key={a.id} className={s.historyItem}>
-                <span className={s.historyName}>
+              <li key={a.id} className="flex items-center justify-between px-3 py-2 text-sm">
+                <span className="text-slate-200">
                   {a.profile?.name ?? 'Jogador'}
                   {a.opponent?.name ? ` vs ${a.opponent.name}` : ''}
                 </span>
-                <span className={s.historyMeta}>
+                <span className="text-slate-400">
                   {isVersus ? resultLabel(a.result) : a.score}{' '}
-                  <span className={s.historyDate}>· {formatDate(a.played_at)}</span>
+                  <span className="text-slate-600">· {formatDate(a.played_at)}</span>
                 </span>
               </li>
             ))}
@@ -172,13 +175,13 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
 
   return (
     <Card>
-      <h2 className={s.cardTitle}>Registar tentativa</h2>
+      <h2 className="mb-3 font-bold text-slate-100">Registar tentativa</h2>
       {error && (
-        <div className={s.slotTop}>
+        <div className="mb-3">
           <Alert kind="error">{error}</Alert>
         </div>
       )}
-      <div className={s.form}>
+      <div className="flex flex-col gap-3">
         <Field label="Jogador" htmlFor="ch-player">
           <Select id="ch-player" value={playerId} onChange={(e) => setPlayerId(e.target.value)}>
             <option value="">Escolher…</option>
@@ -227,7 +230,7 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
           </Field>
         )}
 
-        <div className={s.actions}>
+        <div className="flex justify-end">
           <Button onClick={submit} loading={addAttempt.isPending}>
             Registar
           </Button>

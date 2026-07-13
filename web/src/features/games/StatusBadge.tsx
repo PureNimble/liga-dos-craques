@@ -1,7 +1,12 @@
-import { Badge } from '@/shared/components/ui';
 import type { GameStatus } from '@/types/database';
-import { GAME_STATUS_LABELS, GAME_STATUS_TONE } from './gameStatus';
+import { GAME_STATUS_LABELS, GAME_STATUS_STYLES } from './gameStatus';
 
 export function StatusBadge({ status }: { status: GameStatus }) {
-  return <Badge tone={GAME_STATUS_TONE[status]}>{GAME_STATUS_LABELS[status]}</Badge>;
+  return (
+    <span
+      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GAME_STATUS_STYLES[status]}`}
+    >
+      {GAME_STATUS_LABELS[status]}
+    </span>
+  );
 }
