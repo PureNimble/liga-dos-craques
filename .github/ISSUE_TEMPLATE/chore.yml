@@ -1,0 +1,34 @@
+name: 🔧 Tarefa técnica / manutenção
+description: Refactor, dívida técnica, dependências, CI/CD, infraestrutura
+title: "[Chore]: "
+labels: ["chore", "triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: O que precisa de ser feito e porquê?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      options:
+        - Frontend (web)
+        - Backend / Supabase (BD, RLS, funções)
+        - CI/CD
+        - Dependências
+        - Docs
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Links, PRs relacionados, motivação da mudança.
+    validations:
+      required: false

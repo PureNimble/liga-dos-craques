@@ -1,0 +1,69 @@
+name: ✨ Pedido de funcionalidade
+description: Sugerir uma nova funcionalidade ou melhoria
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Boas ideias tornam o Peladinhas melhor! Descreve o teu pedido com o máximo de contexto possível.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema a resolver
+      description: Que problema ou limitação motivou este pedido?
+      placeholder: Ex. "Não é possível ver o histórico de confrontos diretos entre dois jogadores."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+      description: Como imaginas que isto devia funcionar?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Consideraste outras abordagens? Porque não resultaram?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      options:
+        - Frontend (web)
+        - Backend / Supabase (BD, RLS, funções)
+        - Auth
+        - Rankings
+        - Jogos
+        - Admin
+        - CI/CD
+        - Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade sugerida
+      options:
+        - Alta — bloqueia ou afeta muito a experiência
+        - Média — traria valor claro a curto prazo
+        - Baixa — ideia para o futuro
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Mockups, links, referências de outras apps, etc.
+    validations:
+      required: false
