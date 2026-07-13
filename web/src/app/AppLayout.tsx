@@ -1,6 +1,9 @@
 import { Suspense, type ComponentType, type SVGProps } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
-import { HomeIcon, BallIcon, TrophyIcon, TargetIcon, UserIcon } from '@/components/ui/icons';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/features/auth/useAuth';
+import { IconButton } from '@/components/ui';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
+import { HomeIcon, BallIcon, TrophyIcon, TargetIcon, UserIcon, LogoutIcon } from '@/components/ui/icons';
 
 type NavItem = {
   to: string;
@@ -18,7 +21,22 @@ const navItems: NavItem[] = [
 ];
 
 export function AppLayout() {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const confirm = useConfirm();
+
   const items = navItems;
+
+  async function handleSignOut() {
+    const ok = await confirm({
+      title: 'Terminar sessão?',
+      message: 'Vais precisar de iniciar sessão novamente.',
+      confirmLabel: 'Sair',
+    });
+    if (!ok) return;
+    await signOut();
+    navigate('/login', { replace: true });
+  }
 
   return (
     <div className="min-h-screen bg-navy-975">
@@ -53,6 +71,12 @@ export function AppLayout() {
               </NavLink>
             ))}
           </nav>
+
+          <div className="flex items-center gap-2">
+            <IconButton label="Terminar sessão" onClick={handleSignOut}>
+              <LogoutIcon width={18} height={18} />
+            </IconButton>
+          </div>
         </div>
       </header>
 
