@@ -548,6 +548,22 @@ export interface Database {
         };
         Relationships: [];
       };
+      v_ranking_annual: {
+        Row: {
+          player_id: string;
+          name: string;
+          photo_url: string | null;
+          year: number;
+          games: number;
+          wins: number;
+          draws: number;
+          losses: number;
+          goals: number;
+          assists: number;
+          points: number;
+        };
+        Relationships: [];
+      };
       v_challenge_leaderboard: {
         Row: {
           challenge_id: number;

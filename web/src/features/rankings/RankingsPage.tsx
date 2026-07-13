@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
+import { Page, PageTitle, Alert, CardSkeleton, PillTabs, Select } from '@/shared/components/ui';
 import { useGameFormats } from '@/features/games/gameHooks';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';
-import { useRankingByFormat, useRankingByPeriod, useRankingOverall } from './rankingHooks';
+import { useRankingAnnual, useRankingByFormat, useRankingByPeriod, useRankingOverall } from './rankingHooks';
 import s from './RankingsPage.module.css';
 
 type Scope = 'geral' | 'posicao' | 'formato' | 'mensal' | 'anual';
@@ -44,88 +44,105 @@ export function RankingsPage() {
   const overall = useRankingOverall();
   const byFormat = useRankingByFormat(scope === 'formato' ? formatCode : undefined);
   const byPeriod = useRankingByPeriod(year, scope === 'mensal' ? month : undefined);
+  const annual = useRankingAnnual(year, scope === 'anual');
 
   const years = [now.getFullYear(), now.getFullYear() - 1, now.getFullYear() - 2];
 
-  const rows: RankingRow[] = useMemo(() => {
-    if (scope === 'geral') {
-      return (overall.data ?? []).map((r) => ({
-        player_id: r.player_id,
-        name: r.name,
-        photo_url: r.photo_url,
-        value: `${r.total_xp} XP`,
-        sub: `${wdg(r)} · ${r.mvps} MVP`,
-      }));
+  const { rows, isLoading, isError } = useMemo((): {
+    rows: RankingRow[];
+    isLoading: boolean;
+    isError: boolean;
+  } => {
+    switch (scope) {
+      case 'geral':
+        return {
+          rows: (overall.data ?? []).map((r) => ({
+            player_id: r.player_id,
+            name: r.name,
+            photo_url: r.photo_url,
+            value: `${r.total_xp} XP`,
+            sub: `${wdg(r)} · ${r.mvps} MVP`,
+          })),
+          isLoading: overall.isLoading,
+          isError: overall.isError,
+        };
+
+      case 'posicao':
+        return {
+          rows: (overall.data ?? [])
+            .filter((r) => r.position_category === position)
+            .map((r) => ({
+              player_id: r.player_id,
+              name: r.name,
+              photo_url: r.photo_url,
+              value: `${r.total_xp} XP`,
+              sub: wdg(r),
+            })),
+          isLoading: overall.isLoading,
+          isError: overall.isError,
+        };
+
+      case 'formato':
+        return {
+          rows: (byFormat.data ?? []).map((r) => ({
+            player_id: r.player_id,
+            name: r.name,
+            photo_url: r.photo_url,
+            value: `${r.points} pts`,
+            sub: wdg(r),
+          })),
+          isLoading: byFormat.isLoading,
+          isError: byFormat.isError,
+        };
+
+      case 'mensal':
+        return {
+          rows: (byPeriod.data ?? [])
+            .slice()
+            .sort((a, b) => b.points - a.points)
+            .map((r) => ({
+              player_id: r.player_id,
+              name: r.name,
+              photo_url: r.photo_url,
+              value: `${r.points} pts`,
+              sub: wdg(r),
+            })),
+          isLoading: byPeriod.isLoading,
+          isError: byPeriod.isError,
+        };
+
+      case 'anual':
+        return {
+          rows: (annual.data ?? [])
+            .slice()
+            .sort((a, b) => b.points - a.points)
+            .map((r) => ({
+              player_id: r.player_id,
+              name: r.name,
+              photo_url: r.photo_url,
+              value: `${r.points} pts`,
+              sub: wdg(r),
+            })),
+          isLoading: annual.isLoading,
+          isError: annual.isError,
+        };
     }
-    if (scope === 'posicao') {
-      return (overall.data ?? [])
-        .filter((r) => r.position_category === position)
-        .map((r) => ({
-          player_id: r.player_id,
-          name: r.name,
-          photo_url: r.photo_url,
-          value: `${r.total_xp} XP`,
-          sub: wdg(r),
-        }));
-    }
-    if (scope === 'formato') {
-      return (byFormat.data ?? []).map((r) => ({
-        player_id: r.player_id,
-        name: r.name,
-        photo_url: r.photo_url,
-        value: `${r.points} pts`,
-        sub: wdg(r),
-      }));
-    }
-    if (scope === 'mensal') {
-      return (byPeriod.data ?? [])
-        .slice()
-        .sort((a, b) => b.points - a.points)
-        .map((r) => ({
-          player_id: r.player_id,
-          name: r.name,
-          photo_url: r.photo_url,
-          value: `${r.points} pts`,
-          sub: wdg(r),
-        }));
-    }
-    // anual: agrega os meses do ano por jogador
-    interface Acc {
-      player_id: string;
-      name: string;
-      photo_url: string | null;
-      points: number;
-      games: number;
-      wins: number;
-      goals: number;
-    }
-    const agg = new Map<string, Acc>();
-    for (const r of byPeriod.data ?? []) {
-      const cur = agg.get(r.player_id) ?? {
-        player_id: r.player_id,
-        name: r.name,
-        photo_url: r.photo_url,
-        points: 0,
-        games: 0,
-        wins: 0,
-        goals: 0,
-      };
-      cur.points += r.points;
-      cur.games += r.games;
-      cur.wins += r.wins;
-      cur.goals += r.goals;
-      agg.set(r.player_id, cur);
-    }
-    return [...agg.values()]
-      .sort((a, b) => b.points - a.points)
-      .map((a) => ({
-        player_id: a.player_id,
-        name: a.name,
-        photo_url: a.photo_url,
-        value: `${a.points} pts`,
-        sub: wdg(a),
-      }));
-  }, [scope, overall.data, byFormat.data, byPeriod.data, position]);
+  }, [
+    scope,
+    position,
+    overall.data,
+    overall.isLoading,
+    overall.isError,
+    byFormat.data,
+    byFormat.isLoading,
+    byFormat.isError,
+    byPeriod.data,
+    byPeriod.isLoading,
+    byPeriod.isError,
+    annual.data,
+    annual.isLoading,
+    annual.isError,
+  ]);
 
   return (
     <Page>
@@ -178,7 +195,15 @@ export function RankingsPage() {
         </div>
       )}
 
-      <RankingList rows={rows} />
+      {isLoading && (
+        <div className="grid gap-2 lg:grid-cols-2">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+      )}
+      {isError && <Alert kind="error">Não foi possível carregar o ranking.</Alert>}
+      {!isLoading && !isError && <RankingList rows={rows} />}
     </Page>
   );
 }

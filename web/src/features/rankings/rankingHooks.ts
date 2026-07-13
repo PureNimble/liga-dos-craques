@@ -5,6 +5,7 @@ import type { Database } from '@/types/database';
 export type RankingOverall = Database['public']['Views']['v_ranking_overall']['Row'];
 export type RankingByFormat = Database['public']['Views']['v_ranking_by_format']['Row'];
 export type RankingByPeriod = Database['public']['Views']['v_ranking_by_period']['Row'];
+export type RankingAnnual = Database['public']['Views']['v_ranking_annual']['Row'];
 
 /** Ranking geral (e base para "por posição", filtrado no cliente). */
 export function useRankingOverall() {
@@ -39,14 +40,30 @@ export function useRankingByFormat(formatCode: string | undefined) {
   });
 }
 
-/** Ranking por período. Passa year (obrigatório) e month (mensal) ou omite (anual). */
-export function useRankingByPeriod(year: number, month?: number) {
+/** Ranking mensal (ano + mês). */
+export function useRankingByPeriod(year: number, month: number | undefined) {
   return useQuery({
-    queryKey: ['ranking_period', year, month ?? 'all'],
+    queryKey: ['ranking_period', year, month],
+    enabled: Boolean(month),
     queryFn: async (): Promise<RankingByPeriod[]> => {
-      let query = supabase.from('v_ranking_by_period').select('*').eq('year', year);
-      if (month) query = query.eq('month', month);
-      const { data, error } = await query;
+      const { data, error } = await supabase
+        .from('v_ranking_by_period')
+        .select('*')
+        .eq('year', year)
+        .eq('month', month as number);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+/** Ranking anual (agregado por ano). */
+export function useRankingAnnual(year: number, enabled: boolean) {
+  return useQuery({
+    queryKey: ['ranking_annual', year],
+    enabled,
+    queryFn: async (): Promise<RankingAnnual[]> => {
+      const { data, error } = await supabase.from('v_ranking_annual').select('*').eq('year', year);
       if (error) throw error;
       return data ?? [];
     },
