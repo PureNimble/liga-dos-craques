@@ -1,0 +1,70 @@
+/* Cor — paleta base (primitivos, por família + tom) + camada semântica (por uso). */
+:root {
+  /* Primitivos: neutros (escuro → claro) */
+  --gray-950: #08090c;
+  --gray-900: #0c0e12;
+  --gray-850: #131519;
+  --gray-800: #191c22;
+  --gray-750: #23262e;
+  --gray-700: #31353f;
+  --gray-500: #64748b;
+  --gray-400: #94a3b8;
+  --gray-300: #cbd5e1;
+  --gray-100: #f1f5f9;
+  /* Primitivos: verde (marca) e vermelho (perigo) */
+  --green-300: #6ee7b7;
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --white: #ffffff;
+
+  /* Texto */
+  --text-color: var(--gray-100);
+  --text-muted: var(--gray-300);
+  --text-subtle: var(--gray-400);
+  --text-on-accent: var(--gray-950);
+  --text-placeholder: var(--gray-500);
+  --text-error: var(--red-400);
+
+  /* Acção / marca */
+  --accent: var(--green-500);
+  --accent-strong: var(--green-400);
+  --accent-soft: var(--green-300);
+  --danger: var(--red-500);
+  --danger-hover: var(--red-400);
+
+  /* Superfícies (fundos de "caixa" e de acção) */
+  --surface-page: var(--gray-950);
+  --surface-glass: rgb(16 18 22 / 0.78); /* barras fixas com desfoque */
+  --surface-input: var(--gray-900);
+  --surface-card: rgb(25 28 34 / 0.7); /* gray-800 a 70% */
+  --surface-card-hover: rgb(35 38 46 / 0.7);
+  --surface-translucent: rgb(255 255 255 / 0.04);
+  --surface-translucent-hover: rgb(255 255 255 / 0.08);
+  --surface-ghost-hover: rgb(255 255 255 / 0.06);
+
+  --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
+  --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
+  --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
+  --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */
+  --overlay: rgb(0 0 0 / 0.6); /* fundo escurecido atrás de modais */
+
+  /* Bordas */
+  --border-input: var(--gray-700);
+  --border-faint: rgb(255 255 255 / 0.07);
+  --border-faint-hover: rgb(255 255 255 / 0.12);
+  --border-light: rgb(255 255 255 / 0.1);
+
+  /* Estados (alertas) — texto / fundo / borda por tipo */
+  --status-error-fg: var(--red-300);
+  --status-error-bg: rgb(239 68 68 / 0.1);
+  --status-error-border: rgb(239 68 68 / 0.4);
+  --status-success-fg: var(--green-400);
+  --status-success-bg: rgb(16 185 129 / 0.1);
+  --status-success-border: rgb(16 185 129 / 0.4);
+  --status-info-fg: var(--text-muted);
+  --status-info-bg: var(--gray-850);
+  --status-info-border: var(--gray-700);
+}

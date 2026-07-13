@@ -1,0 +1,14 @@
+/* Tipografia — tamanhos (escala fluida via clamp) e pesos. */
+:root {
+  --font-size-2xs: 0.6875rem; /* rótulos muito pequenos (nav inferior) */
+  --font-size-xs: clamp(0.75rem, 0.726rem + 0.11vw, 0.8125rem);
+  --font-size-sm: clamp(0.8125rem, 0.788rem + 0.11vw, 0.875rem);
+  --font-size-base: clamp(0.9063rem, 0.87rem + 0.16vw, 1rem);
+  --font-size-lg: clamp(1rem, 0.951rem + 0.22vw, 1.125rem);
+  --font-size-2xl: clamp(1.3125rem, 1.239rem + 0.33vw, 1.5rem);
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  --tracking-tight: -0.02em;
+}

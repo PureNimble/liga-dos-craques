@@ -6,6 +6,7 @@ import type { FullProfile } from '@/features/profile/profileHooks';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { Avatar, IconButton } from '@/shared/components/ui';
 import { BallIcon, LogoutIcon } from '@/shared/components/ui/icons';
+import s from './Navbar.module.css';
 
 /** Cabeçalho fixo: logótipo, navegação inline (desktop/tablet), avatar e logout. */
 export function Navbar({ profile }: { profile: FullProfile }) {
@@ -27,17 +28,17 @@ export function Navbar({ profile }: { profile: FullProfile }) {
   }
 
   return (
-    <header className="glass sticky top-0 z-30 border-b border-navy-800">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 text-lg font-black tracking-tight text-white">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-pitch-500 text-navy-975 shadow-glow">
+    <header className={s.header}>
+      <div className={s.inner}>
+        <Link to="/" className={s.logo}>
+          <span className={s.logoMark}>
             <BallIcon width={18} height={18} />
           </span>
           Peladinhas
         </Link>
 
         {/* Navegação inline (desktop/tablet) — o perfil fica no avatar à direita */}
-        <nav className="hidden items-center gap-1 sm:flex">
+        <nav className={s.nav}>
           {items
             .filter((item) => item.to !== '/profile')
             .map((item) => (
@@ -46,11 +47,7 @@ export function Navbar({ profile }: { profile: FullProfile }) {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                    isActive
-                      ? 'bg-pitch-500/15 text-pitch-400'
-                      : 'text-slate-300 hover:bg-navy-800 hover:text-white'
-                  }`
+                  isActive ? `${s.navLink} ${s.navLinkActive}` : s.navLink
                 }
               >
                 {item.label}
@@ -58,8 +55,8 @@ export function Navbar({ profile }: { profile: FullProfile }) {
             ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Link to="/profile" aria-label="Ver perfil" className="hidden sm:block">
+        <div className={s.actions}>
+          <Link to="/profile" aria-label="Ver perfil" className={s.avatarLink}>
             <Avatar name={profile.name} src={profile.photo_url} size="sm" />
           </Link>
           <IconButton label="Terminar sessão" onClick={handleSignOut}>

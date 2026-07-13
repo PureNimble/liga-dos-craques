@@ -1,0 +1,50 @@
+/* Faixa horizontal com scroll (muitos itens) que "sangra" até às margens no
+   telemóvel e alinha ao conteúdo no desktop. Scrollbar escondida (mantém scroll). */
+.pills {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  margin-left: calc(-1 * var(--space-lg));
+  margin-right: calc(-1 * var(--space-lg));
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+  padding-bottom: var(--space-xs);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.pills::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 640px) {
+  .pills {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.pill {
+  flex-shrink: 0;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--gray-750);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    color var(--transition),
+    background-color var(--transition);
+}
+.pill:hover {
+  background-color: var(--gray-700);
+  color: var(--white);
+}
+.active,
+.active:hover {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-glow);
+}
