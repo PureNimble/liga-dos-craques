@@ -1,0 +1,205 @@
+.head {
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.errorSlot {
+  margin-bottom: var(--space-md);
+}
+.empty {
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.switch {
+  display: flex;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-750);
+  background-color: var(--surface-input);
+  padding: var(--space-xs);
+}
+.switchBtn {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.switchBtn:hover {
+  background-color: var(--gray-850);
+}
+.switchActiveA,
+.switchActiveA:hover {
+  background-color: var(--team-a);
+  color: var(--text-on-accent);
+}
+.switchActiveB,
+.switchActiveB:hover {
+  background-color: var(--team-b);
+  color: var(--text-on-accent);
+}
+.switchSum {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+.dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+}
+.dotA {
+  background-color: var(--team-a);
+}
+.dotB {
+  background-color: var(--team-b);
+}
+
+.formRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.dragHint {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+.diff {
+  margin-top: var(--space-sm);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.unassigned {
+  margin-top: var(--space-lg);
+  border-top: 1px solid var(--gray-750);
+  padding-top: var(--space-md);
+}
+.unassignedTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-subtle);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rating {
+  color: var(--text-faint);
+}
+.rowActions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-sm);
+}
+.addBtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: var(--font-size-xs);
+  color: var(--accent-strong);
+  cursor: pointer;
+}
+.addBtn:hover {
+  text-decoration: underline;
+}
+
+/* FormationSelect */
+.formation {
+  flex: 1;
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.formationLabel {
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* TeamColumn */
+.column {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-750);
+  background-color: var(--surface-input);
+  padding: var(--space-md);
+}
+.columnHead {
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.columnTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.columnTotal {
+  border-radius: var(--radius-full);
+  background-color: var(--gray-750);
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.moveBtn {
+  flex-shrink: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+  cursor: pointer;
+}
+.moveBtn:hover {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+.emptyRow {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

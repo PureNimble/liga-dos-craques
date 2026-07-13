@@ -12,6 +12,7 @@ import {
 } from './teamHooks';
 import { balanceTeams, type BalancePlayer } from './teamBalancer';
 import { Pitch } from './Pitch';
+import s from './TeamsPanel.module.css';
 import {
   buildLayout,
   defaultFormation,
@@ -210,8 +211,8 @@ export function TeamsPanel({
 
   return (
     <Card>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-slate-100">Equipas</h2>
+      <div className={s.head}>
+        <h2 className={s.title}>Equipas</h2>
         {canManage && canGenerate && (
           <Button variant="secondary" size="sm" onClick={generate} loading={assignTeams.isPending}>
             {hasTeams ? 'Regenerar' : 'Gerar equipas'}
@@ -220,38 +221,34 @@ export function TeamsPanel({
       </div>
 
       {assignTeams.isError && (
-        <div className="mb-3">
+        <div className={s.errorSlot}>
           <Alert kind="error">Não foi possível gerar as equipas.</Alert>
         </div>
       )}
 
       {!hasTeams ? (
-        <p className="text-sm text-slate-400">
+        <p className={s.empty}>
           {canManage && canGenerate
             ? 'Ainda não há equipas. Gera equipas equilibradas automaticamente.'
             : 'As equipas ainda não foram geradas.'}
         </p>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className={s.body}>
           {/* Switch entre equipas (estilo app de resultados) */}
-          <div className="flex rounded-xl border border-navy-800 bg-navy-950 p-1">
+          <div className={s.switch}>
             {(['A', 'B'] as Team[]).map((t) => {
               const active = selectedTeam === t;
-              const activeBg = t === 'A' ? 'bg-pitch-500 text-navy-975' : 'bg-sky-500 text-navy-975';
+              const activeClass = t === 'A' ? s.switchActiveA : s.switchActiveB;
               return (
                 <button
                   key={t}
                   type="button"
                   onClick={() => setSelectedTeam(t)}
-                  className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
-                    active ? activeBg : 'text-slate-300 hover:bg-navy-900'
-                  }`}
+                  className={`${s.switchBtn} ${active ? activeClass : ''}`}
                 >
-                  {!active && (
-                    <span className={`h-2 w-2 rounded-full ${t === 'A' ? 'bg-pitch-500' : 'bg-sky-500'}`} />
-                  )}
+                  {!active && <span className={`${s.dot} ${t === 'A' ? s.dotA : s.dotB}`} />}
                   Equipa {t}
-                  <span className="tabular-nums opacity-80">{sum(t === 'A' ? teamA : teamB)}</span>
+                  <span className={s.switchSum}>{sum(t === 'A' ? teamA : teamB)}</span>
                 </button>
               );
             })}
@@ -271,10 +268,10 @@ export function TeamsPanel({
 
           {canManage && (
             <>
-              <div className="flex items-end justify-between gap-2">
+              <div className={s.formRow}>
                 <FormationSelect
                   label={`Formação · Equipa ${selectedTeam}`}
-                  dot={selectedTeam === 'A' ? 'bg-pitch-500' : 'bg-sky-500'}
+                  dotClass={selectedTeam === 'A' ? s.dotA : s.dotB}
                   value={selFormName}
                   size={selSize}
                   onChange={(n) => pickFormation(selectedTeam, n)}
@@ -283,11 +280,11 @@ export function TeamsPanel({
                   Auto-preencher
                 </Button>
               </div>
-              <p className="text-center text-xs text-slate-500">ou arrasta um jogador para mover ou trocar</p>
+              <p className={s.dragHint}>ou arrasta um jogador para mover ou trocar</p>
             </>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className={s.columns}>
             <TeamColumn
               title="Equipa A"
               total={sum(teamA)}
@@ -311,33 +308,31 @@ export function TeamsPanel({
       )}
 
       {hasTeams && (
-        <p className="mt-2 text-center text-xs text-slate-500">
-          Diferença de rating: {Math.abs(sum(teamA) - sum(teamB))}
-        </p>
+        <p className={s.diff}>Diferença de rating: {Math.abs(sum(teamA) - sum(teamB))}</p>
       )}
 
       {/* Jogadores por atribuir */}
       {unassigned.length > 0 && (
-        <div className="mt-4 border-t border-navy-800 pt-3">
-          <p className="mb-2 text-xs font-medium text-slate-400">Por atribuir</p>
-          <ul className="flex flex-col gap-1">
+        <div className={s.unassigned}>
+          <p className={s.unassignedTitle}>Por atribuir</p>
+          <ul className={s.list}>
             {unassigned.map((p) => (
-              <li key={p.player_id} className="flex items-center justify-between gap-2 text-sm">
-                <span className="min-w-0 truncate">
+              <li key={p.player_id} className={s.row}>
+                <span className={s.name}>
                   {p.profile?.name ?? 'Jogador'}{' '}
-                  <span className="text-slate-500">({ratingOf(p.player_id)})</span>
+                  <span className={s.rating}>({ratingOf(p.player_id)})</span>
                 </span>
                 {canManage && (
-                  <span className="flex shrink-0 gap-2">
+                  <span className={s.rowActions}>
                     <button
                       onClick={() => setPlayerTeam.mutate({ playerId: p.player_id, team: 'A' })}
-                      className="text-xs text-pitch-400 hover:underline"
+                      className={s.addBtn}
                     >
                       + A
                     </button>
                     <button
                       onClick={() => setPlayerTeam.mutate({ playerId: p.player_id, team: 'B' })}
-                      className="text-xs text-pitch-400 hover:underline"
+                      className={s.addBtn}
                     >
                       + B
                     </button>
@@ -354,22 +349,22 @@ export function TeamsPanel({
 
 function FormationSelect({
   label,
-  dot,
+  dotClass,
   value,
   size,
   onChange,
 }: {
   label: string;
-  dot: string;
+  dotClass: string;
   value: string;
   size: number;
   onChange: (name: string) => void;
 }) {
   const options = formationsFor(size);
   return (
-    <label className="flex-1 text-xs text-slate-400">
-      <span className="mb-1 flex items-center gap-1.5">
-        <span className={`h-2 w-2 rounded-full ${dot}`} /> {label}
+    <label className={s.formation}>
+      <span className={s.formationLabel}>
+        <span className={`${s.dot} ${dotClass}`} /> {label}
       </span>
       <Select value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((o) => (
@@ -401,31 +396,26 @@ function TeamColumn({
   moveLabel: string;
 }) {
   return (
-    <div className="rounded-xl border border-navy-800 bg-navy-950 p-3">
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-sm font-bold text-slate-100">{title}</p>
-        <span className="rounded-full bg-navy-800 px-2 py-0.5 text-xs font-semibold tabular-nums text-slate-300">
-          {total}
-        </span>
+    <div className={s.column}>
+      <div className={s.columnHead}>
+        <p className={s.columnTitle}>{title}</p>
+        <span className={s.columnTotal}>{total}</span>
       </div>
-      <ul className="flex flex-col gap-1">
+      <ul className={s.list}>
         {list.map((p) => (
-          <li key={p.player_id} className="flex items-center justify-between gap-2 text-sm">
-            <span className="min-w-0 truncate">
+          <li key={p.player_id} className={s.row}>
+            <span className={s.name}>
               {p.profile?.name ?? 'Jogador'}{' '}
-              <span className="text-slate-500">({ratingOf(p.player_id)})</span>
+              <span className={s.rating}>({ratingOf(p.player_id)})</span>
             </span>
             {canManage && (
-              <button
-                onClick={() => onMove(p.player_id)}
-                className="shrink-0 text-xs text-slate-400 hover:text-slate-200 hover:underline"
-              >
+              <button onClick={() => onMove(p.player_id)} className={s.moveBtn}>
                 {moveLabel}
               </button>
             )}
           </li>
         ))}
-        {list.length === 0 && <li className="text-xs text-slate-500">—</li>}
+        {list.length === 0 && <li className={s.emptyRow}>—</li>}
       </ul>
     </div>
   );

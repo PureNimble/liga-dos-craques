@@ -66,8 +66,19 @@
   /* Equipas (A verde, B azul) — reutilizado em cabeçalho, campo e painel */
   --team-a: var(--green-500);
   --team-a-ring: rgb(16 185 129 / 0.6);
+  --team-a-token-ring: rgb(110 231 183 / 0.5);
   --team-b: var(--sky-500);
   --team-b-ring: rgb(14 165 233 / 0.6);
+  --team-b-token-ring: rgb(125 211 252 / 0.5);
+
+  /* Campo (relvado + marcações + slots de arrasto) */
+  --surface-turf: #0d3b24;
+  --pitch-line: rgb(255 255 255 / 0.25);
+  --pitch-line-mid: rgb(255 255 255 / 0.2);
+  --pitch-line-soft: rgb(255 255 255 / 0.15);
+  --pitch-slot-border: rgb(255 255 255 / 0.45);
+  --pitch-slot-bg: rgb(255 255 255 / 0.05);
+  --pitch-slot-near-bg: rgb(255 255 255 / 0.2);
   --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
   --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
   --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */
