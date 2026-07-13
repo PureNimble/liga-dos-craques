@@ -6,6 +6,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
 import { AuthLayout } from './AuthLayout';
 import { recoverSchema, type RecoverValues } from './auth.schemas';
+import s from './auth.module.css';
 
 export function RecoverPasswordPage() {
   const [sent, setSent] = useState(false);
@@ -33,21 +34,21 @@ export function RecoverPasswordPage() {
           Se existir uma conta com esse email, enviámos um link para definires uma nova password.
         </Alert>
       ) : (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
           <Field label="Email" htmlFor="email" error={form.formState.errors.email?.message}>
             <Input id="email" type="email" autoComplete="email" {...form.register('email')} />
           </Field>
           <Button type="submit" loading={form.formState.isSubmitting}>
             Enviar link de recuperação
           </Button>
-          <p className="text-center text-xs text-slate-500">
+          <p className={s.note}>
             Se o email não chegar, pede a um administrador para repor a tua password.
           </p>
         </form>
       )}
 
-      <p className="text-center text-sm">
-        <Link to="/login" className="text-pitch-400 hover:underline">
+      <p className={s.centerSm}>
+        <Link to="/login" className={s.link}>
           Voltar ao início de sessão
         </Link>
       </p>
