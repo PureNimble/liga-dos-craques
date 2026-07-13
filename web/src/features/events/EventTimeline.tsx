@@ -1,5 +1,5 @@
-import { Alert } from '@/components/ui';
-import { AssistIcon } from '@/components/ui/icons';
+import { Alert } from '@/shared/components/ui';
+import { AssistIcon } from '@/shared/components/ui/icons';
 import { useGameEvents, useRemoveEvent } from './eventHooks';
 import { EventIcon } from './EventIcon';
 import { eventTone } from './eventIcons';

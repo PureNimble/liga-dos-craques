@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { Alert } from '@/components/ui';
-import { ChevronLeftIcon } from '@/components/ui/icons';
+import { Alert } from '@/shared/components/ui';
+import { ChevronLeftIcon } from '@/shared/components/ui/icons';
 import { usePlayerStats } from '@/features/stats/useStats';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { PlayerCharts } from '@/features/stats/PlayerCharts';

@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui';
-import { BallIcon, BootIcon } from '@/components/ui/icons';
+import { Card } from '@/shared/components/ui';
+import { BallIcon, BootIcon } from '@/shared/components/ui/icons';
 import { useRatingTrend } from './useRatingTrend';
 import { RatingTrend } from './RatingTrend';
 import { useContributions, type GameContribution } from './useContributions';

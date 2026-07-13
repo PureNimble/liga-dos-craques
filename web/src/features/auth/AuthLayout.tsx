@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { BallIcon } from '@/components/ui/icons';
+import { BallIcon } from '@/shared/components/ui/icons';
 
 /** Moldura comum a todas as páginas de autenticação. */
 export function AuthLayout({ title, children }: { title: string; children: ReactNode }) {

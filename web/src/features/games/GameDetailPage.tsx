@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Button, Card, Modal } from '@/components/ui';
-import { useConfirm } from '@/components/ui/ConfirmDialog';
-import { ChevronLeftIcon, WhistleIcon } from '@/components/ui/icons';
+import { Alert, Button, Card, Modal } from '@/shared/components/ui';
+import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
+import { ChevronLeftIcon, WhistleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfile } from '@/features/profile/useProfile';
 import {
@@ -21,8 +21,8 @@ import { ALLOWED_TRANSITIONS, GAME_STATUS_LABELS, GAME_TRANSITION_LABELS } from 
 import { CreateGameForm } from './CreateGameForm';
 import { EventTimeline } from '@/features/events/EventTimeline';
 import { EventSoundboard } from '@/features/events/EventSoundboard';
-import { VotingPanel } from '@/features/voting/VotingPanel';
-import { useResolveAwards } from '@/features/voting/voteHooks';
+import { AwardsPanel } from '@/features/awards/AwardsPanel';
+import { useResolveAwards } from '@/features/awards/awardHooks';
 import { TeamsPanel } from '@/features/teams/TeamsPanel';
 import { usePlayerRatings, useAssignTeams } from '@/features/teams/teamHooks';
 import { balanceTeams } from '@/features/teams/teamBalancer';
@@ -216,7 +216,7 @@ export function GameDetailPage() {
 
       {/* MVP / Flop — só depois de apurar (fechado); nunca durante a revisão */}
       {(game.status === 'voting_open' || game.status === 'closed') && (
-        <VotingPanel gameId={game.id} players={players ?? []} />
+        <AwardsPanel gameId={game.id} players={players ?? []} />
       )}
 
       {/* Plantel */}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Button, Card, Select } from '@/components/ui';
+import { Alert, Button, Card, Select } from '@/shared/components/ui';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
 import type { Team } from '@/types/database';
 import {

@@ -17,6 +17,7 @@ npm run typecheck  # tsc -b --noEmit
 npm run lint       # eslint . --max-warnings 0  (0 warnings é obrigatório)
 npm test           # vitest run (unitários)
 npm run test:watch # vitest em watch
+npm run format     # prettier --write . (formata o código)
 npm run db:types   # regenera src/types/database.ts a partir do schema Supabase local
 npm run test:db    # supabase test db (pgTAP, requer Docker + supabase start)
 ```
@@ -42,21 +43,23 @@ Monorepo com dois mundos: `web/` (frontend React) e `supabase/` (backend as code
 - **Alias de import:** `@/` → `web/src/` (configurado em `vite.config.ts` e `tsconfig`).
 - **Composição da app** (`src/app/App.tsx`): providers encadeados — `QueryClientProvider` → `ToastProvider` → `ConfirmProvider` → `AuthProvider` → `RouterProvider`.
 - **Rotas** (`src/app/router.tsx`): páginas autenticadas usam `lazyWithReload` (code-splitting + recarrega 1x quando um chunk fica desatualizado após deploy). Rotas protegidas ficam dentro de `<ProtectedRoute>` → `<AppLayout>`. Rotas públicas: `/login /signup /recover /update-password`. Protegidas: `/ /profile /players/:id /games /games/new /games/:id /rankings /challenges /admin`.
-- **Cliente Supabase:** singleton tipado em `src/lib/supabase.ts` (`createClient<Database>`), partilhado por toda a app.
+- **Cliente Supabase:** singleton tipado em `src/shared/lib/supabase.ts` (`createClient<Database>`), partilhado por toda a app.
+- **Camada transversal `src/shared/`:** código usado por várias features vive aqui, não dentro de uma feature. `shared/lib/` (utilitários puros: `supabase`, `datetime`, `env`, `queryClient`, `lazyWithReload`) e `shared/components/` (UI partilhada: `ui/`, `toast/`). Importa-se via `@/shared/...`. As features podem depender de `shared/` (e de `auth`/`health`, que são fundacionais), nunca o contrário.
 
 ### Organização por features
 
-O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats, xp, rankings, achievements, challenges, profile, admin, health). Cada feature agrupa os seus componentes, schemas Zod e hooks. Convenções dentro de uma feature:
+O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats, xp, rankings, achievements, challenges, profile, admin, awards, health). Cada feature agrupa os seus componentes, schemas Zod e hooks. Convenções dentro de uma feature:
 
-> **Nota:** a feature `voting/` está descontinuada — o backend de votação (tabela `vote`, funções) foi removido na migração `20260802100000_drop_voting.sql`; MVP/Flop passou a ser 100% por rating. Os ficheiros que restam (`VotingPanel.tsx`, `voteHooks.ts`) são código órfão e não devem ser reutilizados.
+> **Nota:** MVP/Flop é 100% por rating (não há votação — a tabela `vote` e as funções foram removidas em `20260802100000_drop_voting.sql`). O apuramento vive na feature `awards/` (`AwardsPanel.tsx`, `awardHooks.ts`), que continua **em uso** — `awardHooks` lê as views `v_game_player_rating`/`v_game_award` e chama a RPC `resolve_awards`, e `GameDetailPage` renderiza o `AwardsPanel`. (Esta feature chamava-se `voting/`.)
 
 - **`*Hooks.ts`** — toda a I/O passa por hooks TanStack Query (`useQuery`/`useMutation`) que chamam `supabase.from(...)`. Os tipos de linha derivam de `Database['public']['Tables'][...]['Row']`; joins embebidos ganham interfaces `...WithProfile` / `...WithFormat`. É aqui que se lê/escreve dados — não chamar o supabase diretamente dos componentes.
 - **`*.schemas.ts`** (+ `*.schemas.test.ts`) — validação com Zod, testável isoladamente.
-- **Lógica pura** (ex.: `teamBalancer.ts`, `playerRating.ts`, `gameStatus.ts`, `lib/datetime.ts`) fica separada e coberta por testes unitários.
+- **Lógica pura** (ex.: `teamBalancer.ts`, `playerRating.ts`, `gameStatus.ts`, `shared/lib/datetime.ts`) fica separada e coberta por testes unitários.
+- **Gráficos são SVG feito à mão** (`stats/PlayerCharts.tsx`, `stats/RatingTrend.tsx`) — não há biblioteca de charts nas dependências e não se deve adicionar uma (custo 0 € / mínimo de dependências).
 
 ### Backend (`supabase/`)
 
-- **`migrations/`** — schema versionado (`YYYYMMDDHHMMSS_nome.sql`): tabelas, RLS, funções, e **dados de referência** (posições, formatos, tipos de evento). Nunca alterar o schema pela UI do Supabase sem gerar migração. O `seed/` **não** corre em `db push`, por isso dados de referência vão nas migrações, não no seed.
+- **`migrations/`** — schema versionado (`YYYYMMDDHHMMSS_nome.sql`): tabelas, RLS, funções, e **dados de referência** (posições, formatos, tipos de evento). Nunca alterar o schema pela UI do Supabase sem gerar migração. O `seed/` **não** corre em `db push`, por isso dados de referência vão nas migrações, não no seed. As migrações correm por ordem de timestamp no nome — uma migração nova tem de usar um timestamp posterior ao da última existente (atualmente `20260803100000`), senão é aplicada fora de ordem ou saltada em ambientes já migrados.
 - **`functions/`** — Edge Functions (Deno). `health` é o keep-alive público (`verify_jwt=false`, retorna 200).
 - **`tests/`** — pgTAP (`rls_test.sql`) para invariantes de RLS.
 - **Tipos DB** (`web/src/types/database.ts`) são mantidos **à mão** (e podem ser regenerados com `npm run db:types` quando há BD local). Ao adicionar/alterar tabelas numa migração, atualizar este ficheiro.

@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Field, Input, Select } from '@/components/ui';
-import { isoToLocalInput, localInputToISO } from '@/lib/datetime';
+import { Alert, Button, Field, Input, Select } from '@/shared/components/ui';
+import { isoToLocalInput, localInputToISO } from '@/shared/lib/datetime';
 import { useCreateGame, useGameFormats, useUpdateGame, type GameWithFormat } from './gameHooks';
 import { createGameSchema, type CreateGameValues } from './game.schemas';
 

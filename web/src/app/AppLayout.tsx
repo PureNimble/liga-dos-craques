@@ -2,8 +2,8 @@ import { Suspense, type ComponentType, type SVGProps } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfile } from '@/features/profile/useProfile';
-import { Avatar, IconButton } from '@/components/ui';
-import { useConfirm } from '@/components/ui/ConfirmDialog';
+import { Avatar, IconButton } from '@/shared/components/ui';
+import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import {
   HomeIcon,
   BallIcon,
@@ -12,7 +12,7 @@ import {
   UserIcon,
   ShieldIcon,
   LogoutIcon,
-} from '@/components/ui/icons';
+} from '@/shared/components/ui/icons';
 
 type NavItem = {
   to: string;

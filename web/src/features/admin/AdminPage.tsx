@@ -1,10 +1,10 @@
 import { useEffect, useState, type ComponentType, type SVGProps } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Alert, Button, Card, Field, Input, Select } from '@/components/ui';
-import { AssistIcon, BallIcon, StarIcon, TrophyIcon, UsersIcon } from '@/components/ui/icons';
+import { Alert, Button, Card, Field, Input, Select } from '@/shared/components/ui';
+import { AssistIcon, BallIcon, StarIcon, TrophyIcon, UsersIcon } from '@/shared/components/ui/icons';
 import { useProfile } from '@/features/profile/useProfile';
 import { useProfilesList } from '@/features/profile/useProfilesList';
-import { useToast } from '@/components/toast/useToast';
+import { useToast } from '@/shared/components/toast/useToast';
 import {
   useActiveXpRules,
   useAdminSetPassword,

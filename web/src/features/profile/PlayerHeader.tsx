@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card } from '@/components/ui';
+import { Card } from '@/shared/components/ui';
 import { ratingText } from '@/features/stats/ratingColor';
 
 interface PlayerHeaderProps {

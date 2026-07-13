@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button } from '@/components/ui';
+import { Alert, Button } from '@/shared/components/ui';
 import { useProfile } from './useProfile';
 import { usePositions } from './usePositions';
 import { ProfileEditModal } from './ProfileEditModal';

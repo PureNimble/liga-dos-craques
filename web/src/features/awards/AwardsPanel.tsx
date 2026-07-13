@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { Card } from '@/components/ui';
+import { Card } from '@/shared/components/ui';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
-import { useGameAwards, useGameRatings } from './voteHooks';
+import { useGameAwards, useGameRatings } from './awardHooks';
 
-interface VotingPanelProps {
+interface AwardsPanelProps {
   gameId: string;
   players: GamePlayerWithProfile[];
 }
@@ -12,7 +12,7 @@ interface VotingPanelProps {
  * MVP / Flop e avaliações do jogo — decididos pela app (melhor/pior rating;
  * empate desfeito pela consistência). Não há votação.
  */
-export function VotingPanel({ gameId, players }: VotingPanelProps) {
+export function AwardsPanel({ gameId, players }: AwardsPanelProps) {
   const { data: ratings } = useGameRatings(gameId);
   const { data: awards } = useGameAwards(gameId);
 

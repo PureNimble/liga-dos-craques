@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { PillTabs, Select } from '@/components/ui';
+import { PillTabs, Select } from '@/shared/components/ui';
 import { useGameFormats } from '@/features/games/gameHooks';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/lib/supabase';
 import type { Database } from '@/types/database';
 
 export type PlayerXp = Database['public']['Views']['v_player_xp']['Row'];

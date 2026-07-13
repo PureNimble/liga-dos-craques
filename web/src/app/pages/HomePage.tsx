@@ -6,8 +6,8 @@ import { StatsGrid } from '@/features/stats/StatsGrid';
 import { usePlayerXp } from '@/features/xp/useXp';
 import { XpBar } from '@/features/xp/XpBar';
 import { ConnectionStatus } from '@/features/health/ConnectionStatus';
-import { Avatar, Card } from '@/components/ui';
-import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/components/ui/icons';
+import { Avatar, Card } from '@/shared/components/ui';
+import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
 
 const quickActions = [
   { to: '/games', label: 'Ver jogos', hint: 'Próximos e resultados', icon: BallIcon },

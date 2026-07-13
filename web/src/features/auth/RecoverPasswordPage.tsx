@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
-import { Alert, Button, Field, Input } from '@/components/ui';
+import { supabase } from '@/shared/lib/supabase';
+import { Alert, Button, Field, Input } from '@/shared/components/ui';
 import { AuthLayout } from './AuthLayout';
 import { recoverSchema, type RecoverValues } from './auth.schemas';
 

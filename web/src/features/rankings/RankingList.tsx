@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Avatar, EmptyState } from '@/components/ui';
-import { TrophyIcon } from '@/components/ui/icons';
+import { Avatar, EmptyState } from '@/shared/components/ui';
+import { TrophyIcon } from '@/shared/components/ui/icons';
 
 export interface RankingRow {
   player_id: string;
