@@ -4,7 +4,15 @@ import { useAuth } from '@/features/auth/useAuth';
 import { useProfile } from '@/features/profile/useProfile';
 import { Avatar, IconButton } from '@/components/ui';
 import { useConfirm } from '@/components/ui/ConfirmDialog';
-import { HomeIcon, BallIcon, TrophyIcon, TargetIcon, UserIcon, LogoutIcon } from '@/components/ui/icons';
+import {
+  HomeIcon,
+  BallIcon,
+  TrophyIcon,
+  TargetIcon,
+  UserIcon,
+  ShieldIcon,
+  LogoutIcon,
+} from '@/components/ui/icons';
 
 type NavItem = {
   to: string;
@@ -27,7 +35,10 @@ export function AppLayout() {
   const navigate = useNavigate();
   const confirm = useConfirm();
 
-  const items = navItems;
+  const items: NavItem[] =
+    profile?.role === 'admin'
+      ? [...navItems, { to: '/admin', label: 'Admin', icon: ShieldIcon }]
+      : navItems;
 
   async function handleSignOut() {
     const ok = await confirm({

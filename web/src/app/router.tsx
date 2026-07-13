@@ -24,6 +24,9 @@ const CreateGamePage = lazyWithReload(() =>
 const GameDetailPage = lazyWithReload(() =>
   import('@/features/games/GameDetailPage').then((m) => ({ default: m.GameDetailPage })),
 );
+const AdminPage = lazyWithReload(() =>
+  import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
+);
 
 export const router = createBrowserRouter([
   // Rotas públicas
@@ -45,6 +48,7 @@ export const router = createBrowserRouter([
           { path: '/games', element: <GamesListPage /> },
           { path: '/games/new', element: <CreateGamePage /> },
           { path: '/games/:id', element: <GameDetailPage /> },
+          { path: '/admin', element: <AdminPage /> },
         ],
       },
     ],
