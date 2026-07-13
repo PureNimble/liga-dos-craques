@@ -1,3 +1,7 @@
+.emptyMsg {
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
 .actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -117,6 +121,11 @@
 }
 
 /* Modais */
+.titleRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
 .fullWidth {
   width: 100%;
 }

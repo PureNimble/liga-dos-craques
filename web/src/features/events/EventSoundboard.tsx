@@ -37,7 +37,7 @@ export function EventSoundboard({ gameId, players, currentMinute }: EventSoundbo
 
   if (players.length === 0) {
     return (
-      <p className="text-sm text-slate-400">Adiciona jogadores para poderes registar eventos.</p>
+      <p className={s.emptyMsg}>Adiciona jogadores para poderes registar eventos.</p>
     );
   }
 
@@ -186,17 +186,25 @@ function GoalModal({
   onClose: () => void;
 }) {
   const logGoal = useLogGoal(gameId);
+  const { data: tags } = useTags();
   const toast = useToast();
 
   const [variant, setVariant] = useState<GoalVariant>('normal');
   const [minute, setMinute] = useState(String(currentMinute));
   const [scorer, setScorer] = useState<GamePlayerWithProfile | null>(null);
   const [assistId, setAssistId] = useState<string | null>(null);
+  const [tagIds, setTagIds] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const isOwn = variant === 'own_goal';
   // Assistência só existe em golo normal (não em penálti, livre ou autogolo).
   const allowsAssist = variant === 'normal';
+  // Tags de técnica só fazem sentido em golo de bola corrida (normal ou livre).
+  const allowsTags = variant === 'normal' || variant === 'freekick';
+
+  function toggleTag(id: number) {
+    setTagIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
 
   async function submit() {
     if (!scorer) return;
@@ -209,6 +217,7 @@ function GoalModal({
         variant,
         team,
         minute: minute === '' ? null : Number(minute),
+        tagIds: allowsTags ? tagIds : [],
       });
       toast.show(`${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'} ✓`, 'success');
       onClose();
@@ -223,7 +232,7 @@ function GoalModal({
       onClose={onClose}
       variant="sheet"
       title={
-        <span className="flex items-center gap-2">
+        <span className={s.titleRow}>
           <BallIcon width={18} height={18} /> Registar golo
         </span>
       }
@@ -283,6 +292,28 @@ function GoalModal({
               excludeId={scorer.player_id}
               onPick={(gp) => setAssistId((cur) => (cur === gp.player_id ? null : gp.player_id))}
             />
+          </div>
+        )}
+        {allowsTags && tags && tags.length > 0 && (
+          <div>
+            <p className={s.sectionLabel}>
+              Como foi o golo <span className={s.sectionHint}>(opcional)</span>
+            </p>
+            <div className={s.tags}>
+              {tags.map((tag) => {
+                const on = tagIds.includes(tag.id);
+                return (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => toggleTag(tag.id)}
+                    className={`${s.tag} ${on ? s.tagActive : ''}`}
+                  >
+                    {tag.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
         {isOwn && (
