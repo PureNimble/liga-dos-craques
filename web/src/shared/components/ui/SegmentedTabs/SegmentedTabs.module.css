@@ -1,5 +1,9 @@
+/* Telemóvel: a barra ocupa a linha toda e as abas repartem-na em partes iguais
+   (encontram-se ao meio). Desktop: encolhe ao conteúdo — esticada até à margem
+   deixava um vazio enorme à direita das abas. */
 .tabs {
   display: inline-flex;
+  align-self: stretch;
   gap: var(--space-xs);
   border-radius: var(--radius-md);
   border: 1px solid var(--gray-750);
@@ -7,6 +11,10 @@
   padding: var(--space-xs);
 }
 .tab {
+  /* base 0 (e não `auto`): sem isso cada aba ficava com o seu tamanho natural
+     mais uma fatia igual do resto, e a junta caía ao lado do meio — "Anteriores"
+     é mais comprida do que "Próximos". */
+  flex: 1 1 0;
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-lg);
   font-size: var(--font-size-sm);
@@ -16,6 +24,15 @@
   transition:
     color var(--transition),
     background-color var(--transition);
+}
+
+@media (min-width: 640px) {
+  .tabs {
+    align-self: flex-start;
+  }
+  .tab {
+    flex: 0 0 auto;
+  }
 }
 .tab:hover {
   color: var(--text-color);

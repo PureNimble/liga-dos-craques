@@ -105,8 +105,8 @@ export function GamesListPage() {
 function GameCard({ game }: { game: GameWithFormat }) {
   const hasScore = game.team_a_score !== null || game.team_b_score !== null;
   return (
-    <li>
-      <Link to={`/games/${game.id}`}>
+    <li className={s.item}>
+      <Link to={`/games/${game.id}`} className={s.cardLink}>
         <Card interactive className={s.card}>
           <span className={s.icon}>
             <BallIcon width={22} height={22} />

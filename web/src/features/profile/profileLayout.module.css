@@ -45,6 +45,10 @@
 .grid2 {
   display: grid;
   gap: var(--space-lg);
+  /* Emparelha quando CABEM dois cartões de 20rem, não a partir de um breakpoint
+     de viewport: aos 640px exatos o par espremia cada cartão para ~290px — mais
+     estreito do que era em coluna única a 639px (a layout piorava ao crescer). */
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
 }
 
 @media (min-width: 640px) {
@@ -59,8 +63,5 @@
   .cardCol {
     width: 18.75rem;
     flex-shrink: 0;
-  }
-  .grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

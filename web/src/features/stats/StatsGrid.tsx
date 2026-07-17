@@ -33,8 +33,10 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
     );
   }
 
-  // Barra V-E-D proporcional.
-  const total = Math.max(1, stats.games);
+  // Barra V-E-D proporcional. Normaliza pela SOMA dos segmentos, não por
+  // `games`: `v_player_stats.games` conta todas as participações, mas V/E/D só
+  // contam com equipa e resultado preenchidos — um jogo sem equipa/resultado
+  // entra em `games` e em nenhum segmento, deixando a barra por encher.
   const seg = [
     { key: 'w', n: stats.wins, cls: s.segWin },
     { key: 'd', n: stats.draws, cls: s.segDraw },
@@ -61,8 +63,10 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
           <span className={s.loss}>{stats.losses}D</span>
         </div>
         <div className={s.bar}>
+          {/* flex-grow (não width %): reparte o espaço LIVRE, já descontados os
+              gaps do flex — com larguras em % os 2px de cada gap sobravam. */}
           {seg.map((x) => (
-            <div key={x.key} className={x.cls} style={{ width: `${(x.n / total) * 100}%` }} />
+            <div key={x.key} className={x.cls} style={{ flex: x.n }} />
           ))}
         </div>
       </div>

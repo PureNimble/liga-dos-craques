@@ -9,8 +9,12 @@
 }
 .grid2 {
   display: grid;
-  grid-template-columns: 1fr;
   gap: var(--space-lg);
+  /* Emparelha pela largura do próprio grid, não do viewport: o modal é folha à
+     largura toda abaixo dos 640px e fecha em 32rem acima — pelo breakpoint de
+     viewport, a folha de 639px mostrava 1 coluna e o modal de 512px mostrava 2
+     (o modal mais largo tinha menos colunas). 11rem = mínimo de um input date. */
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
 }
 .legend {
   margin-bottom: var(--space-sm);
@@ -43,10 +47,4 @@
   background-color: var(--accent);
   color: var(--text-on-accent);
   box-shadow: var(--shadow-glow);
-}
-
-@media (min-width: 640px) {
-  .grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
