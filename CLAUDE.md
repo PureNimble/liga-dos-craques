@@ -39,12 +39,19 @@ Monorepo com dois mundos: `web/` (frontend React) e `supabase/` (backend as code
 
 ### Frontend (`web/`)
 
-- **Stack:** React 18 + Vite + TypeScript + Tailwind + TanStack Query + React Router + react-hook-form + Zod.
+- **Stack:** React 18 + Vite + TypeScript + TanStack Query + React Router + react-hook-form + Zod. **Não há framework de CSS** — o Tailwind foi removido por completo (`3540ea7`); não o reintroduzir nem a qualquer sucedâneo.
 - **Alias de import:** `@/` → `web/src/` (configurado em `vite.config.ts` e `tsconfig`).
 - **Composição da app** (`src/app/App.tsx`): providers encadeados — `QueryClientProvider` → `ToastProvider` → `ConfirmProvider` → `AuthProvider` → `RouterProvider`.
 - **Rotas** (`src/app/router.tsx`): páginas autenticadas usam `lazyWithReload` (code-splitting + recarrega 1x quando um chunk fica desatualizado após deploy). Rotas protegidas ficam dentro de `<ProtectedRoute>` → `<AppLayout>`. Rotas públicas: `/login /signup /recover /update-password`. Protegidas: `/ /profile /players/:id /games /games/new /games/:id /rankings /challenges /admin`.
 - **Cliente Supabase:** singleton tipado em `src/shared/lib/supabase.ts` (`createClient<Database>`), partilhado por toda a app.
-- **Camada transversal `src/shared/`:** código usado por várias features vive aqui, não dentro de uma feature. `shared/lib/` (utilitários puros: `supabase`, `datetime`, `env`, `queryClient`, `lazyWithReload`) e `shared/components/` (UI partilhada: `ui/`, `toast/`). Importa-se via `@/shared/...`. As features podem depender de `shared/` (e de `auth`/`health`, que são fundacionais), nunca o contrário.
+- **Camada transversal `src/shared/`:** código usado por várias features vive aqui, não dentro de uma feature. `shared/lib/` (utilitários puros: `supabase`, `datetime`, `env`, `queryClient`, `lazyWithReload`), `shared/components/` (UI partilhada: `ui/`, `toast/`) e `shared/tokens/` (design tokens CSS). Importa-se via `@/shared/...`. As features podem depender de `shared/` (e de `auth`/`health`, que são fundacionais), nunca o contrário.
+
+### Estilos (CSS puro, sem framework)
+
+- **Cada componente estiliza-se num `*.module.css` ao lado** (CSS Modules, ~53 ficheiros). Não há utility classes — não escrever `className="flex gap-2"`.
+- **Design tokens** vivem em `src/shared/tokens/` (`colors`, `typography`, `spacing`, `radius`, `shadows`, `motion`), agregados por `theme.css`. Os `*.module.css` referenciam os tokens via `var(--...)`; **valores hard-coded (cores, espaçamentos) não entram nos módulos**. Regra do ficheiro: *um token só existe se for usado*.
+- **Ordem de import global** (`src/main.tsx`, é a única): `shared/tokens/theme.css` (tokens) antes de `index.css` (reset mínimo + base). `index.css` é o único CSS global — não acrescentar outros.
+- **Responsividade prefere container queries nativas** (`@container`, ex. `events/EventSoundboard.module.css`, `stats/StatsGrid.module.css`) a media queries, para os componentes reagirem ao seu contentor e não ao viewport.
 
 ### Organização por features
 
@@ -60,7 +67,7 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 
 ### Backend (`supabase/`)
 
-- **`migrations/`** — schema versionado (`YYYYMMDDHHMMSS_nome.sql`): tabelas, RLS, funções, e **dados de referência** (posições, formatos, tipos de evento). Nunca alterar o schema pela UI do Supabase sem gerar migração. O `seed/` **não** corre em `db push`, por isso dados de referência vão nas migrações, não no seed. As migrações correm por ordem de timestamp no nome — uma migração nova tem de usar um timestamp posterior ao da última existente (atualmente `20260803100000`), senão é aplicada fora de ordem ou saltada em ambientes já migrados.
+- **`migrations/`** — schema versionado (`YYYYMMDDHHMMSS_nome.sql`): tabelas, RLS, funções, e **dados de referência** (posições, formatos, tipos de evento). Nunca alterar o schema pela UI do Supabase sem gerar migração. O `seed/` **não** corre em `db push`, por isso dados de referência vão nas migrações, não no seed. As migrações correm por ordem de timestamp no nome — uma migração nova tem de usar um timestamp posterior ao da última existente. **Confirmar sempre o tip com `ls supabase/migrations | tail -1` contra o `main` atualizado, nunca de memória.** O `schema_migrations` é indexado **só pelo timestamp** (o nome do ficheiro não conta): duas migrações com o mesmo timestamp — típico de branches paralelos criados no mesmo dia — passam no CI local e só rebentam no deploy com `duplicate key ... schema_migrations_pkey`. Nesse caso, renumerar **a que ainda não foi aplicada** (a que não está em `main`); nunca renumerar uma já aplicada em produção.
 - **`functions/`** — Edge Functions (Deno). `health` é o keep-alive público (`verify_jwt=false`, retorna 200).
 - **`tests/`** — pgTAP (`rls_test.sql`) para invariantes de RLS.
 - **Tipos DB** (`web/src/types/database.ts`) são mantidos **à mão** (e podem ser regenerados com `npm run db:types` quando há BD local). Ao adicionar/alterar tabelas numa migração, atualizar este ficheiro.
@@ -76,6 +83,7 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 ## Deploy (CI/CD via GitHub Actions)
 
 Push para `main`:
+
 - Frontend → a Vercel faz build e publica automaticamente (Root Directory = `web`); PRs geram preview URLs.
 - Alterações em `supabase/**` → `deploy.yml` aplica migrações e faz deploy das Edge Functions.
 
