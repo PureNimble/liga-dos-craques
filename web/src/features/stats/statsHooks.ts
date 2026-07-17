@@ -55,8 +55,14 @@ export interface GameContribution {
 const GOAL_CODES = new Set(['goal', 'penalty_scored', 'freekick_scored']);
 const DONE = ['finished', 'voting_open', 'closed'];
 
+/**
+ * Quantos jogos entram nos gráficos. Único para TODOS os gráficos — com mais do
+ * que isto os eixos amontoam-se em cartões estreitos (o perfil põe-nos a par).
+ */
+export const CHART_GAMES = 5;
+
 /** Golos e assistências por jogo (últimos `limit` jogos concluídos). */
-export function useContributions(playerId: string | undefined, limit = 8) {
+export function useContributions(playerId: string | undefined, limit = CHART_GAMES) {
   return useQuery({
     queryKey: ['contributions', playerId, limit],
     enabled: Boolean(playerId),
@@ -110,7 +116,7 @@ export interface RatingPoint {
  * Avaliações dos últimos `limit` jogos do jogador, por ordem cronológica.
  * Junta a data (tabela game) às avaliações (vista v_game_player_rating).
  */
-export function useRatingTrend(playerId: string | undefined, limit = 8) {
+export function useRatingTrend(playerId: string | undefined, limit = CHART_GAMES) {
   return useQuery({
     queryKey: ['rating_trend', playerId, limit],
     enabled: Boolean(playerId),

@@ -39,7 +39,7 @@ export function PlayerCharts({ playerId }: { playerId: string }) {
       )}
 
       {xp && xp.length > 0 && (
-        <Card>
+        <Card className={s.chartCard}>
           <ChartHead title="XP por fonte" hint="De onde vem o XP" />
           <HBars items={xp.map((x) => ({ label: x.label, value: x.points }))} suffix=" XP" />
         </Card>
@@ -57,41 +57,119 @@ function ChartHead({ title, hint }: { title: string; hint: string }) {
   );
 }
 
-/** Pictograma por jogo: uma barra única — bolas (golos) em baixo, botas (assists) por cima. */
-// Altura fixa da área de ícones (px) — tem de bater com `.stack` no CSS.
-const STACK_BOX = 84;
+/**
+ * Pictograma por jogo: uma barra única — bolas (golos) em baixo, botas (assists)
+ * por cima.
+ *
+ * Princípio ISOTYPE: o tamanho do ícone é CONSTANTE, só o número varia. Encolher
+ * o ícone até caber (o que se fazia antes, até 6px) tornava-o ilegível e, como o
+ * tamanho saía do jogo com mais contribuições, mudava de perfil para perfil — dois
+ * pictogramas deixavam de ser comparáveis, que é o objetivo do gráfico.
+ *
+ * Com o ícone fixo é preciso um limite: a coluna tem BUDGET lugares, repartidos
+ * entre golos e assists. Quem não couber nos seus lugares põe o último a valer os
+ * que sobram (contador com o número dentro). O número é exato — ao contrário de
+ * uma escala (1 ícone = 2), não obriga a fazer contas nem esconde nada.
+ */
+const ICON = 16;
 const STACK_GAP = 2;
-const ICON_MAX = 15;
+/** Lugares por coluna. A coluna nunca passa disto — é o limite que faltava. */
+const BUDGET = 5;
+/** Altura da caixa de ícones (px), aplicada inline em `.stack`. */
+const STACK_BOX = BUDGET * ICON + (BUDGET - 1) * STACK_GAP;
+
+/**
+ * Reparte os lugares: os GOLOS têm prioridade — servem-se primeiro e só o que
+ * sobra vai para as assists (guardando 1 lugar para elas, se existirem, para não
+ * desaparecerem). Repartir pelo maior fazia com que 2 golos + 5 assists mostrasse
+ * ZERO bolas (os 2 golos colapsavam num contador) — logo o que mais interessa.
+ */
+function allocate(goals: number, assists: number) {
+  const gs = Math.min(goals, BUDGET - (assists > 0 ? 1 : 0));
+  return { gs, as: Math.min(assists, BUDGET - gs) };
+}
+
+/**
+ * Como se desenha uma fila em `slots` lugares: se o valor cabe, são todos ícones
+ * simples (1 = 1). Se não cabe, o último é um contador que vale os que sobram —
+ * incluindo-se a si próprio, por isso `plain + count` dá sempre o valor exato.
+ */
+function run(v: number, slots: number) {
+  if (v <= slots) return { plain: v, count: 0 };
+  return { plain: slots - 1, count: v - (slots - 1) };
+}
 
 function ContributionBars({ data }: { data: GameContribution[] }) {
-  // O jogo com mais contribuições define o tamanho do ícone, para que ATÉ a
-  // pilha mais alta caiba na caixa (altura fixa) — os dados nunca transbordam.
-  const maxStack = Math.max(1, ...data.map((d) => d.goals + d.assists));
-  const iconSize = Math.max(
-    6,
-    Math.min(ICON_MAX, Math.floor((STACK_BOX - (maxStack - 1) * STACK_GAP) / maxStack)),
-  );
-
   return (
     <div className={s.bars}>
-      {data.map((d) => (
-        <div key={d.gameId} className={s.barCol}>
-          <div
-            className={s.stack}
-            title={`${d.goals} golo${d.goals === 1 ? '' : 's'} · ${d.assists} assist.`}
-          >
-            {Array.from({ length: d.goals }).map((_, i) => (
-              <BallIcon key={`g${i}`} width={iconSize} height={iconSize} className={s.iconGoal} />
-            ))}
-            {Array.from({ length: d.assists }).map((_, i) => (
-              <BootIcon key={`a${i}`} width={iconSize} height={iconSize} className={s.iconAssist} />
-            ))}
-            {d.goals === 0 && d.assists === 0 && <span className={s.empty}>·</span>}
+      {data.map((d) => {
+        const { gs, as } = allocate(d.goals, d.assists);
+        const g = run(d.goals, gs);
+        const a = run(d.assists, as);
+        return (
+          <div key={d.gameId} className={s.barCol}>
+            <div
+              className={s.stack}
+              style={{ height: STACK_BOX }}
+              title={`${d.goals} golo${d.goals === 1 ? '' : 's'} · ${d.assists} assist.`}
+            >
+              {Array.from({ length: g.plain }).map((_, i) => (
+                <BallIcon key={`g${i}`} width={ICON} height={ICON} className={s.iconGoal} />
+              ))}
+              {g.count > 0 && <CountIcon n={g.count} className={s.iconGoal} />}
+              {Array.from({ length: a.plain }).map((_, i) => (
+                <BootIcon key={`a${i}`} width={ICON} height={ICON} className={s.iconAssist} />
+              ))}
+              {a.count > 0 && <CountIcon n={a.count} className={s.iconAssist} />}
+              {d.goals === 0 && d.assists === 0 && <span className={s.empty}>·</span>}
+            </div>
+            <span className={s.barLabel}>{d.label}</span>
           </div>
-          <span className={s.barLabel}>{d.label}</span>
-        </div>
-      ))}
+        );
+      })}
     </div>
+  );
+}
+
+/**
+ * Contador: ocupa um lugar de ícone e diz quantos vale. Fica o aro da bola (mesmo
+ * círculo, mesma cor) e o número ocupa o miolo todo.
+ *
+ * Os raios da `BallIcon` saem de propósito: a 16px não cabem aro + 5 raios + um
+ * número — sobravam ~4px para o algarismo e o conjunto virava borrão. Os raios
+ * são decoração, o número é a razão de ser do contador; a silhueta redonda (e as
+ * bolas normais logo por baixo) chegam para se ler como bola.
+ */
+function CountIcon({ n, className }: { n: number; className?: string }) {
+  return (
+    <svg
+      width={ICON}
+      height={ICON}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      className={className}
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" />
+      {/* O que aperta o número dentro de um círculo não é a largura, são os
+          CANTOS: a meia-diagonal da caixa do texto ≈ 0.45·fontSize com 1
+          algarismo, 0.66 com 2 e 0.90 com 3. O raio útil é 8.25 (9 menos meio
+          traço) — com 11 os "17" iam aos 7.2 e encostavam ao aro. Estes tamanhos
+          mantêm a diagonal em ~6, que é a folga que faltava. */}
+      <text
+        x="12"
+        y="12"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={n > 99 ? 7 : n > 9 ? 9.5 : 12}
+        fontWeight="700"
+        className={s.countText}
+      >
+        {n}
+      </text>
+    </svg>
   );
 }
 

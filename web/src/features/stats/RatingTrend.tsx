@@ -50,6 +50,22 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
 
   const showRef = lo <= 6 && hi >= 6;
   const gridVals = [lo, (lo + hi) / 2, hi];
+  // O meio pode ser fraccionário (ex.: 7.5) — arredondá-lo no rótulo punha um
+  // "8" numa linha desenhada aos 7.5. Só mostra decimal quando existe.
+  const fmtGrid = (v: number) => (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(1));
+
+  // Rótulos do eixo x: quantos CABEM na largura medida (não quantos pontos há).
+  // Dois jogos no mesmo dia repetem a data — de propósito: cada rótulo pertence
+  // a um ponto, e escondê-lo faria parecer que faltavam dados.
+  const X_LABEL_W = 34; // "23/07" a 9px + folga
+  const xLabels: number[] = [];
+  if (n > 0 && innerW > 0) {
+    const maxLabels = Math.max(2, Math.floor(innerW / X_LABEL_W));
+    const step = Math.max(1, Math.ceil(n / maxLabels));
+    for (let i = 0; i < n; i++) {
+      if (i % step === 0 || i === n - 1) xLabels.push(i);
+    }
+  }
 
   function onMove(e: React.PointerEvent) {
     if (n === 0 || w === 0) return;
@@ -91,7 +107,7 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             <g key={i}>
               <line className={s.grid} x1={padX} x2={w - padX} y1={yOf(v)} y2={yOf(v)} strokeWidth={1} />
               <text className={s.axis} x={4} y={yOf(v) + 3} fontSize={9}>
-                {v.toFixed(0)}
+                {fmtGrid(v)}
               </text>
             </g>
           ))}
@@ -150,16 +166,19 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             </text>
           )}
 
-          {/* Datas no eixo x (dilui se forem muitas) */}
-          {points.map((p, i) => {
-            const step = n > 6 ? 2 : 1;
-            if (i % step !== 0 && i !== n - 1) return null;
-            return (
-              <text className={s.axis} key={`x-${p.gameId}`} x={xOf(i)} y={H - 8} fontSize={9} textAnchor="middle">
-                {p.label}
-              </text>
-            );
-          })}
+          {/* Datas no eixo x (só as que cabem; extremos ancorados para não cortar) */}
+          {xLabels.map((i) => (
+            <text
+              className={s.axis}
+              key={`x-${points[i].gameId}`}
+              x={xOf(i)}
+              y={H - 8}
+              fontSize={9}
+              textAnchor={i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}
+            >
+              {points[i].label}
+            </text>
+          ))}
         </svg>
       )}
 
