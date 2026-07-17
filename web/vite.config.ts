@@ -28,5 +28,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
     css: false,
+    // O `env.ts` valida as variáveis ao importar, por isso qualquer teste que
+    // arraste o cliente supabase rebentava no CI, que não tem .env.local.
+    // Valores de faz-de-conta: os testes não falam com a rede.
+    env: {
+      VITE_SUPABASE_URL: 'http://localhost:54321',
+      VITE_SUPABASE_ANON_KEY: 'anon-de-teste',
+    },
   },
 });
