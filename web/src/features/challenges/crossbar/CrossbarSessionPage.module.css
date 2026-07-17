@@ -1,0 +1,200 @@
+.back {
+  margin-bottom: var(--space-xs);
+  padding: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.back:hover {
+  color: var(--text-color);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.cardTitle {
+  margin-bottom: var(--space-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.sectionTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.muted {
+  font-size: var(--font-size-sm);
+  color: var(--text-faint);
+}
+
+/* Setup */
+.setupHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+.setupHead .cardTitle {
+  margin-bottom: 0;
+}
+.chosenList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+.chosenItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2xs) 0;
+}
+.chosenName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--gray-200);
+}
+.addGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+.addChip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-color);
+  background-color: var(--gray-850);
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+.addChip:hover {
+  border-color: var(--accent-border);
+}
+
+/* Active turn */
+.turnCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+}
+.turnLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.turnPlayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.turnName {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.spotBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  background-color: var(--accent-surface);
+  border: 1px solid var(--accent-border);
+}
+.spotHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.spotName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--accent-strong);
+}
+.turnActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+/* Winner */
+.winnerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+}
+.winnerLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.winnerName {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  color: var(--text-color);
+}
+
+/* Progress */
+.progressList {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-850);
+  box-shadow: var(--shadow-card);
+}
+.progressItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--gray-750);
+}
+.progressItem:first-child {
+  border-top: 0;
+}
+.progressActive {
+  background-color: var(--accent-surface-faint);
+}
+.progressDots {
+  display: flex;
+  gap: var(--space-2xs);
+}
+.dot,
+.dotHit {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+.dot {
+  background-color: var(--gray-700);
+}
+.dotHit {
+  background-color: var(--accent);
+}

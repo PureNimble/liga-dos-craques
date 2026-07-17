@@ -30,6 +30,11 @@ const RankingsPage = lazyWithReload(() =>
 const ChallengesPage = lazyWithReload(() =>
   import('@/features/challenges/ChallengesPage').then((m) => ({ default: m.ChallengesPage })),
 );
+const CrossbarSessionPage = lazyWithReload(() =>
+  import('@/features/challenges/crossbar/CrossbarSessionPage').then((m) => ({
+    default: m.CrossbarSessionPage,
+  })),
+);
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
@@ -56,6 +61,7 @@ export const router = createBrowserRouter([
           { path: '/games/:id', element: <GameDetailPage /> },
           { path: '/rankings', element: <RankingsPage /> },
           { path: '/challenges', element: <ChallengesPage /> },
+          { path: '/challenges/crossbar/:sessionId', element: <CrossbarSessionPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],
       },

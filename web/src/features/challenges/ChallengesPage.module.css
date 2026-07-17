@@ -87,3 +87,15 @@
   display: flex;
   justify-content: flex-end;
 }
+.sessionLink {
+  padding: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent-strong);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.sessionLink:hover {
+  text-decoration: underline;
+}
