@@ -75,11 +75,7 @@
   --team-b-ring: rgb(14 165 233 / 0.6);
   --team-b-token-ring: rgb(125 211 252 / 0.5);
 
-  /* Campo (relvado + marcações + slots de arrasto) */
-  --surface-turf: #0d3b24;
-  --pitch-line: rgb(255 255 255 / 0.25);
-  --pitch-line-mid: rgb(255 255 255 / 0.2);
-  --pitch-line-soft: rgb(255 255 255 / 0.15);
+  /* Campo (slots de arrasto) */
   --pitch-slot-border: rgb(255 255 255 / 0.45);
   --pitch-slot-bg: rgb(255 255 255 / 0.05);
   --pitch-slot-near-bg: rgb(255 255 255 / 0.2);
