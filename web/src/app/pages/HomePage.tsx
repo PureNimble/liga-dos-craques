@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
 import type { FullProfile } from '@/features/profile/profileHooks';
+import { ProfileEditModal } from '@/features/profile/ProfileEditModal';
 import { usePlayerStatsSuspense } from '@/features/stats/statsHooks';
 import { usePlayerXpSuspense } from '@/features/xp/xpHooks';
 import { Avatar, Card } from '@/shared/components/ui';
 import { XpBar } from '@/features/xp/XpBar';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
+import { listMissing, profileCompletion } from '@/features/profile/profileCompletion';
 import s from './HomePage.module.css';
 
 const quickActions = [
@@ -22,6 +25,8 @@ export function HomePage() {
   const { data: xp } = usePlayerXpSuspense(profile.id);
 
   const displayName = profile.name || user?.email?.split('@')[0] || 'jogador';
+  const completion = profileCompletion(profile);
+  const [editOpen, setEditOpen] = useState(false);
 
   return (
     <div className={s.page}>
@@ -50,19 +55,25 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Novo jogador: onboarding */}
-      {stats.games === 0 && (
+      {/* Perfil incompleto */}
+      {!completion.isComplete && (
         <Card className={s.onboard}>
-          <h2 className={s.onboardTitle}>Começa por aqui</h2>
+          <h2 className={s.onboardTitle}>Completa o teu perfil</h2>
           <p className={s.onboardText}>
-            Completa o teu perfil (posições, pé preferido, dados físicos) para que o gerador de
-            equipas te encaixe bem.
+            Falta {listMissing(completion.missing)}.{' '}
+            {/* Só a posição entra no gerador de equipas. */}
+            {completion.positionMissing
+              ? 'A posição principal é o que o gerador de equipas usa para te encaixar.'
+              : 'Ajuda a malta a conhecer-te melhor.'}
           </p>
-          <Link to="/profile" className={s.cta}>
+          <button type="button" className={s.cta} onClick={() => setEditOpen(true)}>
             Completar perfil <ChevronRightIcon width={16} height={16} />
-          </Link>
+          </button>
         </Card>
       )}
+
+      {/* O mesmo modal da página de perfil. */}
+      {editOpen && <ProfileEditModal profile={profile} onClose={() => setEditOpen(false)} />}
 
       {/* Acessos rápidos */}
       <section className={s.quick}>

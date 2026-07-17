@@ -10,41 +10,21 @@
 .grid2 {
   display: grid;
   gap: var(--space-lg);
-  /* Emparelha pela largura do próprio grid, não do viewport: o modal é folha à
-     largura toda abaixo dos 640px e fecha em 32rem acima — pelo breakpoint de
-     viewport, a folha de 639px mostrava 1 coluna e o modal de 512px mostrava 2
-     (o modal mais largo tinha menos colunas). 11rem = mínimo de um input date. */
+  /* Emparelha pela largura do grid, não do viewport. 11rem = mínimo de um date. */
   grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
 }
+/* Sem a moldura do browser; fieldset/legend fica pela semântica do grupo. */
+.positions {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  min-width: 0; /* o fieldset é min-content por omissão e recusa encolher */
+}
+/* Mesmos valores do `.label` do Field. */
 .legend {
-  margin-bottom: var(--space-sm);
+  padding: 0;
+  margin-bottom: var(--space-xs);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-color);
-}
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-.chip {
-  border: 1px solid var(--gray-700);
-  border-radius: var(--radius-full);
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-muted);
-  background: transparent;
-  cursor: pointer;
-  transition: all var(--transition);
-}
-.chip:hover {
-  background-color: var(--gray-750);
-}
-.chipActive,
-.chipActive:hover {
-  border-color: var(--accent);
-  background-color: var(--accent);
-  color: var(--text-on-accent);
-  box-shadow: var(--shadow-glow);
 }

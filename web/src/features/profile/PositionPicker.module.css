@@ -1,0 +1,78 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pitch {
+  position: relative;
+  width: 100%;
+  /* Tem de bater certo com o viewBox do SVG (100 × PITCH_H). */
+  aspect-ratio: 100 / 80;
+  border-radius: var(--radius-md);
+  background-image: linear-gradient(to bottom, var(--accent-deep-surface), var(--gray-850));
+  border: 1px solid var(--border-faint);
+}
+.lines {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  fill: none;
+  stroke: var(--accent-ring);
+  stroke-width: 0.6;
+}
+
+/* left/top são o centro do lugar, daí o translate. */
+.spot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  height: 2.125rem;
+  width: 2.125rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--gray-700);
+  background-color: var(--gray-850);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+.spot:hover {
+  border-color: var(--border-faint-hover);
+  color: var(--text-color);
+}
+.spot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.secondary {
+  border-color: var(--accent-ring);
+  background-color: var(--accent-surface);
+  color: var(--accent-soft);
+}
+
+.main,
+.main:hover {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.help {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.helpMain {
+  color: var(--accent-soft);
+}
+.helpSecondary {
+  color: var(--text-color);
+}

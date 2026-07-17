@@ -55,6 +55,10 @@ export function Pitch({
   // Suplente selecionado (à espera de escolher o titular que sai).
   const [subIn, setSubIn] = useState<string | null>(null);
 
+  /** Posição do token: a que o lugar declara; fora dos lugares, adivinha-se. */
+  const codeAt = (x: number, y: number) =>
+    slots.find((s) => Math.hypot(s.x - x, s.y - y) < 3)?.code ?? positionCode(x, y);
+
   function nearestIdx(clientX: number, clientY: number) {
     const rect = fieldRef.current!.getBoundingClientRect();
     const px = clientX - rect.left;
@@ -80,7 +84,14 @@ export function Pitch({
 
   function onMove(e: React.PointerEvent) {
     setDrag((d) =>
-      d ? { ...d, dx: e.clientX - d.sx, dy: e.clientY - d.sy, nearIdx: nearestIdx(e.clientX, e.clientY) } : d,
+      d
+        ? {
+            ...d,
+            dx: e.clientX - d.sx,
+            dy: e.clientY - d.sy,
+            nearIdx: nearestIdx(e.clientX, e.clientY),
+          }
+        : d,
     );
   }
 
@@ -158,7 +169,7 @@ export function Pitch({
               } ${dragging ? s.tokenDragging : ''}`}
             >
               <span className={`${s.crest} ${CREST[team]} ${subTarget ? s.crestSub : ''}`}>
-                {positionCode(at.x, at.y)}
+                {codeAt(at.x, at.y)}
               </span>
               <span className={s.label}>{firstName(p.profile?.name)}</span>
             </div>

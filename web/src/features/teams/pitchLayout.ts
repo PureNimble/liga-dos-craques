@@ -2,7 +2,9 @@ import type { PositionCategory } from '@/types/database';
 
 export type Line = 'GK' | 'DEF' | 'MID' | 'FWD';
 
+/** Um lugar no campo. `code` só existe quando a formação o declara. */
 export interface PitchPos {
+  code?: string;
   x: number;
   y: number;
 }
@@ -11,12 +13,19 @@ export interface PitchPos {
 export interface Formation {
   name: string;
   rows: number[];
+  /**
+   * Posição de cada lugar (sem o GR), na ordem de `buildSlots`: linha a linha, da
+   * defesa para o ataque, e da esquerda para a direita. Um lateral e um ala podem
+   * ocupar o mesmo sítio — só a formação os distingue, a geometria não.
+   * Sem `codes` (formatos pequenos), a posição sai de `positionCode`.
+   */
+  codes?: string[];
 }
 
 const RANK: Record<Line, number> = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
 const catRank = (c: PositionCategory | null) => (c == null ? 2 : RANK[c as Line]);
 
-const F = (name: string, rows: number[]): Formation => ({ name, rows });
+const F = (name: string, rows: number[], codes?: string[]): Formation => ({ name, rows, codes });
 
 /**
  * Catálogo de formações por tamanho de equipa (jogadores por lado, GR incluído).
@@ -38,7 +47,13 @@ const CATALOG: Record<number, Formation[]> = {
     F('4-0', [4]),
   ],
   // Futebol
-  6: [F('2-2-1', [2, 2, 1]), F('2-1-2', [2, 1, 2]), F('1-2-2', [1, 2, 2]), F('3-1-1', [3, 1, 1]), F('3-2', [3, 2])],
+  6: [
+    F('2-2-1', [2, 2, 1]),
+    F('2-1-2', [2, 1, 2]),
+    F('1-2-2', [1, 2, 2]),
+    F('3-1-1', [3, 1, 1]),
+    F('3-2', [3, 2]),
+  ],
   7: [
     F('2-3-1', [2, 3, 1]),
     F('3-2-1', [3, 2, 1]),
@@ -47,7 +62,13 @@ const CATALOG: Record<number, Formation[]> = {
     F('1-3-2', [1, 3, 2]),
     F('2-2-2', [2, 2, 2]),
   ],
-  8: [F('3-3-1', [3, 3, 1]), F('2-3-2', [2, 3, 2]), F('3-2-2', [3, 2, 2]), F('2-4-1', [2, 4, 1]), F('3-1-3', [3, 1, 3])],
+  8: [
+    F('3-3-1', [3, 3, 1]),
+    F('2-3-2', [2, 3, 2]),
+    F('3-2-2', [3, 2, 2]),
+    F('2-4-1', [2, 4, 1]),
+    F('3-1-3', [3, 1, 3]),
+  ],
   9: [
     F('3-3-2', [3, 3, 2]),
     F('3-2-3', [3, 2, 3]),
@@ -57,15 +78,41 @@ const CATALOG: Record<number, Formation[]> = {
     F('3-1-3-1', [3, 1, 3, 1]),
   ],
   10: [F('4-3-2', [4, 3, 2]), F('3-4-2', [3, 4, 2]), F('4-4-1', [4, 4, 1]), F('3-3-3', [3, 3, 3])],
+  // Defesa a 4/5 → laterais (LB/RB); defesa a 3 → alas (LWB/RWB). Nunca ambos.
   11: [
-    F('4-4-2', [4, 4, 2]),
-    F('4-3-3', [4, 3, 3]),
-    F('4-2-3-1', [4, 2, 3, 1]),
-    F('3-5-2', [3, 5, 2]),
-    F('4-5-1', [4, 5, 1]),
-    F('3-4-3', [3, 4, 3]),
-    F('5-3-2', [5, 3, 2]),
-    F('4-1-2-1-2', [4, 1, 2, 1, 2]),
+    F('4-4-2', [4, 4, 2], ['LB', 'CB', 'CB', 'RB', 'LM', 'CM', 'CM', 'RM', 'ST', 'ST']),
+    F('4-3-3', [4, 3, 3], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'LW', 'ST', 'RW']),
+    // 4-3-3 com o meio-campo inclinado: trinco a recuar / médio ofensivo a subir.
+    F('4-1-2-3', [4, 1, 2, 3], ['LB', 'CB', 'CB', 'RB', 'DM', 'CM', 'CM', 'LW', 'ST', 'RW']),
+    F('4-2-1-3', [4, 2, 1, 3], ['LB', 'CB', 'CB', 'RB', 'DM', 'DM', 'AM', 'LW', 'ST', 'RW']),
+    // Falso 9: o ponta de lança recua (SS).
+    F('4-3-3 (falso 9)', [4, 3, 3], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'LW', 'SS', 'RW']),
+    F('4-2-3-1', [4, 2, 3, 1], ['LB', 'CB', 'CB', 'RB', 'DM', 'DM', 'LW', 'AM', 'RW', 'ST']),
+    F(
+      '4-2-3-1 (falso 9)',
+      [4, 2, 3, 1],
+      ['LB', 'CB', 'CB', 'RB', 'DM', 'DM', 'LW', 'AM', 'RW', 'SS'],
+    ),
+    F('3-5-2', [3, 5, 2], ['CB', 'CB', 'CB', 'LWB', 'CM', 'CM', 'CM', 'RWB', 'ST', 'ST']),
+    F('4-5-1', [4, 5, 1], ['LB', 'CB', 'CB', 'RB', 'LM', 'CM', 'CM', 'CM', 'RM', 'ST']),
+    F('3-4-3', [3, 4, 3], ['CB', 'CB', 'CB', 'LWB', 'CM', 'CM', 'RWB', 'LW', 'ST', 'RW']),
+    F('5-3-2', [5, 3, 2], ['LB', 'CB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'ST', 'ST']),
+    F('4-1-2-1-2', [4, 1, 2, 1, 2], ['LB', 'CB', 'CB', 'RB', 'DM', 'CM', 'CM', 'AM', 'ST', 'ST']),
+    F('4-1-4-1', [4, 1, 4, 1], ['LB', 'CB', 'CB', 'RB', 'DM', 'LM', 'CM', 'CM', 'RM', 'ST']),
+    F('5-4-1', [5, 4, 1], ['LB', 'CB', 'CB', 'CB', 'RB', 'LM', 'CM', 'CM', 'RM', 'ST']),
+    // Árvore de Natal.
+    F('4-3-2-1', [4, 3, 2, 1], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'AM', 'AM', 'ST']),
+    F('3-4-1-2', [3, 4, 1, 2], ['CB', 'CB', 'CB', 'LWB', 'CM', 'CM', 'RWB', 'AM', 'ST', 'ST']),
+    F('4-4-1-1', [4, 4, 1, 1], ['LB', 'CB', 'CB', 'RB', 'LM', 'CM', 'CM', 'RM', 'SS', 'ST']),
+    F('4-3-1-2', [4, 3, 1, 2], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'AM', 'ST', 'ST']),
+    // Defesa a 3 sem alas: a largura vem dos médios de lado.
+    F('3-1-4-2', [3, 1, 4, 2], ['CB', 'CB', 'CB', 'DM', 'LM', 'CM', 'CM', 'RM', 'ST', 'ST']),
+    F('3-4-2-1', [3, 4, 2, 1], ['CB', 'CB', 'CB', 'LWB', 'CM', 'CM', 'RWB', 'AM', 'AM', 'ST']),
+    F('4-2-4', [4, 2, 4], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'LW', 'ST', 'ST', 'RW']),
+    // Retângulo mágico.
+    F('4-2-2-2', [4, 2, 2, 2], ['LB', 'CB', 'CB', 'RB', 'DM', 'DM', 'AM', 'AM', 'ST', 'ST']),
+    // Sem ponta de lança.
+    F('4-6-0', [4, 3, 3], ['LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CM', 'LW', 'AM', 'RW']),
   ],
 };
 
@@ -104,6 +151,7 @@ const D_GK = 0.05;
 const D_DEF = 0.16; // linha defensiva
 const D_FWD = 0.92; // linha avançada
 const D_MID_SOLO = 0.5; // única linha de campo (formações pequenas)
+const D_SS = 0.8; // "na cova", entre o médio ofensivo e o ponta de lança
 
 /** Converte profundidade [0,1] em coordenada `y` no campo (0 topo, 100 fundo). */
 function depthToY(d: number): number {
@@ -122,58 +170,63 @@ function rowX(count: number, j: number): number {
 }
 
 /**
- * Código de posição (português) a partir das coordenadas. Além da linha e do
- * corredor (esq/centro/dir), afina os médios centrais por profundidade:
- * MDC (defensivo) · MC (centro) · MCO (ofensivo).
+ * Posição a partir das coordenadas, no vocabulário da tabela `position`.
+ * Bandas, da própria baliza para o ataque:
+ *   corredor lateral:  LB/RB → LWB/RWB → LM/RM → LW/RW
+ *   eixo:              GK → CB → DM → CM → AM → SS → ST
  */
 export function positionCode(x: number, y: number): string {
   const d = Math.min(1, Math.max(0, (Y_GOAL - y) / (Y_GOAL - Y_ATTACK))); // 0 baliza → 1 ataque
-  if (d < 0.1) return 'GR';
+  if (d < 0.1) return 'GK';
+
   const side = x < 36 ? 'L' : x > 64 ? 'R' : 'C';
 
-  // Defesa (a linha defensiva está sempre junto à área, d ≈ 0.16).
-  if (d < 0.3) return side === 'C' ? 'DC' : side === 'L' ? 'LE' : 'LD';
-
-  // Médio (banda larga: apanha trinco, interior e ofensivo entre as linhas).
-  if (d < 0.78) {
-    if (side === 'L') return 'ME'; // médio esquerdo (ala)
-    if (side === 'R') return 'MD'; // médio direito (ala)
-    if (d < 0.5) return 'MDC'; // médio defensivo (trinco)
-    if (d < 0.63) return 'MC'; // médio centro
-    return 'MCO'; // médio ofensivo
+  if (side !== 'C') {
+    const l = side === 'L';
+    if (d < 0.26) return l ? 'LB' : 'RB';
+    if (d < 0.45) return l ? 'LWB' : 'RWB';
+    if (d < 0.7) return l ? 'LM' : 'RM';
+    return l ? 'LW' : 'RW';
   }
 
-  // Avançado
-  return side === 'C' ? 'PL' : side === 'L' ? 'EE' : 'ED';
+  if (d < 0.3) return 'CB';
+  if (d < 0.47) return 'DM';
+  if (d < 0.62) return 'CM';
+  if (d < 0.76) return 'AM';
+  if (d < 0.88) return 'SS';
+  return 'ST';
 }
 
 /** Slots (GR + linhas) distribuídos em profundidade no campo inteiro. */
-function buildSlots(f: Formation): { line: Line; x: number; y: number }[] {
-  const slots: { line: Line; x: number; y: number }[] = [];
+function buildSlots(f: Formation): { line: Line; x: number; y: number; code: string }[] {
+  const slots: { line: Line; x: number; y: number; code: string }[] = [];
   // Guarda-redes (sempre, junto à própria baliza).
-  slots.push({ line: 'GK', x: 50, y: depthToY(D_GK) });
+  slots.push({ line: 'GK', x: 50, y: depthToY(D_GK), code: 'GK' });
 
   const R = f.rows.length;
+  let k = 0;
   f.rows.forEach((count, i) => {
     const line: Line = R === 1 ? 'MID' : i === 0 ? 'DEF' : i === R - 1 ? 'FWD' : 'MID';
     const d = R === 1 ? D_MID_SOLO : D_DEF + (D_FWD - D_DEF) * (i / (R - 1));
     const y = depthToY(d);
     for (let j = 0; j < count; j++) {
-      slots.push({ line, x: rowX(count, j), y });
+      const x = rowX(count, j);
+      slots.push({ line, x, y, code: f.codes?.[k] ?? positionCode(x, y) });
+      k++;
     }
   });
   return slots;
 }
 
-/** Coordenadas dos slots de uma formação. */
+/** Coordenadas (e posição) dos slots de uma formação. */
 export function slotsFor(f: Formation): PitchPos[] {
-  return buildSlots(f).map((s) => ({ x: s.x, y: s.y }));
+  return buildSlots(f).map((s) => ({ x: s.x, y: s.y, code: s.code }));
 }
 
 /**
  * Grelha COMPLETA de posições (tática livre / personalizada): a união de todos
  * os slots das formações de 11v11, independentemente do formato do jogo. Assim
- * pode colocar-se um jogador em qualquer posição (GR, LE, DC, MC, PL, …) sem
+ * pode colocar-se um jogador em qualquer posição (GK, LB, CB, CM, ST, …) sem
  * ficar restrito às posições da formação do tamanho da equipa.
  */
 export function unionSlots(): PitchPos[] {
@@ -184,6 +237,9 @@ export function unionSlots(): PitchPos[] {
       if (!kept.some((k) => Math.hypot(k.x - s.x, k.y - s.y) < MIN)) kept.push(s);
     }
   }
+  // Nenhuma formação cai em d ≈ 0.8, por isso o lugar do SS entra à mão.
+  const ss: PitchPos = { x: 50, y: depthToY(D_SS), code: 'SS' };
+  if (!kept.some((k) => Math.hypot(k.x - ss.x, k.y - ss.y) < MIN)) kept.push(ss);
   return kept;
 }
 

@@ -74,6 +74,7 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 
 ## Regras de ouro
 
+- **Comentários: só JSDoc simples.** Uma linha (ou duas) a dizer o que a coisa é. Nada de comentários a narrar a história da mudança ("antes fazia X", "isto estava mal porque…"), a justificar a alteração, a repetir o que o código já diz, ou a explicar o óbvio. Se um porquê é mesmo preciso, é uma frase curta — não um parágrafo. O contexto da mudança vai na mensagem de commit e no PR, não no ficheiro.
 - **RLS em TODAS as tabelas.** A chave anon é pública; a segurança está na BD. Padrão: RLS + GRANTs por coluna para impedir editar campos sensíveis (`role`, `created_by`) — o próprio nunca escala privilégios. Helpers SQL `is_admin()` e `is_game_organizer()` são `security definer`.
 - **Segredos** (`service_role`, DB password, access token) **só** em GitHub Secrets / Edge Functions — nunca no bundle nem no repo.
 - **Schema só via `migrations/`.**
