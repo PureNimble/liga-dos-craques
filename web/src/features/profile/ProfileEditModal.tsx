@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, Field, Input, Modal, Select } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { AvatarUpload } from './AvatarUpload';
+import { PositionPicker } from './PositionPicker';
+import { togglePosition as toggle } from './positionPitch';
 import { useUpdateProfile, usePositions, type FullProfile } from './profileHooks';
 import {
   profileFormSchema,
@@ -39,18 +41,17 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     },
   });
 
-  // Espera pelas posições para o <select> "engatar" o valor guardado.
-  useEffect(() => {
-    if (positions) form.setValue('main_position_id', profile.main_position_id);
-  }, [positions, profile.main_position_id, form]);
-
   const selectedSecondary = form.watch('secondaryPositionIds');
   const mainPositionId = Number(form.watch('main_position_id')) || null;
 
-  function toggleSecondary(id: number) {
-    const current = form.getValues('secondaryPositionIds');
-    const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
-    form.setValue('secondaryPositionIds', next, { shouldDirty: true });
+  /** Um clique no campo mexe na principal e nas secundárias. */
+  function togglePosition(id: number) {
+    const next = toggle(
+      { mainId: mainPositionId, secondaryIds: form.getValues('secondaryPositionIds') },
+      id,
+    );
+    form.setValue('main_position_id', next.mainId, { shouldDirty: true });
+    form.setValue('secondaryPositionIds', next.secondaryIds, { shouldDirty: true });
   }
 
   async function onSubmit(values: ProfileFormValues) {
@@ -68,7 +69,9 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         weight_kg: values.weight_kg,
         height_cm: values.height_cm,
       },
-      secondaryPositionIds: values.secondaryPositionIds.filter((id) => id !== values.main_position_id),
+      secondaryPositionIds: values.secondaryPositionIds.filter(
+        (id) => id !== values.main_position_id,
+      ),
     });
     toast.show('Perfil guardado ✓', 'success');
     onClose();
@@ -155,36 +158,13 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Field>
         </div>
 
-        <Field label="Posição principal" htmlFor="main_position_id">
-          <Select id="main_position_id" {...form.register('main_position_id')}>
-            <option value="">—</option>
-            {positions?.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.label}
-              </option>
-            ))}
-          </Select>
-        </Field>
-
-        <fieldset>
-          <legend className={s.legend}>Posições secundárias</legend>
-          <div className={s.chips}>
-            {positions
-              ?.filter((p) => p.id !== mainPositionId)
-              .map((p) => {
-                const active = selectedSecondary.includes(p.id);
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => toggleSecondary(p.id)}
-                    className={`${s.chip} ${active ? s.chipActive : ''}`}
-                  >
-                    {p.label}
-                  </button>
-                );
-              })}
-          </div>
+        <fieldset className={s.positions}>
+          <legend className={s.legend}>Posições</legend>
+          <PositionPicker
+            positions={positions ?? []}
+            value={{ mainId: mainPositionId, secondaryIds: selectedSecondary }}
+            onToggle={togglePosition}
+          />
         </fieldset>
 
         {updateProfile.isError && (
