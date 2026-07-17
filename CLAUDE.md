@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Comandos
 
-Todos os comandos do frontend correm dentro de `web/`:
+Todos os comandos do frontend correm dentro de `web/`. O ambiente principal é Windows/PowerShell (há também um shell Bash disponível); os comandos npm/npx são agnósticos do shell, mas utilitários POSIX (`tail`, `ls | tail -1`, etc.) não são nativos do PowerShell — usar o equivalente (`Get-Content -Tail 1`) ou o shell Bash.
 
 ```bash
 npm run dev        # servidor de dev (http://localhost:5173)
@@ -48,7 +48,7 @@ Monorepo com dois mundos: `web/` (frontend React) e `supabase/` (backend as code
 
 ### Estilos (CSS puro, sem framework)
 
-- **Cada componente estiliza-se num `*.module.css` ao lado** (CSS Modules, ~53 ficheiros). Não há utility classes — não escrever `className="flex gap-2"`.
+- **Cada componente estiliza-se num `*.module.css` ao lado** (CSS Modules, ~54 ficheiros). Não há utility classes — não escrever `className="flex gap-2"`.
 - **Design tokens** vivem em `src/shared/tokens/` (`colors`, `typography`, `spacing`, `radius`, `shadows`, `motion`), agregados por `theme.css`. Os `*.module.css` referenciam os tokens via `var(--...)`; **valores hard-coded (cores, espaçamentos) não entram nos módulos**. Regra do ficheiro: *um token só existe se for usado*.
 - **Ordem de import global** (`src/main.tsx`, é a única): `shared/tokens/theme.css` (tokens) antes de `index.css` (reset mínimo + base). `index.css` é o único CSS global — não acrescentar outros.
 - **Responsividade prefere container queries nativas** (`@container`, ex. `events/EventSoundboard.module.css`, `stats/StatsGrid.module.css`) a media queries, para os componentes reagirem ao seu contentor e não ao viewport.

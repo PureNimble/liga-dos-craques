@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Card, Field, Input, Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfilesList } from '@/features/profile/profileHooks';
@@ -10,10 +11,15 @@ import {
   useChallengeAttempts,
   useChallengeLeaderboard,
   useChallenges,
+  useChallengeSessions,
+  useCreateCrossbarSession,
   type Challenge,
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
+import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
 import s from './ChallengesPage.module.css';
+
+const CROSSBAR_CODE = 'crossbar';
 
 export function ChallengesPage() {
   const { data: challenges } = useChallenges();
@@ -49,13 +55,16 @@ export function ChallengesPage() {
 }
 
 function bestValue(row: ChallengeLeaderboardRow): number | null {
-  if (row.scoring_type === 'versus') return row.wins;
+  if (row.scoring_type === 'versus' || row.challenge_code === CROSSBAR_CODE) return row.wins;
   if (row.scoring_type === 'lower_better') return row.best_low;
   return row.best_high;
 }
 
 function ChallengeView({ challenge }: { challenge: Challenge }) {
   const isVersus = challenge.scoring_type === 'versus';
+  const isCrossbar = challenge.code === CROSSBAR_CODE;
+  // Desafios baseados em vitórias (1v1 e o Crossbar em sessão) mostram nº de vitórias.
+  const isWinsBased = isVersus || isCrossbar;
   const { data: leaderboard } = useChallengeLeaderboard(challenge.id);
   const { data: attempts } = useChallengeAttempts(challenge.id);
 
@@ -77,8 +86,12 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
     player_id: r.player_id,
     name: r.name,
     photo_url: r.photo_url,
-    value: isVersus ? `${r.wins}V` : `${bestValue(r) ?? '—'}`,
-    sub: isVersus ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos` : `${r.attempts} tentativas`,
+    value: isVersus ? `${r.wins}V` : isCrossbar ? `${r.wins}` : `${bestValue(r) ?? '—'}`,
+    sub: isVersus
+      ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos`
+      : isCrossbar
+        ? `${r.wins} sessões ganhas`
+        : `${r.attempts} tentativas`,
   }));
 
   return (
@@ -88,7 +101,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
         <p className={s.recordLabel}>Recorde</p>
         {record ? (
           <p className={s.recordValue}>
-            {isVersus ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
+            {isWinsBased ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
             <span className={s.recordSub}>· {record.name}</span>
           </p>
         ) : (
@@ -96,7 +109,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
         )}
       </Card>
 
-      <AddAttemptForm challenge={challenge} />
+      {isCrossbar ? <CrossbarEntry challenge={challenge} /> : <AddAttemptForm challenge={challenge} />}
 
       <div>
         <h2 className={s.sectionTitle}>Ranking</h2>
@@ -114,7 +127,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
                   {a.opponent?.name ? ` vs ${a.opponent.name}` : ''}
                 </span>
                 <span className={s.historyMeta}>
-                  {isVersus ? resultLabel(a.result) : a.score}{' '}
+                  {isWinsBased ? resultLabel(a.result) : a.score}{' '}
                   <span className={s.historyDate}>· {formatDate(a.played_at)}</span>
                 </span>
               </li>
@@ -128,6 +141,86 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
 
 function resultLabel(r: ChallengeResult) {
   return r === 'win' ? 'Vitória' : r === 'loss' ? 'Derrota' : r === 'draw' ? 'Empate' : '—';
+}
+
+const SESSION_STATUS_LABEL: Record<string, string> = {
+  setup: 'Por começar',
+  active: 'A decorrer',
+  finished: 'Terminada',
+};
+
+/** Entrada do Crossbar: arranca uma sessão ao vivo e lista as recentes. */
+function CrossbarEntry({ challenge }: { challenge: Challenge }) {
+  const navigate = useNavigate();
+  const createSession = useCreateCrossbarSession();
+  const { data: sessions } = useChallengeSessions(challenge.id);
+  const [variant, setVariant] = useState<CrossbarVariant>('quick');
+  const [error, setError] = useState<string | null>(null);
+
+  async function start() {
+    setError(null);
+    try {
+      const id = await createSession.mutateAsync({
+        challenge_id: challenge.id,
+        spot_count: spotCount(variant),
+      });
+      navigate(`/challenges/crossbar/${id}`);
+    } catch {
+      setError('Não foi possível criar a sessão.');
+    }
+  }
+
+  return (
+    <>
+      <Card>
+        <h2 className={s.cardTitle}>Nova sessão de Crossbar</h2>
+        {error && (
+          <div className={s.slotTop}>
+            <Alert kind="error">{error}</Alert>
+          </div>
+        )}
+        <div className={s.form}>
+          <Field label="Versão" htmlFor="cb-variant" hint="Rápida = 3 posições · Longa = 5 posições">
+            <Select
+              id="cb-variant"
+              value={variant}
+              onChange={(e) => setVariant(e.target.value as CrossbarVariant)}
+            >
+              <option value="quick">{CROSSBAR_VARIANT_LABEL.quick} (3 posições)</option>
+              <option value="long">{CROSSBAR_VARIANT_LABEL.long} (5 posições)</option>
+            </Select>
+          </Field>
+          <div className={s.actions}>
+            <Button onClick={start} loading={createSession.isPending}>
+              Começar sessão
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {sessions && sessions.length > 0 && (
+        <div>
+          <h2 className={s.sectionTitle}>Sessões</h2>
+          <ul className={s.historyList}>
+            {sessions.map((sess) => (
+              <li key={sess.id} className={s.historyItem}>
+                <button
+                  className={s.sessionLink}
+                  onClick={() => navigate(`/challenges/crossbar/${sess.id}`)}
+                >
+                  {SESSION_STATUS_LABEL[sess.status] ?? sess.status}
+                </button>
+                <span className={s.historyMeta}>
+                  {sess.spot_count} posições{' '}
+                  <span className={s.historyDate}>· {formatDate(sess.created_at)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
 }
 
 function AddAttemptForm({ challenge }: { challenge: Challenge }) {

@@ -27,6 +27,7 @@ export type Team = 'A' | 'B';
 export type VoteCategory = 'mvp' | 'flop';
 export type ChallengeScoring = 'higher_better' | 'lower_better' | 'versus';
 export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
+export type ChallengeSessionStatus = 'setup' | 'active' | 'finished';
 
 export interface Database {
   public: {
@@ -451,6 +452,83 @@ export interface Database {
         };
         Relationships: [];
       };
+      challenge_session: {
+        Row: {
+          id: string;
+          challenge_id: number;
+          spot_count: number;
+          status: ChallengeSessionStatus;
+          current_turn_index: number;
+          winner_id: string | null;
+          created_by: string;
+          created_at: string;
+          finished_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          challenge_id: number;
+          spot_count: number;
+          status?: ChallengeSessionStatus;
+          current_turn_index?: number;
+          winner_id?: string | null;
+          created_by: string;
+          created_at?: string;
+          finished_at?: string | null;
+        };
+        Update: {
+          spot_count?: number;
+          status?: ChallengeSessionStatus;
+          current_turn_index?: number;
+          winner_id?: string | null;
+          finished_at?: string | null;
+        };
+        Relationships: [];
+      };
+      session_player: {
+        Row: {
+          id: string;
+          session_id: string;
+          player_id: string;
+          turn_order: number;
+          current_spot: number;
+        };
+        Insert: {
+          id?: string;
+          session_id: string;
+          player_id: string;
+          turn_order?: number;
+          current_spot?: number;
+        };
+        Update: {
+          turn_order?: number;
+          current_spot?: number;
+        };
+        Relationships: [];
+      };
+      session_turn: {
+        Row: {
+          id: string;
+          session_id: string;
+          player_id: string;
+          spot_index: number;
+          hit: boolean;
+          turn_no: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          session_id: string;
+          player_id: string;
+          spot_index: number;
+          hit: boolean;
+          turn_no: number;
+          created_at?: string;
+        };
+        Update: {
+          hit?: boolean;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       v_player_stats: {
@@ -591,6 +669,8 @@ export interface Database {
       };
       set_xp_rule: { Args: { p_code: string; p_points: number }; Returns: undefined };
       admin_set_password: { Args: { p_user_id: string; p_password: string }; Returns: undefined };
+      crossbar_start_session: { Args: { p_session_id: string }; Returns: undefined };
+      crossbar_record_turn: { Args: { p_session_id: string; p_hit: boolean }; Returns: string };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
