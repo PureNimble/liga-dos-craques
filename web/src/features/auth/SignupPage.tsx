@@ -6,6 +6,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
 import { AuthLayout } from './AuthLayout';
 import { signupSchema, type SignupValues } from './auth.schemas';
+import s from './auth.module.css';
 
 export function SignupPage() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export function SignupPage() {
           Conta criada! Confirma o teu email através do link que enviámos e depois inicia sessão.
         </Alert>
       ) : (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
           <Field label="Nome" htmlFor="name" error={form.formState.errors.name?.message}>
             <Input id="name" autoComplete="name" {...form.register('name')} />
           </Field>
@@ -71,9 +72,9 @@ export function SignupPage() {
         </form>
       )}
 
-      <p className="text-center text-sm text-slate-400">
+      <p className={s.switch}>
         Já tens conta?{' '}
-        <Link to="/login" className="font-semibold text-pitch-400 hover:underline">
+        <Link to="/login" className={s.linkStrong}>
           Entra
         </Link>
       </p>

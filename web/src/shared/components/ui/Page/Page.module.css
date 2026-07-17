@@ -1,0 +1,20 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+}
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tightest);
+  color: var(--white);
+}
+@media (min-width: 640px) {
+  .page {
+    padding: var(--space-xl);
+  }
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+}

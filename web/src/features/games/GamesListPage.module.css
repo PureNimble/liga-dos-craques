@@ -1,0 +1,80 @@
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.skeletons,
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.icon {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background-color: var(--accent-surface);
+  color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-ring);
+}
+.info {
+  min-width: 0;
+  flex: 1;
+}
+.date {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+  color: var(--text-color);
+}
+.meta {
+  margin-top: var(--space-2xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+.metaLoc {
+  margin-left: var(--space-xs);
+}
+.locText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.score {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}
+.scoreDash {
+  color: var(--text-faint);
+}
+.side {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-sm);
+}
+.chevron {
+  color: var(--text-faint);
+}

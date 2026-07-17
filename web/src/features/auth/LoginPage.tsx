@@ -6,6 +6,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
 import { AuthLayout } from './AuthLayout';
 import { loginSchema, type LoginValues } from './auth.schemas';
+import s from './auth.module.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export function LoginPage() {
     <AuthLayout title="Entra na tua conta">
       {error && <Alert kind="error">{error}</Alert>}
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
         <Field label="Email" htmlFor="email" error={form.formState.errors.email?.message}>
           <Input id="email" type="email" autoComplete="email" {...form.register('email')} />
         </Field>
@@ -41,16 +42,16 @@ export function LoginPage() {
         <Button type="submit" loading={form.formState.isSubmitting}>
           Entrar
         </Button>
-        <div className="text-center text-sm">
-          <Link to="/recover" className="text-pitch-400 hover:underline">
+        <div className={s.centerSm}>
+          <Link to="/recover" className={s.link}>
             Esqueci-me da password
           </Link>
         </div>
       </form>
 
-      <p className="text-center text-sm text-slate-400">
+      <p className={s.switch}>
         Ainda não tens conta?{' '}
-        <Link to="/signup" className="font-semibold text-pitch-400 hover:underline">
+        <Link to="/signup" className={s.linkStrong}>
           Cria uma
         </Link>
       </p>

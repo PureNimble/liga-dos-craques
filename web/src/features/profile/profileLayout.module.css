@@ -1,0 +1,66 @@
+/* Layout partilhado pelas páginas de perfil (o próprio e público). */
+.page {
+  margin-inline: auto;
+  display: flex;
+  max-width: 48rem;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+}
+.errorPage {
+  padding: var(--space-lg);
+}
+.back {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+  transition: color var(--transition);
+}
+.back:hover {
+  color: var(--text-muted);
+}
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.cardCol {
+  width: 100%;
+}
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+.sectionTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.grid2 {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 640px) {
+  .page,
+  .errorPage {
+    padding: var(--space-xl);
+  }
+  .hero {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .cardCol {
+    width: 18.75rem;
+    flex-shrink: 0;
+  }
+  .grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

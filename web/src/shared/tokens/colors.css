@@ -1,0 +1,176 @@
+/* Cor — paleta base (primitivos, por família + tom) + camada semântica (por uso). */
+:root {
+  /* Primitivos: neutros (escuro → claro) */
+  --gray-950: #08090c;
+  --gray-900: #0c0e12;
+  --gray-850: #131519;
+  --gray-800: #191c22;
+  --gray-750: #23262e;
+  --gray-700: #31353f;
+  --gray-500: #64748b;
+  --gray-400: #94a3b8;
+  --gray-300: #cbd5e1;
+  --gray-200: #e2e8f0;
+  --gray-100: #f1f5f9;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-600: #ea580c;
+  /* Primitivos: verde (marca) e vermelho (perigo) */
+  --green-300: #6ee7b7;
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  /* Primitivos: tons de etiqueta (estado/categoria) */
+  --sky-300: #7dd3fc;
+  --sky-500: #0ea5e9;
+  --indigo-300: #a5b4fc;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --emerald-600: #059669;
+  --purple-300: #d8b4fe;
+  --white: #ffffff;
+
+  /* Texto */
+  --text-color: var(--gray-100);
+  --text-muted: var(--gray-300);
+  --text-subtle: var(--gray-400);
+  --text-faint: var(--gray-500);
+  --text-on-accent: var(--gray-950);
+  --text-placeholder: var(--gray-500);
+  --text-error: var(--red-400);
+
+  /* Acção / marca */
+  --accent: var(--green-500);
+  --accent-strong: var(--green-400);
+  --accent-soft: var(--green-300);
+  --danger: var(--red-500);
+  --danger-hover: var(--red-400);
+
+  /* Superfícies (fundos de "caixa" e de acção) */
+  --surface-page: var(--gray-950);
+  --surface-glass: rgb(16 18 22 / 0.78); /* barras fixas com desfoque */
+  --surface-input: var(--gray-900);
+  --surface-card: rgb(25 28 34 / 0.7); /* gray-800 a 70% */
+  --surface-card-hover: rgb(35 38 46 / 0.7);
+  --surface-translucent: rgb(255 255 255 / 0.04);
+  --surface-translucent-hover: rgb(255 255 255 / 0.08);
+  --surface-ghost-hover: rgb(255 255 255 / 0.06);
+
+  --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
+  --accent-surface-faint: rgb(16 185 129 / 0.05);
+  --accent-ring: rgb(16 185 129 / 0.25);
+  --accent-border: rgb(16 185 129 / 0.4);
+  --accent-deep-surface: rgb(6 78 59 / 0.4); /* verde profundo (onboarding) */
+  --danger-border: rgb(239 68 68 / 0.25);
+  --accent-glow: rgb(16 185 129 / 0.13); /* brilho de relvado (cabeçalho de jogo) */
+
+  /* Equipas (A verde, B azul) — reutilizado em cabeçalho, campo e painel */
+  --team-a: var(--green-500);
+  --team-a-ring: rgb(16 185 129 / 0.6);
+  --team-a-token-ring: rgb(110 231 183 / 0.5);
+  --team-b: var(--sky-500);
+  --team-b-ring: rgb(14 165 233 / 0.6);
+  --team-b-token-ring: rgb(125 211 252 / 0.5);
+
+  /* Campo (relvado + marcações + slots de arrasto) */
+  --surface-turf: #0d3b24;
+  --pitch-line: rgb(255 255 255 / 0.25);
+  --pitch-line-mid: rgb(255 255 255 / 0.2);
+  --pitch-line-soft: rgb(255 255 255 / 0.15);
+  --pitch-slot-border: rgb(255 255 255 / 0.45);
+  --pitch-slot-bg: rgb(255 255 255 / 0.05);
+  --pitch-slot-near-bg: rgb(255 255 255 / 0.2);
+  --danger-surface: rgb(239 68 68 / 0.15); /* vermelho translúcido */
+  --surface-muted: rgb(19 21 25 / 0.4); /* gray-850 a 40% (fundo "vazio") */
+  --surface-sunken: rgb(19 21 25 / 0.6); /* gray-850 a 60% (rodapé de modal) */
+  --surface-tooltip: rgb(25 28 34 / 0.95);
+  --overlay: rgb(0 0 0 / 0.6); /* fundo escurecido atrás de modais */
+
+  /* Bordas */
+  --border-input: var(--gray-700);
+  --border-faint: rgb(255 255 255 / 0.07);
+  --border-faint-hover: rgb(255 255 255 / 0.12);
+  --border-light: rgb(255 255 255 / 0.1);
+
+  /* Estados (alertas) — texto / fundo / borda por tipo */
+  --status-error-fg: var(--red-300);
+  --status-error-bg: rgb(239 68 68 / 0.1);
+  --status-error-border: rgb(239 68 68 / 0.4);
+  --status-success-fg: var(--green-400);
+  --status-success-bg: rgb(16 185 129 / 0.1);
+  --status-success-border: rgb(16 185 129 / 0.4);
+  --status-info-fg: var(--text-muted);
+  --status-info-bg: var(--gray-850);
+  --status-info-border: var(--gray-700);
+
+  /* Tons de etiqueta — fundo translúcido + texto, por cor (badges de estado) */
+  --tone-gray-bg: rgb(100 116 139 / 0.15);
+  --tone-gray-fg: var(--gray-300);
+  --tone-sky-bg: rgb(14 165 233 / 0.15);
+  --tone-sky-fg: var(--sky-300);
+  --tone-green-bg: var(--accent-surface);
+  --tone-green-fg: var(--accent-strong);
+  --tone-indigo-bg: rgb(99 102 241 / 0.15);
+  --tone-indigo-fg: var(--indigo-300);
+  --tone-amber-bg: rgb(245 158 11 / 0.15);
+  --tone-amber-fg: var(--amber-300);
+  --tone-purple-bg: rgb(168 85 247 / 0.15);
+  --tone-purple-fg: var(--purple-300);
+  --tone-red-bg: var(--danger-surface);
+  --tone-red-fg: var(--red-300);
+
+  /* Escala de rating (0–10) — pílula sólida (bg + fg) e texto */
+  --rating-top-bg: var(--accent);
+  --rating-top-fg: var(--text-on-accent);
+  --rating-good-bg: var(--emerald-600);
+  --rating-good-fg: var(--white);
+  --rating-mid-bg: var(--amber-500);
+  --rating-mid-fg: var(--text-on-accent);
+  --rating-low-bg: var(--danger);
+  --rating-low-fg: var(--white);
+  --rating-none-bg: var(--gray-700);
+  --rating-none-fg: var(--text-muted);
+  --rating-top-text: var(--accent-strong);
+  --rating-good-text: var(--green-400);
+  --rating-mid-text: var(--amber-400);
+  --rating-low-text: var(--danger-hover);
+  --rating-none-text: var(--text-muted);
+
+  /* Pódio (rankings 1º/2º/3º) — gradiente do emblema + anel da linha */
+  --podium-1-from: var(--amber-300);
+  --podium-1-to: var(--amber-500);
+  --podium-1-fg: var(--text-on-accent);
+  --podium-1-ring: rgb(251 191 36 / 0.3);
+  --podium-2-from: var(--gray-200);
+  --podium-2-to: var(--gray-400);
+  --podium-2-fg: var(--text-on-accent);
+  --podium-2-ring: rgb(203 213 225 / 0.2);
+  --podium-3-from: var(--orange-400);
+  --podium-3-to: var(--orange-600);
+  --podium-3-fg: var(--white);
+  --podium-3-ring: rgb(249 115 22 / 0.2);
+
+  /* Escalão do cartão de jogador (estilo FIFA): anel + destaque + brilho */
+  --tier-gold-ring: rgb(252 211 77 / 0.6);
+  --tier-gold-accent: var(--amber-300);
+  --tier-gold-glow: rgb(252 211 77 / 0.25);
+  --tier-silver-ring: rgb(226 232 240 / 0.5);
+  --tier-silver-accent: var(--gray-100);
+  --tier-silver-glow: rgb(226 232 240 / 0.18);
+  --tier-bronze-ring: rgb(251 146 60 / 0.5);
+  --tier-bronze-accent: var(--orange-300);
+  --tier-bronze-glow: rgb(251 146 60 / 0.2);
+
+  /* Gráficos (SVG feito à mão) */
+  --chart-line: var(--accent-strong);
+  --chart-area-top: rgb(16 185 129 / 0.28);
+  --chart-area-bottom: rgb(16 185 129 / 0);
+  --chart-grid: rgb(255 255 255 / 0.06);
+  --chart-axis: rgb(148 163 184 / 0.7);
+  --chart-ref: rgb(148 163 184 / 0.35);
+  --chart-crosshair: rgb(255 255 255 / 0.18);
+  --chart-point-stroke: var(--gray-850);
+}

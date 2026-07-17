@@ -1,0 +1,16 @@
+.page {
+  margin-inline: auto;
+  max-width: 32rem;
+  padding: var(--space-lg);
+}
+.title {
+  margin-bottom: var(--space-xl);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-black);
+  color: var(--white);
+}
+@media (min-width: 640px) {
+  .page {
+    padding: var(--space-xl);
+  }
+}

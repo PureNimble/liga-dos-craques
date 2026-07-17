@@ -1,0 +1,39 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border-radius: var(--radius-full);
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Tons de etiqueta (estado/categoria) */
+.gray {
+  background-color: var(--tone-gray-bg);
+  color: var(--tone-gray-fg);
+}
+.sky {
+  background-color: var(--tone-sky-bg);
+  color: var(--tone-sky-fg);
+}
+.green {
+  background-color: var(--tone-green-bg);
+  color: var(--tone-green-fg);
+}
+.indigo {
+  background-color: var(--tone-indigo-bg);
+  color: var(--tone-indigo-fg);
+}
+.amber {
+  background-color: var(--tone-amber-bg);
+  color: var(--tone-amber-fg);
+}
+.purple {
+  background-color: var(--tone-purple-bg);
+  color: var(--tone-purple-fg);
+}
+.red {
+  background-color: var(--tone-red-bg);
+  color: var(--tone-red-fg);
+}

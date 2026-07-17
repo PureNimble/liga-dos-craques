@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useRef, useState, type ReactNod
 import { Modal } from './Modal';
 import { Button } from './index';
 import { AlertIcon } from './icons';
+import s from './ConfirmDialog.module.css';
 
 interface ConfirmOptions {
   title: string;
@@ -67,17 +68,13 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
           </>
         }
       >
-        <div className="flex gap-3.5 pt-1">
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-              state.danger ? 'bg-red-500/15 text-red-400' : 'bg-pitch-500/15 text-pitch-400'
-            }`}
-          >
+        <div className={s.content}>
+          <div className={[s.icon, state.danger ? s.iconDanger : s.iconNormal].join(' ')}>
             <AlertIcon width={22} height={22} />
           </div>
-          <div className="pt-0.5">
-            <h2 className="text-base font-bold text-white">{state.title}</h2>
-            {state.message && <p className="mt-1 text-sm text-slate-400">{state.message}</p>}
+          <div className={s.text}>
+            <h2 className={s.title}>{state.title}</h2>
+            {state.message && <p className={s.message}>{state.message}</p>}
           </div>
         </div>
       </Modal>
