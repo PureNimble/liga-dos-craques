@@ -182,7 +182,7 @@ export function SparkIcon(props: IconProps) {
 export function LogoutIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
-      <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
+      <path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" />
       <path d="M10 12h10M17 9l3 3-3 3" />
     </svg>
   );
