@@ -37,6 +37,7 @@ export function overallOf(stats: PlayerStats, category: PositionCategory | null)
       saves: stats.saves,
       mvps: stats.mvps,
       category,
+      strengthDelta: stats.strength_delta,
     }),
   );
 }

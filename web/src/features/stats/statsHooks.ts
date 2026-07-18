@@ -25,6 +25,7 @@ const EMPTY: Omit<PlayerStats, 'player_id' | 'name'> = {
   mvps: 0,
   flops: 0,
   avg_rating: null,
+  strength_delta: null,
 };
 
 async function fetchPlayerStats(playerId: string): Promise<PlayerStats> {

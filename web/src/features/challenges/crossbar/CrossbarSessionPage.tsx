@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Avatar, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
+import { TargetIcon, TrophyIcon, XCircleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import {
   useCrossbarSession,
@@ -59,7 +60,7 @@ export function CrossbarSessionPage() {
         <button className={s.back} onClick={() => navigate('/challenges')}>
           ← Desafios
         </button>
-        <PageTitle>🎯 Crossbar Challenge</PageTitle>
+        <PageTitle>Crossbar Challenge</PageTitle>
       </div>
 
       {session.status === 'active' &&
@@ -130,7 +131,7 @@ function ActiveView({
     <div className={s.body}>
       <div className={[s.phaseBar, isSuddenDeath ? s.phaseSd : ''].filter(Boolean).join(' ')}>
         {isSuddenDeath
-          ? '🥅 Morte súbita'
+          ? 'Morte súbita'
           : `Ronda ${session.round}${session.max_rounds ? `/${session.max_rounds}` : ''}`}
       </div>
 
@@ -161,10 +162,10 @@ function ActiveView({
       {isOwner ? (
         <div className={s.turnActions}>
           <button className={s.missBtn} onClick={() => record(false)} disabled={recordTurn.isPending}>
-            <span className={s.btnIcon}>✗</span> Falhou
+            <XCircleIcon className={s.btnIcon} /> Falhou
           </button>
           <button className={s.hitBtn} onClick={() => record(true)} disabled={recordTurn.isPending}>
-            <span className={s.btnIcon}>🎯</span> Acertou
+            <TargetIcon className={s.btnIcon} /> Acertou
           </button>
         </div>
       ) : (
@@ -234,7 +235,9 @@ function FinishedView({ winnerName }: { winnerName: string }) {
       <div className={s.body}>
         <Card className={s.winnerCard}>
           <p className={s.winnerLabel}>Vencedor</p>
-          <span className={s.winnerName}>🏆 {winnerName}</span>
+          <span className={s.winnerName}>
+            <TrophyIcon className={s.winnerIcon} /> {winnerName}
+          </span>
           <p className={s.muted}>+1 no ranking do Crossbar</p>
         </Card>
         <Button block onClick={() => navigate('/challenges')}>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Avatar, Badge, Button, Card, Field, Input, Loading, Page, PageTitle } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
+import { CheckIcon } from '@/shared/components/ui/icons';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import { useChallenges, useCreateAndStart } from '../challengeHooks';
 import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbarSpots';
@@ -55,7 +56,7 @@ export function CrossbarSetupPage() {
         <button className={s.back} onClick={() => navigate('/challenges')}>
           ← Desafios
         </button>
-        <PageTitle>🎯 Nova sessão</PageTitle>
+        <PageTitle>Nova sessão</PageTitle>
       </div>
 
       <div className={s.body}>
@@ -83,7 +84,7 @@ export function CrossbarSetupPage() {
                   >
                     <Avatar name={p.name} src={p.photo_url} size="sm" />
                     <span className={s.pickName}>{p.name}</span>
-                    {on && <span className={s.pickCheck}>✓</span>}
+                    {on && <CheckIcon className={s.pickCheck} width={16} height={16} />}
                   </button>
                 );
               })}

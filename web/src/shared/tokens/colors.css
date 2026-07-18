@@ -162,9 +162,8 @@
 
   /* Penáltis — cena de estádio (baliza, bancadas, painéis, relva) */
   --pen-sky-top: #0a1220;
-  --pen-sky-bottom: #12202e;
-  --pen-stand: #161b26;
-  --pen-stand-edge: rgb(255 255 255 / 0.06);
+  --pen-sky-bottom: #143047;
+  --pen-stand: #1b2330;
   --pen-crowd-1: var(--sky-500);
   --pen-crowd-2: var(--amber-500);
   --pen-crowd-3: var(--red-400);
@@ -172,8 +171,8 @@
   --pen-billboard-bg: #05070b;
   --pen-billboard-fg: var(--accent-soft);
   --pen-billboard-shine: rgb(255 255 255 / 0.28);
-  --pen-grass-1: #0f3d2b;
-  --pen-grass-2: #0c3325;
+  --pen-grass-1: #1c7a41;
+  --pen-grass-2: #176a38;
   --pen-net: rgb(255 255 255 / 0.16);
   --pen-net-bg: rgb(4 6 9 / 0.62); /* interior escuro p/ a baliza contrastar com os painéis atrás */
   --pen-zone-bg: rgb(6 10 9 / 0.5); /* fundo translúcido escuro das zonas (números legíveis) */

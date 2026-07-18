@@ -42,24 +42,32 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 15%;
+  height: 46%;
   z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 1.5cqw 1.5cqw;
-  background-image: linear-gradient(to bottom, var(--pen-stand), transparent);
-  border-bottom: 1px solid var(--pen-stand-edge);
+  padding: 1.2cqw 1.5cqw;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, var(--pen-stand) 78%, transparent);
 }
+/* Espaçamento fixo entre adeptos: centra e corta os que sobram (mantém a mesma
+   folga em qualquer largura — em ecrãs pequenos mostra menos, não amontoa). */
 .fanRow {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: clamp(5px, 2cqw, 12px);
+}
+.fanRow:nth-child(even) {
+  transform: translateX(1.4cqw);
 }
 .fan {
-  width: clamp(4px, 1.7cqw, 10px);
-  height: clamp(5px, 2.2cqw, 13px);
-  border-radius: var(--radius-full) var(--radius-full) 2px 2px;
+  flex: 0 0 auto;
+  width: clamp(6px, 2.3cqw, 14px);
+  height: clamp(10px, 3.4cqw, 20px);
+  border-radius: 50% 50% 30% 30% / 42% 42% 22% 22%;
   transform-origin: bottom center;
+  box-shadow: inset 0 -0.4cqw 0.4cqw rgb(0 0 0 / 0.3);
   animation: fanBob 1.2s ease-in-out infinite;
 }
 .fanA {
@@ -79,10 +87,10 @@
 /* Painel publicitário atrás da baliza (visível através da rede e nas laterais). */
 .billboard {
   position: absolute;
-  top: 49%;
+  top: 46%;
   left: 0;
   right: 0;
-  height: 18%;
+  height: 20%;
   z-index: 1;
   overflow: hidden;
   display: flex;
@@ -119,8 +127,8 @@
   /* Espessura dos postes proporcional à baliza (cqw; teto alto p/ não achatar no desktop). */
   --post: clamp(4px, 2.2cqw, 20px);
   position: absolute;
-  top: 17%;
-  bottom: 23%;
+  top: 14%;
+  bottom: 28%;
   left: 8%;
   right: 8%;
   z-index: 3;
@@ -213,24 +221,54 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 33%;
+  height: 34%;
   z-index: 2;
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--pen-grass-1) 0 8%,
-    var(--pen-grass-2) 8% 16%
-  );
+  background-image:
+    linear-gradient(to bottom, rgb(255 255 255 / 0.12), transparent 45%),
+    repeating-linear-gradient(
+      90deg,
+      var(--pen-grass-1) 0 8%,
+      var(--pen-grass-2) 8% 16%
+    );
   box-shadow: inset 0 2px 6px var(--pen-shadow);
 }
 .penaltySpot {
   position: absolute;
-  top: 34%;
+  top: 62%;
   left: 50%;
   width: clamp(4px, 1.6cqw, 9px);
   height: clamp(4px, 1.6cqw, 9px);
   transform: translateX(-50%);
   border-radius: var(--radius-full);
   background-color: var(--pen-post);
+}
+
+/* Saltar animação — canto inferior direito da relva. */
+.skip {
+  position: absolute;
+  right: 3%;
+  bottom: 5%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: clamp(2rem, 9cqw, 2.75rem);
+  height: clamp(2rem, 9cqw, 2.75rem);
+  padding: 0;
+  border: 1px solid var(--pen-net);
+  border-radius: var(--radius-full);
+  background-color: rgb(0 0 0 / 0.45);
+  color: var(--gray-100);
+  font-size: clamp(1rem, 5cqw, 1.4rem);
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+.skip:hover {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  transform: scale(1.06);
 }
 
 .complete {

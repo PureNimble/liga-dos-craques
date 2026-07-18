@@ -4,7 +4,6 @@ import type { PenaltyMode } from '@/types/database';
 export interface PenaltyModeInfo {
   code: PenaltyMode;
   label: string;
-  icon: string;
   /** Mostra a baliza de 6 zonas (pen_zones/pen_target). */
   usesGoal: boolean;
   /** Pede o nº de rondas no setup (modos por golos). */
@@ -18,7 +17,6 @@ export const PENALTY_MODES: Record<PenaltyMode, PenaltyModeInfo> = {
   pen_goals: {
     code: 'pen_goals',
     label: 'Mais golos',
-    icon: '⚽',
     usesGoal: false,
     usesRounds: true,
     picksZone: false,
@@ -27,7 +25,6 @@ export const PENALTY_MODES: Record<PenaltyMode, PenaltyModeInfo> = {
   pen_zones: {
     code: 'pen_zones',
     label: 'Preencher zonas',
-    icon: '🎯',
     usesGoal: true,
     usesRounds: false,
     picksZone: true,
@@ -36,7 +33,6 @@ export const PENALTY_MODES: Record<PenaltyMode, PenaltyModeInfo> = {
   pen_target: {
     code: 'pen_target',
     label: 'Zona sorteada',
-    icon: '🎲',
     usesGoal: true,
     usesRounds: true,
     picksZone: false,
@@ -55,7 +51,6 @@ export type PenaltyDifficulty = 'facil' | 'dificil';
 export interface PenaltyEntryInfo {
   key: PenaltyEntry;
   label: string;
-  icon: string;
   hint: string;
   /** A entrada tem escolha de dificuldade fácil/difícil (só a de golos). */
   hasDifficulty: boolean;
@@ -65,14 +60,12 @@ export const PENALTY_ENTRIES: PenaltyEntryInfo[] = [
   {
     key: 'goals',
     label: 'Mais penáltis',
-    icon: '⚽',
     hint: 'X rondas; ganha quem marcar mais. No difícil, o jogo escolhe a zona.',
     hasDifficulty: true,
   },
   {
     key: 'zones',
     label: 'Preencher zonas',
-    icon: '🎯',
     hint: 'Escolhe a zona e marca; ganha o 1º a preencher as 6.',
     hasDifficulty: false,
   },

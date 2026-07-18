@@ -47,6 +47,7 @@ export function usePlayerRatings(playerIds: string[]) {
           saves: s?.saves ?? 0,
           mvps: s?.mvps ?? 0,
           category,
+          strengthDelta: s?.strength_delta ?? 0,
         });
         result.set(profile.id, { rating, category });
       }
