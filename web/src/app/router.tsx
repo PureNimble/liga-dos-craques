@@ -53,6 +53,9 @@ const PenaltySessionPage = lazyWithReload(() =>
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
+const PlacesMapPage = lazyWithReload(() =>
+  import('@/features/places/PlacesMapPage').then((m) => ({ default: m.PlacesMapPage })),
+);
 
 export const router = createBrowserRouter([
   // Rotas públicas
@@ -80,6 +83,7 @@ export const router = createBrowserRouter([
           { path: '/challenges/crossbar/:sessionId', element: <CrossbarSessionPage /> },
           { path: '/challenges/penalty/new', element: <PenaltySetupPage /> },
           { path: '/challenges/penalty/:sessionId', element: <PenaltySessionPage /> },
+          { path: '/places', element: <PlacesMapPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],
       },

@@ -151,6 +151,7 @@ export function GameDetailPage() {
       await updateGame.mutateAsync({
         scheduled_at: game.scheduled_at,
         location: game.location,
+        place_id: game.place_id,
         format_id: fmt.id,
         max_players: fmt.players_per_side * 2,
         notes: game.notes,

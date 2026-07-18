@@ -1,4 +1,4 @@
-import { BallIcon, HomeIcon, ShieldIcon, TargetIcon, TrophyIcon, UserIcon } from '@/shared/components/ui/icons';
+import { BallIcon, HomeIcon, PinIcon, ShieldIcon, TargetIcon, TrophyIcon, UserIcon } from '@/shared/components/ui/icons';
 import type { ComponentType, SVGProps } from 'react';
 
 
@@ -14,6 +14,7 @@ export const navItems: NavItem[] = [
   { to: '/games', label: 'Jogos', icon: BallIcon },
   { to: '/rankings', label: 'Rankings', icon: TrophyIcon },
   { to: '/challenges', label: 'Desafios', icon: TargetIcon },
+  { to: '/places', label: 'Campos', icon: PinIcon },
   { to: '/profile', label: 'Perfil', icon: UserIcon },
 ];
 

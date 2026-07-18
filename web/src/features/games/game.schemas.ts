@@ -8,6 +8,12 @@ export const createGameSchema = z.object({
     .max(200)
     .optional()
     .transform((v) => v || null),
+  place_id: z
+    .string()
+    .uuid()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
   // O formato define quantos jogam (tamanho do campo). Sem limite de inscrições:
   // quem vier a mais fica suplente.
   format_id: z.coerce.number().int().positive('Escolhe o formato'),

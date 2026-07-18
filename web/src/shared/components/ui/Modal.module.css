@@ -1,7 +1,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  /* Acima de qualquer widget de terceiros (ex.: os controlos do Leaflet usam z-index: 1000). */
+  z-index: 1200;
   display: flex;
   justify-content: center;
 }
@@ -66,6 +67,13 @@
   .lg {
     max-width: 32rem;
   }
+}
+
+/* Ao contrário de sm/md/lg (largura fixa), adapta-se à largura do conteúdo —
+   útil para dialogs cujo conteúdo (ex.: imagem + texto) já define o tamanho certo. */
+.auto {
+  width: fit-content;
+  max-width: min(92vw, 34rem);
 }
 
 .grip {
