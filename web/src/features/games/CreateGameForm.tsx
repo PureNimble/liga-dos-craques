@@ -1,7 +1,10 @@
+import { useEffect, useState, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, Field, Input, Select } from '@/shared/components/ui';
 import { isoToLocalInput, localInputToISO } from '@/shared/lib/datetime';
+import { useSearchPlaces, type Place } from '@/features/places/placeHooks';
+import { AddPlaceModal } from '@/features/places/AddPlaceModal';
 import { useCreateGame, useGameFormats, useUpdateGame, type GameWithFormat } from './gameHooks';
 import { createGameSchema, type CreateGameValues } from './game.schemas';
 import s from './CreateGameForm.module.css';
@@ -13,11 +16,16 @@ interface CreateGameFormProps {
   game?: GameWithFormat;
 }
 
+/** Espera-se que o utilizador pare de escrever antes de pesquisar — evita um pedido por tecla. */
+const SEARCH_DEBOUNCE_MS = 300;
+
 export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProps) {
   const isEdit = Boolean(game);
   const { data: formats } = useGameFormats();
   const createGame = useCreateGame();
   const updateGame = useUpdateGame(game?.id ?? '');
+  const [showAddPlaceModal, setShowAddPlaceModal] = useState(false);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   const form = useForm<CreateGameValues>({
     resolver: zodResolver(createGameSchema),
@@ -25,11 +33,43 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
       ? {
           scheduled_at: isoToLocalInput(game.scheduled_at),
           location: game.location ?? '',
+          place_id: game.place_id ?? null,
           format_id: game.format_id,
           notes: game.notes ?? '',
         }
       : {},
   });
+
+  const locationText = form.watch('location') ?? '';
+  const locationField = form.register('location');
+
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  useEffect(() => {
+    const handle = setTimeout(() => setDebouncedQuery(locationText), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(handle);
+  }, [locationText]);
+
+  // useQuery já trata em cache/memoiza por queryKey (["places","search",debouncedQuery]) —
+  // reescrever a mesma pesquisa não dispara outro pedido à BD.
+  const { data: suggestions } = useSearchPlaces(debouncedQuery);
+
+  function handleLocationChange(e: ChangeEvent<HTMLInputElement>) {
+    locationField.onChange(e);
+    // Escrever à mão desliga a ligação a um place anterior — só volta a
+    // ligar se escolher explicitamente uma sugestão da lista.
+    form.setValue('place_id', null);
+    setSuggestionsOpen(true);
+  }
+
+  function selectPlace(place: Place) {
+    form.setValue('place_id', place.id, { shouldValidate: true });
+    form.setValue('location', place.name, { shouldValidate: true });
+    setSuggestionsOpen(false);
+  }
+
+  function handlePlaceCreated(place: Place) {
+    selectPlace(place);
+  }
 
   async function onSubmit(values: CreateGameValues) {
     // O nº que joga vem do formato (tamanho do campo). Inscrições sem limite.
@@ -37,6 +77,7 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
     const payload = {
       scheduled_at: localInputToISO(values.scheduled_at),
       location: values.location,
+      place_id: values.place_id ?? null,
       format_id: values.format_id,
       max_players: fmt ? fmt.players_per_side * 2 : 10,
       notes: values.notes,
@@ -61,7 +102,39 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
       </Field>
 
       <Field label="Localização" htmlFor="location" error={form.formState.errors.location?.message}>
-        <Input id="location" placeholder="Ex.: Pavilhão Municipal" {...form.register('location')} />
+        <Input
+          id="location"
+          placeholder="Escreve o nome do campo…"
+          autoComplete="off"
+          {...locationField}
+          onChange={handleLocationChange}
+          onFocus={() => setSuggestionsOpen(true)}
+          onBlur={(e) => {
+            locationField.onBlur(e);
+            setSuggestionsOpen(false);
+          }}
+        />
+
+        {suggestionsOpen && suggestions && suggestions.length > 0 && (
+          <ul className={s.suggestions}>
+            {suggestions.map((p) => (
+              <li key={p.id}>
+                <button type="button" className={s.suggestion} onMouseDown={(e) => e.preventDefault()} onClick={() => selectPlace(p)}>
+                  {p.name} <span className={s.suggestionMeta}>{p.concelho}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button
+          type="button"
+          className={s.addPlaceLink}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => setShowAddPlaceModal(true)}
+        >
+          + Adicionar novo campo
+        </button>
       </Field>
 
       <Field
@@ -99,6 +172,14 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
           {isEdit ? 'Guardar' : 'Criar jogo'}
         </Button>
       </div>
+
+      {showAddPlaceModal && (
+        <AddPlaceModal
+          onClose={() => setShowAddPlaceModal(false)}
+          onCreated={handlePlaceCreated}
+          defaultName={locationText}
+        />
+      )}
     </form>
   );
 }

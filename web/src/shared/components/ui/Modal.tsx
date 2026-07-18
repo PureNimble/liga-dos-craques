@@ -12,7 +12,7 @@ interface ModalProps {
   footer?: ReactNode;
   /** No telemóvel, apresenta como "bottom sheet" (desliza de baixo). */
   variant?: 'center' | 'sheet';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'auto';
   /** Impede fechar ao clicar fora / Esc (ex.: enquanto submete). */
   dismissible?: boolean;
 }
@@ -21,6 +21,7 @@ const sizeClass: Record<NonNullable<ModalProps['size']>, string> = {
   sm: s.sm,
   md: s.md,
   lg: s.lg,
+  auto: s.auto,
 };
 
 export function Modal({

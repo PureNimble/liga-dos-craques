@@ -120,6 +120,7 @@ export function useGamePlayers(gameId: string | undefined) {
 export interface CreateGameInput {
   scheduled_at: string;
   location: string | null;
+  place_id: string | null;
   format_id: number;
   max_players: number;
   notes: string | null;

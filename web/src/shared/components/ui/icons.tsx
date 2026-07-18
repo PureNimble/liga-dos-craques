@@ -153,6 +153,24 @@ export function PinIcon(props: IconProps) {
   );
 }
 
+export function ImageIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="3" y="4.5" width="18" height="15" rx="2.5" />
+      <circle cx="8.5" cy="9.5" r="1.5" />
+      <path d="m4 17.5 5-5 3.5 3.5L17 11l3 3" />
+    </svg>
+  );
+}
+
+export function PhoneIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M6.6 3.5 4.8 5.3c-.5.5-.6 1.2-.3 1.9 2 4 5.1 7.1 9.1 9.1.7.3 1.4.2 1.9-.3l1.8-1.8-2.7-2.7-1.3.6a1 1 0 0 1-1.1-.2 13 13 0 0 1-3.4-3.4 1 1 0 0 1-.2-1.1l.6-1.3-2.7-2.7Z" />
+    </svg>
+  );
+}
+
 export function UsersIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
