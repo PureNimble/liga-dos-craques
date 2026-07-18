@@ -1,5 +1,5 @@
 import { Card } from '@/shared/components/ui';
-import { useRecentGames, type MatchResult } from './statsHooks';
+import { useRecentGames, MIN_GAMES_FOR_STATS, type MatchResult, type RecentGame } from './statsHooks';
 import { ratingPill } from './ratingColor';
 import s from './RecentMatches.module.css';
 
@@ -10,10 +10,15 @@ const RESULT_CLASS: Record<MatchResult, string> = {
 };
 
 /** Lista dos últimos jogos com resultado e avaliação (estilo SofaScore). */
-export function RecentMatches({ playerId }: { playerId: string }) {
+export function RecentMatches({ playerId, games }: { playerId: string; games: number }) {
   const { data } = useRecentGames(playerId, 5);
-  if (!data || data.length === 0) return null;
+  // Bloqueado (<5 jogos) → o estado bloqueado com mock vive em PlayerCharts.
+  if (games < MIN_GAMES_FOR_STATS || !data || data.length === 0) return null;
+  return <RecentMatchesCard data={data} />;
+}
 
+/** Cartão apresentacional — reutilizado pelo estado bloqueado (dados de mentira). */
+export function RecentMatchesCard({ data }: { data: RecentGame[] }) {
   return (
     <Card>
       <h2 className={s.heading}>Últimos jogos</h2>

@@ -75,11 +75,7 @@
   --team-b-ring: rgb(14 165 233 / 0.6);
   --team-b-token-ring: rgb(125 211 252 / 0.5);
 
-  /* Campo (relvado + marcações + slots de arrasto) */
-  --surface-turf: #0d3b24;
-  --pitch-line: rgb(255 255 255 / 0.25);
-  --pitch-line-mid: rgb(255 255 255 / 0.2);
-  --pitch-line-soft: rgb(255 255 255 / 0.15);
+  /* Campo (slots de arrasto) */
   --pitch-slot-border: rgb(255 255 255 / 0.45);
   --pitch-slot-bg: rgb(255 255 255 / 0.05);
   --pitch-slot-near-bg: rgb(255 255 255 / 0.2);
@@ -163,6 +159,27 @@
   --tier-bronze-ring: rgb(251 146 60 / 0.5);
   --tier-bronze-accent: var(--orange-300);
   --tier-bronze-glow: rgb(251 146 60 / 0.2);
+
+  /* Penáltis — cena de estádio (baliza, bancadas, painéis, relva) */
+  --pen-sky-top: #0a1220;
+  --pen-sky-bottom: #12202e;
+  --pen-stand: #161b26;
+  --pen-stand-edge: rgb(255 255 255 / 0.06);
+  --pen-crowd-1: var(--sky-500);
+  --pen-crowd-2: var(--amber-500);
+  --pen-crowd-3: var(--red-400);
+  --pen-crowd-4: var(--gray-300);
+  --pen-billboard-bg: #05070b;
+  --pen-billboard-fg: var(--accent-soft);
+  --pen-billboard-shine: rgb(255 255 255 / 0.28);
+  --pen-grass-1: #0f3d2b;
+  --pen-grass-2: #0c3325;
+  --pen-net: rgb(255 255 255 / 0.16);
+  --pen-net-bg: rgb(4 6 9 / 0.62); /* interior escuro p/ a baliza contrastar com os painéis atrás */
+  --pen-zone-bg: rgb(6 10 9 / 0.5); /* fundo translúcido escuro das zonas (números legíveis) */
+  --pen-post: var(--gray-100);
+  --pen-light: rgb(255 255 255 / 0.14);
+  --pen-shadow: rgb(0 0 0 / 0.4);
 
   /* Gráficos (SVG feito à mão) */
   --chart-line: var(--accent-strong);

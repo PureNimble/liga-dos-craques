@@ -1,19 +1,43 @@
 import { useMemo, useState } from 'react';
-import { Alert, Button, Card, Field, Input, Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
+import { useNavigate } from 'react-router-dom';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Field,
+  IconButton,
+  Input,
+  Page,
+  PageTitle,
+  PillTabs,
+  Select,
+  type BadgeTone,
+} from '@/shared/components/ui';
+import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
+import { CloseIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import { RankingList, type RankingRow } from '@/features/rankings/RankingList';
-import { formatDate } from '@/shared/lib/datetime';
-import type { ChallengeResult } from '@/types/database';
+import { formatDate, formatDateShort } from '@/shared/lib/datetime';
+import type { ChallengeResult, ChallengeSessionStatus } from '@/types/database';
 import {
   useAddChallengeAttempt,
   useChallengeAttempts,
   useChallengeLeaderboard,
   useChallenges,
+  useChallengeSessions,
+  useDeleteSession,
   type Challenge,
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
+import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
+import { PENALTY_ENTRIES, PENALTY_MODES } from './penalty/penaltyModes';
+import type { PenaltyMode } from '@/types/database';
 import s from './ChallengesPage.module.css';
+
+const CROSSBAR_CODE = 'crossbar';
+const PENALTY_CODE = 'penalty';
 
 export function ChallengesPage() {
   const { data: challenges } = useChallenges();
@@ -49,13 +73,19 @@ export function ChallengesPage() {
 }
 
 function bestValue(row: ChallengeLeaderboardRow): number | null {
-  if (row.scoring_type === 'versus') return row.wins;
+  const isSession = row.challenge_code === CROSSBAR_CODE || row.challenge_code === PENALTY_CODE;
+  if (row.scoring_type === 'versus' || isSession) return row.wins;
   if (row.scoring_type === 'lower_better') return row.best_low;
   return row.best_high;
 }
 
 function ChallengeView({ challenge }: { challenge: Challenge }) {
   const isVersus = challenge.scoring_type === 'versus';
+  const isCrossbar = challenge.code === CROSSBAR_CODE;
+  const isPenalty = challenge.code === PENALTY_CODE;
+  // Desafios em sessão ao vivo (Crossbar, Penáltis) e o 1v1 mostram nº de vitórias.
+  const isSession = isCrossbar || isPenalty;
+  const isWinsBased = isVersus || isSession;
   const { data: leaderboard } = useChallengeLeaderboard(challenge.id);
   const { data: attempts } = useChallengeAttempts(challenge.id);
 
@@ -77,33 +107,45 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
     player_id: r.player_id,
     name: r.name,
     photo_url: r.photo_url,
-    value: isVersus ? `${r.wins}V` : `${bestValue(r) ?? '—'}`,
-    sub: isVersus ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos` : `${r.attempts} tentativas`,
+    value: isVersus ? `${r.wins}V` : isSession ? `${r.wins}` : `${bestValue(r) ?? '—'}`,
+    sub: isVersus
+      ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos`
+      : isSession
+        ? undefined
+        : `${r.attempts} tentativas`,
   }));
 
   return (
     <div className={s.body}>
-      {/* Recorde */}
-      <Card className={s.recordCard}>
-        <p className={s.recordLabel}>Recorde</p>
-        {record ? (
-          <p className={s.recordValue}>
-            {isVersus ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
-            <span className={s.recordSub}>· {record.name}</span>
-          </p>
-        ) : (
-          <p className={s.recordEmpty}>Ainda sem registos.</p>
-        )}
-      </Card>
+      {/* Recorde (não nas sessões ao vivo — o ranking já mostra as vitórias). */}
+      {!isSession && (
+        <Card className={s.recordCard}>
+          <p className={s.recordLabel}>Recorde</p>
+          {record ? (
+            <p className={s.recordValue}>
+              {isWinsBased ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
+              <span className={s.recordSub}>· {record.name}</span>
+            </p>
+          ) : (
+            <p className={s.recordEmpty}>Ainda sem registos.</p>
+          )}
+        </Card>
+      )}
 
-      <AddAttemptForm challenge={challenge} />
+      {isCrossbar ? (
+        <CrossbarEntry challenge={challenge} />
+      ) : isPenalty ? (
+        <PenaltyEntry challenge={challenge} />
+      ) : (
+        <AddAttemptForm challenge={challenge} />
+      )}
 
       <div>
         <h2 className={s.sectionTitle}>Ranking</h2>
         <RankingList rows={rankingRows} />
       </div>
 
-      {attempts && attempts.length > 0 && (
+      {!isSession && attempts && attempts.length > 0 && (
         <div>
           <h2 className={s.sectionTitle}>Histórico recente</h2>
           <ul className={s.historyList}>
@@ -114,7 +156,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
                   {a.opponent?.name ? ` vs ${a.opponent.name}` : ''}
                 </span>
                 <span className={s.historyMeta}>
-                  {isVersus ? resultLabel(a.result) : a.score}{' '}
+                  {isWinsBased ? resultLabel(a.result) : a.score}{' '}
                   <span className={s.historyDate}>· {formatDate(a.played_at)}</span>
                 </span>
               </li>
@@ -128,6 +170,145 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
 
 function resultLabel(r: ChallengeResult) {
   return r === 'win' ? 'Vitória' : r === 'loss' ? 'Derrota' : r === 'draw' ? 'Empate' : '—';
+}
+
+const SESSION_STATUS_LABEL: Record<ChallengeSessionStatus, string> = {
+  setup: 'Por começar',
+  active: 'A decorrer',
+  finished: 'Terminada',
+};
+const SESSION_STATUS_TONE: Record<ChallengeSessionStatus, BadgeTone> = {
+  setup: 'gray',
+  active: 'green',
+  finished: 'indigo',
+};
+
+/** Entrada do Crossbar: escolhe a versão (cria no setup) e lista as sessões a decorrer. */
+function CrossbarEntry({ challenge }: { challenge: Challenge }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const confirm = useConfirm();
+  const deleteSession = useDeleteSession(challenge.id);
+  const { data: sessions } = useChallengeSessions(challenge.id);
+
+  async function remove(sessionId: string) {
+    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    if (ok) deleteSession.mutate(sessionId);
+  }
+
+  return (
+    <>
+      <Card>
+        <h2 className={s.cardTitle}>Nova sessão de Crossbar</h2>
+        <div className={s.versionGrid}>
+          {(['quick', 'long'] as CrossbarVariant[]).map((v) => (
+            <button
+              key={v}
+              className={s.versionCard}
+              onClick={() => navigate(`/challenges/crossbar/new?v=${v}`)}
+            >
+              <span className={s.versionName}>{CROSSBAR_VARIANT_LABEL[v]}</span>
+              <span className={s.versionSpots}>{spotCount(v)} posições</span>
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {sessions && sessions.length > 0 && (
+        <div>
+          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
+          <ul className={s.historyList}>
+            {sessions.map((sess) => (
+              <li key={sess.id} className={s.sessionItem}>
+                <button
+                  className={s.sessionMain}
+                  onClick={() => navigate(`/challenges/crossbar/${sess.id}`)}
+                >
+                  <Badge tone={SESSION_STATUS_TONE[sess.status]}>
+                    {SESSION_STATUS_LABEL[sess.status]}
+                  </Badge>
+                  <span className={s.sessionMeta}>
+                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
+                    {sess.spot_count} posições · {formatDateShort(sess.created_at)}
+                  </span>
+                </button>
+                {sess.created_by === user?.id && (
+                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                    <CloseIcon />
+                  </IconButton>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Entrada dos Penáltis: escolhe o modo (cria no setup) e lista as sessões a decorrer. */
+function PenaltyEntry({ challenge }: { challenge: Challenge }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const confirm = useConfirm();
+  const deleteSession = useDeleteSession(challenge.id);
+  const { data: sessions } = useChallengeSessions(challenge.id);
+
+  async function remove(sessionId: string) {
+    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    if (ok) deleteSession.mutate(sessionId);
+  }
+
+  return (
+    <>
+      <Card>
+        <h2 className={s.cardTitle}>Nova sessão de Penáltis</h2>
+        <div className={s.versionGrid}>
+          {PENALTY_ENTRIES.map((entry) => (
+            <button
+              key={entry.key}
+              className={s.versionCard}
+              onClick={() => navigate(`/challenges/penalty/new?m=${entry.key}`)}
+            >
+              <span className={s.versionName}>
+                {entry.icon} {entry.label}
+              </span>
+              <span className={s.versionSpots}>{entry.hint}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {sessions && sessions.length > 0 && (
+        <div>
+          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
+          <ul className={s.historyList}>
+            {sessions.map((sess) => (
+              <li key={sess.id} className={s.sessionItem}>
+                <button
+                  className={s.sessionMain}
+                  onClick={() => navigate(`/challenges/penalty/${sess.id}`)}
+                >
+                  <Badge tone={SESSION_STATUS_TONE[sess.status]}>
+                    {PENALTY_MODES[sess.mode as PenaltyMode]?.label ?? SESSION_STATUS_LABEL[sess.status]}
+                  </Badge>
+                  <span className={s.sessionMeta}>
+                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
+                    {formatDateShort(sess.created_at)}
+                  </span>
+                </button>
+                {sess.created_by === user?.id && (
+                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                    <CloseIcon />
+                  </IconButton>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
 }
 
 function AddAttemptForm({ challenge }: { challenge: Challenge }) {

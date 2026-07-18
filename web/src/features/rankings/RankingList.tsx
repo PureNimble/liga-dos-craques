@@ -8,7 +8,7 @@ export interface RankingRow {
   name: string;
   photo_url: string | null;
   value: string;
-  sub: string;
+  sub?: string;
 }
 
 // Emblema do pódio (1º ouro, 2º prata, 3º bronze) e realce subtil da linha.
@@ -35,7 +35,7 @@ export function RankingList({ rows }: { rows: RankingRow[] }) {
             <Avatar name={row.name} src={row.photo_url} size="md" />
             <div className={s.info}>
               <p className={s.name}>{row.name}</p>
-              <p className={s.sub}>{row.sub}</p>
+              {row.sub && <p className={s.sub}>{row.sub}</p>}
             </div>
             <span className={s.value}>{row.value}</span>
           </Link>

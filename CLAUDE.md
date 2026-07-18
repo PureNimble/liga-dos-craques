@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Comandos
 
-Todos os comandos do frontend correm dentro de `web/`:
+Todos os comandos do frontend correm dentro de `web/`. O ambiente principal é Windows/PowerShell (há também um shell Bash disponível); os comandos npm/npx são agnósticos do shell, mas utilitários POSIX (`tail`, `ls | tail -1`, etc.) não são nativos do PowerShell — usar o equivalente (`Get-Content -Tail 1`) ou o shell Bash.
 
 ```bash
 npm run dev        # servidor de dev (http://localhost:5173)
@@ -42,13 +42,13 @@ Monorepo com dois mundos: `web/` (frontend React) e `supabase/` (backend as code
 - **Stack:** React 18 + Vite + TypeScript + TanStack Query + React Router + react-hook-form + Zod. **Não há framework de CSS** — o Tailwind foi removido por completo (`3540ea7`); não o reintroduzir nem a qualquer sucedâneo.
 - **Alias de import:** `@/` → `web/src/` (configurado em `vite.config.ts` e `tsconfig`).
 - **Composição da app** (`src/app/App.tsx`): providers encadeados — `QueryClientProvider` → `ToastProvider` → `ConfirmProvider` → `AuthProvider` → `RouterProvider`.
-- **Rotas** (`src/app/router.tsx`): páginas autenticadas usam `lazyWithReload` (code-splitting + recarrega 1x quando um chunk fica desatualizado após deploy). Rotas protegidas ficam dentro de `<ProtectedRoute>` → `<AppLayout>`. Rotas públicas: `/login /signup /recover /update-password`. Protegidas: `/ /profile /players/:id /games /games/new /games/:id /rankings /challenges /admin`.
+- **Rotas** (`src/app/router.tsx`): páginas autenticadas usam `lazyWithReload` (code-splitting + recarrega 1x quando um chunk fica desatualizado após deploy). Rotas protegidas ficam dentro de `<ProtectedRoute>` → `<AppLayout>`. Rotas públicas: `/login /signup /recover /update-password`. Protegidas: `/ /profile /players/:id /games /games/new /games/:id /rankings /challenges /challenges/crossbar/new /challenges/crossbar/:sessionId /challenges/penalty/new /challenges/penalty/:sessionId /admin`.
 - **Cliente Supabase:** singleton tipado em `src/shared/lib/supabase.ts` (`createClient<Database>`), partilhado por toda a app.
 - **Camada transversal `src/shared/`:** código usado por várias features vive aqui, não dentro de uma feature. `shared/lib/` (utilitários puros: `supabase`, `datetime`, `env`, `queryClient`, `lazyWithReload`), `shared/components/` (UI partilhada: `ui/`, `toast/`) e `shared/tokens/` (design tokens CSS). Importa-se via `@/shared/...`. As features podem depender de `shared/` (e de `auth`/`health`, que são fundacionais), nunca o contrário.
 
 ### Estilos (CSS puro, sem framework)
 
-- **Cada componente estiliza-se num `*.module.css` ao lado** (CSS Modules, ~53 ficheiros). Não há utility classes — não escrever `className="flex gap-2"`.
+- **Cada componente estiliza-se num `*.module.css` ao lado** (CSS Modules, ~54 ficheiros). Não há utility classes — não escrever `className="flex gap-2"`.
 - **Design tokens** vivem em `src/shared/tokens/` (`colors`, `typography`, `spacing`, `radius`, `shadows`, `motion`), agregados por `theme.css`. Os `*.module.css` referenciam os tokens via `var(--...)`; **valores hard-coded (cores, espaçamentos) não entram nos módulos**. Regra do ficheiro: *um token só existe se for usado*.
 - **Ordem de import global** (`src/main.tsx`, é a única): `shared/tokens/theme.css` (tokens) antes de `index.css` (reset mínimo + base). `index.css` é o único CSS global — não acrescentar outros.
 - **Responsividade prefere container queries nativas** (`@container`, ex. `events/EventSoundboard.module.css`, `stats/StatsGrid.module.css`) a media queries, para os componentes reagirem ao seu contentor e não ao viewport.
@@ -64,6 +64,7 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 - **`*.schemas.ts`** (+ `*.schemas.test.ts`) — validação com Zod, testável isoladamente.
 - **Lógica pura** (ex.: `teamBalancer.ts`, `playerRating.ts`, `gameStatus.ts`, `shared/lib/datetime.ts`) fica separada e coberta por testes unitários.
 - **Gráficos são SVG feito à mão** (`stats/PlayerCharts.tsx`, `stats/RatingTrend.tsx`) — não há biblioteca de charts nas dependências e não se deve adicionar uma (custo 0 € / mínimo de dependências).
+- **Desafios em tempo real usam sessões efémeras** (padrão distinto do resto da app, que é persistente/append-only). Servem o **Crossbar** (`challenges/crossbar/`) e os **Penáltis** (`challenges/penalty/`), partilhando o mesmo esquema de sessão (`challenge_session` / `session_player` / `session_turn`) com um discriminador `challenge_session.mode` (`'crossbar'` | `'pen_goals'` | `'pen_zones'` | `'pen_target'`). O setup é 100% client-side — nada é gravado antes de começar. A `challenge_session` só existe na BD enquanto o jogo decorre: é criada já `active` (com a ordem sorteada) por uma RPC `security definer` (`crossbar_create_and_start` / `penalty_create_and_start`), avança por turnos/rondas via `*_record_turn` (colunas `round`/`phase`, morte súbita; penáltis usam `session_player.goals`/`zones`/`target`), e ao terminar (`*_finish`) a sessão é **apagada** — sobra apenas o `+1` no ranking (`challenge_attempt`). Lógica pura testável em `crossbarSpots.ts` / `penaltyModes.ts`. Na `ChallengesPage`, ambos os desafios são "wins-based" (o ranking mostra vitórias, não score).
 
 ### Backend (`supabase/`)
 

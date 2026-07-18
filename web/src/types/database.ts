@@ -27,6 +27,11 @@ export type Team = 'A' | 'B';
 export type VoteCategory = 'mvp' | 'flop';
 export type ChallengeScoring = 'higher_better' | 'lower_better' | 'versus';
 export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
+export type ChallengeSessionStatus = 'setup' | 'active' | 'finished';
+export type CrossbarPhase = 'play' | 'sudden_death';
+export type CrossbarTurnStatus = 'active' | 'sudden_death' | 'finished';
+export type PenaltyMode = 'pen_goals' | 'pen_zones' | 'pen_target';
+export type SessionMode = 'crossbar' | PenaltyMode;
 
 export type District =
   | 'Aveiro'
@@ -476,6 +481,113 @@ export interface Database {
         };
         Relationships: [];
       };
+      challenge_session: {
+        Row: {
+          id: string;
+          challenge_id: number;
+          mode: SessionMode;
+          spot_count: number;
+          status: ChallengeSessionStatus;
+          current_turn_index: number;
+          round: number;
+          phase: CrossbarPhase;
+          max_rounds: number | null;
+          winner_id: string | null;
+          created_by: string;
+          created_at: string;
+          finished_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          challenge_id: number;
+          mode?: SessionMode;
+          spot_count: number;
+          status?: ChallengeSessionStatus;
+          current_turn_index?: number;
+          round?: number;
+          phase?: CrossbarPhase;
+          max_rounds?: number | null;
+          winner_id?: string | null;
+          created_by: string;
+          created_at?: string;
+          finished_at?: string | null;
+        };
+        Update: {
+          mode?: SessionMode;
+          spot_count?: number;
+          status?: ChallengeSessionStatus;
+          current_turn_index?: number;
+          round?: number;
+          phase?: CrossbarPhase;
+          max_rounds?: number | null;
+          winner_id?: string | null;
+          finished_at?: string | null;
+        };
+        Relationships: [];
+      };
+      session_player: {
+        Row: {
+          id: string;
+          session_id: string;
+          player_id: string;
+          turn_order: number;
+          current_spot: number;
+          goals: number;
+          zones: number;
+          target: number | null;
+          eliminated: boolean;
+          sd_shot: boolean;
+          sd_hit: boolean;
+        };
+        Insert: {
+          id?: string;
+          session_id: string;
+          player_id: string;
+          turn_order?: number;
+          current_spot?: number;
+          goals?: number;
+          zones?: number;
+          target?: number | null;
+          eliminated?: boolean;
+          sd_shot?: boolean;
+          sd_hit?: boolean;
+        };
+        Update: {
+          turn_order?: number;
+          current_spot?: number;
+          goals?: number;
+          zones?: number;
+          target?: number | null;
+          eliminated?: boolean;
+          sd_shot?: boolean;
+          sd_hit?: boolean;
+        };
+        Relationships: [];
+      };
+      session_turn: {
+        Row: {
+          id: string;
+          session_id: string;
+          player_id: string;
+          spot_index: number;
+          hit: boolean;
+          turn_no: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          session_id: string;
+          player_id: string;
+          spot_index: number;
+          hit: boolean;
+          turn_no: number;
+          created_at?: string;
+        };
+        Update: {
+          hit?: boolean;
+        };
+        Relationships: [];
+      };
       place: {
         Row: {
           id: string;
@@ -671,6 +783,33 @@ export interface Database {
       };
       set_xp_rule: { Args: { p_code: string; p_points: number }; Returns: undefined };
       admin_set_password: { Args: { p_user_id: string; p_password: string }; Returns: undefined };
+      crossbar_start_session: { Args: { p_session_id: string }; Returns: undefined };
+      crossbar_record_turn: {
+        Args: { p_session_id: string; p_hit: boolean };
+        Returns: { status: CrossbarTurnStatus; winner_id: string | null };
+      };
+      crossbar_create_and_start: {
+        Args: {
+          p_challenge_id: number;
+          p_spot_count: number;
+          p_player_ids: string[];
+          p_max_rounds?: number | null;
+        };
+        Returns: string;
+      };
+      penalty_create_and_start: {
+        Args: {
+          p_challenge_id: number;
+          p_mode: PenaltyMode;
+          p_player_ids: string[];
+          p_rounds?: number | null;
+        };
+        Returns: string;
+      };
+      penalty_record_turn: {
+        Args: { p_session_id: string; p_hit: boolean; p_zone?: number | null };
+        Returns: { status: CrossbarTurnStatus; winner_id: string | null };
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

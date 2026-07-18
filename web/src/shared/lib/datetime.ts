@@ -16,12 +16,23 @@ const dateFmt = new Intl.DateTimeFormat('pt-PT', {
   timeZone: TZ,
 });
 
+const dateShortFmt = new Intl.DateTimeFormat('pt-PT', {
+  day: '2-digit',
+  month: 'short',
+  timeZone: TZ,
+});
+
 export function formatGameDateTime(iso: string): string {
   return dateTimeFmt.format(new Date(iso));
 }
 
 export function formatDate(iso: string): string {
   return dateFmt.format(new Date(iso));
+}
+
+/** Data curta (ex.: "17 jul."), para espaços apertados. */
+export function formatDateShort(iso: string): string {
+  return dateShortFmt.format(new Date(iso));
 }
 
 /**

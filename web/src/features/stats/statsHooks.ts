@@ -4,6 +4,16 @@ import type { Database } from '@/types/database';
 
 export type PlayerStats = Database['public']['Views']['v_player_stats']['Row'];
 
+/** Nº mínimo de jogos para desbloquear a nota média e os gráficos. */
+export const MIN_GAMES_FOR_STATS = 5;
+
+/** Mensagem do estado bloqueado — no próprio perfil convida a jogar; nos outros, informa. */
+export function statsLockMessage(own: boolean): string {
+  return own
+    ? `Joga ${MIN_GAMES_FOR_STATS} jogos para desbloquear`
+    : `Disponível a partir de ${MIN_GAMES_FOR_STATS} jogos`;
+}
+
 const EMPTY: Omit<PlayerStats, 'player_id' | 'name'> = {
   games: 0,
   wins: 0,

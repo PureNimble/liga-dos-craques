@@ -30,6 +30,26 @@ const RankingsPage = lazyWithReload(() =>
 const ChallengesPage = lazyWithReload(() =>
   import('@/features/challenges/ChallengesPage').then((m) => ({ default: m.ChallengesPage })),
 );
+const CrossbarSetupPage = lazyWithReload(() =>
+  import('@/features/challenges/crossbar/CrossbarSetupPage').then((m) => ({
+    default: m.CrossbarSetupPage,
+  })),
+);
+const CrossbarSessionPage = lazyWithReload(() =>
+  import('@/features/challenges/crossbar/CrossbarSessionPage').then((m) => ({
+    default: m.CrossbarSessionPage,
+  })),
+);
+const PenaltySetupPage = lazyWithReload(() =>
+  import('@/features/challenges/penalty/PenaltySetupPage').then((m) => ({
+    default: m.PenaltySetupPage,
+  })),
+);
+const PenaltySessionPage = lazyWithReload(() =>
+  import('@/features/challenges/penalty/PenaltySessionPage').then((m) => ({
+    default: m.PenaltySessionPage,
+  })),
+);
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
@@ -59,6 +79,10 @@ export const router = createBrowserRouter([
           { path: '/games/:id', element: <GameDetailPage /> },
           { path: '/rankings', element: <RankingsPage /> },
           { path: '/challenges', element: <ChallengesPage /> },
+          { path: '/challenges/crossbar/new', element: <CrossbarSetupPage /> },
+          { path: '/challenges/crossbar/:sessionId', element: <CrossbarSessionPage /> },
+          { path: '/challenges/penalty/new', element: <PenaltySetupPage /> },
+          { path: '/challenges/penalty/:sessionId', element: <PenaltySessionPage /> },
           { path: '/places', element: <PlacesMapPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],

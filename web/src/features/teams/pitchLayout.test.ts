@@ -22,7 +22,7 @@ const CODIGOS = [
 
 /** d = 0 na própria baliza, 1 no ataque. */
 const Y_GOAL = 92;
-const Y_ATTACK = 12;
+const Y_ATTACK = 6;
 const yAt = (d: number) => Y_GOAL + (Y_ATTACK - Y_GOAL) * d;
 const codeAt = (d: number, x: number) => positionCode(x, yAt(d));
 
@@ -199,6 +199,32 @@ describe('unionSlots (tática livre)', () => {
     for (const c of ['LWB', 'RWB', 'SS']) {
       expect(alcancaveis, `${c} sem lugar na tática livre`).toContain(c);
     }
+  });
+
+  it('a posição de cada lugar é a do sítio onde ele está', () => {
+    // Sem formação não há posições declaradas. Herdá-las das formações punha
+    // "RW" num lugar que é RM, ou "CB" num que é LB.
+    for (const s of unionSlots()) {
+      expect(s.code, `x=${s.x} y=${s.y.toFixed(1)}`).toBe(positionCode(s.x, s.y));
+    }
+  });
+
+  it('só há um lugar de cada lado em cada linha', () => {
+    // Dois LM colados não fazem sentido — não se joga com dois laterais
+    // esquerdos. Ao meio repetem-se (dois centrais, dois pontas).
+    const laterais = new Set(['LB', 'RB', 'LWB', 'RWB', 'LM', 'RM', 'LW', 'RW']);
+    const vistos = new Map<string, number>();
+    for (const s of unionSlots()) {
+      if (!laterais.has(s.code!)) continue;
+      const key = `${s.y.toFixed(2)}:${s.code}`;
+      vistos.set(key, (vistos.get(key) ?? 0) + 1);
+    }
+    for (const [key, n] of vistos) expect(n, key).toBe(1);
+  });
+
+  it('a linha do segundo avançado tem lugares dos lados, como as outras', () => {
+    const ss = unionSlots().filter((s) => s.code === 'SS');
+    expect(ss.length).toBeGreaterThan(1);
   });
 
   it('não põe dois lugares em cima um do outro', () => {

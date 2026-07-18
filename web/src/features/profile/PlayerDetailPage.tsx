@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Loading } from '@/shared/components/ui';
 import { ChevronLeftIcon } from '@/shared/components/ui/icons';
 import { usePlayerStats } from '@/features/stats/statsHooks';
@@ -18,7 +18,12 @@ import s from './profileLayout.module.css';
 
 export function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { data: profile, isLoading, isError } = usePublicProfile(id);
+
+  // Volta ao ecrã que abriu o perfil; se foi acesso direto (sem histórico), aos rankings.
+  const goBack = () => (location.key === 'default' ? navigate('/rankings') : navigate(-1));
   const { data: xp } = usePlayerXp(id);
   const { data: stats } = usePlayerStats(id);
   const { data: achievements } = useAchievements();
@@ -38,9 +43,9 @@ export function PlayerDetailPage() {
 
   return (
     <div className={s.page}>
-      <Link to="/rankings" className={s.back}>
-        <ChevronLeftIcon width={16} height={16} /> Rankings
-      </Link>
+      <button type="button" onClick={goBack} className={s.back}>
+        <ChevronLeftIcon width={16} height={16} /> Voltar
+      </button>
 
       {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
       <div className={s.hero}>
@@ -73,8 +78,8 @@ export function PlayerDetailPage() {
       )}
 
       <div className={s.grid2}>
-        <RecentMatches playerId={profile.id} />
-        <PlayerCharts playerId={profile.id} />
+        <RecentMatches playerId={profile.id} games={stats?.games ?? 0} />
+        <PlayerCharts playerId={profile.id} games={stats?.games ?? 0} />
       </div>
 
       <AchievementsGrid playerId={profile.id} featuredId={profile.featured_achievement_id} />

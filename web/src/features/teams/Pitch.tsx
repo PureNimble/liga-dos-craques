@@ -117,14 +117,21 @@ export function Pitch({
   return (
     <div className={s.wrap}>
       <div ref={fieldRef} className={s.field}>
-        {/* Marcações */}
-        <div className={s.markings}>
-          <div className={s.halfway} />
-          <div className={s.centerCircle} />
-          <div className={s.box} />
-          <div className={s.goalTop} />
-          <div className={s.goalBottom} />
-        </div>
+        {/* Marcações (campo inteiro, traço fino como na escolha de posições) */}
+        <svg className={s.lines} viewBox="0 0 100 133.33" aria-hidden focusable="false">
+          <rect x="2" y="2" width="96" height="129.33" rx="2" />
+          {/* Meio-campo */}
+          <line x1="2" y1="66.67" x2="98" y2="66.67" />
+          <circle cx="50" cy="66.67" r="13.5" />
+          {/* Baliza de cima (ataque): grande área, pequena área e baliza */}
+          <rect x="20" y="2" width="60" height="20" />
+          <rect x="36" y="2" width="28" height="10" />
+          <rect x="44" y="1" width="12" height="2" />
+          {/* Baliza de baixo (própria) */}
+          <rect x="20" y="111.33" width="60" height="20" />
+          <rect x="36" y="121.33" width="28" height="10" />
+          <rect x="44" y="130.33" width="12" height="2" />
+        </svg>
 
         {/* Slots-alvo enquanto arrasta */}
         {drag &&
@@ -136,7 +143,9 @@ export function Pitch({
                 key={`slot-${i}`}
                 style={{ left: `${slot.x}%`, top: `${slot.y}%` }}
                 className={`${s.slot} ${near ? s.slotNear : isOccupied ? s.slotOccupied : ''}`}
-              />
+              >
+                {codeAt(slot.x, slot.y)}
+              </div>
             );
           })}
 

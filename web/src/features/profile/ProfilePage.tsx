@@ -63,6 +63,7 @@ export function ProfilePage() {
           footLabel={profile.preferred_foot ? FOOT_LABELS[profile.preferred_foot] : null}
           avgRating={stats?.avg_rating ?? null}
           games={stats?.games}
+          own
           featured={featured ? { icon: featured.icon, label: featured.label } : null}
         />
       </div>
@@ -86,8 +87,8 @@ export function ProfilePage() {
       )}
 
       <div className={s.grid2}>
-        <RecentMatches playerId={profile.id} />
-        <PlayerCharts playerId={profile.id} />
+        <RecentMatches playerId={profile.id} games={stats?.games ?? 0} />
+        <PlayerCharts playerId={profile.id} games={stats?.games ?? 0} own />
       </div>
 
       <AchievementsGrid

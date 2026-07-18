@@ -1,18 +1,39 @@
 import type { ReactNode } from 'react';
-import { Card } from '@/shared/components/ui';
+import { Card, LockOverlay } from '@/shared/components/ui';
 import { ratingText } from '@/features/stats/ratingColor';
+import { MIN_GAMES_FOR_STATS, statsLockMessage } from '@/features/stats/statsHooks';
 import s from './PlayerHeader.module.css';
 
 interface PlayerHeaderProps {
   footLabel?: string | null;
   avgRating?: number | null;
   games?: number;
+  own?: boolean;
   featured?: { icon: string; label: string } | null;
 }
 
 /** Cartão de nota média (estilo SofaScore) — fica ao lado do cartão do jogador. */
-export function PlayerHeader({ footLabel, avgRating, games, featured }: PlayerHeaderProps) {
-  if (avgRating == null) return null;
+export function PlayerHeader({ footLabel, avgRating, games, own = false, featured }: PlayerHeaderProps) {
+  // Bloqueado até jogar o mínimo de jogos: mostra o cartão desfocado com cadeado.
+  if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
+    return (
+      <LockOverlay locked className={s.lockWrap} message={statsLockMessage(own)}>
+        <Card className={s.header}>
+          <div className={s.rating}>
+            <span className={`${s.ratingValue} ${ratingText(7.4)}`}>7.4</span>
+            <span className={s.ratingLabel}>Nota média</span>
+          </div>
+          <div className={s.divider} />
+          <div className={s.body}>
+            <p className={s.caption}>Média das avaliações por jogo</p>
+            <div className={s.chips}>
+              <Chip>{MIN_GAMES_FOR_STATS} jogos</Chip>
+            </div>
+          </div>
+        </Card>
+      </LockOverlay>
+    );
+  }
   return (
     <Card className={s.header}>
       <div className={s.rating}>

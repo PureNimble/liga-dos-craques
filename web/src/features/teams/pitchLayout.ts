@@ -144,14 +144,29 @@ export function defaultFormation(n: number): Formation {
 /* -------------------------------------------------------------------------- */
 
 const Y_GOAL = 92; // linha da própria baliza (fundo do campo)
-const Y_ATTACK = 12; // terço ofensivo (topo do campo)
+const Y_ATTACK = 6; // dentro da área contrária (o `.goalTop` vai até aos 14%)
 
 // Profundidade tática normalizada por linha (0 = baliza própria, 1 = ataque).
-const D_GK = 0.05;
+const Y_GK = 93; // guarda-redes: fixo dentro da pequena área (abaixo de Y_GOAL)
 const D_DEF = 0.16; // linha defensiva
-const D_FWD = 0.92; // linha avançada
+const D_FWD = 0.96; // linha avançada
 const D_MID_SOLO = 0.5; // única linha de campo (formações pequenas)
-const D_SS = 0.8; // "na cova", entre o médio ofensivo e o ponta de lança
+
+/**
+ * As seis linhas de campo, da defesa ao ataque. Formações e tática livre assentam
+ * exatamente nas mesmas linhas — trocar de formação nunca desloca as posições, só
+ * muda que lugares ficam ocupados. Caem no centro das bandas de `positionCode`,
+ * por isso cada linha lê-se como uma posição do eixo: CB → DM → CM → AM → SS → ST.
+ */
+const LADDER = [D_DEF, 0.32, 0.48, 0.64, 0.8, D_FWD];
+
+/** Aproxima uma profundidade à linha mais próxima da grelha. */
+const snapToLadder = (d: number) =>
+  LADDER.reduce((best, v) => (Math.abs(v - d) < Math.abs(best - d) ? v : best));
+
+/** Limites dos corredores: fora deles é lado, entre eles é eixo. */
+const X_LEFT = 32;
+const X_RIGHT = 68;
 
 /** Converte profundidade [0,1] em coordenada `y` no campo (0 topo, 100 fundo). */
 function depthToY(d: number): number {
@@ -159,14 +174,43 @@ function depthToY(d: number): number {
 }
 
 /**
- * Espalhamento horizontal simétrico de `count` jogadores numa linha. O espaço
- * afina com o número: linhas cheias ocupam quase toda a largura; pares ficam
- * centrais (dois pontas/centrais no meio, não nas linhas laterais).
+ * Colunas simétricas de uma linha, por nº de lugares — sempre em UNION_X, para os
+ * lugares das formações assentarem na mesma grelha da tática livre. Até três ficam
+ * centrais (dois pontas/centrais no meio, não nas linhas laterais); a partir de
+ * quatro abrem-se às pontas.
  */
-function rowX(count: number, j: number): number {
-  if (count <= 1) return 50;
-  const gap = Math.min(24, 80 / (count - 1));
-  return 50 + (j - (count - 1) / 2) * gap;
+const ROW_COLS: Record<number, number[]> = {
+  1: [50],
+  2: [34, 66],
+  3: [34, 50, 66],
+  4: [14, 34, 66, 86],
+  5: [14, 34, 50, 66, 86],
+};
+
+/** Recurso para linhas fora do catálogo: distribui simétrico entre as pontas. */
+function evenSpread(count: number): number[] {
+  if (count <= 1) return [50];
+  const gap = 72 / (count - 1);
+  return Array.from({ length: count }, (_, j) => 14 + gap * j);
+}
+
+/**
+ * Colunas (x) de uma linha. Com posições declaradas, laterais e alas vão às pontas
+ * (L→14, R→86) e os centrais às colunas do meio; sem elas (formatos pequenos), os
+ * lugares espalham-se simétricos. Tudo cai em UNION_X.
+ */
+function rowColumns(count: number, codes?: string[]): number[] {
+  if (!codes) return ROW_COLS[count] ?? evenSpread(count);
+  const xs = new Array<number>(count);
+  const central: number[] = [];
+  codes.forEach((c, j) => {
+    if (c[0] === 'L') xs[j] = 14;
+    else if (c[0] === 'R') xs[j] = 86;
+    else central.push(j);
+  });
+  const cols = ROW_COLS[central.length] ?? evenSpread(central.length);
+  central.forEach((j, m) => (xs[j] = cols[m]));
+  return xs;
 }
 
 /**
@@ -179,7 +223,7 @@ export function positionCode(x: number, y: number): string {
   const d = Math.min(1, Math.max(0, (Y_GOAL - y) / (Y_GOAL - Y_ATTACK))); // 0 baliza → 1 ataque
   if (d < 0.1) return 'GK';
 
-  const side = x < 36 ? 'L' : x > 64 ? 'R' : 'C';
+  const side = x < X_LEFT ? 'L' : x > X_RIGHT ? 'R' : 'C';
 
   if (side !== 'C') {
     const l = side === 'L';
@@ -200,18 +244,20 @@ export function positionCode(x: number, y: number): string {
 /** Slots (GR + linhas) distribuídos em profundidade no campo inteiro. */
 function buildSlots(f: Formation): { line: Line; x: number; y: number; code: string }[] {
   const slots: { line: Line; x: number; y: number; code: string }[] = [];
-  // Guarda-redes (sempre, junto à própria baliza).
-  slots.push({ line: 'GK', x: 50, y: depthToY(D_GK), code: 'GK' });
+  // Guarda-redes (sempre, dentro da pequena área).
+  slots.push({ line: 'GK', x: 50, y: Y_GK, code: 'GK' });
 
   const R = f.rows.length;
   let k = 0;
   f.rows.forEach((count, i) => {
     const line: Line = R === 1 ? 'MID' : i === 0 ? 'DEF' : i === R - 1 ? 'FWD' : 'MID';
     const d = R === 1 ? D_MID_SOLO : D_DEF + (D_FWD - D_DEF) * (i / (R - 1));
-    const y = depthToY(d);
+    const y = depthToY(snapToLadder(d));
+    const rowCodes = f.codes?.slice(k, k + count);
+    const xs = rowColumns(count, rowCodes);
     for (let j = 0; j < count; j++) {
-      const x = rowX(count, j);
-      slots.push({ line, x, y, code: f.codes?.[k] ?? positionCode(x, y) });
+      const x = xs[j];
+      slots.push({ line, x, y, code: rowCodes?.[j] ?? positionCode(x, y) });
       k++;
     }
   });
@@ -224,23 +270,28 @@ export function slotsFor(f: Formation): PitchPos[] {
 }
 
 /**
- * Grelha COMPLETA de posições (tática livre / personalizada): a união de todos
- * os slots das formações de 11v11, independentemente do formato do jogo. Assim
- * pode colocar-se um jogador em qualquer posição (GK, LB, CB, CM, ST, …) sem
- * ficar restrito às posições da formação do tamanho da equipa.
+ * Colunas da grelha livre: um lugar de cada lado e três no eixo. Os do meio ficam
+ * bem dentro de [X_LEFT, X_RIGHT] para se lerem como centrais.
+ */
+const UNION_X = [14, 34, 50, 66, 86];
+
+/**
+ * Grelha COMPLETA de posições (tática livre / personalizada): as seis linhas do
+ * `LADDER` cruzadas com UNION_X. Assim pode colocar-se um jogador em qualquer
+ * posição (GK, LB, CB, CM, ST, …) sem ficar restrito à formação do tamanho da
+ * equipa, e nos mesmos sítios onde as formações assentam os seus lugares.
+ *
+ * Sem formação não há posições declaradas: cada lugar vale pelo sítio onde está.
+ * Um lugar por lado em cada linha — não se joga com dois laterais esquerdos; ao
+ * meio repetem-se (dois centrais, dois pontas).
  */
 export function unionSlots(): PitchPos[] {
-  const MIN = 8; // distância mínima entre slots (%) — baixa para manter o DC central
-  const kept: PitchPos[] = [];
-  for (const f of formationsFor(11)) {
-    for (const s of slotsFor(f)) {
-      if (!kept.some((k) => Math.hypot(k.x - s.x, k.y - s.y) < MIN)) kept.push(s);
-    }
+  const out: PitchPos[] = [{ x: 50, y: Y_GK, code: 'GK' }];
+  for (const d of LADDER) {
+    const y = depthToY(d);
+    for (const x of UNION_X) out.push({ x, y, code: positionCode(x, y) });
   }
-  // Nenhuma formação cai em d ≈ 0.8, por isso o lugar do SS entra à mão.
-  const ss: PitchPos = { x: 50, y: depthToY(D_SS), code: 'SS' };
-  if (!kept.some((k) => Math.hypot(k.x - ss.x, k.y - ss.y) < MIN)) kept.push(ss);
-  return kept;
+  return out;
 }
 
 /**

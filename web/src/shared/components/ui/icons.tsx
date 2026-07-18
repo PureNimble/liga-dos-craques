@@ -30,6 +30,16 @@ export function HomeIcon(props: IconProps) {
   );
 }
 
+export function LockIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="5" y="10.5" width="14" height="10" rx="2" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+      <circle cx="12" cy="15.5" r="1" />
+    </svg>
+  );
+}
+
 export function BallIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -200,7 +210,7 @@ export function SparkIcon(props: IconProps) {
 export function LogoutIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
-      <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
+      <path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" />
       <path d="M10 12h10M17 9l3 3-3 3" />
     </svg>
   );
