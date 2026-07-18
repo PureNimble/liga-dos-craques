@@ -16,9 +16,10 @@
      é mais comprida do que "Próximos". */
   flex: 1 1 0;
   border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-lg);
+  padding: var(--space-xs) var(--space-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
   color: var(--text-subtle);
   cursor: pointer;
   transition:

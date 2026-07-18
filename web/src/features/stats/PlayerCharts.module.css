@@ -2,6 +2,16 @@
   display: flex;
   flex-direction: column;
 }
+
+/* Estado bloqueado (gráficos desfocados sob uma única sobreposição). */
+.lockedWrap {
+  grid-column: 1 / -1;
+}
+.lockedGrid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+}
 .trendRow {
   display: flex;
   flex: 1;
