@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
-import type { ChallengeResult, CrossbarTurnStatus, Database } from '@/types/database';
+import type { ChallengeResult, CrossbarTurnStatus, Database, PenaltyMode } from '@/types/database';
 
 export interface RecordTurnResult {
   status: CrossbarTurnStatus;
@@ -105,6 +105,9 @@ export interface SessionPlayerWithProfile {
   player_id: string;
   turn_order: number;
   current_spot: number;
+  goals: number;
+  zones: number;
+  target: number | null;
   eliminated: boolean;
   sd_shot: boolean;
   sd_hit: boolean;
@@ -145,7 +148,7 @@ export function useSessionPlayers(sessionId: string | undefined) {
       const { data, error } = await supabase
         .from('session_player')
         .select(
-          'id, player_id, turn_order, current_spot, eliminated, sd_shot, sd_hit, profile:player_id(name, photo_url)',
+          'id, player_id, turn_order, current_spot, goals, zones, target, eliminated, sd_shot, sd_hit, profile:player_id(name, photo_url)',
         )
         .eq('session_id', sessionId as string)
         .order('turn_order');
@@ -244,6 +247,58 @@ export function useRecordTurn(session: ChallengeSession) {
       const { data, error } = await supabase.rpc('crossbar_record_turn', {
         p_session_id: session.id,
         p_hit: hit,
+      });
+      if (error) throw error;
+      return data as RecordTurnResult;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['crossbar_session', session.id] });
+      queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', session.id] });
+      queryClient.invalidateQueries({ queryKey: ['crossbar_session_turns', session.id] });
+      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', session.challenge_id] });
+      queryClient.invalidateQueries({ queryKey: ['challenge_leaderboard', session.challenge_id] });
+      queryClient.invalidateQueries({ queryKey: ['challenge_attempts', session.challenge_id] });
+    },
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Sessões ao vivo (Penáltis) — mesmo esquema de sessão, RPCs próprias.
+// -----------------------------------------------------------------------------
+
+/** Cria a sessão de penáltis já a decorrer (setup é client-side) e devolve o id. */
+export function usePenaltyCreateAndStart() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: {
+      challenge_id: number;
+      mode: PenaltyMode;
+      player_ids: string[];
+      rounds: number | null;
+    }): Promise<string> => {
+      const { data, error } = await supabase.rpc('penalty_create_and_start', {
+        p_challenge_id: input.challenge_id,
+        p_mode: input.mode,
+        p_player_ids: input.player_ids,
+        p_rounds: input.rounds,
+      });
+      if (error) throw error;
+      return data as string;
+    },
+    onSuccess: (_id, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', vars.challenge_id] });
+    },
+  });
+}
+
+export function usePenaltyRecordTurn(session: ChallengeSession) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { hit: boolean; zone?: number | null }): Promise<RecordTurnResult> => {
+      const { data, error } = await supabase.rpc('penalty_record_turn', {
+        p_session_id: session.id,
+        p_hit: input.hit,
+        p_zone: input.zone ?? null,
       });
       if (error) throw error;
       return data as RecordTurnResult;

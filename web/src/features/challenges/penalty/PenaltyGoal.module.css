@@ -1,0 +1,302 @@
+/* Cena de estádio: céu, bancadas com adeptos, painel publicitário, baliza e relva. */
+.scene {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  isolation: isolate;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: linear-gradient(to bottom, var(--pen-sky-top), var(--pen-sky-bottom));
+}
+
+/* Focos de luz do estádio (cantos de cima). */
+.light {
+  position: absolute;
+  top: -12%;
+  width: 42%;
+  height: 40%;
+  z-index: 1;
+  background-image: radial-gradient(closest-side, var(--pen-light), transparent);
+  filter: blur(6px);
+  animation: lightSway 6s ease-in-out infinite;
+}
+.lightL {
+  left: -6%;
+}
+.lightR {
+  right: -6%;
+  animation-delay: 3s;
+}
+
+/* ---- Bancadas + adeptos ---------------------------------------------------- */
+.stands {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 15%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 1.5cqw 1.5cqw;
+  background-image: linear-gradient(to bottom, var(--pen-stand), transparent);
+  border-bottom: 1px solid var(--pen-stand-edge);
+}
+.fanRow {
+  display: flex;
+  justify-content: space-between;
+}
+.fan {
+  width: clamp(4px, 1.7cqw, 10px);
+  height: clamp(5px, 2.2cqw, 13px);
+  border-radius: var(--radius-full) var(--radius-full) 2px 2px;
+  transform-origin: bottom center;
+  animation: fanBob 1.2s ease-in-out infinite;
+}
+.fanA {
+  background-color: var(--pen-crowd-1);
+}
+.fanB {
+  background-color: var(--pen-crowd-2);
+}
+.fanC {
+  background-color: var(--pen-crowd-3);
+}
+.fanD {
+  background-color: var(--pen-crowd-4);
+}
+
+/* ---- Painel publicitário --------------------------------------------------- */
+/* Painel publicitário atrás da baliza (visível através da rede e nas laterais). */
+.billboard {
+  position: absolute;
+  top: 49%;
+  left: 0;
+  right: 0;
+  height: 18%;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(to bottom, var(--pen-billboard-bg), var(--gray-950));
+  border-top: 2px solid var(--accent-border);
+  border-bottom: 2px solid var(--pen-shadow);
+}
+.billboardText {
+  white-space: nowrap;
+  font-size: clamp(0.75rem, 4.6cqw, 1.5rem);
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.08em;
+  color: var(--pen-billboard-fg);
+  text-transform: uppercase;
+  animation: billboardScroll 22s linear infinite;
+}
+.billboardShine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  background-image: linear-gradient(
+    100deg,
+    transparent,
+    var(--pen-billboard-shine),
+    transparent
+  );
+  animation: billboardShine 4s ease-in-out infinite;
+}
+
+/* ---- Baliza (rede + postes + zonas) ---------------------------------------- */
+.goal {
+  /* Espessura dos postes proporcional à baliza (cqw; teto alto p/ não achatar no desktop). */
+  --post: clamp(4px, 2.2cqw, 20px);
+  position: absolute;
+  top: 17%;
+  bottom: 23%;
+  left: 8%;
+  right: 8%;
+  z-index: 3;
+}
+.net {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    repeating-linear-gradient(45deg, var(--pen-net) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-45deg, var(--pen-net) 0 1px, transparent 1px 9px);
+  background-color: var(--pen-net-bg);
+}
+.frame {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: var(--post) solid var(--pen-post);
+  border-bottom: none;
+  border-top-left-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
+  box-shadow:
+    inset 0 0 0 1px var(--pen-shadow),
+    0 3px 10px var(--gray-950);
+  pointer-events: none;
+}
+
+/* As zonas cobrem toda a rede: encostam ao interior dos postes (topo/laterais),
+   descem até ao fundo aberto e não deixam espaços entre si. */
+.grid {
+  position: absolute;
+  top: var(--post);
+  left: var(--post);
+  right: var(--post);
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0;
+}
+
+.zone {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-ring);
+  background-color: var(--pen-zone-bg);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-extrabold);
+  font-size: clamp(0.9rem, 6cqw, 1.6rem);
+  backdrop-filter: blur(2px);
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+.zonePick {
+  cursor: pointer;
+  border-style: solid;
+}
+.zonePick:hover {
+  background-color: var(--surface-ghost-hover);
+  border-color: var(--accent);
+}
+.zoneSelected {
+  border-color: var(--accent);
+  background-color: var(--accent-surface);
+  color: var(--text-color);
+}
+.zoneTarget {
+  border: 2px solid var(--accent);
+  background-color: var(--accent-surface);
+  box-shadow: inset 0 0 12px var(--accent-ring);
+  color: var(--text-color);
+  z-index: 1;
+  animation: targetPulse 1.1s ease-in-out infinite;
+}
+.zoneOn {
+  border: 1px solid var(--green-400);
+  background-color: var(--status-success-bg);
+  color: var(--status-success-fg);
+}
+.mark {
+  line-height: 1;
+  text-shadow: 0 1px 4px var(--gray-950);
+}
+
+/* ---- Relva + marca de penálti ---------------------------------------------- */
+.grass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 33%;
+  z-index: 2;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--pen-grass-1) 0 8%,
+    var(--pen-grass-2) 8% 16%
+  );
+  box-shadow: inset 0 2px 6px var(--pen-shadow);
+}
+.penaltySpot {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  width: clamp(4px, 1.6cqw, 9px);
+  height: clamp(4px, 1.6cqw, 9px);
+  transform: translateX(-50%);
+  border-radius: var(--radius-full);
+  background-color: var(--pen-post);
+}
+
+.complete {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  transform: translateX(-50%);
+  z-index: 4;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--green-300);
+  text-shadow: 0 1px 3px var(--gray-950);
+}
+
+/* ---- Animações ------------------------------------------------------------- */
+@keyframes fanBob {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-28%) scaleY(1.08);
+  }
+}
+@keyframes billboardScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes billboardShine {
+  0% {
+    transform: translateX(-120cqw);
+  }
+  60%,
+  100% {
+    transform: translateX(320cqw);
+  }
+}
+@keyframes lightSway {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes targetPulse {
+  0%,
+  100% {
+    box-shadow: inset 0 0 10px var(--accent-ring);
+  }
+  50% {
+    box-shadow: inset 0 0 20px var(--accent-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan,
+  .billboardText,
+  .billboardShine,
+  .light,
+  .zoneTarget {
+    animation: none;
+  }
+}

@@ -30,6 +30,8 @@ export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
 export type ChallengeSessionStatus = 'setup' | 'active' | 'finished';
 export type CrossbarPhase = 'play' | 'sudden_death';
 export type CrossbarTurnStatus = 'active' | 'sudden_death' | 'finished';
+export type PenaltyMode = 'pen_goals' | 'pen_zones' | 'pen_target';
+export type SessionMode = 'crossbar' | PenaltyMode;
 
 export interface Database {
   public: {
@@ -458,6 +460,7 @@ export interface Database {
         Row: {
           id: string;
           challenge_id: number;
+          mode: SessionMode;
           spot_count: number;
           status: ChallengeSessionStatus;
           current_turn_index: number;
@@ -472,6 +475,7 @@ export interface Database {
         Insert: {
           id?: string;
           challenge_id: number;
+          mode?: SessionMode;
           spot_count: number;
           status?: ChallengeSessionStatus;
           current_turn_index?: number;
@@ -484,6 +488,7 @@ export interface Database {
           finished_at?: string | null;
         };
         Update: {
+          mode?: SessionMode;
           spot_count?: number;
           status?: ChallengeSessionStatus;
           current_turn_index?: number;
@@ -502,6 +507,9 @@ export interface Database {
           player_id: string;
           turn_order: number;
           current_spot: number;
+          goals: number;
+          zones: number;
+          target: number | null;
           eliminated: boolean;
           sd_shot: boolean;
           sd_hit: boolean;
@@ -512,6 +520,9 @@ export interface Database {
           player_id: string;
           turn_order?: number;
           current_spot?: number;
+          goals?: number;
+          zones?: number;
+          target?: number | null;
           eliminated?: boolean;
           sd_shot?: boolean;
           sd_hit?: boolean;
@@ -519,6 +530,9 @@ export interface Database {
         Update: {
           turn_order?: number;
           current_spot?: number;
+          goals?: number;
+          zones?: number;
+          target?: number | null;
           eliminated?: boolean;
           sd_shot?: boolean;
           sd_hit?: boolean;
@@ -702,6 +716,19 @@ export interface Database {
           p_max_rounds?: number | null;
         };
         Returns: string;
+      };
+      penalty_create_and_start: {
+        Args: {
+          p_challenge_id: number;
+          p_mode: PenaltyMode;
+          p_player_ids: string[];
+          p_rounds?: number | null;
+        };
+        Returns: string;
+      };
+      penalty_record_turn: {
+        Args: { p_session_id: string; p_hit: boolean; p_zone?: number | null };
+        Returns: { status: CrossbarTurnStatus; winner_id: string | null };
       };
     };
     Enums: Record<string, never>;

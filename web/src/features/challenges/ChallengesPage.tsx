@@ -32,9 +32,12 @@ import {
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
 import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
+import { PENALTY_ENTRIES, PENALTY_MODES } from './penalty/penaltyModes';
+import type { PenaltyMode } from '@/types/database';
 import s from './ChallengesPage.module.css';
 
 const CROSSBAR_CODE = 'crossbar';
+const PENALTY_CODE = 'penalty';
 
 export function ChallengesPage() {
   const { data: challenges } = useChallenges();
@@ -70,7 +73,8 @@ export function ChallengesPage() {
 }
 
 function bestValue(row: ChallengeLeaderboardRow): number | null {
-  if (row.scoring_type === 'versus' || row.challenge_code === CROSSBAR_CODE) return row.wins;
+  const isSession = row.challenge_code === CROSSBAR_CODE || row.challenge_code === PENALTY_CODE;
+  if (row.scoring_type === 'versus' || isSession) return row.wins;
   if (row.scoring_type === 'lower_better') return row.best_low;
   return row.best_high;
 }
@@ -78,8 +82,10 @@ function bestValue(row: ChallengeLeaderboardRow): number | null {
 function ChallengeView({ challenge }: { challenge: Challenge }) {
   const isVersus = challenge.scoring_type === 'versus';
   const isCrossbar = challenge.code === CROSSBAR_CODE;
-  // Desafios baseados em vitórias (1v1 e o Crossbar em sessão) mostram nº de vitórias.
-  const isWinsBased = isVersus || isCrossbar;
+  const isPenalty = challenge.code === PENALTY_CODE;
+  // Desafios em sessão ao vivo (Crossbar, Penáltis) e o 1v1 mostram nº de vitórias.
+  const isSession = isCrossbar || isPenalty;
+  const isWinsBased = isVersus || isSession;
   const { data: leaderboard } = useChallengeLeaderboard(challenge.id);
   const { data: attempts } = useChallengeAttempts(challenge.id);
 
@@ -101,18 +107,18 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
     player_id: r.player_id,
     name: r.name,
     photo_url: r.photo_url,
-    value: isVersus ? `${r.wins}V` : isCrossbar ? `${r.wins}` : `${bestValue(r) ?? '—'}`,
+    value: isVersus ? `${r.wins}V` : isSession ? `${r.wins}` : `${bestValue(r) ?? '—'}`,
     sub: isVersus
       ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos`
-      : isCrossbar
+      : isSession
         ? undefined
         : `${r.attempts} tentativas`,
   }));
 
   return (
     <div className={s.body}>
-      {/* Recorde (não no crossbar — o ranking já mostra as vitórias). */}
-      {!isCrossbar && (
+      {/* Recorde (não nas sessões ao vivo — o ranking já mostra as vitórias). */}
+      {!isSession && (
         <Card className={s.recordCard}>
           <p className={s.recordLabel}>Recorde</p>
           {record ? (
@@ -126,14 +132,20 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
         </Card>
       )}
 
-      {isCrossbar ? <CrossbarEntry challenge={challenge} /> : <AddAttemptForm challenge={challenge} />}
+      {isCrossbar ? (
+        <CrossbarEntry challenge={challenge} />
+      ) : isPenalty ? (
+        <PenaltyEntry challenge={challenge} />
+      ) : (
+        <AddAttemptForm challenge={challenge} />
+      )}
 
       <div>
         <h2 className={s.sectionTitle}>Ranking</h2>
         <RankingList rows={rankingRows} />
       </div>
 
-      {!isCrossbar && attempts && attempts.length > 0 && (
+      {!isSession && attempts && attempts.length > 0 && (
         <div>
           <h2 className={s.sectionTitle}>Histórico recente</h2>
           <ul className={s.historyList}>
@@ -218,6 +230,71 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
                   <span className={s.sessionMeta}>
                     {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
                     {sess.spot_count} posições · {formatDateShort(sess.created_at)}
+                  </span>
+                </button>
+                {sess.created_by === user?.id && (
+                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                    <CloseIcon />
+                  </IconButton>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Entrada dos Penáltis: escolhe o modo (cria no setup) e lista as sessões a decorrer. */
+function PenaltyEntry({ challenge }: { challenge: Challenge }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const confirm = useConfirm();
+  const deleteSession = useDeleteSession(challenge.id);
+  const { data: sessions } = useChallengeSessions(challenge.id);
+
+  async function remove(sessionId: string) {
+    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    if (ok) deleteSession.mutate(sessionId);
+  }
+
+  return (
+    <>
+      <Card>
+        <h2 className={s.cardTitle}>Nova sessão de Penáltis</h2>
+        <div className={s.versionGrid}>
+          {PENALTY_ENTRIES.map((entry) => (
+            <button
+              key={entry.key}
+              className={s.versionCard}
+              onClick={() => navigate(`/challenges/penalty/new?m=${entry.key}`)}
+            >
+              <span className={s.versionName}>
+                {entry.icon} {entry.label}
+              </span>
+              <span className={s.versionSpots}>{entry.hint}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {sessions && sessions.length > 0 && (
+        <div>
+          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
+          <ul className={s.historyList}>
+            {sessions.map((sess) => (
+              <li key={sess.id} className={s.sessionItem}>
+                <button
+                  className={s.sessionMain}
+                  onClick={() => navigate(`/challenges/penalty/${sess.id}`)}
+                >
+                  <Badge tone={SESSION_STATUS_TONE[sess.status]}>
+                    {PENALTY_MODES[sess.mode as PenaltyMode]?.label ?? SESSION_STATUS_LABEL[sess.status]}
+                  </Badge>
+                  <span className={s.sessionMeta}>
+                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
+                    {formatDateShort(sess.created_at)}
                   </span>
                 </button>
                 {sess.created_by === user?.id && (
