@@ -40,6 +40,16 @@ const CrossbarSessionPage = lazyWithReload(() =>
     default: m.CrossbarSessionPage,
   })),
 );
+const PenaltySetupPage = lazyWithReload(() =>
+  import('@/features/challenges/penalty/PenaltySetupPage').then((m) => ({
+    default: m.PenaltySetupPage,
+  })),
+);
+const PenaltySessionPage = lazyWithReload(() =>
+  import('@/features/challenges/penalty/PenaltySessionPage').then((m) => ({
+    default: m.PenaltySessionPage,
+  })),
+);
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
@@ -68,6 +78,8 @@ export const router = createBrowserRouter([
           { path: '/challenges', element: <ChallengesPage /> },
           { path: '/challenges/crossbar/new', element: <CrossbarSetupPage /> },
           { path: '/challenges/crossbar/:sessionId', element: <CrossbarSessionPage /> },
+          { path: '/challenges/penalty/new', element: <PenaltySetupPage /> },
+          { path: '/challenges/penalty/:sessionId', element: <PenaltySessionPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],
       },
