@@ -219,7 +219,7 @@ function GoalModal({
         minute: minute === '' ? null : Number(minute),
         tagIds: allowsTags ? tagIds : [],
       });
-      toast.show(`${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'} ✓`, 'success');
+      toast.show(`${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'}`, 'success');
       onClose();
     } catch {
       setError('Não foi possível registar o golo.');
@@ -364,7 +364,7 @@ function SimpleEventModal({
         team: gp.team,
         tagIds: eventType.supports_tags ? tagIds : [],
       });
-      toast.show(`${eventType.label} · ${gp.profile?.name ?? 'Jogador'} ✓`, 'success');
+      toast.show(`${eventType.label} · ${gp.profile?.name ?? 'Jogador'}`, 'success');
       onClose();
     } catch {
       setError('Não foi possível registar o evento.');

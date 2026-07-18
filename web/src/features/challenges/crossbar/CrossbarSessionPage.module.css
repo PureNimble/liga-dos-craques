@@ -263,8 +263,8 @@
   color: var(--text-error);
 }
 .btnIcon {
-  font-size: var(--font-size-2xl);
-  line-height: 1;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* Vencedor */
@@ -284,7 +284,15 @@
   color: var(--text-subtle);
 }
 .winnerName {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-black);
   color: var(--text-color);
+}
+.winnerIcon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--accent);
 }

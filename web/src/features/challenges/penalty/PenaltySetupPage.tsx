@@ -13,6 +13,7 @@ import {
   SegmentedTabs,
 } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
+import { CheckIcon } from '@/shared/components/ui/icons';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import { useChallenges, usePenaltyCreateAndStart } from '../challengeHooks';
 import {
@@ -80,9 +81,7 @@ export function PenaltySetupPage() {
         <button className={cb.back} onClick={() => navigate('/challenges')}>
           ← Desafios
         </button>
-        <PageTitle>
-          {entry.icon} Nova sessão · {entry.label}
-        </PageTitle>
+        <PageTitle>Nova sessão · {entry.label}</PageTitle>
       </div>
 
       <div className={cb.body}>
@@ -129,7 +128,7 @@ export function PenaltySetupPage() {
                   >
                     <Avatar name={p.name} src={p.photo_url} size="sm" />
                     <span className={cb.pickName}>{p.name}</span>
-                    {on && <span className={cb.pickCheck}>✓</span>}
+                    {on && <CheckIcon className={cb.pickCheck} width={16} height={16} />}
                   </button>
                 );
               })}

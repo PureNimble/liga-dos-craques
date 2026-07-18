@@ -71,7 +71,7 @@ function ResetPasswordCard() {
     try {
       await setPassword.mutateAsync({ userId, password });
       setPassword2('');
-      toast.show('Password reposta ✓', 'success');
+      toast.show('Password reposta', 'success');
     } catch {
       setError('Não foi possível repor a password.');
     }

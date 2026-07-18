@@ -32,8 +32,22 @@ describe('computeRating', () => {
         mvpPerGame: 0,
         experience: 0,
         experienceCap: 10,
+        strengthDelta: 0,
       },
     );
     expect(r).toBe(100);
+  });
+
+  it('sobe/desce com o desvio de força (bater equipas mais fortes vale mais)', () => {
+    const base = { games: 10, wins: 5, goals: 0, assists: 0, saves: 0, mvps: 0, category: null };
+    const neutral = computeRating(base);
+    // Peso 15 × strengthDelta.
+    expect(computeRating({ ...base, strengthDelta: 0.4 })).toBeCloseTo(neutral + 6);
+    expect(computeRating({ ...base, strengthDelta: -0.4 })).toBeCloseTo(neutral - 6);
+  });
+
+  it('ignora o desvio de força quando não é fornecido (compatível)', () => {
+    const base = { games: 10, wins: 5, goals: 0, assists: 0, saves: 0, mvps: 0, category: null };
+    expect(computeRating(base)).toBe(computeRating({ ...base, strengthDelta: null }));
   });
 });

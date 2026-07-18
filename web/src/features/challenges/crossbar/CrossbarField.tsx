@@ -1,4 +1,5 @@
 import { Avatar } from '@/shared/components/ui';
+import { TrophyIcon } from '@/shared/components/ui/icons';
 import type { SessionPlayerWithProfile } from '../challengeHooks';
 import { CROSSBAR_PITCH_H, CROSSBAR_PITCH_LEN, GOAL, spotPos } from './crossbarSpots';
 import s from './CrossbarField.module.css';
@@ -72,7 +73,7 @@ export function CrossbarField({
           style={{ left: `${pctX(focusPos.x)}%`, top: `${pctY(focusPos.y)}%` }}
         >
           <span className={s.tokenName}>
-            {winnerId ? '🏆 ' : ''}
+            {winnerId && <TrophyIcon width={12} height={12} />}
             {firstName(focus.profile?.name)}
           </span>
           <Avatar

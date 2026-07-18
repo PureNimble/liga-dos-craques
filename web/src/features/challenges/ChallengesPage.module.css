@@ -129,6 +129,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  /* Altura igual em todas as linhas, tenham ou não o botão de apagar (IconButton = 2.25rem). */
+  min-height: 2.25rem;
   padding: var(--space-sm) var(--space-md);
   border-top: 1px solid var(--gray-750);
 }

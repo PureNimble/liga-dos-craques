@@ -640,6 +640,7 @@ export interface Database {
           mvps: number;
           flops: number;
           avg_rating: number | null;
+          strength_delta: number | null;
         };
         Relationships: [];
       };

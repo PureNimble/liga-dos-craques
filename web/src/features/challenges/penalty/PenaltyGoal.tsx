@@ -1,3 +1,4 @@
+import { BallIcon } from '@/shared/components/ui/icons';
 import { ALL_ZONES, ZONE_COUNT, ZONE_LABELS, zoneFilled } from './penaltyModes';
 import s from './PenaltyGoal.module.css';
 
@@ -10,10 +11,12 @@ interface PenaltyGoalProps {
   selected?: number | null;
   /** Se definido, as zonas vazias ficam selecionáveis (pen_zones). */
   onSelect?: (zone: number) => void;
+  /** Se definido, mostra um botão de saltar animação no canto da relva (pen_target). */
+  onSkip?: () => void;
 }
 
-const FAN_ROWS = 3;
-const FANS_PER_ROW = 24;
+const FAN_ROWS = 12;
+const FANS_PER_ROW = 80;
 const FAN_TONES = [s.fanA, s.fanB, s.fanC, s.fanD];
 
 /** Bancadas com adeptos que oscilam (movimento escalonado, como uma multidão). */
@@ -36,7 +39,7 @@ function Stands() {
 }
 
 /** Baliza numa cena de estádio: bancadas, painéis publicitários, rede e relva. */
-export function PenaltyGoal({ filled, target, selected, onSelect }: PenaltyGoalProps) {
+export function PenaltyGoal({ filled, target, selected, onSelect, onSkip }: PenaltyGoalProps) {
   return (
     <div className={s.scene}>
       <div className={s.sky} aria-hidden />
@@ -85,7 +88,9 @@ export function PenaltyGoal({ filled, target, selected, onSelect }: PenaltyGoalP
             }
             return (
               <div key={i} className={className} title={ZONE_LABELS[i]}>
-                <span className={s.mark}>{on ? '⚽' : i + 1}</span>
+                <span className={s.mark}>
+                  {on ? <BallIcon width="1em" height="1em" /> : i + 1}
+                </span>
               </div>
             );
           })}
@@ -95,6 +100,24 @@ export function PenaltyGoal({ filled, target, selected, onSelect }: PenaltyGoalP
       <div className={s.grass} aria-hidden>
         <span className={s.penaltySpot} />
       </div>
+      {onSkip && (
+        <button type="button" className={s.skip} onClick={onSkip} aria-label="Saltar animação">
+          <svg
+            viewBox="0 0 24 24"
+            width="1em"
+            height="1em"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M4 5l7 7-7 7" />
+            <path d="M13 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
       {filled === ALL_ZONES && <span className={s.complete}>Baliza completa!</span>}
     </div>
   );

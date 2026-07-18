@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 /**
  * Conjunto de ícones inline (stroke) — sem dependências externas.
@@ -225,6 +225,57 @@ export function AlertIcon(props: IconProps) {
   );
 }
 
+export function DiceIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="4" y="4" width="16" height="16" rx="3" />
+      <circle cx="9" cy="9" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="9" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="15" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function MedalIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M8 3l2.6 5.2M16 3l-2.6 5.2" />
+      <circle cx="12" cy="15" r="5.5" />
+      <path d="m12 12.3.95 1.9 2.1.3-1.5 1.5.35 2.1-1.9-1-1.9 1 .35-2.1-1.5-1.5 2.1-.3.95-1.9Z" />
+    </svg>
+  );
+}
+
+export function NetIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 7h16v11H4z" />
+      <path d="M4 11h16M4 14.5h16M8 7v11M12 7v11M16 7v11" />
+    </svg>
+  );
+}
+
+export function HatIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M8 4h8v9H8z" />
+      <path d="M4.5 13h15" />
+      <path d="M8 10h8" />
+    </svg>
+  );
+}
+
+export function FlameIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M12 3c1.2 3 4 4.2 4 8a4 4 0 0 1-8 0c0-1.6.6-2.7 1.6-3.7C11 8.8 12 7.2 12 3Z" />
+      <path d="M12 20a2.4 2.4 0 0 0 2.4-2.5c0-1.4-1-2-1.5-3-.7 1-1.4 1-1.9 2A2.3 2.3 0 0 0 12 20Z" />
+    </svg>
+  );
+}
+
 /* -------------------------------- Eventos --------------------------------- */
 
 export function GloveIcon(props: IconProps) {
@@ -270,4 +321,30 @@ export function BootIcon(props: IconProps) {
       <path d="M4.5 16.8h14.2" />
     </svg>
   );
+}
+
+/* --------------------------- Ícones por nome ------------------------------ */
+/**
+ * Mapeia uma chave semântica (guardada na BD ou em metadados) para o SVG.
+ * Substitui os emojis: os desafios e as conquistas guardam a chave, não o glifo.
+ */
+const ICON_BY_NAME: Record<string, ComponentType<IconProps>> = {
+  ball: BallIcon,
+  target: TargetIcon,
+  trophy: TrophyIcon,
+  goal: NetIcon,
+  medal: MedalIcon,
+  check: CheckIcon,
+  hat: HatIcon,
+  flame: FlameIcon,
+  star: StarIcon,
+  spark: SparkIcon,
+  dice: DiceIcon,
+  versus: UsersIcon,
+};
+
+/** Ícone escolhido por nome; cai no medalha por omissão (chave desconhecida). */
+export function NamedIcon({ name, ...props }: IconProps & { name: string }) {
+  const Icon = ICON_BY_NAME[name] ?? MedalIcon;
+  return <Icon {...props} />;
 }

@@ -32,7 +32,7 @@ export function OrderReveal({ players, onDone }: OrderRevealProps) {
     const p = players[highlight % Math.max(players.length, 1)];
     return (
       <div className={s.wrap}>
-        <p className={s.title}>🎲 A sortear a ordem…</p>
+        <p className={s.title}>A sortear a ordem…</p>
         <div className={s.shuffleCard}>
           <Avatar name={p?.profile?.name} src={p?.profile?.photo_url} size="lg" />
           <span className={s.shuffleName}>{p?.profile?.name ?? '—'}</span>

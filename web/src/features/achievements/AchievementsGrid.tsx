@@ -1,3 +1,4 @@
+import { NamedIcon } from '@/shared/components/ui/icons';
 import { useAchievements, usePlayerAchievements } from './achievementHooks';
 import s from './AchievementsGrid.module.css';
 
@@ -44,7 +45,7 @@ export function AchievementsGrid({ playerId, editable, featuredId, onSelect }: A
                 !isFeatured && !isUnlocked ? s.locked : ''
               } ${clickable ? s.clickable : ''}`}
             >
-              <span aria-hidden>{a.icon}</span>
+              <NamedIcon name={a.icon} width={26} height={26} aria-hidden />
             </button>
           );
         })}

@@ -13,6 +13,11 @@ export interface RatingInput {
   saves: number;
   mvps: number;
   category: PositionCategory | null;
+  /**
+   * Desvio médio de resultado face à força do adversário (Elo, ~[-0.5, 0.5]):
+   * bater equipas mais fortes sobe, perder para mais fracas desce. Ver v_player_stats.
+   */
+  strengthDelta?: number | null;
 }
 
 export interface RatingWeights {
@@ -24,6 +29,7 @@ export interface RatingWeights {
   mvpPerGame: number;
   experience: number;
   experienceCap: number;
+  strengthDelta: number;
 }
 
 export const DEFAULT_RATING_WEIGHTS: RatingWeights = {
@@ -35,6 +41,7 @@ export const DEFAULT_RATING_WEIGHTS: RatingWeights = {
   mvpPerGame: 10,
   experience: 5,
   experienceCap: 10,
+  strengthDelta: 15,
 };
 
 /**
@@ -55,6 +62,7 @@ export function computeRating(input: RatingInput, w: RatingWeights = DEFAULT_RAT
     w.assistsPerGame * (input.assists / g) +
     w.savesPerGame * (input.saves / g) +
     w.mvpPerGame * (input.mvps / g) +
-    w.experience * experience
+    w.experience * experience +
+    w.strengthDelta * (input.strengthDelta ?? 0)
   );
 }

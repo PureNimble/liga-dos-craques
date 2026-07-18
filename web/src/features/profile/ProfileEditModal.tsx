@@ -73,7 +73,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         (id) => id !== values.main_position_id,
       ),
     });
-    toast.show('Perfil guardado ✓', 'success');
+    toast.show('Perfil guardado', 'success');
     onClose();
   }
 

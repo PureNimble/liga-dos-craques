@@ -18,7 +18,7 @@ export function ConnectionStatus() {
 
   const label: Record<typeof state, string> = {
     loading: 'A ligar ao Supabase…',
-    ok: 'Ligado ao Supabase ✓',
+    ok: 'Ligado ao Supabase',
     error: 'Sem ligação ao Supabase',
   };
 

@@ -12,13 +12,12 @@
   color: var(--text-muted);
   text-align: center;
 }
-
-.spinRow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
+/* Reserva a altura de uma linha p/ alternar mensagens sem salto de layout. */
+.zoneHintFixed {
+  min-height: 1.5em;
+  margin: 0;
 }
+
 .zoneHint strong {
   color: var(--text-color);
 }

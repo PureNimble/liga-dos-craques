@@ -58,11 +58,7 @@ export function ChallengesPage() {
           onChange={setSelectedId}
           items={challenges.map((c) => ({
             value: c.id,
-            label: (
-              <>
-                {c.icon} {c.label}
-              </>
-            ),
+            label: c.label,
           }))}
         />
       )}
@@ -270,9 +266,7 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
               className={s.versionCard}
               onClick={() => navigate(`/challenges/penalty/new?m=${entry.key}`)}
             >
-              <span className={s.versionName}>
-                {entry.icon} {entry.label}
-              </span>
+              <span className={s.versionName}>{entry.label}</span>
               <span className={s.versionSpots}>{entry.hint}</span>
             </button>
           ))}

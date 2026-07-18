@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Avatar, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
+import { BallIcon, CheckIcon, TrophyIcon, XCircleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import {
   useCrossbarSession,
@@ -62,9 +63,7 @@ export function PenaltySessionPage() {
         <button className={cb.back} onClick={() => navigate('/challenges')}>
           ← Desafios
         </button>
-        <PageTitle>
-          {mode.icon} Penáltis · {mode.label}
-        </PageTitle>
+        <PageTitle>Penáltis · {mode.label}</PageTitle>
       </div>
 
       {session.status === 'active' &&
@@ -153,7 +152,7 @@ function ActiveView({
     <div className={cb.body}>
       <div className={[cb.phaseBar, isSuddenDeath ? cb.phaseSd : ''].filter(Boolean).join(' ')}>
         {isSuddenDeath
-          ? '🥅 Morte súbita'
+          ? 'Morte súbita'
           : `Ronda ${session.round}${session.max_rounds ? `/${session.max_rounds}` : ''}`}
       </div>
 
@@ -170,22 +169,19 @@ function ActiveView({
               target={mode === 'pen_target' ? displayZone : null}
               selected={info.picksZone ? selectedZone : null}
               onSelect={info.picksZone && isOwner && !spinning ? setSelectedZone : undefined}
+              onSkip={mode === 'pen_target' && spinning ? skip : undefined}
             />
-            {mode === 'pen_target' &&
-              (spinning ? (
-                <div className={s.spinRow}>
-                  <p className={s.zoneHint}>A sortear a zona…</p>
-                  <Button variant="ghost" size="sm" onClick={skip}>
-                    Saltar
-                  </Button>
-                </div>
-              ) : (
-                targetZone !== null && (
-                  <p className={s.zoneHint}>
+            {mode === 'pen_target' && (
+              <p className={[s.zoneHint, s.zoneHintFixed].join(' ')}>
+                {spinning ? (
+                  'A sortear a zona…'
+                ) : targetZone !== null ? (
+                  <>
                     Alvo: <strong>{ZONE_LABELS[targetZone]}</strong>
-                  </p>
-                )
-              ))}
+                  </>
+                ) : null}
+              </p>
+            )}
             {info.picksZone && (
               <p className={s.zoneHint}>
                 {selectedZone === null ? (
@@ -217,10 +213,10 @@ function ActiveView({
       {isOwner ? (
         <div className={cb.turnActions}>
           <button className={cb.missBtn} onClick={() => record(false)} disabled={!canRecord}>
-            <span className={cb.btnIcon}>✗</span> Falhou
+            <XCircleIcon className={cb.btnIcon} /> Falhou
           </button>
           <button className={cb.hitBtn} onClick={() => record(true)} disabled={!canRecord}>
-            <span className={cb.btnIcon}>⚽</span> Marcou
+            <BallIcon className={cb.btnIcon} /> Marcou
           </button>
         </div>
       ) : (
@@ -271,7 +267,13 @@ function PlayerBoard({
                   ))}
                 </span>
                 <span className={cb.boardCount}>
-                  {p.eliminated ? 'fora' : allFilled(p.zones) ? '✓' : `${filledCount(p.zones)}/6`}
+                  {p.eliminated ? (
+                    'fora'
+                  ) : allFilled(p.zones) ? (
+                    <CheckIcon width={16} height={16} />
+                  ) : (
+                    `${filledCount(p.zones)}/6`
+                  )}
                 </span>
               </>
             ) : (
@@ -293,7 +295,9 @@ function FinishedView({ winnerName }: { winnerName: string }) {
       <div className={cb.body}>
         <Card className={cb.winnerCard}>
           <p className={cb.winnerLabel}>Vencedor</p>
-          <span className={cb.winnerName}>🏆 {winnerName}</span>
+          <span className={cb.winnerName}>
+            <TrophyIcon className={cb.winnerIcon} /> {winnerName}
+          </span>
           <p className={cb.muted}>+1 no ranking dos Penáltis</p>
         </Card>
         <Button block onClick={() => navigate('/challenges')}>
