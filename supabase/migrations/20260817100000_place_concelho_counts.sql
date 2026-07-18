@@ -17,8 +17,18 @@ alter table public.place
 update public.place set concelho = 'Não especificado' where concelho is null;
 
 alter table public.place
-  alter column concelho set not null,
-  add constraint place_concelho_length check (char_length(concelho) between 1 and 120);
+  alter column concelho set not null;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'place_concelho_length' and conrelid = 'public.place'::regclass
+  ) then
+    alter table public.place
+      add constraint place_concelho_length check (char_length(concelho) between 1 and 120);
+  end if;
+end $$;
 
 comment on column public.place.concelho is 'Concelho (município) — texto livre; são 300+ valores, não vale a pena um enum.';
 comment on column public.place.phone is 'Telefone de contacto do campo — opcional.';
