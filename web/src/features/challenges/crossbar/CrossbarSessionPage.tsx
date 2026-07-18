@@ -1,26 +1,43 @@
-import { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Alert, Avatar, Badge, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Alert, Avatar, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfilesList } from '@/features/profile/profileHooks';
 import {
-  useAddSessionPlayer,
   useCrossbarSession,
   useRecordTurn,
-  useRemoveSessionPlayer,
   useSessionPlayers,
-  useStartCrossbarSession,
   type ChallengeSession,
   type SessionPlayerWithProfile,
 } from '../challengeHooks';
+import { CrossbarField } from './CrossbarField';
+import { OrderReveal } from './OrderReveal';
 import { spotLabel, variantFromCount } from './crossbarSpots';
 import s from './CrossbarSessionPage.module.css';
+
+const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) => a.turn_order - b.turn_order;
 
 export function CrossbarSessionPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { data: session, isLoading } = useCrossbarSession(sessionId);
+  const [justStarted, setJustStarted] = useState(
+    Boolean((location.state as { justStarted?: boolean } | null)?.justStarted),
+  );
+  const [winnerName, setWinnerName] = useState<string | null>(null);
+
+  // Consome o "justStarted" uma vez: limpa-o do histórico para um reload não
+  // repetir a animação de sorteio.
+  useEffect(() => {
+    if ((location.state as { justStarted?: boolean } | null)?.justStarted) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // O jogo terminou nesta sessão do ecrã → a sessão já foi apagada na BD.
+  if (winnerName) return <FinishedView winnerName={winnerName} />;
 
   if (isLoading) return <Loading />;
 
@@ -29,7 +46,7 @@ export function CrossbarSessionPage() {
       <Page>
         <EmptyState
           title="Sessão não encontrada"
-          description="Pode ter sido removida."
+          description="Pode já ter terminado ou sido removida."
           action={<Button onClick={() => navigate('/challenges')}>Voltar aos desafios</Button>}
         />
       </Page>
@@ -45,120 +62,65 @@ export function CrossbarSessionPage() {
         <PageTitle>🎯 Crossbar Challenge</PageTitle>
       </div>
 
-      {session.status === 'setup' && <SetupView session={session} />}
-      {session.status === 'active' && <ActiveView session={session} />}
-      {session.status === 'finished' && <FinishedView session={session} />}
+      {session.status === 'active' &&
+        (justStarted ? (
+          <OrderRevealGate session={session} onDone={() => setJustStarted(false)} />
+        ) : (
+          <ActiveView session={session} onFinished={setWinnerName} />
+        ))}
+
+      {session.status !== 'active' && (
+        <EmptyState
+          title="Sessão não iniciada"
+          description="Cria uma nova sessão a partir dos desafios."
+          action={<Button onClick={() => navigate('/challenges')}>Voltar aos desafios</Button>}
+        />
+      )}
     </Page>
   );
 }
 
 // -----------------------------------------------------------------------------
-// SETUP — escolher jogadores e começar.
+// Animação de sorteio (mostra a ordem antes do jogo).
 // -----------------------------------------------------------------------------
-function SetupView({ session }: { session: ChallengeSession }) {
-  const { user } = useAuth();
-  const toast = useToast();
-  const { data: profiles } = useProfilesList();
+function OrderRevealGate({ session, onDone }: { session: ChallengeSession; onDone: () => void }) {
   const { data: players } = useSessionPlayers(session.id);
-  const addPlayer = useAddSessionPlayer(session.id);
-  const removePlayer = useRemoveSessionPlayer(session.id);
-  const startSession = useStartCrossbarSession(session.id);
-
-  const isOwner = session.created_by === user?.id;
-  const variant = variantFromCount(session.spot_count);
-  const chosenIds = new Set((players ?? []).map((p) => p.player_id));
-  const available = (profiles ?? []).filter((p) => !chosenIds.has(p.id));
-
-  async function start() {
-    try {
-      await startSession.mutateAsync();
-    } catch {
-      toast.show('São precisos pelo menos 2 jogadores.', 'error');
-    }
-  }
-
-  return (
-    <div className={s.body}>
-      <Card>
-        <div className={s.setupHead}>
-          <h2 className={s.cardTitle}>Jogadores ({players?.length ?? 0})</h2>
-          <Badge tone="sky">Versão {variant === 'quick' ? 'rápida' : 'longa'} · {session.spot_count} posições</Badge>
-        </div>
-
-        {players && players.length > 0 ? (
-          <ul className={s.chosenList}>
-            {players.map((p) => (
-              <li key={p.id} className={s.chosenItem}>
-                <span className={s.chosenName}>
-                  <Avatar name={p.profile?.name} src={p.profile?.photo_url} size="sm" />
-                  {p.profile?.name ?? 'Jogador'}
-                </span>
-                {isOwner && (
-                  <Button variant="ghost" size="sm" onClick={() => removePlayer.mutate(p.id)}>
-                    Remover
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className={s.muted}>Ainda sem jogadores.</p>
-        )}
-      </Card>
-
-      {isOwner && (
-        <Card>
-          <h2 className={s.cardTitle}>Adicionar</h2>
-          {available.length === 0 ? (
-            <p className={s.muted}>Todos os jogadores já foram adicionados.</p>
-          ) : (
-            <div className={s.addGrid}>
-              {available.map((p) => (
-                <button key={p.id} className={s.addChip} onClick={() => addPlayer.mutate(p.id)}>
-                  <Avatar name={p.name} src={p.photo_url} size="sm" />
-                  {p.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </Card>
-      )}
-
-      {isOwner ? (
-        <Button
-          block
-          size="lg"
-          onClick={start}
-          loading={startSession.isPending}
-          disabled={(players?.length ?? 0) < 2}
-        >
-          Sortear ordem e começar
-        </Button>
-      ) : (
-        <Alert kind="info">Só o organizador da sessão pode geri-la.</Alert>
-      )}
-    </div>
-  );
+  const ordered = useMemo(() => [...(players ?? [])].sort(byOrder), [players]);
+  if (!players) return <Loading />;
+  return <OrderReveal players={ordered} onDone={onDone} />;
 }
 
 // -----------------------------------------------------------------------------
-// ACTIVE — turno a turno.
+// ACTIVE — campo + prompt do remate + board.
 // -----------------------------------------------------------------------------
-function ActiveView({ session }: { session: ChallengeSession }) {
+function ActiveView({
+  session,
+  onFinished,
+}: {
+  session: ChallengeSession;
+  onFinished: (winnerName: string) => void;
+}) {
   const { user } = useAuth();
   const toast = useToast();
   const { data: players } = useSessionPlayers(session.id);
   const recordTurn = useRecordTurn(session);
 
   const isOwner = session.created_by === user?.id;
+  const isSuddenDeath = session.phase === 'sudden_death';
   const variant = variantFromCount(session.spot_count);
-  const ordered = useMemo(() => [...(players ?? [])].sort((a, b) => a.turn_order - b.turn_order), [players]);
-  const current = ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0];
+  const ordered = useMemo(() => [...(players ?? [])].sort(byOrder), [players]);
+  const current = isSuddenDeath
+    ? ordered.find((p) => !p.eliminated && !p.sd_shot) ?? ordered.find((p) => !p.eliminated)
+    : ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0];
   const currentSpot = current ? spotLabel(variant, current.current_spot) : null;
 
   async function record(hit: boolean) {
     try {
-      await recordTurn.mutateAsync(hit);
+      const res = await recordTurn.mutateAsync(hit);
+      if (res.status === 'finished') {
+        const w = ordered.find((p) => p.player_id === res.winner_id);
+        onFinished(w?.profile?.name ?? 'Jogador');
+      }
     } catch {
       toast.show('Não foi possível registar o remate.', 'error');
     }
@@ -166,93 +128,119 @@ function ActiveView({ session }: { session: ChallengeSession }) {
 
   return (
     <div className={s.body}>
-      <Card className={s.turnCard}>
-        <p className={s.turnLabel}>É a vez de</p>
-        <div className={s.turnPlayer}>
-          <Avatar name={current?.profile?.name} src={current?.profile?.photo_url} size="lg" />
-          <span className={s.turnName}>{current?.profile?.name ?? 'Jogador'}</span>
-        </div>
-        <div className={s.spotBox}>
-          <span className={s.spotHint}>Posição {(current?.current_spot ?? 0) + 1}/{session.spot_count}</span>
-          <span className={s.spotName}>{currentSpot}</span>
-        </div>
+      <div className={[s.phaseBar, isSuddenDeath ? s.phaseSd : ''].filter(Boolean).join(' ')}>
+        {isSuddenDeath
+          ? '🥅 Morte súbita'
+          : `Ronda ${session.round}${session.max_rounds ? `/${session.max_rounds}` : ''}`}
+      </div>
 
-        {isOwner ? (
-          <div className={s.turnActions}>
-            <Button variant="secondary" size="lg" onClick={() => record(false)} loading={recordTurn.isPending}>
-              Falhou
-            </Button>
-            <Button size="lg" onClick={() => record(true)} loading={recordTurn.isPending}>
-              Acertou 🎯
-            </Button>
-          </div>
-        ) : (
-          <Alert kind="info">Só o organizador regista os remates.</Alert>
-        )}
-      </Card>
+      {isSuddenDeath ? (
+        <Card className={s.sdShooter}>
+          <Avatar name={current?.profile?.name} src={current?.profile?.photo_url} size="xl" />
+          <span className={s.sdShooterName}>{current?.profile?.name ?? 'Jogador'}</span>
+        </Card>
+      ) : (
+        <CrossbarField
+          spotCount={session.spot_count}
+          players={ordered}
+          currentPlayerId={current?.player_id}
+        />
+      )}
 
-      <ProgressList players={ordered} session={session} currentId={current?.id} />
+      <div className={s.prompt}>
+        <span className={s.promptTurn}>
+          É a vez de <strong>{current?.profile?.name ?? 'Jogador'}</strong>
+        </span>
+        <span className={s.promptSpot}>
+          {isSuddenDeath
+            ? 'Acerta para continuar'
+            : `${currentSpot} · ${(current?.current_spot ?? 0) + 1}/${session.spot_count}`}
+        </span>
+      </div>
+
+      {isOwner ? (
+        <div className={s.turnActions}>
+          <button className={s.missBtn} onClick={() => record(false)} disabled={recordTurn.isPending}>
+            <span className={s.btnIcon}>✗</span> Falhou
+          </button>
+          <button className={s.hitBtn} onClick={() => record(true)} disabled={recordTurn.isPending}>
+            <span className={s.btnIcon}>🎯</span> Acertou
+          </button>
+        </div>
+      ) : (
+        <Alert kind="info">Só o organizador regista os remates.</Alert>
+      )}
+
+      <PlayerBoard players={ordered} spotCount={session.spot_count} currentId={current?.player_id} />
     </div>
   );
 }
 
 // -----------------------------------------------------------------------------
-// FINISHED — vencedor.
+// Board com o estado de cada jogador (posição atual e progresso).
 // -----------------------------------------------------------------------------
-function FinishedView({ session }: { session: ChallengeSession }) {
-  const navigate = useNavigate();
-  const { data: players } = useSessionPlayers(session.id);
-  const ordered = useMemo(() => [...(players ?? [])].sort((a, b) => a.turn_order - b.turn_order), [players]);
-  const winner = ordered.find((p) => p.player_id === session.winner_id);
-
-  return (
-    <div className={s.body}>
-      <Card className={s.winnerCard}>
-        <p className={s.winnerLabel}>Vencedor</p>
-        <div className={s.turnPlayer}>
-          <Avatar name={winner?.profile?.name} src={winner?.profile?.photo_url} size="xl" />
-          <span className={s.winnerName}>🏆 {winner?.profile?.name ?? 'Jogador'}</span>
-        </div>
-        <p className={s.muted}>+1 no ranking do Crossbar</p>
-      </Card>
-
-      <ProgressList players={ordered} session={session} currentId={undefined} />
-
-      <Button block onClick={() => navigate('/challenges')}>
-        Voltar aos desafios
-      </Button>
-    </div>
-  );
-}
-
-// -----------------------------------------------------------------------------
-function ProgressList({
+function PlayerBoard({
   players,
-  session,
+  spotCount,
   currentId,
 }: {
   players: SessionPlayerWithProfile[];
-  session: ChallengeSession;
-  currentId: string | undefined;
+  spotCount: number;
+  currentId?: string;
 }) {
   return (
     <div>
-      <h2 className={s.sectionTitle}>Progresso</h2>
-      <ul className={s.progressList}>
-        {players.map((p) => (
-          <li key={p.id} className={[s.progressItem, p.id === currentId ? s.progressActive : ''].filter(Boolean).join(' ')}>
-            <span className={s.chosenName}>
+      <h2 className={s.sectionTitle}>Estado</h2>
+      <ul className={s.board}>
+        {players.map((p, i) => {
+          const done = Math.min(p.current_spot, spotCount);
+          return (
+            <li
+              key={p.id}
+              className={[
+                s.boardRow,
+                p.player_id === currentId ? s.boardRowActive : '',
+                p.eliminated ? s.boardRowOut : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <span className={s.boardPos}>{i + 1}</span>
               <Avatar name={p.profile?.name} src={p.profile?.photo_url} size="sm" />
-              {p.profile?.name ?? 'Jogador'}
-            </span>
-            <span className={s.progressDots}>
-              {Array.from({ length: session.spot_count }, (_, i) => (
-                <span key={i} className={i < p.current_spot ? s.dotHit : s.dot} />
-              ))}
-            </span>
-          </li>
-        ))}
+              <span className={s.boardName}>{p.profile?.name ?? 'Jogador'}</span>
+              <span className={s.boardDots}>
+                {Array.from({ length: spotCount }, (_, k) => (
+                  <span key={k} className={k < done ? s.dotHit : s.dot} />
+                ))}
+              </span>
+              <span className={s.boardCount}>
+                {p.eliminated ? 'fora' : `${done}/${spotCount}`}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// FINISHED — vencedor (a sessão já foi apagada; fica só o +1 no ranking).
+// -----------------------------------------------------------------------------
+function FinishedView({ winnerName }: { winnerName: string }) {
+  const navigate = useNavigate();
+  return (
+    <Page>
+      <div className={s.body}>
+        <Card className={s.winnerCard}>
+          <p className={s.winnerLabel}>Vencedor</p>
+          <span className={s.winnerName}>🏆 {winnerName}</span>
+          <p className={s.muted}>+1 no ranking do Crossbar</p>
+        </Card>
+        <Button block onClick={() => navigate('/challenges')}>
+          Voltar aos desafios
+        </Button>
+      </div>
+    </Page>
   );
 }

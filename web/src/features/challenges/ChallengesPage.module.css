@@ -87,15 +87,80 @@
   display: flex;
   justify-content: flex-end;
 }
-.sessionLink {
-  padding: 0;
+
+/* Cartões de versão (tocar cria e abre a sessão) */
+.versionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+.versionCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-lg) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-850);
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+.versionCard:hover:not(:disabled) {
+  border-color: var(--accent);
+  background-color: var(--accent-surface);
+}
+.versionCard:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.versionName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.versionSpots {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--accent-strong);
+  color: var(--text-subtle);
+}
+.sessionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--gray-750);
+}
+.sessionItem:first-child {
+  border-top: 0;
+}
+.sessionMain {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  text-align: left;
   background: none;
   border: 0;
   cursor: pointer;
 }
-.sessionLink:hover {
-  text-decoration: underline;
+.sessionMeta {
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+.sessionMain:hover .sessionMeta {
+  color: var(--text-color);
+}
+/* Ecrãs largos: badge e meta lado a lado. */
+@media (min-width: 480px) {
+  .sessionMain {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-sm);
+  }
 }

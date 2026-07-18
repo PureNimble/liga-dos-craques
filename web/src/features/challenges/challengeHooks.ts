@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
-import type { ChallengeResult, ChallengeSessionStatus, Database } from '@/types/database';
+import type { ChallengeResult, CrossbarTurnStatus, Database } from '@/types/database';
+
+export interface RecordTurnResult {
+  status: CrossbarTurnStatus;
+  winner_id: string | null;
+}
 
 export type Challenge = Database['public']['Tables']['challenge']['Row'];
 export type ChallengeLeaderboardRow = Database['public']['Views']['v_challenge_leaderboard']['Row'];
@@ -100,6 +105,9 @@ export interface SessionPlayerWithProfile {
   player_id: string;
   turn_order: number;
   current_spot: number;
+  eliminated: boolean;
+  sd_shot: boolean;
+  sd_hit: boolean;
   profile: { name: string; photo_url: string | null } | null;
 }
 
@@ -136,7 +144,9 @@ export function useSessionPlayers(sessionId: string | undefined) {
     queryFn: async (): Promise<SessionPlayerWithProfile[]> => {
       const { data, error } = await supabase
         .from('session_player')
-        .select('id, player_id, turn_order, current_spot, profile:player_id(name, photo_url)')
+        .select(
+          'id, player_id, turn_order, current_spot, eliminated, sd_shot, sd_hit, profile:player_id(name, photo_url)',
+        )
         .eq('session_id', sessionId as string)
         .order('turn_order');
       if (error) throw error;
@@ -161,36 +171,65 @@ export function useSessionTurns(sessionId: string | undefined) {
   });
 }
 
-/** Sessões recentes de um desafio (em curso primeiro). */
+export interface ChallengeSessionWithCount extends ChallengeSession {
+  player_count: number;
+}
+
+/** Sessões a decorrer de um desafio (mais recentes primeiro), com nº de jogadores. */
 export function useChallengeSessions(challengeId: number | undefined) {
   return useQuery({
     queryKey: ['challenge_sessions', challengeId],
     enabled: Boolean(challengeId),
-    queryFn: async (): Promise<ChallengeSession[]> => {
+    queryFn: async (): Promise<ChallengeSessionWithCount[]> => {
       const { data, error } = await supabase
         .from('challenge_session')
-        .select('*')
+        .select('*, session_player(count)')
         .eq('challenge_id', challengeId as number)
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(10);
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []).map((row) => {
+        const { session_player, ...rest } = row as unknown as ChallengeSession & {
+          session_player: { count: number }[];
+        };
+        return { ...rest, player_count: session_player?.[0]?.count ?? 0 };
+      });
     },
   });
 }
 
-export function useCreateCrossbarSession() {
-  const { user } = useAuth();
+export function useDeleteSession(challengeId: number) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { challenge_id: number; spot_count: number }): Promise<string> => {
-      const { data, error } = await supabase
-        .from('challenge_session')
-        .insert({ ...input, created_by: user!.id })
-        .select('id')
-        .single();
+    mutationFn: async (sessionId: string) => {
+      const { error } = await supabase.from('challenge_session').delete().eq('id', sessionId);
       if (error) throw error;
-      return data.id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', challengeId] });
+    },
+  });
+}
+
+/** Cria a sessão já a decorrer (setup é client-side) e devolve o id. */
+export function useCreateAndStart() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: {
+      challenge_id: number;
+      spot_count: number;
+      player_ids: string[];
+      max_rounds: number | null;
+    }): Promise<string> => {
+      const { data, error } = await supabase.rpc('crossbar_create_and_start', {
+        p_challenge_id: input.challenge_id,
+        p_spot_count: input.spot_count,
+        p_player_ids: input.player_ids,
+        p_max_rounds: input.max_rounds,
+      });
+      if (error) throw error;
+      return data as string;
     },
     onSuccess: (_id, vars) => {
       queryClient.invalidateQueries({ queryKey: ['challenge_sessions', vars.challenge_id] });
@@ -198,58 +237,16 @@ export function useCreateCrossbarSession() {
   });
 }
 
-export function useAddSessionPlayer(sessionId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (playerId: string) => {
-      const { error } = await supabase
-        .from('session_player')
-        .insert({ session_id: sessionId, player_id: playerId });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', sessionId] });
-    },
-  });
-}
-
-export function useRemoveSessionPlayer(sessionId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (sessionPlayerId: string) => {
-      const { error } = await supabase.from('session_player').delete().eq('id', sessionPlayerId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', sessionId] });
-    },
-  });
-}
-
-export function useStartCrossbarSession(sessionId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.rpc('crossbar_start_session', { p_session_id: sessionId });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crossbar_session', sessionId] });
-      queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', sessionId] });
-    },
-  });
-}
-
 export function useRecordTurn(session: ChallengeSession) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (hit: boolean): Promise<ChallengeSessionStatus> => {
+    mutationFn: async (hit: boolean): Promise<RecordTurnResult> => {
       const { data, error } = await supabase.rpc('crossbar_record_turn', {
         p_session_id: session.id,
         p_hit: hit,
       });
       if (error) throw error;
-      return data as ChallengeSessionStatus;
+      return data as RecordTurnResult;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crossbar_session', session.id] });

@@ -1,16 +1,96 @@
-import { Card } from '@/shared/components/ui';
+import { Card, LockOverlay } from '@/shared/components/ui';
 import { BallIcon, BootIcon } from '@/shared/components/ui/icons';
-import { useRatingTrend, useContributions, useXpBreakdown, type GameContribution } from './statsHooks';
+import {
+  useRatingTrend,
+  useContributions,
+  useXpBreakdown,
+  MIN_GAMES_FOR_STATS,
+  statsLockMessage,
+  type GameContribution,
+  type RatingPoint,
+  type RecentGame,
+} from './statsHooks';
 import { RatingTrend } from './RatingTrend';
+import { RecentMatchesCard } from './RecentMatches';
 import s from './PlayerCharts.module.css';
 
+// Dados de mentira: só para o efeito desfocado do estado bloqueado.
+const MOCK_TREND: RatingPoint[] = [6.2, 7.1, 5.8, 7.6, 6.9, 8.0].map((rating, i) => ({
+  gameId: String(i),
+  date: '',
+  rating,
+  label: `J${i + 1}`,
+}));
+const MOCK_CONTRIB: GameContribution[] = [
+  { gameId: '1', label: 'J1', goals: 1, assists: 0 },
+  { gameId: '2', label: 'J2', goals: 2, assists: 1 },
+  { gameId: '3', label: 'J3', goals: 0, assists: 2 },
+  { gameId: '4', label: 'J4', goals: 1, assists: 1 },
+  { gameId: '5', label: 'J5', goals: 3, assists: 0 },
+];
+const MOCK_XP = [
+  { label: 'Jogos', value: 120 },
+  { label: 'Golos', value: 80 },
+  { label: 'Assistências', value: 50 },
+  { label: 'Conquistas', value: 30 },
+];
+const MOCK_RECENT: RecentGame[] = [
+  { gameId: '1', date: '', label: 'J1', rating: 7.2, result: 'V', scoreFor: 3, scoreAgainst: 1, formatLabel: '5v5' },
+  { gameId: '2', date: '', label: 'J2', rating: 6.5, result: 'E', scoreFor: 2, scoreAgainst: 2, formatLabel: '5v5' },
+  { gameId: '3', date: '', label: 'J3', rating: 8.1, result: 'V', scoreFor: 4, scoreAgainst: 0, formatLabel: '5v5' },
+  { gameId: '4', date: '', label: 'J4', rating: 5.9, result: 'D', scoreFor: 1, scoreAgainst: 2, formatLabel: '5v5' },
+  { gameId: '5', date: '', label: 'J5', rating: 7.0, result: 'V', scoreFor: 3, scoreAgainst: 2, formatLabel: '5v5' },
+];
+
 /** Cartões de gráficos do jogador — devolvidos como fragmento para caber num grid. */
-export function PlayerCharts({ playerId }: { playerId: string }) {
+export function PlayerCharts({
+  playerId,
+  games,
+  own = false,
+}: {
+  playerId: string;
+  games: number;
+  own?: boolean;
+}) {
   const { data: trend } = useRatingTrend(playerId);
   const { data: contrib } = useContributions(playerId);
   const { data: xp } = useXpBreakdown(playerId);
 
   const hasContrib = (contrib ?? []).some((c) => c.goals > 0 || c.assists > 0);
+
+  // Bloqueado até jogar o mínimo de jogos: cartões reais com dados de mentira,
+  // sob uma única sobreposição bem desfocada.
+  if (games < MIN_GAMES_FOR_STATS) {
+    return (
+      <LockOverlay locked className={s.lockedWrap} message={statsLockMessage(own)}>
+        <div className={s.lockedGrid}>
+          <RecentMatchesCard data={MOCK_RECENT} />
+          <Card className={s.chartCard}>
+            <ChartHead title="Forma" hint={`Últimos ${MOCK_TREND.length} jogos`} />
+            <div className={s.trendRow}>
+              <RatingTrend points={MOCK_TREND} />
+            </div>
+          </Card>
+          <Card>
+            <ChartHead title="Golos e assistências" hint="Por jogo" />
+            <ContributionBars data={MOCK_CONTRIB} />
+            <div className={s.legend}>
+              <span className={s.legendItem}>
+                <BallIcon width={14} height={14} className={s.iconGoal} /> Golos
+              </span>
+              <span className={s.legendItem}>
+                <BootIcon width={14} height={14} className={s.iconAssist} /> Assist.
+              </span>
+            </div>
+          </Card>
+          <Card className={s.chartCard}>
+            <ChartHead title="XP por fonte" hint="De onde vem o XP" />
+            <HBars items={MOCK_XP} suffix=" XP" />
+          </Card>
+        </div>
+      </LockOverlay>
+    );
+  }
 
   return (
     <>

@@ -1,0 +1,107 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+}
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+
+/* Fase baralhar */
+.shuffleCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--accent-border);
+  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+  animation: pulse 0.9s ease-in-out infinite;
+}
+.shuffleName {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Fase revelar */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 22rem;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-850);
+  opacity: 0;
+  animation: slideIn 0.4s ease forwards;
+}
+.ordinal {
+  min-width: 1.75rem;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-black);
+  color: var(--accent-strong);
+}
+.name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ctaIn {
+  animation: fadeUp 0.3s ease;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shuffleCard,
+  .item,
+  .ctaIn {
+    animation: none;
+  }
+  .item {
+    opacity: 1;
+  }
+}

@@ -28,6 +28,8 @@ export type VoteCategory = 'mvp' | 'flop';
 export type ChallengeScoring = 'higher_better' | 'lower_better' | 'versus';
 export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
 export type ChallengeSessionStatus = 'setup' | 'active' | 'finished';
+export type CrossbarPhase = 'play' | 'sudden_death';
+export type CrossbarTurnStatus = 'active' | 'sudden_death' | 'finished';
 
 export interface Database {
   public: {
@@ -459,6 +461,9 @@ export interface Database {
           spot_count: number;
           status: ChallengeSessionStatus;
           current_turn_index: number;
+          round: number;
+          phase: CrossbarPhase;
+          max_rounds: number | null;
           winner_id: string | null;
           created_by: string;
           created_at: string;
@@ -470,6 +475,9 @@ export interface Database {
           spot_count: number;
           status?: ChallengeSessionStatus;
           current_turn_index?: number;
+          round?: number;
+          phase?: CrossbarPhase;
+          max_rounds?: number | null;
           winner_id?: string | null;
           created_by: string;
           created_at?: string;
@@ -479,6 +487,9 @@ export interface Database {
           spot_count?: number;
           status?: ChallengeSessionStatus;
           current_turn_index?: number;
+          round?: number;
+          phase?: CrossbarPhase;
+          max_rounds?: number | null;
           winner_id?: string | null;
           finished_at?: string | null;
         };
@@ -491,6 +502,9 @@ export interface Database {
           player_id: string;
           turn_order: number;
           current_spot: number;
+          eliminated: boolean;
+          sd_shot: boolean;
+          sd_hit: boolean;
         };
         Insert: {
           id?: string;
@@ -498,10 +512,16 @@ export interface Database {
           player_id: string;
           turn_order?: number;
           current_spot?: number;
+          eliminated?: boolean;
+          sd_shot?: boolean;
+          sd_hit?: boolean;
         };
         Update: {
           turn_order?: number;
           current_spot?: number;
+          eliminated?: boolean;
+          sd_shot?: boolean;
+          sd_hit?: boolean;
         };
         Relationships: [];
       };
@@ -670,7 +690,19 @@ export interface Database {
       set_xp_rule: { Args: { p_code: string; p_points: number }; Returns: undefined };
       admin_set_password: { Args: { p_user_id: string; p_password: string }; Returns: undefined };
       crossbar_start_session: { Args: { p_session_id: string }; Returns: undefined };
-      crossbar_record_turn: { Args: { p_session_id: string; p_hit: boolean }; Returns: string };
+      crossbar_record_turn: {
+        Args: { p_session_id: string; p_hit: boolean };
+        Returns: { status: CrossbarTurnStatus; winner_id: string | null };
+      };
+      crossbar_create_and_start: {
+        Args: {
+          p_challenge_id: number;
+          p_spot_count: number;
+          p_player_ids: string[];
+          p_max_rounds?: number | null;
+        };
+        Returns: string;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

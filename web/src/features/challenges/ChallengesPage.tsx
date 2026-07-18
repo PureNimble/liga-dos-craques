@@ -1,18 +1,33 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Card, Field, Input, Page, PageTitle, PillTabs, Select } from '@/shared/components/ui';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Field,
+  IconButton,
+  Input,
+  Page,
+  PageTitle,
+  PillTabs,
+  Select,
+  type BadgeTone,
+} from '@/shared/components/ui';
+import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
+import { CloseIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfilesList } from '@/features/profile/profileHooks';
 import { RankingList, type RankingRow } from '@/features/rankings/RankingList';
-import { formatDate } from '@/shared/lib/datetime';
-import type { ChallengeResult } from '@/types/database';
+import { formatDate, formatDateShort } from '@/shared/lib/datetime';
+import type { ChallengeResult, ChallengeSessionStatus } from '@/types/database';
 import {
   useAddChallengeAttempt,
   useChallengeAttempts,
   useChallengeLeaderboard,
   useChallenges,
   useChallengeSessions,
-  useCreateCrossbarSession,
+  useDeleteSession,
   type Challenge,
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
@@ -90,24 +105,26 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
     sub: isVersus
       ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos`
       : isCrossbar
-        ? `${r.wins} sessões ganhas`
+        ? undefined
         : `${r.attempts} tentativas`,
   }));
 
   return (
     <div className={s.body}>
-      {/* Recorde */}
-      <Card className={s.recordCard}>
-        <p className={s.recordLabel}>Recorde</p>
-        {record ? (
-          <p className={s.recordValue}>
-            {isWinsBased ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
-            <span className={s.recordSub}>· {record.name}</span>
-          </p>
-        ) : (
-          <p className={s.recordEmpty}>Ainda sem registos.</p>
-        )}
-      </Card>
+      {/* Recorde (não no crossbar — o ranking já mostra as vitórias). */}
+      {!isCrossbar && (
+        <Card className={s.recordCard}>
+          <p className={s.recordLabel}>Recorde</p>
+          {record ? (
+            <p className={s.recordValue}>
+              {isWinsBased ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
+              <span className={s.recordSub}>· {record.name}</span>
+            </p>
+          ) : (
+            <p className={s.recordEmpty}>Ainda sem registos.</p>
+          )}
+        </Card>
+      )}
 
       {isCrossbar ? <CrossbarEntry challenge={challenge} /> : <AddAttemptForm challenge={challenge} />}
 
@@ -116,7 +133,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
         <RankingList rows={rankingRows} />
       </div>
 
-      {attempts && attempts.length > 0 && (
+      {!isCrossbar && attempts && attempts.length > 0 && (
         <div>
           <h2 className={s.sectionTitle}>Histórico recente</h2>
           <ul className={s.historyList}>
@@ -143,77 +160,71 @@ function resultLabel(r: ChallengeResult) {
   return r === 'win' ? 'Vitória' : r === 'loss' ? 'Derrota' : r === 'draw' ? 'Empate' : '—';
 }
 
-const SESSION_STATUS_LABEL: Record<string, string> = {
+const SESSION_STATUS_LABEL: Record<ChallengeSessionStatus, string> = {
   setup: 'Por começar',
   active: 'A decorrer',
   finished: 'Terminada',
 };
+const SESSION_STATUS_TONE: Record<ChallengeSessionStatus, BadgeTone> = {
+  setup: 'gray',
+  active: 'green',
+  finished: 'indigo',
+};
 
-/** Entrada do Crossbar: arranca uma sessão ao vivo e lista as recentes. */
+/** Entrada do Crossbar: escolhe a versão (cria no setup) e lista as sessões a decorrer. */
 function CrossbarEntry({ challenge }: { challenge: Challenge }) {
   const navigate = useNavigate();
-  const createSession = useCreateCrossbarSession();
+  const { user } = useAuth();
+  const confirm = useConfirm();
+  const deleteSession = useDeleteSession(challenge.id);
   const { data: sessions } = useChallengeSessions(challenge.id);
-  const [variant, setVariant] = useState<CrossbarVariant>('quick');
-  const [error, setError] = useState<string | null>(null);
 
-  async function start() {
-    setError(null);
-    try {
-      const id = await createSession.mutateAsync({
-        challenge_id: challenge.id,
-        spot_count: spotCount(variant),
-      });
-      navigate(`/challenges/crossbar/${id}`);
-    } catch {
-      setError('Não foi possível criar a sessão.');
-    }
+  async function remove(sessionId: string) {
+    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    if (ok) deleteSession.mutate(sessionId);
   }
 
   return (
     <>
       <Card>
         <h2 className={s.cardTitle}>Nova sessão de Crossbar</h2>
-        {error && (
-          <div className={s.slotTop}>
-            <Alert kind="error">{error}</Alert>
-          </div>
-        )}
-        <div className={s.form}>
-          <Field label="Versão" htmlFor="cb-variant" hint="Rápida = 3 posições · Longa = 5 posições">
-            <Select
-              id="cb-variant"
-              value={variant}
-              onChange={(e) => setVariant(e.target.value as CrossbarVariant)}
+        <div className={s.versionGrid}>
+          {(['quick', 'long'] as CrossbarVariant[]).map((v) => (
+            <button
+              key={v}
+              className={s.versionCard}
+              onClick={() => navigate(`/challenges/crossbar/new?v=${v}`)}
             >
-              <option value="quick">{CROSSBAR_VARIANT_LABEL.quick} (3 posições)</option>
-              <option value="long">{CROSSBAR_VARIANT_LABEL.long} (5 posições)</option>
-            </Select>
-          </Field>
-          <div className={s.actions}>
-            <Button onClick={start} loading={createSession.isPending}>
-              Começar sessão
-            </Button>
-          </div>
+              <span className={s.versionName}>{CROSSBAR_VARIANT_LABEL[v]}</span>
+              <span className={s.versionSpots}>{spotCount(v)} posições</span>
+            </button>
+          ))}
         </div>
       </Card>
 
       {sessions && sessions.length > 0 && (
         <div>
-          <h2 className={s.sectionTitle}>Sessões</h2>
+          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
           <ul className={s.historyList}>
             {sessions.map((sess) => (
-              <li key={sess.id} className={s.historyItem}>
+              <li key={sess.id} className={s.sessionItem}>
                 <button
-                  className={s.sessionLink}
+                  className={s.sessionMain}
                   onClick={() => navigate(`/challenges/crossbar/${sess.id}`)}
                 >
-                  {SESSION_STATUS_LABEL[sess.status] ?? sess.status}
+                  <Badge tone={SESSION_STATUS_TONE[sess.status]}>
+                    {SESSION_STATUS_LABEL[sess.status]}
+                  </Badge>
+                  <span className={s.sessionMeta}>
+                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
+                    {sess.spot_count} posições · {formatDateShort(sess.created_at)}
+                  </span>
                 </button>
-                <span className={s.historyMeta}>
-                  {sess.spot_count} posições{' '}
-                  <span className={s.historyDate}>· {formatDate(sess.created_at)}</span>
-                </span>
+                {sess.created_by === user?.id && (
+                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                    <CloseIcon />
+                  </IconButton>
+                )}
               </li>
             ))}
           </ul>
