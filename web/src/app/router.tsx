@@ -33,6 +33,9 @@ const ChallengesPage = lazyWithReload(() =>
 const AdminPage = lazyWithReload(() =>
   import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
 );
+const PlacesMapPage = lazyWithReload(() =>
+  import('@/features/places/PlacesMapPage').then((m) => ({ default: m.PlacesMapPage })),
+);
 
 export const router = createBrowserRouter([
   // Rotas públicas
@@ -56,6 +59,7 @@ export const router = createBrowserRouter([
           { path: '/games/:id', element: <GameDetailPage /> },
           { path: '/rankings', element: <RankingsPage /> },
           { path: '/challenges', element: <ChallengesPage /> },
+          { path: '/places', element: <PlacesMapPage /> },
           { path: '/admin', element: <AdminPage /> },
         ],
       },

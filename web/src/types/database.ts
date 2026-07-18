@@ -28,6 +28,28 @@ export type VoteCategory = 'mvp' | 'flop';
 export type ChallengeScoring = 'higher_better' | 'lower_better' | 'versus';
 export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
 
+export type District =
+  | 'Aveiro'
+  | 'Beja'
+  | 'Braga'
+  | 'Bragança'
+  | 'Castelo Branco'
+  | 'Coimbra'
+  | 'Évora'
+  | 'Faro'
+  | 'Guarda'
+  | 'Leiria'
+  | 'Lisboa'
+  | 'Portalegre'
+  | 'Porto'
+  | 'Santarém'
+  | 'Setúbal'
+  | 'Viana do Castelo'
+  | 'Vila Real'
+  | 'Viseu'
+  | 'Açores'
+  | 'Madeira';
+
 export interface Database {
   public: {
     Tables: {
@@ -152,6 +174,7 @@ export interface Database {
           created_by: string;
           scheduled_at: string;
           location: string | null;
+          place_id: string | null;
           format_id: number;
           max_players: number;
           status: GameStatus;
@@ -168,6 +191,7 @@ export interface Database {
           created_by: string;
           scheduled_at: string;
           location?: string | null;
+          place_id?: string | null;
           format_id: number;
           max_players: number;
           status?: GameStatus;
@@ -176,6 +200,7 @@ export interface Database {
         Update: {
           scheduled_at?: string;
           location?: string | null;
+          place_id?: string | null;
           format_id?: number;
           max_players?: number;
           status?: GameStatus;
@@ -451,6 +476,42 @@ export interface Database {
         };
         Relationships: [];
       };
+      place: {
+        Row: {
+          id: string;
+          created_by: string;
+          name: string;
+          district: District;
+          concelho: string;
+          latitude: number;
+          longitude: number;
+          url: string | null;
+          phone: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          created_by: string;
+          name: string;
+          district: District;
+          concelho: string;
+          latitude: number;
+          longitude: number;
+          url?: string | null;
+          phone?: string | null;
+        };
+        Update: {
+          name?: string;
+          district?: District;
+          concelho?: string;
+          latitude?: number;
+          longitude?: number;
+          url?: string | null;
+          phone?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       v_player_stats: {
@@ -578,6 +639,25 @@ export interface Database {
           wins: number;
           losses: number;
           last_played: string;
+        };
+        Relationships: [];
+      };
+      v_place_count_by_district: {
+        Row: {
+          district: District;
+          place_count: number;
+          avg_latitude: number;
+          avg_longitude: number;
+        };
+        Relationships: [];
+      };
+      v_place_count_by_concelho: {
+        Row: {
+          district: District;
+          concelho: string;
+          place_count: number;
+          avg_latitude: number;
+          avg_longitude: number;
         };
         Relationships: [];
       };
