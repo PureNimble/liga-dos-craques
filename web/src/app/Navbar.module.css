@@ -8,16 +8,28 @@
   -webkit-backdrop-filter: saturate(130%) blur(14px);
 }
 .inner {
-  margin-inline: auto;
   display: flex;
-  max-width: var(--width-content);
+  margin-inline: auto;
+  max-width: var(--container-max);
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
   padding: var(--space-md) var(--space-lg);
+}
+@media (min-width: 640px) {
+  .inner {
+    padding-inline: var(--space-xl);
+  }
+}
+/* Ecrãs grandes: cabeçalho mais alto e com mais respiração lateral. */
+@media (min-width: 1024px) {
+  .inner {
+    padding: var(--space-lg) var(--space-2xl);
+  }
 }
 
 .logo {
+  /* Logótipo isolado à esquerda; avatar + menu à direita. */
+  margin-inline-end: auto;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -38,45 +50,25 @@
   box-shadow: var(--shadow-glow);
 }
 
-.nav {
-  display: none;
-  align-items: center;
-  gap: var(--space-xs);
-}
-.navLink {
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-muted);
-  transition:
-    color var(--transition),
-    background-color var(--transition);
-}
-.navLink:hover {
-  background-color: var(--gray-750);
-  color: var(--white);
-}
-.navLinkActive,
-.navLinkActive:hover {
-  background-color: var(--accent-surface);
-  color: var(--accent-strong);
-}
-
 .actions {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
 }
 .avatarLink {
-  display: none;
+  display: flex;
 }
-
-@media (min-width: 640px) {
-  .nav {
-    display: flex;
-  }
-  .avatarLink {
-    display: block;
-  }
+/* Ponto no menu quando há avisos por ler (sem acrescentar mais um controlo). */
+.menuWrap {
+  position: relative;
+  display: inline-flex;
+}
+.dot {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--accent);
 }

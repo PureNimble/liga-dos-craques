@@ -1,0 +1,151 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Acima de widgets de terceiros (ex.: controlos do Leaflet a z-index: 1000). */
+  z-index: 1200;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fadeIn 0.18s ease-out;
+}
+
+.panel {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  height: 100%;
+  width: min(20rem, 82vw);
+  flex-direction: column;
+  gap: var(--space-xs);
+  border-left: 1px solid var(--gray-700);
+  background-color: var(--gray-850);
+  box-shadow: var(--shadow-modal);
+  padding: var(--space-lg) var(--space-sm) calc(var(--space-lg) + env(safe-area-inset-bottom));
+  animation: slideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 0 var(--space-sm) var(--space-sm);
+}
+.profile {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.name {
+  overflow: hidden;
+  font-weight: var(--font-weight-semibold);
+  color: var(--white);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.close {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs);
+  color: var(--text-subtle);
+  transition: all var(--transition);
+}
+.close:hover {
+  background-color: var(--gray-750);
+  color: var(--white);
+}
+
+.nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-top: 1px solid var(--gray-750);
+  padding-top: var(--space-sm);
+}
+.nav::-webkit-scrollbar {
+  display: none;
+}
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md) var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  transition:
+    color var(--transition),
+    background-color var(--transition);
+}
+.link:hover {
+  background-color: var(--gray-750);
+  color: var(--white);
+}
+.linkActive,
+.linkActive:hover {
+  background-color: var(--accent-surface);
+  color: var(--accent-strong);
+}
+/* Avisos por ler, ao fundo da linha. */
+.count {
+  margin-left: auto;
+  border-radius: var(--radius-full);
+  background-color: var(--accent);
+  padding: 0 var(--space-sm);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-on-accent);
+}
+
+.signOut {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  border-top: 1px solid var(--gray-750);
+  padding: var(--space-md) var(--space-sm) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  transition: color var(--transition);
+}
+.signOut:hover {
+  color: var(--danger-hover);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .backdrop {
+    animation-duration: 1ms;
+  }
+}

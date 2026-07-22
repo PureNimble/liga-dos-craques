@@ -45,7 +45,11 @@ export function AchievementsGrid({ playerId, editable, featuredId, onSelect }: A
                 !isFeatured && !isUnlocked ? s.locked : ''
               } ${clickable ? s.clickable : ''}`}
             >
-              <NamedIcon name={a.icon} width={26} height={26} aria-hidden />
+              {a.image_url ? (
+                <img className={s.photo} src={a.image_url} alt="" aria-hidden />
+              ) : (
+                <NamedIcon name={a.icon} width={26} height={26} aria-hidden />
+              )}
             </button>
           );
         })}

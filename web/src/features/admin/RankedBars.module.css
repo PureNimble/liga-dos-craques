@@ -1,0 +1,55 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 9rem) minmax(0, 1fr) 2.5rem max-content;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.name {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.track {
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-ghost-hover);
+}
+.fill {
+  display: block;
+  height: 100%;
+  min-width: 0.75rem;
+  border-radius: var(--radius-full);
+}
+.value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+  text-align: right;
+}
+.share {
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+  text-align: right;
+  white-space: nowrap;
+}
+/* Ocupa o lugar das barras em vez de deixar o cartão às moscas. */
+.empty {
+  display: flex;
+  min-height: 8rem;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}

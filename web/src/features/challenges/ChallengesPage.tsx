@@ -33,11 +33,13 @@ import {
 } from './challengeHooks';
 import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
 import { PENALTY_ENTRIES, PENALTY_MODES } from './penalty/penaltyModes';
+import { IconicGoalsEntry } from './iconic/IconicGoalsEntry';
 import type { PenaltyMode } from '@/types/database';
 import s from './ChallengesPage.module.css';
 
 const CROSSBAR_CODE = 'crossbar';
 const PENALTY_CODE = 'penalty';
+const ICONIC_CODE = 'iconic_goals';
 
 export function ChallengesPage() {
   const { data: challenges } = useChallenges();
@@ -63,7 +65,12 @@ export function ChallengesPage() {
         />
       )}
 
-      {selected && <ChallengeView challenge={selected} />}
+      {selected &&
+        (selected.code === ICONIC_CODE ? (
+          <IconicGoalsEntry />
+        ) : (
+          <ChallengeView challenge={selected} />
+        ))}
     </Page>
   );
 }

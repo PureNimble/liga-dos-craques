@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.git
+# Segredos/ambiente não entram na imagem (o .env.local é montado em runtime).
+.env
+.env.*
+!.env.example

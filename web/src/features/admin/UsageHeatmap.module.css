@@ -1,0 +1,87 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.wrap::-webkit-scrollbar {
+  display: none;
+}
+.grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--space-2xs);
+  table-layout: fixed;
+}
+.corner {
+  width: 5.5rem;
+}
+.colHead,
+.rowHead {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-faint);
+}
+.colHead {
+  padding-bottom: var(--space-2xs);
+}
+.rowHead {
+  padding-right: var(--space-xs);
+  text-align: right;
+  white-space: nowrap;
+}
+/* Rampa sequencial: uma só hue, opacidade a marcar a magnitude. */
+.cell {
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(
+    in srgb,
+    var(--accent) calc(var(--intensity) * 85%),
+    var(--surface-ghost-hover)
+  );
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-semibold);
+  color: var(--white);
+  text-align: center;
+}
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+.legendLabel {
+  padding-inline: var(--space-2xs);
+}
+.swatch {
+  width: 1.25rem;
+  height: 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(
+    in srgb,
+    var(--accent) calc(var(--intensity) * 85%),
+    var(--surface-ghost-hover)
+  );
+}
+.empty {
+  display: flex;
+  min-height: 8rem;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+.srOnly {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

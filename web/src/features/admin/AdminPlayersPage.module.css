@@ -1,0 +1,50 @@
+.muted {
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+}
+.rowText {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+.rowName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.roleBadge {
+  flex-shrink: 0;
+}
+.rowMeta {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+
+@media (max-width: 33rem) {
+  .row {
+    flex-wrap: wrap;
+  }
+  .rowText {
+    flex-basis: 100%;
+  }
+}

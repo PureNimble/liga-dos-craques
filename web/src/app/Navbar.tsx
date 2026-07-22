@@ -1,22 +1,32 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
 
-import { navItems, adminNavItem } from './navItems';
+import { NavDrawer } from './NavDrawer';
 import type { FullProfile } from '@/features/profile/profileHooks';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { Avatar, IconButton } from '@/shared/components/ui';
-import { BallIcon, LogoutIcon } from '@/shared/components/ui/icons';
+import { BallIcon, MenuIcon } from '@/shared/components/ui/icons';
+import { ReportBugModal } from '@/features/feedback/ReportBugModal';
+import { useUnreadNotificationCount } from '@/features/notifications/notificationHooks';
 import s from './Navbar.module.css';
 
-/** Cabeçalho fixo: logótipo, navegação inline (desktop/tablet), avatar e logout. */
+/** Cabeçalho fixo: logótipo, avatar e menu — a navegação vive toda na gaveta. */
 export function Navbar({ profile }: { profile: FullProfile }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const { data: unread = 0 } = useUnreadNotificationCount(profile.id);
 
-  const items = profile.role === 'admin' ? [...navItems, adminNavItem] : navItems;
+  function openReport() {
+    setDrawerOpen(false);
+    setReportOpen(true);
+  }
 
   async function handleSignOut() {
+    setDrawerOpen(false);
     const ok = await confirm({
       title: 'Terminar sessão?',
       message: 'Vais precisar de iniciar sessão novamente.',
@@ -37,33 +47,31 @@ export function Navbar({ profile }: { profile: FullProfile }) {
           Peladinhas
         </Link>
 
-        {/* Navegação inline (desktop/tablet) — o perfil fica no avatar à direita */}
-        <nav className={s.nav}>
-          {items
-            .filter((item) => item.to !== '/profile')
-            .map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  isActive ? `${s.navLink} ${s.navLinkActive}` : s.navLink
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-        </nav>
-
         <div className={s.actions}>
           <Link to="/profile" aria-label="Ver perfil" className={s.avatarLink}>
             <Avatar name={profile.name} src={profile.photo_url} size="sm" />
           </Link>
-          <IconButton label="Terminar sessão" onClick={handleSignOut}>
-            <LogoutIcon width={18} height={18} />
-          </IconButton>
+          <span className={s.menuWrap}>
+            <IconButton
+              label={unread > 0 ? `Abrir menu (${unread} por ler)` : 'Abrir menu'}
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MenuIcon width={20} height={20} />
+            </IconButton>
+            {unread > 0 && <span className={s.dot} aria-hidden="true" />}
+          </span>
         </div>
       </div>
+
+      <NavDrawer
+        profile={profile}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSignOut={handleSignOut}
+        onReport={openReport}
+      />
+
+      <ReportBugModal open={reportOpen} onClose={() => setReportOpen(false)} />
     </header>
   );
 }

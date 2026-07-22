@@ -1,0 +1,167 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+.subtitle {
+  min-width: 16rem;
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+
+/* Filtro de período: um único grupo de botões acima dos gráficos. */
+.range {
+  display: flex;
+  gap: var(--space-2xs);
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-card);
+  padding: var(--space-2xs);
+}
+.rangeButton {
+  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-subtle);
+  transition:
+    color var(--transition),
+    background-color var(--transition);
+}
+.rangeButton:hover {
+  background-color: var(--surface-ghost-hover);
+  color: var(--white);
+}
+.rangeActive {
+  composes: rangeButton;
+  background-color: var(--accent-surface);
+  color: var(--accent-strong);
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--space-sm);
+}
+@media (min-width: 560px) {
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
+  }
+}
+@media (min-width: 1100px) {
+  .kpis {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.kpi {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  padding: var(--space-md);
+}
+.kpiLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.kpiValue {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--white);
+}
+.kpiFoot {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+.kpiHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.deltaUp,
+.deltaDown,
+.deltaFlat {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.deltaUp {
+  color: var(--status-success-fg);
+}
+.deltaDown {
+  color: var(--status-error-fg);
+}
+.deltaFlat {
+  color: var(--text-faint);
+}
+
+/* KPIs dentro de um cartão (secção de tracking). */
+.kpisInline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+  gap: var(--space-sm);
+}
+
+/* Uma ou duas colunas — nunca três, senão os cartões deixam de emparelhar e
+   sobra meia linha vazia no fim de cada bloco. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+  gap: var(--space-md);
+}
+.wide {
+  grid-column: 1 / -1;
+}
+.card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-md);
+  overflow: hidden;
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  padding: var(--space-md);
+}
+@media (min-width: 560px) {
+  .card {
+    padding: var(--space-lg);
+  }
+}
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+}
+.meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.empty {
+  padding-block: var(--space-xl);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}

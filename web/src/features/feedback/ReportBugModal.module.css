@@ -1,0 +1,28 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.textarea {
+  width: 100%;
+  min-width: 0;
+  resize: vertical;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-input);
+  background-color: var(--surface-input);
+  padding: var(--space-sm) var(--space-md);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--text-color);
+  outline: none;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+.textarea::placeholder {
+  color: var(--text-placeholder);
+}
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}

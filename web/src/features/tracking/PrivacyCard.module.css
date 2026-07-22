@@ -1,0 +1,25 @@
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  padding: var(--space-lg);
+}
+.text {
+  min-width: 14rem;
+  flex: 1;
+}
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+}
+.body {
+  margin-top: var(--space-2xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}

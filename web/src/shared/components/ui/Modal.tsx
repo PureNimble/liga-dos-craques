@@ -44,12 +44,13 @@ export function Modal({
       if (e.key === 'Escape' && dismissible) onClose();
     }
     document.addEventListener('keydown', onKey);
-    document.body.classList.add('modal-open');
+    // Bloqueia o scroll da página (ver `html.modal-open` no index.css).
+    document.documentElement.classList.add('modal-open');
     // Foca o painel para leitores de ecrã / navegação por teclado.
-    panelRef.current?.focus();
+    panelRef.current?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.classList.remove('modal-open');
+      document.documentElement.classList.remove('modal-open');
     };
   }, [open, onClose, dismissible]);
 

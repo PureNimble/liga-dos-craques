@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card, LockOverlay } from '@/shared/components/ui';
+import { NamedIcon } from '@/shared/components/ui/icons';
 import { ratingText } from '@/features/stats/ratingColor';
 import { MIN_GAMES_FOR_STATS, statsLockMessage } from '@/features/stats/statsHooks';
 import s from './PlayerHeader.module.css';
@@ -13,7 +14,13 @@ interface PlayerHeaderProps {
 }
 
 /** Cartão de nota média (estilo SofaScore) — fica ao lado do cartão do jogador. */
-export function PlayerHeader({ footLabel, avgRating, games, own = false, featured }: PlayerHeaderProps) {
+export function PlayerHeader({
+  footLabel,
+  avgRating,
+  games,
+  own = false,
+  featured,
+}: PlayerHeaderProps) {
   // Bloqueado até jogar o mínimo de jogos: mostra o cartão desfocado com cadeado.
   if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
     return (
@@ -52,7 +59,7 @@ export function PlayerHeader({ footLabel, avgRating, games, own = false, feature
         {featured && (
           <div className={s.featured}>
             <span className={s.featuredIcon} aria-hidden>
-              {featured.icon}
+              <NamedIcon name={featured.icon} width={18} height={18} />
             </span>
             <span className={s.featuredLabel}>{featured.label}</span>
           </div>

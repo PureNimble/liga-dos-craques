@@ -1,0 +1,141 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+.cardTitle {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.count {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-subtle);
+}
+
+.headRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.soundToggle {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs);
+  color: var(--text-subtle);
+  transition: color var(--transition);
+}
+.soundToggle:hover {
+  color: var(--text-color);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.hint {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+  text-align: center;
+}
+
+/* Cabeçalho do golo ativo */
+.activeHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+.scorer {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+
+/* Grelha dos golos */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-sm);
+}
+.goalCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-850);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+.goalCard:hover {
+  border-color: var(--accent);
+  background-color: var(--surface-card-hover);
+}
+.goalCard.done {
+  border-color: var(--accent);
+  background-color: var(--accent-surface-faint);
+}
+.filterDef {
+  position: absolute;
+}
+.goalThumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  filter: url(#iconic-ink) contrast(1.05);
+  transition: filter var(--transition);
+}
+/* Ao passar o rato, mostra a foto real (sem posterização). */
+.goalCard:hover .goalThumb {
+  filter: saturate(1.1) contrast(1.05);
+}
+.goalScorer {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.goalTitle {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.doneTag {
+  margin-top: var(--space-2xs);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-strong);
+}

@@ -4,6 +4,8 @@ import { useAuth } from '@/features/auth/useAuth';
 import type { Database } from '@/types/database';
 
 export type Achievement = Database['public']['Tables']['achievement']['Row'];
+export type AchievementInsert = Database['public']['Tables']['achievement']['Insert'];
+export type AchievementUpdate = Database['public']['Tables']['achievement']['Update'];
 
 /** Define (ou limpa) a conquista destacada no cartão do próprio jogador. */
 export function useSetFeaturedAchievement() {
@@ -54,5 +56,49 @@ export function usePlayerAchievements(playerId: string | undefined) {
       if (error) throw error;
       return new Map((data ?? []).map((r) => [r.achievement_id, r.unlocked_at]));
     },
+  });
+}
+
+/** Admin: todas as conquistas (inclui inativas), ordenadas como na grelha. */
+export function useAllAchievements() {
+  return useQuery({
+    queryKey: ['achievements_all'],
+    queryFn: async (): Promise<Achievement[]> => {
+      const { data, error } = await supabase
+        .from('achievement')
+        .select('*')
+        .order('sort_order');
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+function invalidateAchievements(queryClient: ReturnType<typeof useQueryClient>) {
+  queryClient.invalidateQueries({ queryKey: ['achievements'] });
+  queryClient.invalidateQueries({ queryKey: ['achievements_all'] });
+}
+
+/** Admin: cria uma conquista (RLS exige is_admin()). */
+export function useAddAchievement() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (achievement: AchievementInsert) => {
+      const { error } = await supabase.from('achievement').insert(achievement);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidateAchievements(queryClient),
+  });
+}
+
+/** Admin: edita uma conquista (RLS exige is_admin()). */
+export function useUpdateAchievement() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: number; patch: AchievementUpdate }) => {
+      const { error } = await supabase.from('achievement').update(patch).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidateAchievements(queryClient),
   });
 }

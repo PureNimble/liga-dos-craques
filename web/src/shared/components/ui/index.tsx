@@ -19,3 +19,4 @@ export { EmptyState } from './EmptyState/EmptyState';
 export { LockOverlay } from './LockOverlay/LockOverlay';
 export { Page, PageTitle } from './Page/Page';
 export { Loading } from './Loading/Loading';
+export { YouTubeEmbed } from './YouTubeEmbed/YouTubeEmbed';

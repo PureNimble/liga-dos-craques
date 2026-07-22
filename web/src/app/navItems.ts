@@ -1,6 +1,15 @@
-import { BallIcon, HomeIcon, PinIcon, ShieldIcon, TargetIcon, TrophyIcon, UserIcon } from '@/shared/components/ui/icons';
+import {
+  BallIcon,
+  BellIcon,
+  HomeIcon,
+  PinIcon,
+  SettingsIcon,
+  ShieldIcon,
+  TargetIcon,
+  TrophyIcon,
+  UserIcon,
+} from '@/shared/components/ui/icons';
 import type { ComponentType, SVGProps } from 'react';
-
 
 export type NavItem = {
   to: string;
@@ -19,3 +28,16 @@ export const navItems: NavItem[] = [
 ];
 
 export const adminNavItem: NavItem = { to: '/admin', label: 'Admin', icon: ShieldIcon };
+
+/** Ficam fora da navegação principal — vivem na gaveta, junto às ações da conta. */
+export const notificationsNavItem: NavItem = {
+  to: '/notifications',
+  label: 'Notificações',
+  icon: BellIcon,
+};
+
+export const settingsNavItem: NavItem = {
+  to: '/settings',
+  label: 'Definições',
+  icon: SettingsIcon,
+};

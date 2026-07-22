@@ -5,19 +5,26 @@ project_id = "liga-dos-craques"
 
 [api]
 enabled = true
-port = 54321
+# Portas na gama 443xx: abaixo do intervalo dinâmico do Windows (49152+), onde
+# o Hyper-V/winnat reserva blocos a cada arranque e o Docker deixa de conseguir
+# publicar as portas. As gamas 543xx e 553xx caíam lá dentro.
+port = 44321
 schemas = ["public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
 [db]
-port = 54322
-shadow_port = 54320
+port = 44322
+shadow_port = 44320
 major_version = 15
 
 [studio]
 enabled = true
-port = 54323
+port = 44323
+
+[inbucket]
+enabled = true
+port = 44324
 
 [auth]
 enabled = true

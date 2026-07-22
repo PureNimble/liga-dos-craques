@@ -8,7 +8,9 @@ import { UpdatePasswordPage } from '@/features/auth/UpdatePasswordPage';
 import { AppLayout } from './AppLayout';
 
 // Páginas autenticadas carregadas sob procura (code-splitting) → arranque leve.
-const HomePage = lazyWithReload(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
+const HomePage = lazyWithReload(() =>
+  import('./pages/HomePage').then((m) => ({ default: m.HomePage })),
+);
 const ProfilePage = lazyWithReload(() =>
   import('@/features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage })),
 );
@@ -50,11 +52,48 @@ const PenaltySessionPage = lazyWithReload(() =>
     default: m.PenaltySessionPage,
   })),
 );
-const AdminPage = lazyWithReload(() =>
-  import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })),
+const AdminLayout = lazyWithReload(() =>
+  import('@/features/admin/AdminLayout').then((m) => ({ default: m.AdminLayout })),
+);
+const AdminDashboard = lazyWithReload(() =>
+  import('@/features/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })),
+);
+const AdminPlayersPage = lazyWithReload(() =>
+  import('@/features/admin/AdminPlayersPage').then((m) => ({ default: m.AdminPlayersPage })),
+);
+const AdminGoalsPage = lazyWithReload(() =>
+  import('@/features/admin/AdminGoalsPage').then((m) => ({ default: m.AdminGoalsPage })),
+);
+const AdminReportsPage = lazyWithReload(() =>
+  import('@/features/admin/AdminReportsPage').then((m) => ({ default: m.AdminReportsPage })),
+);
+const AdminGamesPage = lazyWithReload(() =>
+  import('@/features/admin/AdminGamesPage').then((m) => ({ default: m.AdminGamesPage })),
+);
+const AdminAchievementsPage = lazyWithReload(() =>
+  import('@/features/admin/AdminAchievementsPage').then((m) => ({
+    default: m.AdminAchievementsPage,
+  })),
+);
+const AdminReferencePage = lazyWithReload(() =>
+  import('@/features/admin/AdminReferencePage').then((m) => ({ default: m.AdminReferencePage })),
+);
+const AdminAnalyticsPage = lazyWithReload(() =>
+  import('@/features/admin/AdminAnalyticsPage').then((m) => ({ default: m.AdminAnalyticsPage })),
+);
+const AdminSystemPage = lazyWithReload(() =>
+  import('@/features/admin/AdminSystemPage').then((m) => ({ default: m.AdminSystemPage })),
 );
 const PlacesMapPage = lazyWithReload(() =>
   import('@/features/places/PlacesMapPage').then((m) => ({ default: m.PlacesMapPage })),
+);
+const SettingsPage = lazyWithReload(() =>
+  import('@/features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
+);
+const NotificationsPage = lazyWithReload(() =>
+  import('@/features/notifications/NotificationsPage').then((m) => ({
+    default: m.NotificationsPage,
+  })),
 );
 
 export const router = createBrowserRouter([
@@ -84,7 +123,23 @@ export const router = createBrowserRouter([
           { path: '/challenges/penalty/new', element: <PenaltySetupPage /> },
           { path: '/challenges/penalty/:sessionId', element: <PenaltySessionPage /> },
           { path: '/places', element: <PlacesMapPage /> },
-          { path: '/admin', element: <AdminPage /> },
+          { path: '/settings', element: <SettingsPage /> },
+          { path: '/notifications', element: <NotificationsPage /> },
+          {
+            path: '/admin',
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <AdminDashboard /> },
+              { path: 'players', element: <AdminPlayersPage /> },
+              { path: 'games', element: <AdminGamesPage /> },
+              { path: 'goals', element: <AdminGoalsPage /> },
+              { path: 'achievements', element: <AdminAchievementsPage /> },
+              { path: 'reference', element: <AdminReferencePage /> },
+              { path: 'analytics', element: <AdminAnalyticsPage /> },
+              { path: 'reports', element: <AdminReportsPage /> },
+              { path: 'system', element: <AdminSystemPage /> },
+            ],
+          },
         ],
       },
     ],

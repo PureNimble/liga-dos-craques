@@ -1,0 +1,103 @@
+.window {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-image: linear-gradient(to bottom, var(--gray-900), var(--gray-850), var(--gray-900));
+  box-shadow: var(--shadow-card);
+}
+
+.reel {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  padding: 0 var(--space-md);
+  text-align: center;
+}
+.cardScorer {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.cardTitle {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+
+/* Moldura central fixa: a carta que aterra aqui fica "selecionada". Altura = CARD_H. */
+.centerFrame {
+  position: absolute;
+  left: var(--space-sm);
+  right: var(--space-sm);
+  top: 50%;
+  height: 88px;
+  transform: translateY(-50%);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Esbatimento das cartas que espreitam em cima e em baixo. */
+.fadeTop,
+.fadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 34%;
+  z-index: 2;
+  pointer-events: none;
+}
+.fadeTop {
+  top: 0;
+  background-image: linear-gradient(var(--gray-900), transparent);
+}
+.fadeBottom {
+  bottom: 0;
+  background-image: linear-gradient(transparent, var(--gray-900));
+}
+
+/* Setas que apontam para a moldura central. */
+.arrowL,
+.arrowR {
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  border-style: solid;
+  z-index: 4;
+}
+.arrowL {
+  left: 3px;
+  border-width: 8px 0 8px 12px;
+  border-color: transparent transparent transparent var(--accent);
+}
+.arrowR {
+  right: 3px;
+  border-width: 8px 12px 8px 0;
+  border-color: transparent var(--accent) transparent transparent;
+}
+
+.pips {
+  display: inline-flex;
+  gap: var(--space-2xs);
+  margin-top: var(--space-2xs);
+}
+.pip {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: var(--radius-full);
+  background-color: var(--gray-700);
+}
+.pipOn {
+  background-color: var(--accent);
+}

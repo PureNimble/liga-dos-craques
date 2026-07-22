@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Frontend em container ("clonar e correr" sem instalar Node localmente).
+#
+# O backend (Supabase) NÃO está aqui — já é dockerizado pelo Supabase CLI.
+# Fluxo completo a partir da raiz do repositório:
+#   1. npx supabase start                     # sobe o backend em Docker
+#   2. npx supabase db reset                  # migrações + seed
+#   3. cp web/.env.example web/.env.local     # e apontar ao stack local:
+#        VITE_SUPABASE_URL=http://127.0.0.1:44321
+#        VITE_SUPABASE_ANON_KEY=<anon key de `npx supabase status`>
+#   4. docker compose up                      # frontend em http://localhost:5173
+#
+# O browser corre no host, por isso fala com o Supabase em 127.0.0.1:44321
+# diretamente — não é preciso ligar os containers à mesma rede.
+# ---------------------------------------------------------------------------
+services:
+  web:
+    build: ./web
+    ports:
+      - '5173:5173'
+    environment:
+      # O bind-mount não propaga eventos de ficheiro do host para o container, por
+      # isso sem polling o Vite nunca vê as alterações e não há hot reload.
+      - VITE_USE_POLLING=1
+    volumes:
+      - ./web:/app # código-fonte, para hot reload
+      - /app/node_modules # usa o node_modules do container (binários Linux)

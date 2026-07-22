@@ -86,7 +86,7 @@
   border-radius: var(--radius-sm);
   background-color: var(--accent-surface);
   box-shadow: 0 0 0 1px var(--accent-ring);
-  font-size: var(--font-size-lg);
+  color: var(--accent-strong);
 }
 .featuredLabel {
   min-width: 0;

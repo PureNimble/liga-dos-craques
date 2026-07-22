@@ -30,6 +30,27 @@ export function HomeIcon(props: IconProps) {
   );
 }
 
+export function ChartIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 4v16h16" />
+      <path d="M8 15v-3" />
+      <path d="M12 15V8" />
+      <path d="M16 15v-5" />
+    </svg>
+  );
+}
+
+export function MenuIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 6h16" />
+      <path d="M4 12h16" />
+      <path d="M4 18h16" />
+    </svg>
+  );
+}
+
 export function LockIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -83,6 +104,24 @@ export function ShieldIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
       <path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z" />
+    </svg>
+  );
+}
+
+export function BellIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M6 9a6 6 0 1 1 12 0c0 3.2.7 5 1.5 6H4.5C5.3 14 6 12.2 6 9Z" />
+      <path d="M10 19a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+export function SettingsIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.1a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-3-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.1-3l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 3 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.4 1Z" />
     </svg>
   );
 }
@@ -323,6 +362,155 @@ export function BootIcon(props: IconProps) {
   );
 }
 
+/* ---------------- Ícones de golos icónicos (a jogada de cada golo) --------- */
+
+/** Livre com efeito (banana) — bola + trajetória curva para o canto. */
+export function GoalCurveIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="5.5" cy="18.5" r="1.7" />
+      <path d="M7 17.5C8 11 13 8.5 19 9.5" strokeDasharray="0.5 2.5" />
+      <path d="m19 9.5-2.6-.9M19 9.5l-.9 2.5" />
+    </svg>
+  );
+}
+
+/** Voleio — bola no ar + remate em arco. */
+export function GoalVolleyIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="16.5" cy="6.5" r="1.8" />
+      <path d="M15 8 8 15" />
+      <path d="M4 18.5 8.2 16l1.6 3.2" />
+    </svg>
+  );
+}
+
+/** Pontapé de bicicleta — bola a passar por cima (arco invertido). */
+export function GoalBicycleIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="16.5" r="1.8" />
+      <path d="M12 14.7C12 7 5.5 6.5 5 11.5" />
+      <path d="m5 11.5-1.4-1.7M5 11.5l2.1-.8" />
+    </svg>
+  );
+}
+
+/** Pontapé de escorpião — calcanhar para trás. */
+export function GoalScorpionIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="6.5" cy="16.5" r="1.8" />
+      <path d="M8.3 15.7c6-1.2 6.8-6.5 2.4-8.4" />
+      <path d="m10.7 7.3-1.8.2M10.7 7.3l.5 1.9" />
+    </svg>
+  );
+}
+
+/** Pirueta — setas de rotação à volta da bola. */
+export function GoalSpinIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="1.6" />
+      <path d="M12 6.4a5.6 5.6 0 0 1 5 3.1" />
+      <path d="M17.4 6.2 17 9.6l-3.4-.5" />
+      <path d="M12 17.6a5.6 5.6 0 0 1-5-3.1" />
+      <path d="M6.6 17.8 7 14.4l3.4.5" />
+    </svg>
+  );
+}
+
+/** Corrida em slalom — trajeto a driblar defesas. */
+export function GoalDribbleIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="4.5" cy="18.5" r="1.5" />
+      <path d="M5.6 17.6 9 12l3 4 3.2-6 3 4.4" strokeDasharray="0.5 2" />
+      <circle cx="9" cy="14.5" r="0.9" fill="currentColor" stroke="none" />
+      <circle cx="15.2" cy="12.5" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Chapéu/balão por cima do guarda-redes — arco alto. */
+export function GoalLobIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 17.5C7 8 16.5 8 19.5 17.5" />
+      <path d="M4 18h3M19.5 18h-3" />
+      <circle cx="4" cy="17.5" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Corrida de campo inteiro — seta a atravessar o campo. */
+export function GoalRunIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="3" y="6" width="18" height="12" rx="1.5" />
+      <path d="M12 6v12" />
+      <path d="M5 12h11" strokeDasharray="0.5 2" />
+      <path d="m16 12-2.2-1.4M16 12l-2.2 1.4" />
+    </svg>
+  );
+}
+
+/** Remate potente — bola + linhas de velocidade. */
+export function GoalPowerIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="16" cy="12" r="2.2" />
+      <path d="M3 8.5h7M2.5 12H10M3 15.5h7" />
+    </svg>
+  );
+}
+
+/** Livre por cima da barreira — bola + barreira + arco. */
+export function GoalWallIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="4.5" cy="18" r="1.5" />
+      <path d="M13.5 19v-4.5M16 19v-4.5M18.5 19v-4.5" />
+      <path d="M5.6 17C8 10.5 12.5 10.5 15 14.5" strokeDasharray="0.5 2" />
+    </svg>
+  );
+}
+
+/** Jogada coletiva — teia de passes entre jogadores. */
+export function GoalWebIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M5 17 10 8l6 5 3-7" strokeDasharray="0.5 2" />
+      <circle cx="5" cy="17" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="8" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="16" cy="13" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="19" cy="6" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Som ligado — altifalante com ondas. */
+export function SoundOnIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" />
+      <path d="M15 9.5a3.5 3.5 0 0 1 0 5" />
+      <path d="M17.5 7.5a7 7 0 0 1 0 9" />
+    </svg>
+  );
+}
+
+/** Som desligado — altifalante cortado. */
+export function SoundOffIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" />
+      <path d="m16 10 4 4M20 10l-4 4" />
+    </svg>
+  );
+}
+
 /* --------------------------- Ícones por nome ------------------------------ */
 /**
  * Mapeia uma chave semântica (guardada na BD ou em metadados) para o SVG.
@@ -341,7 +529,21 @@ const ICON_BY_NAME: Record<string, ComponentType<IconProps>> = {
   spark: SparkIcon,
   dice: DiceIcon,
   versus: UsersIcon,
+  g_curve: GoalCurveIcon,
+  g_volley: GoalVolleyIcon,
+  g_bicycle: GoalBicycleIcon,
+  g_scorpion: GoalScorpionIcon,
+  g_spin: GoalSpinIcon,
+  g_dribble: GoalDribbleIcon,
+  g_lob: GoalLobIcon,
+  g_run: GoalRunIcon,
+  g_power: GoalPowerIcon,
+  g_wall: GoalWallIcon,
+  g_web: GoalWebIcon,
 };
+
+/** Nomes disponíveis para `NamedIcon` (ex.: escolher o ícone de uma conquista). */
+export const ICON_NAMES = Object.keys(ICON_BY_NAME);
 
 /** Ícone escolhido por nome; cai no medalha por omissão (chave desconhecida). */
 export function NamedIcon({ name, ...props }: IconProps & { name: string }) {

@@ -14,7 +14,10 @@ import { RecentMatches } from '@/features/stats/RecentMatches';
 import { usePlayerXp } from '@/features/xp/xpHooks';
 import { XpBar } from '@/features/xp/XpBar';
 import { AchievementsGrid } from '@/features/achievements/AchievementsGrid';
-import { useAchievements, useSetFeaturedAchievement } from '@/features/achievements/achievementHooks';
+import {
+  useAchievements,
+  useSetFeaturedAchievement,
+} from '@/features/achievements/achievementHooks';
 import s from './profileLayout.module.css';
 
 export function ProfilePage() {
@@ -38,7 +41,10 @@ export function ProfilePage() {
   }
 
   const category = positions?.find((p) => p.id === profile.main_position_id)?.category ?? null;
-  const subtitle = [positions?.find((p) => p.id === profile.main_position_id)?.label, profile.locality]
+  const subtitle = [
+    positions?.find((p) => p.id === profile.main_position_id)?.label,
+    profile.locality,
+  ]
     .filter(Boolean)
     .join(' · ');
   const featured = achievements?.find((a) => a.id === profile.featured_achievement_id) ?? null;

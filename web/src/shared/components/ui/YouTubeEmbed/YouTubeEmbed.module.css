@@ -1,0 +1,82 @@
+.wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-900);
+}
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.watchLink {
+  display: inline-block;
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.watchLink:hover {
+  color: var(--accent-strong);
+}
+
+/* Miniatura clicável (vídeo não embutível) */
+.facade {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-750);
+  background-color: var(--gray-900);
+}
+.thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity var(--transition);
+}
+.facade:hover .thumb {
+  opacity: 1;
+}
+.playBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: var(--radius-full);
+  background-color: rgb(0 0 0 / 0.6);
+  transform: translate(-50%, -50%);
+}
+.triangle {
+  width: 0;
+  height: 0;
+  margin-left: 0.25rem;
+  border-style: solid;
+  border-width: 0.6rem 0 0.6rem 1rem;
+  border-color: transparent transparent transparent var(--white);
+}
+.watchTag {
+  position: absolute;
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--white);
+  background-color: rgb(0 0 0 / 0.6);
+  border-radius: var(--radius-md);
+}

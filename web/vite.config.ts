@@ -10,6 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Só em container (ver docker-compose.yml): o polling custa CPU e não é
+    // preciso quando o dev server corre nativamente no host.
+    watch: process.env.VITE_USE_POLLING ? { usePolling: true, interval: 300 } : undefined,
+  },
   build: {
     rollupOptions: {
       output: {

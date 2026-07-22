@@ -391,6 +391,7 @@ export interface Database {
           label: string;
           description: string;
           icon: string;
+          image_url: string | null;
           criteria: Json;
           sort_order: number;
           active: boolean;
@@ -401,6 +402,7 @@ export interface Database {
           label: string;
           description: string;
           icon?: string;
+          image_url?: string | null;
           criteria: Json;
           sort_order?: number;
           active?: boolean;
@@ -409,6 +411,7 @@ export interface Database {
           label?: string;
           description?: string;
           icon?: string;
+          image_url?: string | null;
           criteria?: Json;
           sort_order?: number;
           active?: boolean;
@@ -624,6 +627,116 @@ export interface Database {
         };
         Relationships: [];
       };
+      iconic_goal: {
+        Row: {
+          id: number;
+          code: string;
+          scorer: string;
+          title: string;
+          achievement_name: string | null;
+          year: number | null;
+          youtube_id: string;
+          video_start: number;
+          difficulty: number;
+          sort_order: number;
+          active: boolean;
+          embeddable: boolean;
+        };
+        Insert: {
+          id?: number;
+          code: string;
+          scorer: string;
+          title: string;
+          achievement_name?: string | null;
+          year?: number | null;
+          youtube_id: string;
+          video_start?: number;
+          difficulty?: number;
+          sort_order?: number;
+          active?: boolean;
+          embeddable?: boolean;
+        };
+        Update: {
+          scorer?: string;
+          title?: string;
+          achievement_name?: string | null;
+          year?: number | null;
+          youtube_id?: string;
+          video_start?: number;
+          difficulty?: number;
+          sort_order?: number;
+          active?: boolean;
+          embeddable?: boolean;
+        };
+        Relationships: [];
+      };
+      iconic_goal_spin: {
+        Row: { player_id: string; iconic_goal_id: number; spun_at: string };
+        Insert: { player_id: string; iconic_goal_id: number; spun_at?: string };
+        Update: { iconic_goal_id?: number };
+        Relationships: [];
+      };
+      iconic_goal_replica: {
+        Row: { player_id: string; iconic_goal_id: number; replicated_at: string };
+        Insert: { player_id: string; iconic_goal_id: number; replicated_at?: string };
+        Update: { replicated_at?: string };
+        Relationships: [];
+      };
+      bug_report: {
+        Row: {
+          id: number;
+          reporter_id: string;
+          message: string;
+          page: string | null;
+          status: string;
+          created_at: string;
+          resolved_at: string | null;
+        };
+        Insert: { reporter_id: string; message: string; page?: string | null };
+        Update: { status?: string; resolved_at?: string | null };
+        Relationships: [];
+      };
+      notification: {
+        Row: {
+          id: number;
+          user_id: string;
+          kind: string;
+          title: string;
+          body: string | null;
+          data: Json;
+          created_at: string;
+          read_at: string | null;
+        };
+        Insert: never;
+        Update: { read_at?: string | null };
+        Relationships: [];
+      };
+      analytics_consent: {
+        Row: { user_id: string; granted: boolean; decided_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      app_event: {
+        Row: {
+          id: number;
+          user_id: string;
+          session_id: string;
+          name: string;
+          path: string | null;
+          props: Json;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          session_id: string;
+          name: string;
+          path?: string | null;
+          props?: Json;
+        };
+        Update: never;
+        Relationships: [];
+      };
     };
     Views: {
       v_player_stats: {
@@ -774,9 +887,19 @@ export interface Database {
         };
         Relationships: [];
       };
+      v_iconic_goal_leaderboard: {
+        Row: {
+          player_id: string;
+          name: string;
+          photo_url: string | null;
+          replicated: number;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       ping: { Args: Record<string, never>; Returns: string };
+      analytics_set_consent: { Args: { p_granted: boolean }; Returns: undefined };
       resolve_awards: { Args: { p_game_id: string }; Returns: string };
       backfill_progression: {
         Args: Record<string, never>;
@@ -784,6 +907,8 @@ export interface Database {
       };
       set_xp_rule: { Args: { p_code: string; p_points: number }; Returns: undefined };
       admin_set_password: { Args: { p_user_id: string; p_password: string }; Returns: undefined };
+      admin_set_role: { Args: { p_user_id: string; p_role: string }; Returns: undefined };
+      admin_reopen_game: { Args: { p_game_id: string }; Returns: undefined };
       crossbar_start_session: { Args: { p_session_id: string }; Returns: undefined };
       crossbar_record_turn: {
         Args: { p_session_id: string; p_hit: boolean };
@@ -811,6 +936,9 @@ export interface Database {
         Args: { p_session_id: string; p_hit: boolean; p_zone?: number | null };
         Returns: { status: CrossbarTurnStatus; winner_id: string | null };
       };
+      iconic_goal_roll: { Args: Record<string, never>; Returns: number | null };
+      iconic_goal_replicate: { Args: Record<string, never>; Returns: number };
+      iconic_goal_forfeit: { Args: Record<string, never>; Returns: undefined };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  padding: var(--space-lg);
+  padding-block: var(--space-lg);
 }
 .greeting {
   display: flex;
@@ -118,6 +118,6 @@
 
 @media (min-width: 640px) {
   .page {
-    padding: var(--space-xl);
+    padding-block: var(--space-xl);
   }
 }

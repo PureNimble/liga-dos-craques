@@ -1,0 +1,140 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  border: 1px solid var(--gray-750);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  padding: var(--space-lg) var(--space-md);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-inline: var(--space-sm);
+}
+.brandMark {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-glow);
+}
+.brandText {
+  font-weight: var(--font-weight-black);
+  letter-spacing: var(--tracking-tight);
+  color: var(--white);
+}
+
+.nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+.group {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-2xs);
+  padding-inline: var(--space-sm);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  transition:
+    color var(--transition),
+    background-color var(--transition);
+}
+.link:hover {
+  background-color: var(--surface-ghost-hover);
+  color: var(--white);
+}
+.linkActive,
+.linkActive:hover {
+  background-color: var(--accent-surface);
+  color: var(--accent-strong);
+}
+.soon,
+.soon:hover {
+  background-color: transparent;
+  color: var(--text-faint);
+  cursor: default;
+}
+.soonDot {
+  margin-left: auto;
+  height: 0.4rem;
+  width: 0.4rem;
+  border-radius: var(--radius-full);
+  background-color: var(--gray-700);
+}
+
+.backToApp {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  border-top: 1px solid var(--gray-750);
+  padding: var(--space-md) var(--space-sm) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-subtle);
+  transition: color var(--transition);
+}
+.backToApp:hover {
+  color: var(--text-color);
+}
+
+/* Telemóvel: a barra passa a topo, horizontal e deslizável. */
+@media (max-width: 899px) {
+  .sidebar {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-md);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: var(--space-sm) var(--space-md);
+  }
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+  .brand {
+    flex-shrink: 0;
+  }
+  .brandText {
+    display: none;
+  }
+  .nav {
+    flex-direction: row;
+    align-items: center;
+  }
+  .group {
+    display: none;
+  }
+  .link span:not(.soonDot) {
+    white-space: nowrap;
+  }
+  .soon {
+    display: none;
+  }
+  .backToApp {
+    flex-shrink: 0;
+    border-top: 0;
+    border-left: 1px solid var(--gray-750);
+    padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
+  }
+}

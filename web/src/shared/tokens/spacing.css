@@ -8,6 +8,6 @@
   --space-xl: 1.5rem;
   --space-2xl: 2rem;
 
-  /* Largura máxima do conteúdo (colunas centradas) */
-  --width-content: 64rem;
+  /* Largura da coluna central de conteúdo (a app é centrada, não edge-to-edge). */
+  --container-max: 78rem;
 }

@@ -49,6 +49,10 @@
   --danger: var(--red-500);
   --danger-hover: var(--red-400);
 
+  /* Gradientes (cartões de destaque do dashboard) */
+  --gradient-emerald: linear-gradient(140deg, var(--green-500), var(--emerald-600));
+  --gradient-teal: linear-gradient(140deg, var(--sky-500), var(--green-400));
+
   /* Superfícies (fundos de "caixa" e de acção) */
   --surface-page: var(--gray-950);
   --surface-glass: rgb(16 18 22 / 0.78); /* barras fixas com desfoque */
