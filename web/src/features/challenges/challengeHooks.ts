@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import type { ChallengeResult, CrossbarTurnStatus, Database, PenaltyMode } from '@/types/database';
 
 export interface RecordTurnResult {
@@ -40,13 +41,15 @@ export function useChallenges() {
 }
 
 export function useChallengeLeaderboard(challengeId: number | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['challenge_leaderboard', challengeId],
+    queryKey: ['challenge_leaderboard', groupId, challengeId],
     enabled: Boolean(challengeId),
     queryFn: async (): Promise<ChallengeLeaderboardRow[]> => {
       const { data, error } = await supabase
         .from('v_challenge_leaderboard')
         .select('*')
+        .eq('group_id', groupId)
         .eq('challenge_id', challengeId as number);
       if (error) throw error;
       return data ?? [];
@@ -55,13 +58,17 @@ export function useChallengeLeaderboard(challengeId: number | undefined) {
 }
 
 export function useChallengeAttempts(challengeId: number | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['challenge_attempts', challengeId],
+    queryKey: ['challenge_attempts', groupId, challengeId],
     enabled: Boolean(challengeId),
     queryFn: async (): Promise<ChallengeAttemptWithNames[]> => {
       const { data, error } = await supabase
         .from('challenge_attempt')
-        .select('id, player_id, opponent_id, score, result, played_at, profile:player_id(name), opponent:opponent_id(name)')
+        .select(
+          'id, player_id, opponent_id, score, result, played_at, profile:player_id(name), opponent:opponent_id(name)',
+        )
+        .eq('group_id', groupId)
         .eq('challenge_id', challengeId as number)
         .order('played_at', { ascending: false })
         .limit(20);
@@ -81,17 +88,22 @@ export interface AddAttemptInput {
 
 export function useAddChallengeAttempt() {
   const { user } = useAuth();
+  const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: AddAttemptInput) => {
       const { error } = await supabase
         .from('challenge_attempt')
-        .insert({ ...input, created_by: user!.id });
+        .insert({ ...input, created_by: user!.id, group_id: groupId });
       if (error) throw error;
     },
     onSuccess: (_data, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['challenge_leaderboard', vars.challenge_id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_attempts', vars.challenge_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_leaderboard', groupId, vars.challenge_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_attempts', groupId, vars.challenge_id],
+      });
     },
   });
 }
@@ -178,15 +190,17 @@ export interface ChallengeSessionWithCount extends ChallengeSession {
   player_count: number;
 }
 
-/** Sessões a decorrer de um desafio (mais recentes primeiro), com nº de jogadores. */
+/** Sessões a decorrer de um desafio (mais recentes primeiro), com nº de jogadores, no grupo ativo. */
 export function useChallengeSessions(challengeId: number | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['challenge_sessions', challengeId],
+    queryKey: ['challenge_sessions', groupId, challengeId],
     enabled: Boolean(challengeId),
     queryFn: async (): Promise<ChallengeSessionWithCount[]> => {
       const { data, error } = await supabase
         .from('challenge_session')
         .select('*, session_player(count)')
+        .eq('group_id', groupId)
         .eq('challenge_id', challengeId as number)
         .eq('status', 'active')
         .order('created_at', { ascending: false })
@@ -203,6 +217,7 @@ export function useChallengeSessions(challengeId: number | undefined) {
 }
 
 export function useDeleteSession(challengeId: number) {
+  const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (sessionId: string) => {
@@ -210,13 +225,14 @@ export function useDeleteSession(challengeId: number) {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', challengeId] });
+      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', groupId, challengeId] });
     },
   });
 }
 
 /** Cria a sessão já a decorrer (setup é client-side) e devolve o id. */
 export function useCreateAndStart() {
+  const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: {
@@ -229,13 +245,16 @@ export function useCreateAndStart() {
         p_challenge_id: input.challenge_id,
         p_spot_count: input.spot_count,
         p_player_ids: input.player_ids,
+        p_group_id: groupId,
         p_max_rounds: input.max_rounds,
       });
       if (error) throw error;
       return data as string;
     },
     onSuccess: (_id, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', vars.challenge_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_sessions', groupId, vars.challenge_id],
+      });
     },
   });
 }
@@ -255,9 +274,15 @@ export function useRecordTurn(session: ChallengeSession) {
       queryClient.invalidateQueries({ queryKey: ['crossbar_session', session.id] });
       queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', session.id] });
       queryClient.invalidateQueries({ queryKey: ['crossbar_session_turns', session.id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', session.challenge_id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_leaderboard', session.challenge_id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_attempts', session.challenge_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_sessions', session.group_id, session.challenge_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_leaderboard', session.group_id, session.challenge_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_attempts', session.group_id, session.challenge_id],
+      });
     },
   });
 }
@@ -268,6 +293,7 @@ export function useRecordTurn(session: ChallengeSession) {
 
 /** Cria a sessão de penáltis já a decorrer (setup é client-side) e devolve o id. */
 export function usePenaltyCreateAndStart() {
+  const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: {
@@ -280,13 +306,16 @@ export function usePenaltyCreateAndStart() {
         p_challenge_id: input.challenge_id,
         p_mode: input.mode,
         p_player_ids: input.player_ids,
+        p_group_id: groupId,
         p_rounds: input.rounds,
       });
       if (error) throw error;
       return data as string;
     },
     onSuccess: (_id, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', vars.challenge_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_sessions', groupId, vars.challenge_id],
+      });
     },
   });
 }
@@ -294,7 +323,10 @@ export function usePenaltyCreateAndStart() {
 export function usePenaltyRecordTurn(session: ChallengeSession) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { hit: boolean; zone?: number | null }): Promise<RecordTurnResult> => {
+    mutationFn: async (input: {
+      hit: boolean;
+      zone?: number | null;
+    }): Promise<RecordTurnResult> => {
       const { data, error } = await supabase.rpc('penalty_record_turn', {
         p_session_id: session.id,
         p_hit: input.hit,
@@ -307,9 +339,15 @@ export function usePenaltyRecordTurn(session: ChallengeSession) {
       queryClient.invalidateQueries({ queryKey: ['crossbar_session', session.id] });
       queryClient.invalidateQueries({ queryKey: ['crossbar_session_players', session.id] });
       queryClient.invalidateQueries({ queryKey: ['crossbar_session_turns', session.id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_sessions', session.challenge_id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_leaderboard', session.challenge_id] });
-      queryClient.invalidateQueries({ queryKey: ['challenge_attempts', session.challenge_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_sessions', session.group_id, session.challenge_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_leaderboard', session.group_id, session.challenge_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['challenge_attempts', session.group_id, session.challenge_id],
+      });
     },
   });
 }

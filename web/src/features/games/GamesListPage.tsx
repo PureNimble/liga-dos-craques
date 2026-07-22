@@ -11,7 +11,13 @@ import {
   PageTitle,
   SegmentedTabs,
 } from '@/shared/components/ui';
-import { BallIcon, CalendarIcon, PinIcon, PlusIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
+import {
+  BallIcon,
+  CalendarIcon,
+  PinIcon,
+  PlusIcon,
+  ChevronRightIcon,
+} from '@/shared/components/ui/icons';
 import { formatGameDateTime } from '@/shared/lib/datetime';
 import { useGames, type GameWithFormat } from './gameHooks';
 import { StatusBadge } from './StatusBadge';
@@ -28,7 +34,9 @@ export function GamesListPage() {
   const navigate = useNavigate();
 
   const filtered = (games ?? []).filter((g) =>
-    tab === 'upcoming' ? UPCOMING_STATUSES.includes(g.status) : !UPCOMING_STATUSES.includes(g.status),
+    tab === 'upcoming'
+      ? UPCOMING_STATUSES.includes(g.status)
+      : !UPCOMING_STATUSES.includes(g.status),
   );
 
   return (
@@ -64,7 +72,9 @@ export function GamesListPage() {
           icon={<BallIcon width={26} height={26} />}
           title={tab === 'upcoming' ? 'Sem jogos por jogar' : 'Ainda não há jogos passados'}
           description={
-            tab === 'upcoming' ? 'Marca o próximo jogo e convoca a malta.' : 'Os jogos concluídos aparecem aqui.'
+            tab === 'upcoming'
+              ? 'Marca o próximo jogo e convoca a malta.'
+              : 'Os jogos concluídos aparecem aqui.'
           }
           action={
             tab === 'upcoming' ? (

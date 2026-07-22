@@ -1,0 +1,158 @@
+.rail {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .rail {
+    position: sticky;
+    top: 0;
+    display: flex;
+    height: 100dvh;
+    width: 4.5rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    border-right: 1px solid var(--gray-750);
+    background-color: var(--gray-900);
+    padding-block: var(--space-lg);
+  }
+}
+
+.list {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  overflow-y: auto;
+}
+
+.chip {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  background-color: var(--gray-800);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-subtle);
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    border-radius var(--transition),
+    transform var(--transition);
+}
+.chipImage {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.chip:hover,
+.chip:focus-visible {
+  border-radius: 50%;
+  background-color: var(--surface-ghost-hover);
+  color: var(--text-color);
+  transform: translateY(-1px);
+}
+/* Com foto, o círculo é fixo — só as iniciais fazem o morph squircle→círculo. */
+.chipPhoto {
+  border-radius: 50%;
+}
+
+.item {
+  position: relative;
+}
+
+/* Indicador do grupo ativo, no gutter à esquerda do avatar (estilo Discord) —
+   ponto que vira barra no hover. A .list agora tem width:100% (em vez de
+   encolher à largura do chip), por isso o gutter fica DENTRO da caixa da
+   .list e não é cortado pelo overflow-x forçado (overflow-y:auto obriga
+   overflow-x a não ser visible). */
+.indicator {
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  height: 0.4rem;
+  width: 0.35rem;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background-color: var(--white);
+  pointer-events: none;
+  transition:
+    height var(--transition),
+    border-radius var(--transition);
+}
+.item:hover .indicator {
+  height: 1.15rem;
+  border-radius: var(--radius-full);
+}
+.chipActive {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-glow);
+}
+.chipActive:hover,
+.chipActive:focus-visible {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.add {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--gray-700);
+  color: var(--text-faint);
+  transition:
+    border-color var(--transition),
+    background-color var(--transition),
+    color var(--transition);
+}
+.add:hover {
+  border-color: var(--accent);
+  border-style: solid;
+  background-color: var(--accent-surface-faint);
+  color: var(--accent-strong);
+}
+
+/* Tooltip — desenhado num portal (document.body), posicionado por JS a partir
+   do círculo em hover/foco, para nunca ser cortado pelo overflow-y da lista. */
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-faint);
+  background-color: var(--surface-tooltip);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+  box-shadow: var(--shadow-elevated);
+  pointer-events: none;
+}
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -0.25rem;
+  height: 0.5rem;
+  width: 0.5rem;
+  transform: translateY(-50%) rotate(45deg);
+  border-bottom: 1px solid var(--border-faint);
+  border-left: 1px solid var(--border-faint);
+  background-color: var(--surface-tooltip);
+}

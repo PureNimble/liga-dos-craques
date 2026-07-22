@@ -1,5 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import type { Database } from '@/types/database';
 
 export type PlayerStats = Database['public']['Views']['v_player_stats']['Row'];
@@ -14,7 +15,7 @@ export function statsLockMessage(own: boolean): string {
     : `Disponível a partir de ${MIN_GAMES_FOR_STATS} jogos`;
 }
 
-const EMPTY: Omit<PlayerStats, 'player_id' | 'name'> = {
+const EMPTY: Omit<PlayerStats, 'player_id' | 'group_id' | 'name'> = {
   games: 0,
   wins: 0,
   draws: 0,
@@ -28,31 +29,34 @@ const EMPTY: Omit<PlayerStats, 'player_id' | 'name'> = {
   strength_delta: null,
 };
 
-async function fetchPlayerStats(playerId: string): Promise<PlayerStats> {
+async function fetchPlayerStats(playerId: string, groupId: string): Promise<PlayerStats> {
   const { data, error } = await supabase
     .from('v_player_stats')
     .select('*')
     .eq('player_id', playerId)
+    .eq('group_id', groupId)
     .maybeSingle();
   if (error) throw error;
-  // Se ainda não houver linha (jogador sem jogos), devolve zeros.
-  return data ?? { player_id: playerId, name: '', ...EMPTY };
+  // Se ainda não houver linha (jogador sem jogos neste grupo), devolve zeros.
+  return data ?? { player_id: playerId, group_id: groupId, name: '', ...EMPTY };
 }
 
-/** Estatísticas de um jogador (derivadas da vista v_player_stats). */
+/** Estatísticas de um jogador no grupo ativo (derivadas da vista v_player_stats). */
 export function usePlayerStats(playerId: string | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['player_stats', playerId],
+    queryKey: ['player_stats', groupId, playerId],
     enabled: Boolean(playerId),
-    queryFn: () => fetchPlayerStats(playerId as string),
+    queryFn: () => fetchPlayerStats(playerId as string, groupId),
   });
 }
 
 /** Variante Suspense: usar apenas quando o playerId já está garantidamente disponível. */
 export function usePlayerStatsSuspense(playerId: string) {
+  const groupId = useActiveGroupId();
   return useSuspenseQuery({
-    queryKey: ['player_stats', playerId],
-    queryFn: () => fetchPlayerStats(playerId),
+    queryKey: ['player_stats', groupId, playerId],
+    queryFn: () => fetchPlayerStats(playerId, groupId),
   });
 }
 
@@ -72,10 +76,11 @@ const DONE = ['finished', 'voting_open', 'closed'];
  */
 export const CHART_GAMES = 5;
 
-/** Golos e assistências por jogo (últimos `limit` jogos concluídos). */
+/** Golos e assistências por jogo (últimos `limit` jogos concluídos) no grupo ativo. */
 export function useContributions(playerId: string | undefined, limit = CHART_GAMES) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['contributions', playerId, limit],
+    queryKey: ['contributions', groupId, playerId, limit],
     enabled: Boolean(playerId),
     queryFn: async (): Promise<GameContribution[]> => {
       const { data: evs, error } = await supabase
@@ -97,7 +102,8 @@ export function useContributions(playerId: string | undefined, limit = CHART_GAM
 
       const { data: games, error: gErr } = await supabase
         .from('game')
-        .select('id, scheduled_at, status')
+        .select('id, scheduled_at, status, group_id')
+        .eq('group_id', groupId)
         .in('id', ids);
       if (gErr) throw gErr;
 
@@ -110,7 +116,12 @@ export function useContributions(playerId: string | undefined, limit = CHART_GAM
         .map((id) => ({ gameId: id, date: dateById.get(id) as string, ...byGame.get(id)! }))
         .sort((a, b) => a.date.localeCompare(b.date))
         .slice(-limit)
-        .map((x) => ({ gameId: x.gameId, label: fmt.format(new Date(x.date)), goals: x.goals, assists: x.assists }));
+        .map((x) => ({
+          gameId: x.gameId,
+          label: fmt.format(new Date(x.date)),
+          goals: x.goals,
+          assists: x.assists,
+        }));
     },
     staleTime: 60_000,
   });
@@ -124,18 +135,20 @@ export interface RatingPoint {
 }
 
 /**
- * Avaliações dos últimos `limit` jogos do jogador, por ordem cronológica.
- * Junta a data (tabela game) às avaliações (vista v_game_player_rating).
+ * Avaliações dos últimos `limit` jogos do jogador no grupo ativo, por ordem
+ * cronológica. Junta a data (tabela game) às avaliações (vista v_game_player_rating).
  */
 export function useRatingTrend(playerId: string | undefined, limit = CHART_GAMES) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['rating_trend', playerId, limit],
+    queryKey: ['rating_trend', groupId, playerId, limit],
     enabled: Boolean(playerId),
     queryFn: async (): Promise<RatingPoint[]> => {
       const { data: ratings, error } = await supabase
         .from('v_game_player_rating')
         .select('game_id, rating')
-        .eq('player_id', playerId as string);
+        .eq('player_id', playerId as string)
+        .eq('group_id', groupId);
       if (error) throw error;
       const rows = (ratings ?? []).filter((r) => r.rating != null);
       if (rows.length === 0) return [];
@@ -152,7 +165,11 @@ export function useRatingTrend(playerId: string | undefined, limit = CHART_GAMES
 
       const fmt = new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: '2-digit' });
       return ids
-        .map((id) => ({ gameId: id, date: dateById.get(id) ?? '', rating: ratingById.get(id) as number }))
+        .map((id) => ({
+          gameId: id,
+          date: dateById.get(id) ?? '',
+          rating: ratingById.get(id) as number,
+        }))
         .filter((p) => p.date)
         .sort((a, b) => a.date.localeCompare(b.date))
         .slice(-limit)
@@ -181,32 +198,37 @@ interface EmbeddedGame {
   team_a_score: number | null;
   team_b_score: number | null;
   status: string;
+  group_id: string;
   game_format: { label: string } | null;
 }
 
-/** Últimos `limit` jogos do jogador: data, formato, resultado e avaliação. */
+/** Últimos `limit` jogos do jogador no grupo ativo: data, formato, resultado e avaliação. */
 export function useRecentGames(playerId: string | undefined, limit = 6) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['recent_games', playerId, limit],
+    queryKey: ['recent_games', groupId, playerId, limit],
     enabled: Boolean(playerId),
     queryFn: async (): Promise<RecentGame[]> => {
       const { data: gps, error } = await supabase
         .from('game_player')
-        .select('team, game:game_id(id, scheduled_at, team_a_score, team_b_score, status, game_format(label))')
+        .select(
+          'team, game:game_id(id, scheduled_at, team_a_score, team_b_score, status, group_id, game_format(label))',
+        )
         .eq('player_id', playerId as string);
       if (error) throw error;
 
       const { data: ratings } = await supabase
         .from('v_game_player_rating')
         .select('game_id, rating')
-        .eq('player_id', playerId as string);
+        .eq('player_id', playerId as string)
+        .eq('group_id', groupId);
       const ratingById = new Map((ratings ?? []).map((r) => [r.game_id, r.rating]));
 
       const fmt = new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: '2-digit' });
       const rows: RecentGame[] = [];
       for (const gp of gps ?? []) {
         const g = gp.game as unknown as EmbeddedGame | null;
-        if (!g || !DONE.includes(g.status)) continue;
+        if (!g || !DONE.includes(g.status) || g.group_id !== groupId) continue;
         const a = g.team_a_score;
         const b = g.team_b_score;
         let result: MatchResult | null = null;
@@ -248,16 +270,18 @@ const XP_LABELS: Record<string, string> = {
   mvp: 'MVP',
 };
 
-/** Repartição do XP total do jogador por fonte (participação, vitória, golo, …). */
+/** Repartição do XP total do jogador no grupo ativo por fonte (participação, vitória, golo, …). */
 export function useXpBreakdown(playerId: string | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['xp_breakdown', playerId],
+    queryKey: ['xp_breakdown', groupId, playerId],
     enabled: Boolean(playerId),
     queryFn: async (): Promise<XpSource[]> => {
       const { data, error } = await supabase
         .from('xp_ledger')
         .select('source_code, points')
-        .eq('player_id', playerId as string);
+        .eq('player_id', playerId as string)
+        .eq('group_id', groupId);
       if (error) throw error;
 
       const by = new Map<string, number>();

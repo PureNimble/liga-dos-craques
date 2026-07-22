@@ -3,7 +3,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, Field, Input, Modal, Select } from '@/shared/components/ui';
 import { useCreatePlace, type Place } from './placeHooks';
-import { createPlaceSchema, CONCELHOS_BY_DISTRICT, DISTRICTS, type CreatePlaceValues } from './place.schemas';
+import {
+  createPlaceSchema,
+  CONCELHOS_BY_DISTRICT,
+  DISTRICTS,
+  type CreatePlaceValues,
+} from './place.schemas';
 import s from './AddPlaceModal.module.css';
 
 interface AddPlaceModalProps {
@@ -42,7 +47,12 @@ function matchConcelho(district: string, address: NominatimResult['address']): s
   return candidates.find((c): c is string => c !== undefined && validConcelhos.includes(c));
 }
 
-export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated }: AddPlaceModalProps) {
+export function AddPlaceModal({
+  onClose,
+  defaultDistrict,
+  defaultName,
+  onCreated,
+}: AddPlaceModalProps) {
   const createPlace = useCreatePlace();
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -110,10 +120,14 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
         form.setValue('concelho', matchedConcelho, { shouldValidate: true });
         setDistrictWarning(null);
       } else {
-        setDistrictWarning('Não foi possível identificar o concelho automaticamente — confirma antes de guardar.');
+        setDistrictWarning(
+          'Não foi possível identificar o concelho automaticamente — confirma antes de guardar.',
+        );
       }
     } else {
-      setDistrictWarning('Não foi possível identificar o distrito automaticamente — confirma antes de guardar.');
+      setDistrictWarning(
+        'Não foi possível identificar o distrito automaticamente — confirma antes de guardar.',
+      );
     }
     setCandidates([]);
   }
@@ -135,7 +149,10 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
           <Button variant="secondary" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={form.handleSubmit(onSubmit)} loading={form.formState.isSubmitting || createPlace.isPending}>
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            loading={form.formState.isSubmitting || createPlace.isPending}
+          >
             Adicionar
           </Button>
         </>
@@ -154,7 +171,9 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
         {searchError && <Alert kind="error">{searchError}</Alert>}
 
         {noResults && (
-          <Alert kind="info">Campo não encontrado — preenche a localização manualmente abaixo.</Alert>
+          <Alert kind="info">
+            Campo não encontrado — preenche a localização manualmente abaixo.
+          </Alert>
         )}
 
         {districtWarning && <Alert kind="info">{districtWarning}</Alert>}
@@ -172,7 +191,11 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
         )}
 
         <div className={s.grid2}>
-          <Field label="Distrito" htmlFor="district" error={form.formState.errors.district?.message}>
+          <Field
+            label="Distrito"
+            htmlFor="district"
+            error={form.formState.errors.district?.message}
+          >
             <Select id="district" {...form.register('district')}>
               {DISTRICTS.map((d) => (
                 <option key={d} value={d}>
@@ -181,7 +204,11 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
               ))}
             </Select>
           </Field>
-          <Field label="Concelho" htmlFor="concelho" error={form.formState.errors.concelho?.message}>
+          <Field
+            label="Concelho"
+            htmlFor="concelho"
+            error={form.formState.errors.concelho?.message}
+          >
             <Select id="concelho" {...form.register('concelho')}>
               {concelhoOptions.map((c) => (
                 <option key={c} value={c}>
@@ -193,11 +220,31 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
         </div>
 
         <div className={s.grid2}>
-          <Field label="Latitude" htmlFor="latitude" error={form.formState.errors.latitude?.message}>
-            <Input id="latitude" type="number" step="any" placeholder="Ex.: 38.7169" {...form.register('latitude')} />
+          <Field
+            label="Latitude"
+            htmlFor="latitude"
+            error={form.formState.errors.latitude?.message}
+          >
+            <Input
+              id="latitude"
+              type="number"
+              step="any"
+              placeholder="Ex.: 38.7169"
+              {...form.register('latitude')}
+            />
           </Field>
-          <Field label="Longitude" htmlFor="longitude" error={form.formState.errors.longitude?.message}>
-            <Input id="longitude" type="number" step="any" placeholder="Ex.: -9.1399" {...form.register('longitude')} />
+          <Field
+            label="Longitude"
+            htmlFor="longitude"
+            error={form.formState.errors.longitude?.message}
+          >
+            <Input
+              id="longitude"
+              type="number"
+              step="any"
+              placeholder="Ex.: -9.1399"
+              {...form.register('longitude')}
+            />
           </Field>
         </div>
 
@@ -210,7 +257,12 @@ export function AddPlaceModal({ onClose, defaultDistrict, defaultName, onCreated
           <Input id="url" placeholder="https://…" {...form.register('url')} />
         </Field>
 
-        <Field label="Telefone" htmlFor="phone" hint="Opcional" error={form.formState.errors.phone?.message}>
+        <Field
+          label="Telefone"
+          htmlFor="phone"
+          hint="Opcional"
+          error={form.formState.errors.phone?.message}
+        >
           <Input id="phone" placeholder="Ex.: 912 345 678" {...form.register('phone')} />
         </Field>
 

@@ -10,7 +10,12 @@ interface AchievementsGridProps {
   onSelect?: (id: number | null) => void;
 }
 
-export function AchievementsGrid({ playerId, editable, featuredId, onSelect }: AchievementsGridProps) {
+export function AchievementsGrid({
+  playerId,
+  editable,
+  featuredId,
+  onSelect,
+}: AchievementsGridProps) {
   const { data: achievements } = useAchievements();
   const { data: unlocked } = usePlayerAchievements(playerId);
 

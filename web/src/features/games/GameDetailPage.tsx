@@ -219,6 +219,7 @@ export function GameDetailPage() {
       {/* Plantel */}
       <PlayerRoster
         gameId={game.id}
+        groupId={game.group_id}
         players={players ?? []}
         maxPlayers={game.max_players}
         canManage={isOrganizer}
@@ -324,7 +325,9 @@ export function GameDetailPage() {
                   <Button
                     key={t}
                     block
-                    variant={t === 'cancelled' ? 'danger' : t === 'closed' ? 'secondary' : 'primary'}
+                    variant={
+                      t === 'cancelled' ? 'danger' : t === 'closed' ? 'secondary' : 'primary'
+                    }
                     onClick={() => changeStatus(t)}
                     loading={updateStatus.isPending}
                   >
@@ -334,9 +337,7 @@ export function GameDetailPage() {
             </div>
           )}
 
-          {noManageActions && (
-            <p className={s.emptyNote}>Sem ações disponíveis neste estado.</p>
-          )}
+          {noManageActions && <p className={s.emptyNote}>Sem ações disponíveis neste estado.</p>}
         </div>
       </Modal>
 
@@ -348,7 +349,11 @@ export function GameDetailPage() {
         variant="sheet"
         size="lg"
       >
-        <CreateGameForm game={game} onSuccess={() => setEditOpen(false)} onCancel={() => setEditOpen(false)} />
+        <CreateGameForm
+          game={game}
+          onSuccess={() => setEditOpen(false)}
+          onCancel={() => setEditOpen(false)}
+        />
       </Modal>
     </Page>
   );

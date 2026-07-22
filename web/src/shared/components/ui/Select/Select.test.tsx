@@ -111,11 +111,7 @@ describe('Select', () => {
   it('funciona com react-hook-form register(), refletindo defaultValues', () => {
     function Form() {
       const { register } = useForm({ defaultValues: { position: 'def' } });
-      return (
-        <Select {...register('position')}>
-          {positionOptions()}
-        </Select>
-      );
+      return <Select {...register('position')}>{positionOptions()}</Select>;
     }
     render(<Form />);
 

@@ -119,7 +119,12 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
           <ul className={s.suggestions}>
             {suggestions.map((p) => (
               <li key={p.id}>
-                <button type="button" className={s.suggestion} onMouseDown={(e) => e.preventDefault()} onClick={() => selectPlace(p)}>
+                <button
+                  type="button"
+                  className={s.suggestion}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => selectPlace(p)}
+                >
                   {p.name} <span className={s.suggestionMeta}>{p.concelho}</span>
                 </button>
               </li>

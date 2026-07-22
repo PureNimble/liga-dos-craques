@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Alert, Avatar, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
+import {
+  Alert,
+  Avatar,
+  Button,
+  Card,
+  EmptyState,
+  Loading,
+  Page,
+  PageTitle,
+} from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { BallIcon, CheckIcon, TrophyIcon, XCircleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
@@ -19,7 +28,8 @@ import type { PenaltyMode } from '@/types/database';
 import cb from '../crossbar/CrossbarSessionPage.module.css';
 import s from './PenaltySessionPage.module.css';
 
-const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) => a.turn_order - b.turn_order;
+const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) =>
+  a.turn_order - b.turn_order;
 const penaltyMode = (session: ChallengeSession): PenaltyMode =>
   session.mode === 'crossbar' ? 'pen_goals' : session.mode;
 
@@ -112,15 +122,15 @@ function ActiveView({
   const isSuddenDeath = session.phase === 'sudden_death';
   const ordered = useMemo(() => [...(players ?? [])].sort(byOrder), [players]);
   const current = isSuddenDeath
-    ? ordered.find((p) => !p.eliminated && !p.sd_shot) ?? ordered.find((p) => !p.eliminated)
-    : ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0];
+    ? (ordered.find((p) => !p.eliminated && !p.sd_shot) ?? ordered.find((p) => !p.eliminated))
+    : (ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0]);
 
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   // Zera a escolha quando muda o rematador.
   useEffect(() => setSelectedZone(null), [current?.player_id]);
 
   const showGoal = info.usesGoal && !isSuddenDeath;
-  const targetZone = mode === 'pen_target' ? current?.target ?? null : null;
+  const targetZone = mode === 'pen_target' ? (current?.target ?? null) : null;
   const needsZone = info.picksZone && !isSuddenDeath;
 
   // Animação do sorteio da zona (pen_target): joga uma vez por vez de cada jogador.
@@ -165,7 +175,7 @@ function ActiveView({
         showGoal && (
           <div className={s.goalWrap}>
             <PenaltyGoal
-              filled={mode === 'pen_zones' ? current?.zones ?? 0 : 0}
+              filled={mode === 'pen_zones' ? (current?.zones ?? 0) : 0}
               target={mode === 'pen_target' ? displayZone : null}
               selected={info.picksZone ? selectedZone : null}
               onSelect={info.picksZone && isOwner && !spinning ? setSelectedZone : undefined}

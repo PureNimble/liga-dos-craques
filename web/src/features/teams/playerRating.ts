@@ -48,7 +48,10 @@ export const DEFAULT_RATING_WEIGHTS: RatingWeights = {
  * Rating baseado em desempenho por jogo (não recompensa só quem joga muito).
  * Jogadores sem jogos ficam no valor base (neutro), para não penalizar novatos.
  */
-export function computeRating(input: RatingInput, w: RatingWeights = DEFAULT_RATING_WEIGHTS): number {
+export function computeRating(
+  input: RatingInput,
+  w: RatingWeights = DEFAULT_RATING_WEIGHTS,
+): number {
   if (input.games <= 0) return w.base;
 
   const g = input.games;

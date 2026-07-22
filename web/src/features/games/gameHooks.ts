@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import type { Database, GameStatus, GamePlayerStatus } from '@/types/database';
 
 export type GameFormat = Database['public']['Tables']['game_format']['Row'];
@@ -30,7 +31,10 @@ export function pickFormatForCount(count: number, formats: GameFormat[]): GameFo
   let bestDiff = Infinity;
   for (const f of sorted) {
     const diff = Math.abs(f.players_per_side - target);
-    if (diff < bestDiff - 1e-9 || (Math.abs(diff - bestDiff) < 1e-9 && f.players_per_side > best.players_per_side)) {
+    if (
+      diff < bestDiff - 1e-9 ||
+      (Math.abs(diff - bestDiff) < 1e-9 && f.players_per_side > best.players_per_side)
+    ) {
       bestDiff = diff;
       best = f;
     }
@@ -62,12 +66,14 @@ export function useGameFormats() {
 /*  Lista de jogos                                                              */
 /* -------------------------------------------------------------------------- */
 export function useGames() {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['games'],
+    queryKey: ['games', groupId],
     queryFn: async (): Promise<GameWithFormat[]> => {
       const { data, error } = await supabase
         .from('game')
         .select('*, game_format(code, label, players_per_side)')
+        .eq('group_id', groupId)
         .order('scheduled_at', { ascending: false });
       if (error) throw error;
       return (data ?? []) as unknown as GameWithFormat[];
@@ -128,19 +134,20 @@ export interface CreateGameInput {
 
 export function useCreateGame() {
   const { user } = useAuth();
+  const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: CreateGameInput): Promise<Game> => {
       // Ao criar, as inscrições ficam logo abertas.
       const { data, error } = await supabase
         .from('game')
-        .insert({ ...input, created_by: user!.id, status: 'open' })
+        .insert({ ...input, created_by: user!.id, group_id: groupId, status: 'open' })
         .select()
         .single();
       if (error) throw error;
       return data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games', groupId] }),
   });
 }
 

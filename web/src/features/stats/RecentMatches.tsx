@@ -1,5 +1,10 @@
 import { Card } from '@/shared/components/ui';
-import { useRecentGames, MIN_GAMES_FOR_STATS, type MatchResult, type RecentGame } from './statsHooks';
+import {
+  useRecentGames,
+  MIN_GAMES_FOR_STATS,
+  type MatchResult,
+  type RecentGame,
+} from './statsHooks';
 import { ratingPill } from './ratingColor';
 import s from './RecentMatches.module.css';
 

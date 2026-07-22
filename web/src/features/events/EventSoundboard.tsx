@@ -28,21 +28,22 @@ export function EventSoundboard({ gameId, players, currentMinute }: EventSoundbo
   const { data: eventTypes } = useEventTypes();
   const [sheet, setSheet] = useState<Sheet>(null);
 
-  const byCode = useMemo(
-    () => new Map((eventTypes ?? []).map((t) => [t.code, t])),
-    [eventTypes],
-  );
+  const byCode = useMemo(() => new Map((eventTypes ?? []).map((t) => [t.code, t])), [eventTypes]);
   const save = byCode.get('save');
   const penaltyMissed = byCode.get('penalty_missed');
 
   if (players.length === 0) {
-    return (
-      <p className={s.emptyMsg}>Adiciona jogadores para poderes registar eventos.</p>
-    );
+    return <p className={s.emptyMsg}>Adiciona jogadores para poderes registar eventos.</p>;
   }
 
   const actions = [
-    { key: 'goal', Icon: BallIcon, label: 'Golo', danger: false, onClick: () => setSheet({ kind: 'goal' }) },
+    {
+      key: 'goal',
+      Icon: BallIcon,
+      label: 'Golo',
+      danger: false,
+      onClick: () => setSheet({ kind: 'goal' }),
+    },
     save && {
       key: 'save',
       Icon: GloveIcon,
@@ -219,7 +220,10 @@ function GoalModal({
         minute: minute === '' ? null : Number(minute),
         tagIds: allowsTags ? tagIds : [],
       });
-      toast.show(`${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'}`, 'success');
+      toast.show(
+        `${isOwn ? 'Autogolo' : 'Golo'} · ${scorer.profile?.name ?? 'Jogador'}`,
+        'success',
+      );
       onClose();
     } catch {
       setError('Não foi possível registar o golo.');
@@ -372,7 +376,13 @@ function SimpleEventModal({
   }
 
   return (
-    <Modal open onClose={onClose} variant="sheet" title={eventType.label} description="Escolhe quem">
+    <Modal
+      open
+      onClose={onClose}
+      variant="sheet"
+      title={eventType.label}
+      description="Escolhe quem"
+    >
       <div className={s.body}>
         {error && <Alert kind="error">{error}</Alert>}
 

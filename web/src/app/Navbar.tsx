@@ -11,7 +11,7 @@ import { ReportBugModal } from '@/features/feedback/ReportBugModal';
 import { useUnreadNotificationCount } from '@/features/notifications/notificationHooks';
 import s from './Navbar.module.css';
 
-/** Cabeçalho fixo: logótipo, avatar e menu — a navegação vive toda na gaveta. */
+/** Cabeçalho fixo: logótipo, avatar e menu — a navegação (e os grupos) vive toda na gaveta. */
 export function Navbar({ profile }: { profile: FullProfile }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();

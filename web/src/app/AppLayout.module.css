@@ -9,6 +9,13 @@
   overflow: hidden;
   background-color: var(--surface-page);
 }
+.shell {
+  display: flex;
+}
+.column {
+  min-width: 0;
+  flex: 1;
+}
 /* Contentor de scroll a toda a largura. A barra é escondida (desliza na mesma);
    sem barra visível não há goteira a reservar nem salto ao abrir um modal. */
 .main {

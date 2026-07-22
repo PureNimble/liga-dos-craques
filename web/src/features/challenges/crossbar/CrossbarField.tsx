@@ -29,15 +29,16 @@ export function CrossbarField({
       (winnerId && p.player_id === winnerId),
   );
   const focusDone = focus ? focus.current_spot >= spotCount : false;
-  const focusPos = !focus
-    ? GOAL
-    : focusDone
-      ? GOAL
-      : spotPos(spotCount, focus.current_spot);
+  const focusPos = !focus ? GOAL : focusDone ? GOAL : spotPos(spotCount, focus.current_spot);
 
   return (
     <div className={s.field}>
-      <svg className={s.lines} viewBox={`0 0 ${CROSSBAR_PITCH_LEN} 100`} aria-hidden focusable="false">
+      <svg
+        className={s.lines}
+        viewBox={`0 0 ${CROSSBAR_PITCH_LEN} 100`}
+        aria-hidden
+        focusable="false"
+      >
         <rect x="2" y="2" width="129.33" height="96" rx="2" />
         {/* Meio-campo (vertical). */}
         <line x1="66.67" y1="2" x2="66.67" y2="98" />

@@ -42,11 +42,11 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
   const xOf = (i: number) => padX + (n <= 1 ? innerW / 2 : (innerW * i) / (n - 1));
   const yOf = (r: number) => padTop + innerH * (1 - (r - lo) / span);
 
-  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xOf(i)} ${yOf(p.rating)}`).join(' ');
+  const linePath = points
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xOf(i)} ${yOf(p.rating)}`)
+    .join(' ');
   const areaPath =
-    n > 0
-      ? `${linePath} L ${xOf(n - 1)} ${padTop + innerH} L ${xOf(0)} ${padTop + innerH} Z`
-      : '';
+    n > 0 ? `${linePath} L ${xOf(n - 1)} ${padTop + innerH} L ${xOf(0)} ${padTop + innerH} Z` : '';
 
   const showRef = lo <= 6 && hi >= 6;
   const gridVals = [lo, (lo + hi) / 2, hi];
@@ -105,7 +105,14 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
           {/* Grelha recessiva */}
           {gridVals.map((v, i) => (
             <g key={i}>
-              <line className={s.grid} x1={padX} x2={w - padX} y1={yOf(v)} y2={yOf(v)} strokeWidth={1} />
+              <line
+                className={s.grid}
+                x1={padX}
+                x2={w - padX}
+                y1={yOf(v)}
+                y2={yOf(v)}
+                strokeWidth={1}
+              />
               <text className={s.axis} x={4} y={yOf(v) + 3} fontSize={9}>
                 {fmtGrid(v)}
               </text>
@@ -127,7 +134,13 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
 
           {areaPath && <path d={areaPath} fill="url(#ratingArea)" />}
           {linePath && (
-            <path className={s.line} d={linePath} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              className={s.line}
+              d={linePath}
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           )}
 
           {/* Crosshair */}
@@ -148,7 +161,14 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             const isHover = hover === i;
             const r = isHover ? 5 : isLast ? 4 : 3;
             return (
-              <circle className={s.point} key={p.gameId} cx={xOf(i)} cy={yOf(p.rating)} r={r} strokeWidth={2} />
+              <circle
+                className={s.point}
+                key={p.gameId}
+                cx={xOf(i)}
+                cy={yOf(p.rating)}
+                r={r}
+                strokeWidth={2}
+              />
             );
           })}
 

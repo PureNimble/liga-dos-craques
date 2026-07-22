@@ -35,11 +35,56 @@ const MOCK_XP = [
   { label: 'Conquistas', value: 30 },
 ];
 const MOCK_RECENT: RecentGame[] = [
-  { gameId: '1', date: '', label: 'J1', rating: 7.2, result: 'V', scoreFor: 3, scoreAgainst: 1, formatLabel: '5v5' },
-  { gameId: '2', date: '', label: 'J2', rating: 6.5, result: 'E', scoreFor: 2, scoreAgainst: 2, formatLabel: '5v5' },
-  { gameId: '3', date: '', label: 'J3', rating: 8.1, result: 'V', scoreFor: 4, scoreAgainst: 0, formatLabel: '5v5' },
-  { gameId: '4', date: '', label: 'J4', rating: 5.9, result: 'D', scoreFor: 1, scoreAgainst: 2, formatLabel: '5v5' },
-  { gameId: '5', date: '', label: 'J5', rating: 7.0, result: 'V', scoreFor: 3, scoreAgainst: 2, formatLabel: '5v5' },
+  {
+    gameId: '1',
+    date: '',
+    label: 'J1',
+    rating: 7.2,
+    result: 'V',
+    scoreFor: 3,
+    scoreAgainst: 1,
+    formatLabel: '5v5',
+  },
+  {
+    gameId: '2',
+    date: '',
+    label: 'J2',
+    rating: 6.5,
+    result: 'E',
+    scoreFor: 2,
+    scoreAgainst: 2,
+    formatLabel: '5v5',
+  },
+  {
+    gameId: '3',
+    date: '',
+    label: 'J3',
+    rating: 8.1,
+    result: 'V',
+    scoreFor: 4,
+    scoreAgainst: 0,
+    formatLabel: '5v5',
+  },
+  {
+    gameId: '4',
+    date: '',
+    label: 'J4',
+    rating: 5.9,
+    result: 'D',
+    scoreFor: 1,
+    scoreAgainst: 2,
+    formatLabel: '5v5',
+  },
+  {
+    gameId: '5',
+    date: '',
+    label: 'J5',
+    rating: 7.0,
+    result: 'V',
+    scoreFor: 3,
+    scoreAgainst: 2,
+    formatLabel: '5v5',
+  },
 ];
 
 /** Cartões de gráficos do jogador — devolvidos como fragmento para caber num grid. */
@@ -254,7 +299,13 @@ function CountIcon({ n, className }: { n: number; className?: string }) {
 }
 
 /** Barras horizontais de magnitude (uma cor, rótulo à esquerda, valor à direita). */
-function HBars({ items, suffix = '' }: { items: { label: string; value: number }[]; suffix?: string }) {
+function HBars({
+  items,
+  suffix = '',
+}: {
+  items: { label: string; value: number }[];
+  suffix?: string;
+}) {
   const max = Math.max(1, ...items.map((i) => i.value));
   return (
     <div className={s.hbars}>

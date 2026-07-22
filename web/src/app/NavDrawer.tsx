@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import type { FullProfile } from '@/features/profile/profileHooks';
 import { Avatar } from '@/shared/components/ui';
-import { AlertIcon, CloseIcon, LogoutIcon } from '@/shared/components/ui/icons';
+import { AlertIcon, CloseIcon, LogoutIcon, MoreIcon } from '@/shared/components/ui/icons';
 import { useUnreadNotificationCount } from '@/features/notifications/notificationHooks';
+import { useActiveGroup } from '@/features/groups/useActiveGroup';
+import { AddGroupModal } from '@/features/groups/AddGroupModal';
+import { GroupSwitcherModal } from '@/features/groups/GroupSwitcherModal';
 import { navItems, adminNavItem, notificationsNavItem, settingsNavItem } from './navItems';
 import s from './NavDrawer.module.css';
 
@@ -20,6 +23,9 @@ interface Props {
 export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props) {
   const items = profile.role === 'admin' ? [...navItems, adminNavItem] : navItems;
   const { data: unread = 0 } = useUnreadNotificationCount(profile.id);
+  const { groupId, myGroups, switchGroup } = useActiveGroup();
+  const [addGroupOpen, setAddGroupOpen] = useState(false);
+  const [manageGroupId, setManageGroupId] = useState<string | null>(null);
 
   // Fecha com Esc + bloqueia o scroll da página enquanto aberta (ver `html.modal-open`).
   useEffect(() => {
@@ -49,6 +55,45 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
           </NavLink>
           <button type="button" onClick={onClose} aria-label="Fechar" className={s.close}>
             <CloseIcon width={20} height={20} />
+          </button>
+        </div>
+
+        {/* No tablet/desktop a troca de grupo já vive na coluna (GroupRail);
+            aqui fica só para o telemóvel, que não tem espaço para a coluna. */}
+        <div className={s.groupsSection}>
+          <h3 className={s.groupsTitle}>Grupos</h3>
+          <ul className={s.groupList}>
+            {myGroups.map((g) => {
+              const active = g.group_id === groupId;
+              return (
+                <li key={g.group_id} className={s.groupRow}>
+                  <button
+                    type="button"
+                    className={[s.groupItem, active ? s.groupItemActive : '']
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => {
+                      if (!active) switchGroup(g.group_id);
+                      onClose();
+                    }}
+                  >
+                    <Avatar name={g.name} src={g.photo_url} size="sm" />
+                    <span className={s.groupItemName}>{g.name}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={s.groupManage}
+                    aria-label={`Gerir ${g.name}`}
+                    onClick={() => setManageGroupId(g.group_id)}
+                  >
+                    <MoreIcon width={18} height={18} />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <button type="button" className={s.addGroupLink} onClick={() => setAddGroupOpen(true)}>
+            + Adicionar grupo
           </button>
         </div>
 
@@ -97,6 +142,11 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
           Terminar sessão
         </button>
       </div>
+
+      {addGroupOpen && <AddGroupModal onClose={() => setAddGroupOpen(false)} />}
+      {manageGroupId && (
+        <GroupSwitcherModal groupId={manageGroupId} onClose={() => setManageGroupId(null)} />
+      )}
     </div>,
     document.body,
   );

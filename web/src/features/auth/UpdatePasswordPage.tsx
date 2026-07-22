@@ -51,7 +51,11 @@ export function UpdatePasswordPage() {
               {...form.register('password')}
             />
           </Field>
-          <Field label="Confirmar password" htmlFor="confirm" error={form.formState.errors.confirm?.message}>
+          <Field
+            label="Confirmar password"
+            htmlFor="confirm"
+            error={form.formState.errors.confirm?.message}
+          >
             <Input
               id="confirm"
               type="password"

@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Avatar, Badge, Button, Card, Field, Input, Loading, Page, PageTitle } from '@/shared/components/ui';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Field,
+  Input,
+  Loading,
+  Page,
+  PageTitle,
+} from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { CheckIcon } from '@/shared/components/ui/icons';
-import { useProfilesList } from '@/features/profile/profileHooks';
+import { useGroupMembers } from '@/features/groups/groupHooks';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import { useChallenges, useCreateAndStart } from '../challengeHooks';
 import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbarSpots';
 import s from './CrossbarSessionPage.module.css';
@@ -16,7 +27,8 @@ export function CrossbarSetupPage() {
   const variant: CrossbarVariant = params.get('v') === 'long' ? 'long' : 'quick';
   const { data: challenges } = useChallenges();
   const crossbar = challenges?.find((c) => c.code === 'crossbar');
-  const { data: profiles } = useProfilesList();
+  const groupId = useActiveGroupId();
+  const { data: profiles } = useGroupMembers(groupId);
   const createAndStart = useCreateAndStart();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [maxRounds, setMaxRounds] = useState('');
@@ -42,7 +54,8 @@ export function CrossbarSetupPage() {
         challenge_id: crossbar.id,
         spot_count: floor,
         player_ids: [...selected],
-        max_rounds: maxRounds.trim() !== '' && parsed > 0 ? Math.max(Math.floor(parsed), floor) : null,
+        max_rounds:
+          maxRounds.trim() !== '' && parsed > 0 ? Math.max(Math.floor(parsed), floor) : null,
       });
       navigate(`/challenges/crossbar/${id}`, { state: { justStarted: true } });
     } catch {

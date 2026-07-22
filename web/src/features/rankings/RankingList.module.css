@@ -26,13 +26,19 @@
   transform: scale(0.995);
 }
 .ring1 {
-  box-shadow: var(--shadow-card), inset 0 0 0 1px var(--podium-1-ring);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 1px var(--podium-1-ring);
 }
 .ring2 {
-  box-shadow: var(--shadow-card), inset 0 0 0 1px var(--podium-2-ring);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 1px var(--podium-2-ring);
 }
 .ring3 {
-  box-shadow: var(--shadow-card), inset 0 0 0 1px var(--podium-3-ring);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 1px var(--podium-3-ring);
 }
 
 .badge {

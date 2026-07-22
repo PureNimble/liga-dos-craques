@@ -24,6 +24,8 @@ export type GameStatus =
 
 export type GamePlayerStatus = 'invited' | 'confirmed' | 'played' | 'no_show';
 export type Team = 'A' | 'B';
+export type GroupRole = 'member' | 'admin';
+export type GroupVisibility = 'public' | 'private';
 export type VoteCategory = 'mvp' | 'flop';
 export type ChallengeScoring = 'higher_better' | 'lower_better' | 'versus';
 export type ChallengeResult = 'win' | 'loss' | 'draw' | 'na';
@@ -58,6 +60,29 @@ export type District =
 export interface Database {
   public: {
     Tables: {
+      app_group: {
+        Row: {
+          id: string;
+          name: string;
+          invite_code: string;
+          visibility: GroupVisibility;
+          photo_url: string | null;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        };
+        // Escrita só por RPCs (create_group/regenerate_invite_code/update_group) — sem Insert/Update de cliente.
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      group_member: {
+        Row: { group_id: string; player_id: string; role: GroupRole; joined_at: string };
+        // Escrita só por RPCs (create_group/join_group_by_code/join_public_group).
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       health: {
         Row: { id: number; checked_at: string; note: string | null };
         Insert: { id?: number; checked_at?: string; note?: string | null };
@@ -98,6 +123,7 @@ export interface Database {
           preferred_foot: PreferredFoot | null;
           main_position_id: number | null;
           featured_achievement_id: number | null;
+          active_group_id: string | null;
           role: UserRole;
           created_at: string;
           updated_at: string;
@@ -177,6 +203,7 @@ export interface Database {
         Row: {
           id: string;
           created_by: string;
+          group_id: string;
           scheduled_at: string;
           location: string | null;
           place_id: string | null;
@@ -194,6 +221,7 @@ export interface Database {
         Insert: {
           id?: string;
           created_by: string;
+          group_id: string;
           scheduled_at: string;
           location?: string | null;
           place_id?: string | null;
@@ -362,6 +390,7 @@ export interface Database {
           id: string;
           player_id: string;
           game_id: string | null;
+          group_id: string;
           source_code: string;
           points: number;
           xp_rule_id: number | null;
@@ -371,6 +400,7 @@ export interface Database {
           id?: string;
           player_id: string;
           game_id?: string | null;
+          group_id: string;
           source_code: string;
           points: number;
           xp_rule_id?: number | null;
@@ -419,8 +449,8 @@ export interface Database {
         Relationships: [];
       };
       user_achievement: {
-        Row: { player_id: string; achievement_id: number; unlocked_at: string };
-        Insert: { player_id: string; achievement_id: number };
+        Row: { player_id: string; achievement_id: number; group_id: string; unlocked_at: string };
+        Insert: { player_id: string; achievement_id: number; group_id: string };
         Update: never;
         Relationships: [];
       };
@@ -463,6 +493,7 @@ export interface Database {
           played_at: string;
           meta: Json;
           created_by: string;
+          group_id: string;
           created_at: string;
         };
         Insert: {
@@ -475,6 +506,7 @@ export interface Database {
           played_at?: string;
           meta?: Json;
           created_by: string;
+          group_id: string;
         };
         Update: {
           score?: number | null;
@@ -497,6 +529,7 @@ export interface Database {
           max_rounds: number | null;
           winner_id: string | null;
           created_by: string;
+          group_id: string;
           created_at: string;
           finished_at: string | null;
         };
@@ -512,6 +545,7 @@ export interface Database {
           max_rounds?: number | null;
           winner_id?: string | null;
           created_by: string;
+          group_id: string;
           created_at?: string;
           finished_at?: string | null;
         };
@@ -742,6 +776,7 @@ export interface Database {
       v_player_stats: {
         Row: {
           player_id: string;
+          group_id: string;
           name: string;
           games: number;
           wins: number;
@@ -761,6 +796,7 @@ export interface Database {
         Row: {
           game_id: string;
           player_id: string;
+          group_id: string;
           rating: number | null;
         };
         Relationships: [];
@@ -768,6 +804,7 @@ export interface Database {
       v_game_award: {
         Row: {
           game_id: string;
+          group_id: string;
           category: VoteCategory;
           player_id: string;
         };
@@ -776,6 +813,7 @@ export interface Database {
       v_player_xp: {
         Row: {
           player_id: string;
+          group_id: string;
           total_xp: number;
           level: number;
           level_min_xp: number;
@@ -786,6 +824,7 @@ export interface Database {
       v_ranking_overall: {
         Row: {
           player_id: string;
+          group_id: string;
           name: string;
           photo_url: string | null;
           position_category: PositionCategory | null;
@@ -805,6 +844,7 @@ export interface Database {
       v_ranking_by_format: {
         Row: {
           player_id: string;
+          group_id: string;
           name: string;
           photo_url: string | null;
           format_code: string;
@@ -821,6 +861,7 @@ export interface Database {
       v_ranking_by_period: {
         Row: {
           player_id: string;
+          group_id: string;
           name: string;
           photo_url: string | null;
           year: number;
@@ -838,6 +879,7 @@ export interface Database {
       v_ranking_annual: {
         Row: {
           player_id: string;
+          group_id: string;
           name: string;
           photo_url: string | null;
           year: number;
@@ -853,6 +895,7 @@ export interface Database {
       };
       v_challenge_leaderboard: {
         Row: {
+          group_id: string;
           challenge_id: number;
           challenge_code: string;
           scoring_type: ChallengeScoring;
@@ -919,6 +962,7 @@ export interface Database {
           p_challenge_id: number;
           p_spot_count: number;
           p_player_ids: string[];
+          p_group_id: string;
           p_max_rounds?: number | null;
         };
         Returns: string;
@@ -928,6 +972,7 @@ export interface Database {
           p_challenge_id: number;
           p_mode: PenaltyMode;
           p_player_ids: string[];
+          p_group_id: string;
           p_rounds?: number | null;
         };
         Returns: string;
@@ -939,6 +984,26 @@ export interface Database {
       iconic_goal_roll: { Args: Record<string, never>; Returns: number | null };
       iconic_goal_replicate: { Args: Record<string, never>; Returns: number };
       iconic_goal_forfeit: { Args: Record<string, never>; Returns: undefined };
+      create_group: {
+        Args: { p_name: string; p_visibility?: GroupVisibility };
+        Returns: string;
+      };
+      join_group_by_code: { Args: { p_code: string }; Returns: string };
+      join_public_group: { Args: { p_group_id: string }; Returns: undefined };
+      set_group_visibility: {
+        Args: { p_group_id: string; p_visibility: GroupVisibility };
+        Returns: undefined;
+      };
+      regenerate_invite_code: { Args: { p_group_id: string }; Returns: string };
+      set_active_group: { Args: { p_group_id: string }; Returns: undefined };
+      update_group: {
+        Args: { p_group_id: string; p_name: string; p_photo_url: string | null };
+        Returns: undefined;
+      };
+      promote_group_member: {
+        Args: { p_group_id: string; p_player_id: string };
+        Returns: undefined;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

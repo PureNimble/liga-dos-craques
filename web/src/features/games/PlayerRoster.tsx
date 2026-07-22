@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert, Avatar, Badge, Button, Card, Select, type BadgeTone } from '@/shared/components/ui';
-import { useProfilesList } from '@/features/profile/profileHooks';
+import { useGroupMembers } from '@/features/groups/groupHooks';
 import type { GamePlayerStatus } from '@/types/database';
 import {
   useAddGamePlayer,
@@ -12,6 +12,7 @@ import s from './PlayerRoster.module.css';
 
 interface PlayerRosterProps {
   gameId: string;
+  groupId: string;
   players: GamePlayerWithProfile[];
   maxPlayers: number;
   canManage: boolean; // organizador/admin
@@ -35,13 +36,14 @@ const STATUS_TONE: Record<GamePlayerStatus, BadgeTone> = {
 
 export function PlayerRoster({
   gameId,
+  groupId,
   players,
   maxPlayers,
   canManage,
   currentUserId,
   editable,
 }: PlayerRosterProps) {
-  const { data: allProfiles } = useProfilesList();
+  const { data: allProfiles } = useGroupMembers(groupId);
   const addPlayer = useAddGamePlayer(gameId);
   const removePlayer = useRemoveGamePlayer(gameId);
   const setStatus = useSetGamePlayerStatus(gameId);
@@ -105,7 +107,11 @@ export function PlayerRoster({
             return (
               <li key={gp.id} className={s.item}>
                 <div className={s.player}>
-                  <Avatar name={gp.profile?.name ?? '?'} src={gp.profile?.photo_url ?? null} size="sm" />
+                  <Avatar
+                    name={gp.profile?.name ?? '?'}
+                    src={gp.profile?.photo_url ?? null}
+                    size="sm"
+                  />
                   <span className={s.name}>{gp.profile?.name ?? 'Jogador'}</span>
                   {gp.team && <Badge tone="gray">{gp.team}</Badge>}
                   <Badge tone={STATUS_TONE[gp.status]}>{STATUS_LABEL[gp.status]}</Badge>
@@ -130,7 +136,10 @@ export function PlayerRoster({
                     </button>
                   )}
                   {editable && (canManage || isSelf) && (
-                    <button onClick={() => handleRemove(gp.id)} className={`${s.link} ${s.linkDanger}`}>
+                    <button
+                      onClick={() => handleRemove(gp.id)}
+                      className={`${s.link} ${s.linkDanger}`}
+                    >
                       Remover
                     </button>
                   )}

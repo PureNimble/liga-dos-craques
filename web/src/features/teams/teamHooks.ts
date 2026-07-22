@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import type { PositionCategory, Team } from '@/types/database';
 import { computeRating } from './playerRating';
 
@@ -14,14 +15,19 @@ export interface PlayerRating {
  * Devolvido como Map id → { rating, category }.
  */
 export function usePlayerRatings(playerIds: string[]) {
+  const groupId = useActiveGroupId();
   const key = [...playerIds].sort().join(',');
   return useQuery({
-    queryKey: ['player_ratings', key],
+    queryKey: ['player_ratings', groupId, key],
     enabled: playerIds.length > 0,
     queryFn: async (): Promise<Map<string, PlayerRating>> => {
       const [profilesRes, statsRes, positionsRes] = await Promise.all([
         supabase.from('profile').select('id, main_position_id').in('id', playerIds),
-        supabase.from('v_player_stats').select('*').in('player_id', playerIds),
+        supabase
+          .from('v_player_stats')
+          .select('*')
+          .eq('group_id', groupId)
+          .in('player_id', playerIds),
         supabase.from('position').select('id, category'),
       ]);
       if (profilesRes.error) throw profilesRes.error;
@@ -140,7 +146,9 @@ export function useAssignLineup(gameId: string) {
     mutationFn: async (rows: { playerId: string; on_field: boolean; x?: number; y?: number }[]) => {
       await Promise.all(
         rows.map((r) => {
-          const patch: { on_field: boolean; pos_x?: number; pos_y?: number } = { on_field: r.on_field };
+          const patch: { on_field: boolean; pos_x?: number; pos_y?: number } = {
+            on_field: r.on_field,
+          };
           if (r.x != null && r.y != null) {
             patch.pos_x = Math.round(r.x);
             patch.pos_y = Math.round(r.y);

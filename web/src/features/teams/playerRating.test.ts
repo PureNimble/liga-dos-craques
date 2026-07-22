@@ -3,7 +3,9 @@ import { computeRating } from './playerRating';
 
 describe('computeRating', () => {
   it('devolve o valor base para jogadores sem jogos', () => {
-    expect(computeRating({ games: 0, wins: 0, goals: 0, assists: 0, saves: 0, mvps: 0, category: null })).toBe(50);
+    expect(
+      computeRating({ games: 0, wins: 0, goals: 0, assists: 0, saves: 0, mvps: 0, category: null }),
+    ).toBe(50);
   });
 
   it('calcula o rating ponderado por desempenho por jogo', () => {

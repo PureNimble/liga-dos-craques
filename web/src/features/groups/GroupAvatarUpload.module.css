@@ -1,0 +1,13 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.hiddenInput {
+  display: none;
+}

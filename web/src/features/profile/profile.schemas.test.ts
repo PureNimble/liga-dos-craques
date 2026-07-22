@@ -3,7 +3,9 @@ import { profileFormSchema } from './profile.schemas';
 
 describe('profileFormSchema', () => {
   it('exige um nome com pelo menos 2 caracteres', () => {
-    expect(profileFormSchema.safeParse({ name: 'A', secondaryPositionIds: [] }).success).toBe(false);
+    expect(profileFormSchema.safeParse({ name: 'A', secondaryPositionIds: [] }).success).toBe(
+      false,
+    );
   });
 
   it('converte campos vazios em null', () => {
@@ -35,6 +37,9 @@ describe('profileFormSchema', () => {
     expect(ok.height_cm).toBe(180);
     expect(ok.main_position_id).toBe(5);
 
-    expect(profileFormSchema.safeParse({ name: 'Vasco', weight_kg: '500', secondaryPositionIds: [] }).success).toBe(false);
+    expect(
+      profileFormSchema.safeParse({ name: 'Vasco', weight_kg: '500', secondaryPositionIds: [] })
+        .success,
+    ).toBe(false);
   });
 });

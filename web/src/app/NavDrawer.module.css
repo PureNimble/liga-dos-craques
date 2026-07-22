@@ -63,6 +63,85 @@
   color: var(--white);
 }
 
+.groupsSection {
+  border-top: 1px solid var(--gray-750);
+  padding: var(--space-sm) var(--space-sm) 0;
+}
+@media (min-width: 640px) {
+  /* Já há coluna de grupos (GroupRail) neste breakpoint — não duplicar. */
+  .groupsSection {
+    display: none;
+  }
+}
+.groupsTitle {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-subtle);
+}
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+.groupRow {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2xs);
+}
+.groupItem {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  transition: background-color var(--transition);
+}
+.groupItem:hover {
+  background-color: var(--gray-750);
+  color: var(--white);
+}
+.groupItemActive,
+.groupItemActive:hover {
+  background-color: var(--accent-surface);
+  color: var(--accent-strong);
+}
+.groupItemName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.groupManage {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  transition: color var(--transition);
+}
+.groupManage:hover {
+  color: var(--accent-strong);
+}
+.addGroupLink {
+  margin: var(--space-xs) 0 var(--space-sm) var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent-strong);
+}
+.addGroupLink:hover {
+  text-decoration: underline;
+}
+
 .nav {
   display: flex;
   flex: 1;

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import type { Database } from '@/types/database';
 
 export type Achievement = Database['public']['Tables']['achievement']['Row'];
@@ -43,16 +44,18 @@ export function useAchievements() {
   });
 }
 
-/** Conquistas desbloqueadas por um jogador → Map achievement_id → unlocked_at. */
+/** Conquistas desbloqueadas por um jogador no grupo ativo → Map achievement_id → unlocked_at. */
 export function usePlayerAchievements(playerId: string | undefined) {
+  const groupId = useActiveGroupId();
   return useQuery({
-    queryKey: ['player_achievements', playerId],
+    queryKey: ['player_achievements', groupId, playerId],
     enabled: Boolean(playerId),
     queryFn: async (): Promise<Map<number, string>> => {
       const { data, error } = await supabase
         .from('user_achievement')
         .select('achievement_id, unlocked_at')
-        .eq('player_id', playerId as string);
+        .eq('player_id', playerId as string)
+        .eq('group_id', groupId);
       if (error) throw error;
       return new Map((data ?? []).map((r) => [r.achievement_id, r.unlocked_at]));
     },

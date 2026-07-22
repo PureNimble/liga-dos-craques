@@ -47,9 +47,7 @@ export function PenaltyGoal({ filled, target, selected, onSelect, onSkip }: Pena
       <span className={[s.light, s.lightR].join(' ')} aria-hidden />
       <Stands />
       <div className={s.billboard} aria-hidden>
-        <div className={s.billboardText}>
-          {'PELADINHAS · LIGA DOS CRAQUES · '.repeat(6)}
-        </div>
+        <div className={s.billboardText}>{'PELADINHAS · LIGA DOS CRAQUES · '.repeat(6)}</div>
         <div className={s.billboardShine} />
       </div>
 
@@ -88,9 +86,7 @@ export function PenaltyGoal({ filled, target, selected, onSelect, onSkip }: Pena
             }
             return (
               <div key={i} className={className} title={ZONE_LABELS[i]}>
-                <span className={s.mark}>
-                  {on ? <BallIcon width="1em" height="1em" /> : i + 1}
-                </span>
+                <span className={s.mark}>{on ? <BallIcon width="1em" height="1em" /> : i + 1}</span>
               </div>
             );
           })}

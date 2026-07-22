@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Alert, Avatar, Button, Card, EmptyState, Loading, Page, PageTitle } from '@/shared/components/ui';
+import {
+  Alert,
+  Avatar,
+  Button,
+  Card,
+  EmptyState,
+  Loading,
+  Page,
+  PageTitle,
+} from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { TargetIcon, TrophyIcon, XCircleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
@@ -16,7 +25,8 @@ import { OrderReveal } from './OrderReveal';
 import { spotLabel, variantFromCount } from './crossbarSpots';
 import s from './CrossbarSessionPage.module.css';
 
-const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) => a.turn_order - b.turn_order;
+const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) =>
+  a.turn_order - b.turn_order;
 
 export function CrossbarSessionPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -111,8 +121,8 @@ function ActiveView({
   const variant = variantFromCount(session.spot_count);
   const ordered = useMemo(() => [...(players ?? [])].sort(byOrder), [players]);
   const current = isSuddenDeath
-    ? ordered.find((p) => !p.eliminated && !p.sd_shot) ?? ordered.find((p) => !p.eliminated)
-    : ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0];
+    ? (ordered.find((p) => !p.eliminated && !p.sd_shot) ?? ordered.find((p) => !p.eliminated))
+    : (ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0]);
   const currentSpot = current ? spotLabel(variant, current.current_spot) : null;
 
   async function record(hit: boolean) {
@@ -161,7 +171,11 @@ function ActiveView({
 
       {isOwner ? (
         <div className={s.turnActions}>
-          <button className={s.missBtn} onClick={() => record(false)} disabled={recordTurn.isPending}>
+          <button
+            className={s.missBtn}
+            onClick={() => record(false)}
+            disabled={recordTurn.isPending}
+          >
             <XCircleIcon className={s.btnIcon} /> Falhou
           </button>
           <button className={s.hitBtn} onClick={() => record(true)} disabled={recordTurn.isPending}>
@@ -172,7 +186,11 @@ function ActiveView({
         <Alert kind="info">Só o organizador regista os remates.</Alert>
       )}
 
-      <PlayerBoard players={ordered} spotCount={session.spot_count} currentId={current?.player_id} />
+      <PlayerBoard
+        players={ordered}
+        spotCount={session.spot_count}
+        currentId={current?.player_id}
+      />
     </div>
   );
 }
@@ -214,9 +232,7 @@ function PlayerBoard({
                   <span key={k} className={k < done ? s.dotHit : s.dot} />
                 ))}
               </span>
-              <span className={s.boardCount}>
-                {p.eliminated ? 'fora' : `${done}/${spotCount}`}
-              </span>
+              <span className={s.boardCount}>{p.eliminated ? 'fora' : `${done}/${spotCount}`}</span>
             </li>
           );
         })}

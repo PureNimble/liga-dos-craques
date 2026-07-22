@@ -2,9 +2,7 @@ import { z } from 'zod';
 
 export const emailSchema = z.string().trim().email('Email inválido');
 
-export const passwordSchema = z
-  .string()
-  .min(8, 'A password deve ter pelo menos 8 caracteres');
+export const passwordSchema = z.string().min(8, 'A password deve ter pelo menos 8 caracteres');
 
 export const loginSchema = z.object({
   email: emailSchema,

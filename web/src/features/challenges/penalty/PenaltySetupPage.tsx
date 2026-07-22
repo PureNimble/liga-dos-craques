@@ -14,7 +14,8 @@ import {
 } from '@/shared/components/ui';
 import { useToast } from '@/shared/components/toast/useToast';
 import { CheckIcon } from '@/shared/components/ui/icons';
-import { useProfilesList } from '@/features/profile/profileHooks';
+import { useGroupMembers } from '@/features/groups/groupHooks';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import { useChallenges, usePenaltyCreateAndStart } from '../challengeHooks';
 import {
   PENALTY_DIFFICULTY_LABEL,
@@ -34,7 +35,8 @@ export function PenaltySetupPage() {
   const entry = PENALTY_ENTRIES.find((e) => e.key === entryKey)!;
   const { data: challenges } = useChallenges();
   const penalty = challenges?.find((c) => c.code === 'penalty');
-  const { data: profiles } = useProfilesList();
+  const groupId = useActiveGroupId();
+  const { data: profiles } = useGroupMembers(groupId);
   const createAndStart = usePenaltyCreateAndStart();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [difficulty, setDifficulty] = useState<PenaltyDifficulty>('facil');

@@ -74,7 +74,12 @@ export function EventTimeline({ gameId, canManage }: EventTimelineProps) {
                 {ev.event_tag.length > 0 && (
                   <div className={s.tags}>
                     {ev.event_tag.map(
-                      (et) => et.tag && <span key={et.tag.code} className={s.tag}>{et.tag.label}</span>,
+                      (et) =>
+                        et.tag && (
+                          <span key={et.tag.code} className={s.tag}>
+                            {et.tag.label}
+                          </span>
+                        ),
                     )}
                   </div>
                 )}

@@ -94,17 +94,27 @@ export function TeamsPanel({
   // Layout dos titulares: formação base + posições guardadas + otimista da sessão.
   const layout = useMemo(() => {
     const m = new Map<string, PitchPos>();
-    buildLayout(startersA.map((p) => p.player_id), formA, categoryOf).forEach((v, k) => m.set(k, v));
-    buildLayout(startersB.map((p) => p.player_id), formB, categoryOf).forEach((v, k) => m.set(k, v));
+    buildLayout(
+      startersA.map((p) => p.player_id),
+      formA,
+      categoryOf,
+    ).forEach((v, k) => m.set(k, v));
+    buildLayout(
+      startersB.map((p) => p.player_id),
+      formB,
+      categoryOf,
+    ).forEach((v, k) => m.set(k, v));
     for (const p of players) {
-      if (p.on_field && p.pos_x != null && p.pos_y != null) m.set(p.player_id, { x: p.pos_x, y: p.pos_y });
+      if (p.on_field && p.pos_x != null && p.pos_y != null)
+        m.set(p.player_id, { x: p.pos_x, y: p.pos_y });
     }
     override.forEach((v, k) => m.set(k, v));
     return m;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [players, formA, formB, override, ratings]);
 
-  const sum = (list: GamePlayerWithProfile[]) => list.reduce((acc, p) => acc + ratingOf(p.player_id), 0);
+  const sum = (list: GamePlayerWithProfile[]) =>
+    list.reduce((acc, p) => acc + ratingOf(p.player_id), 0);
 
   function generate() {
     const input: BalancePlayer[] = players.map((p) => ({
@@ -139,7 +149,13 @@ export function TeamsPanel({
     if (occupant) {
       const pa = layout.get(id);
       const pb = layout.get(occupant.player_id);
-      if (pa && pb) persistLayout(new Map([[id, pb], [occupant.player_id, pa]]));
+      if (pa && pb)
+        persistLayout(
+          new Map([
+            [id, pb],
+            [occupant.player_id, pa],
+          ]),
+        );
     } else {
       persistLayout(new Map([[id, { x, y }]]));
     }
@@ -157,7 +173,13 @@ export function TeamsPanel({
     const starters = team === 'A' ? startersA : startersB;
     if (team === 'A') setFormNameA(f.name);
     else setFormNameB(f.name);
-    persistLayout(buildLayout(starters.map((p) => p.player_id), f, categoryOf));
+    persistLayout(
+      buildLayout(
+        starters.map((p) => p.player_id),
+        f,
+        categoryOf,
+      ),
+    );
   }
 
   // Define titulares (os melhores por equipa, até à dimensão) + suplentes + posições.
@@ -172,7 +194,11 @@ export function TeamsPanel({
       const sorted = [...list].sort((a, b) => ratingOf(b.player_id) - ratingOf(a.player_id));
       const starters = sorted.slice(0, size);
       const bench = sorted.slice(size);
-      const pos = buildLayout(starters.map((p) => p.player_id), f, categoryOf);
+      const pos = buildLayout(
+        starters.map((p) => p.player_id),
+        f,
+        categoryOf,
+      );
       for (const s of starters) {
         const p = pos.get(s.player_id);
         rows.push({ playerId: s.player_id, on_field: true, x: p?.x, y: p?.y });
@@ -207,7 +233,7 @@ export function TeamsPanel({
   const selBench = selectedTeam === 'A' ? benchA : benchB;
   const selSlots = selectedTeam === 'A' ? slotsA : slotsB;
   const selSize = sizeOf(selectedTeam);
-  const selFormName = selectedTeam === 'A' ? formNameA ?? formA.name : formNameB ?? formB.name;
+  const selFormName = selectedTeam === 'A' ? (formNameA ?? formA.name) : (formNameB ?? formB.name);
 
   return (
     <Card>
@@ -276,7 +302,12 @@ export function TeamsPanel({
                   size={selSize}
                   onChange={(n) => pickFormation(selectedTeam, n)}
                 />
-                <Button variant="secondary" size="sm" onClick={autoFill} loading={persist.isPending}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={autoFill}
+                  loading={persist.isPending}
+                >
                   Auto-preencher
                 </Button>
               </div>

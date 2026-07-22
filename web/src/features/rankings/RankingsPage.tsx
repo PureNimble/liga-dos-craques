@@ -3,7 +3,12 @@ import { Page, PageTitle, Alert, CardSkeleton, PillTabs, Select } from '@/shared
 import { useGameFormats } from '@/features/games/gameHooks';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';
-import { useRankingAnnual, useRankingByFormat, useRankingByPeriod, useRankingOverall } from './rankingHooks';
+import {
+  useRankingAnnual,
+  useRankingByFormat,
+  useRankingByPeriod,
+  useRankingOverall,
+} from './rankingHooks';
 import s from './RankingsPage.module.css';
 
 type Scope = 'geral' | 'posicao' | 'formato' | 'mensal' | 'anual';
@@ -24,8 +29,18 @@ const POSITION_LABELS: Record<PositionCategory, string> = {
 };
 
 const MONTHS = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
 ];
 
 const wdg = (r: { games: number; wins: number; goals: number }) =>

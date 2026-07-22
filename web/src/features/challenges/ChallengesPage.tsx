@@ -17,7 +17,8 @@ import {
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { CloseIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
-import { useProfilesList } from '@/features/profile/profileHooks';
+import { useGroupMembers } from '@/features/groups/groupHooks';
+import { useActiveGroupId } from '@/features/groups/useActiveGroup';
 import { RankingList, type RankingRow } from '@/features/rankings/RankingList';
 import { formatDate, formatDateShort } from '@/shared/lib/datetime';
 import type { ChallengeResult, ChallengeSessionStatus } from '@/types/database';
@@ -291,7 +292,8 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
                   onClick={() => navigate(`/challenges/penalty/${sess.id}`)}
                 >
                   <Badge tone={SESSION_STATUS_TONE[sess.status]}>
-                    {PENALTY_MODES[sess.mode as PenaltyMode]?.label ?? SESSION_STATUS_LABEL[sess.status]}
+                    {PENALTY_MODES[sess.mode as PenaltyMode]?.label ??
+                      SESSION_STATUS_LABEL[sess.status]}
                   </Badge>
                   <span className={s.sessionMeta}>
                     {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
@@ -314,7 +316,8 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
 
 function AddAttemptForm({ challenge }: { challenge: Challenge }) {
   const { user } = useAuth();
-  const { data: profiles } = useProfilesList();
+  const groupId = useActiveGroupId();
+  const { data: profiles } = useGroupMembers(groupId);
   const addAttempt = useAddChallengeAttempt();
   const isVersus = challenge.scoring_type === 'versus';
 
@@ -375,7 +378,11 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
         {isVersus ? (
           <>
             <Field label="Adversário" htmlFor="ch-opp">
-              <Select id="ch-opp" value={opponentId} onChange={(e) => setOpponentId(e.target.value)}>
+              <Select
+                id="ch-opp"
+                value={opponentId}
+                onChange={(e) => setOpponentId(e.target.value)}
+              >
                 <option value="">Escolher…</option>
                 {profiles
                   ?.filter((p) => p.id !== playerId)

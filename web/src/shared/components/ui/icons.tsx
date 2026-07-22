@@ -375,6 +375,15 @@ export function GoalCurveIcon(props: IconProps) {
   );
 }
 
+export function SearchIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="10.5" cy="10.5" r="6.5" />
+      <path d="m20 20-4.35-4.35" />
+    </svg>
+  );
+}
+
 /** Voleio — bola no ar + remate em arco. */
 export function GoalVolleyIcon(props: IconProps) {
   return (
@@ -507,6 +516,16 @@ export function SoundOffIcon(props: IconProps) {
     <svg {...base(props)}>
       <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" />
       <path d="m16 10 4 4M20 10l-4 4" />
+    </svg>
+  );
+}
+
+export function MoreIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="5" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none" />
     </svg>
   );
 }
