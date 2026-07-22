@@ -7,7 +7,4 @@
   --space-lg: 1rem;
   --space-xl: 1.5rem;
   --space-2xl: 2rem;
-
-  /* Largura da coluna central de conteúdo (a app é centrada, não edge-to-edge). */
-  --container-max: 78rem;
 }

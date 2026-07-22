@@ -11,10 +11,15 @@
 }
 .shell {
   display: flex;
+  flex: 1;
+  min-height: 0;
 }
 .column {
+  display: flex;
   min-width: 0;
   flex: 1;
+  flex-direction: column;
+  min-height: 0;
 }
 /* Contentor de scroll a toda a largura. A barra é escondida (desliza na mesma);
    sem barra visível não há goteira a reservar nem salto ao abrir um modal. */
@@ -28,10 +33,9 @@
 .main::-webkit-scrollbar {
   display: none;
 }
-/* Coluna central: conteúdo centrado com gutter que cresce no desktop. */
+/* Conteúdo a toda a largura da coluna (a rail de grupos já limita a largura
+   à esquerda) — só o gutter cresce no desktop, sem cap central. */
 .container {
-  margin-inline: auto;
-  max-width: var(--container-max);
   padding-inline: var(--space-lg);
   padding-bottom: var(--space-2xl);
 }

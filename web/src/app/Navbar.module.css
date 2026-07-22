@@ -9,8 +9,6 @@
 }
 .inner {
   display: flex;
-  margin-inline: auto;
-  max-width: var(--container-max);
   align-items: center;
   gap: var(--space-xl);
   padding: var(--space-md) var(--space-lg);
