@@ -75,7 +75,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--gray-200);
+  color: var(--text-color);
 }
 .tagMvp,
 .tagFlop {

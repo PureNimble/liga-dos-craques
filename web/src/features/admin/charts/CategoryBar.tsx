@@ -8,7 +8,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { AXIS_TICK, GRID_STROKE, SERIES, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
+import {
+  AXIS_TICK,
+  CURSOR_FILL,
+  GRID_STROKE,
+  SERIES,
+  TOOLTIP_LABEL_STYLE,
+  TOOLTIP_STYLE,
+} from './chartTheme';
 import s from './chartEmpty.module.css';
 
 interface Props {
@@ -43,7 +50,7 @@ export function CategoryBar({
         <Tooltip
           contentStyle={TOOLTIP_STYLE}
           labelStyle={TOOLTIP_LABEL_STYLE}
-          cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+          cursor={{ fill: CURSOR_FILL }}
         />
         <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={40}>
           {data.map((_, i) => (

@@ -16,7 +16,7 @@
 .range {
   display: flex;
   gap: var(--space-2xs);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
   background-color: var(--surface-card);
   padding: var(--space-2xs);
@@ -33,7 +33,7 @@
 }
 .rangeButton:hover {
   background-color: var(--surface-ghost-hover);
-  color: var(--white);
+  color: var(--text-color);
 }
 .rangeActive {
   composes: rangeButton;
@@ -63,7 +63,7 @@
   min-width: 0;
   flex-direction: column;
   gap: var(--space-2xs);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-card);
   padding: var(--space-md);
@@ -81,7 +81,7 @@
   font-weight: var(--font-weight-bold);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
-  color: var(--white);
+  color: var(--text-color);
 }
 .kpiFoot {
   display: flex;
@@ -117,12 +117,23 @@
   gap: var(--space-sm);
 }
 
-/* Uma ou duas colunas — nunca três, senão os cartões deixam de emparelhar e
-   sobra meia linha vazia no fim de cada bloco. */
+/* Duas colunas fixas (nunca três — os cartões deixam de emparelhar e sobra
+   meia linha vazia). Cada linha estica os dois cartões à mesma altura por
+   omissão do grid; para isso não sobrar espaço morto dentro do mais baixo,
+   os pares em baixo juntam cartões do mesmo tipo/altura (dois donuts, duas
+   listas, dois gráficos com a mesma `height`) em vez de pela ordem em que
+   aparecem no JSX — ver comentários junto a cada par em AdminAnalyticsPage.
+   Um cartão sem par do mesmo tipo fica `wide` em vez de forçado a emparelhar
+   com algo de altura muito diferente. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-md);
+}
+@media (min-width: 780px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .wide {
   grid-column: 1 / -1;
@@ -133,7 +144,7 @@
   flex-direction: column;
   gap: var(--space-md);
   overflow: hidden;
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-card);
   padding: var(--space-md);
@@ -153,7 +164,7 @@
 .title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--white);
+  color: var(--text-color);
 }
 .meta {
   font-size: var(--font-size-xs);

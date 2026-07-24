@@ -38,7 +38,7 @@
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-black);
   letter-spacing: var(--tracking-tight);
-  color: var(--white);
+  color: var(--text-color);
 }
 .subtitle {
   margin-top: var(--space-xs);

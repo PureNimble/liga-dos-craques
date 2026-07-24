@@ -5,6 +5,7 @@ import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { ChevronLeftIcon, WhistleIcon } from '@/shared/components/ui/icons';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProfile } from '@/features/profile/profileHooks';
+import { useT } from '@/shared/i18n/useT';
 import {
   pickFormatForCount,
   useGame,
@@ -17,7 +18,7 @@ import { useGameRealtime } from './useGameRealtime';
 import { useMatchClock } from './useMatchClock';
 import { MatchHeader } from './MatchHeader';
 import { PlayerRoster } from './PlayerRoster';
-import { ALLOWED_TRANSITIONS, GAME_STATUS_LABELS, GAME_TRANSITION_LABELS } from './gameStatus';
+import { ALLOWED_TRANSITIONS, GAME_STATUS_KEY, GAME_TRANSITION_KEY } from './gameStatus';
 import { CreateGameForm } from './CreateGameForm';
 import { EventTimeline } from '@/features/events/EventTimeline';
 import { EventSoundboard } from '@/features/events/EventSoundboard';
@@ -42,6 +43,7 @@ const EVENTS_VISIBLE: GameStatus[] = ['in_progress', 'finished', 'voting_open', 
 const EVENTS_EDITABLE: GameStatus[] = ['in_progress', 'finished'];
 
 export function GameDetailPage() {
+  const { t } = useT();
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { data: profile } = useProfile();
@@ -66,9 +68,9 @@ export function GameDetailPage() {
   if (isError || !game) {
     return (
       <div className={s.errorPage}>
-        <Alert kind="error">Jogo não encontrado.</Alert>
+        <Alert kind="error">{t('games.detail.notFound')}</Alert>
         <Link to="/games" className={s.errorBack}>
-          ← Voltar aos jogos
+          {t('games.detail.backToGames')}
         </Link>
       </div>
     );
@@ -91,9 +93,9 @@ export function GameDetailPage() {
     if (
       status === 'cancelled' &&
       !(await confirm({
-        title: 'Cancelar este jogo?',
-        message: 'Os jogadores convocados serão notificados. Esta ação não pode ser revertida.',
-        confirmLabel: 'Cancelar jogo',
+        title: t('games.detail.cancelTitle'),
+        message: t('games.detail.cancelMessage'),
+        confirmLabel: t('games.detail.cancelConfirm'),
         danger: true,
       }))
     )
@@ -101,9 +103,9 @@ export function GameDetailPage() {
     if (
       status === 'closed' &&
       !(await confirm({
-        title: 'Fechar o jogo?',
-        message: 'O jogo será fechado e o XP atribuído. Esta ação é definitiva.',
-        confirmLabel: 'Fechar jogo',
+        title: t('games.detail.closeTitle'),
+        message: t('games.detail.closeMessage'),
+        confirmLabel: t('games.detail.closeConfirm'),
       }))
     )
       return;
@@ -140,11 +142,11 @@ export function GameDetailPage() {
     if (!fmt) return;
     const changed = fmt.id !== game.format_id;
     const ok = await confirm({
-      title: 'Encerrar inscrições?',
+      title: t('games.detail.closeRegistrationsTitle'),
       message: changed
-        ? `${count} inscritos → o formato desce para ${fmt.label}. Vou ajustar o jogo e formar equipas equilibradas.`
-        : `${count} inscritos · formato ${fmt.label}. Vou formar equipas equilibradas; os excedentes ficam no banco.`,
-      confirmLabel: 'Encerrar e formar',
+        ? t('games.detail.closeRegistrationsChanged', { count, format: fmt.label })
+        : t('games.detail.closeRegistrationsSame', { count, format: fmt.label }),
+      confirmLabel: t('games.detail.closeRegistrationsConfirm'),
     });
     if (!ok) return;
     if (changed) {
@@ -190,17 +192,14 @@ export function GameDetailPage() {
       {/* Eventos (golos, assistências, defesas, …) */}
       {EVENTS_VISIBLE.includes(game.status) && (
         <Card>
-          <h2 className={s.sectionHead}>Eventos</h2>
+          <h2 className={s.sectionHead}>{t('games.detail.events')}</h2>
           {game.status === 'finished' && isOrganizer && (
             <div className={s.infoSlot}>
-              <Alert kind="info">
-                Fase de revisão: adiciona ou corrige eventos em falta. Ao apurar o MVP/Flop, os
-                eventos ficam fechados.
-              </Alert>
+              <Alert kind="info">{t('games.detail.reviewNotice')}</Alert>
             </div>
           )}
           {(game.status === 'voting_open' || game.status === 'closed') && (
-            <p className={s.closedNote}>Jogo apurado — os eventos estão fechados.</p>
+            <p className={s.closedNote}>{t('games.detail.eventsClosed')}</p>
           )}
           {eventsEditable && (
             <div className={s.soundboardWrap}>
@@ -232,7 +231,7 @@ export function GameDetailPage() {
   return (
     <Page>
       <Link to="/games" className={s.back}>
-        <ChevronLeftIcon width={16} height={16} /> Jogos
+        <ChevronLeftIcon width={16} height={16} /> {t('games.detail.back')}
       </Link>
 
       {/* Cabeçalho / placar em destaque (estilo transmissão) */}
@@ -242,7 +241,7 @@ export function GameDetailPage() {
 
       {isOrganizer && (
         <Button variant="secondary" block onClick={() => setManageOpen(true)}>
-          <WhistleIcon width={18} height={18} /> Gerir jogo
+          <WhistleIcon width={18} height={18} /> {t('games.detail.manageGame')}
         </Button>
       )}
 
@@ -263,12 +262,12 @@ export function GameDetailPage() {
       <Modal
         open={manageOpen}
         onClose={() => setManageOpen(false)}
-        title="Gerir jogo"
-        description={GAME_STATUS_LABELS[game.status]}
+        title={t('games.detail.manageTitle')}
+        description={t(GAME_STATUS_KEY[game.status])}
         variant="sheet"
       >
         <div className={s.modalBody}>
-          {updateStatus.isError && <Alert kind="error">Não foi possível atualizar o estado.</Alert>}
+          {updateStatus.isError && <Alert kind="error">{t('games.detail.updateError')}</Alert>}
 
           {DETAILS_EDITABLE.includes(game.status) ? (
             <Button
@@ -279,10 +278,10 @@ export function GameDetailPage() {
                 setEditOpen(true);
               }}
             >
-              Editar detalhes
+              {t('games.detail.editDetails')}
             </Button>
           ) : (
-            <p className={s.lockedNote}>O jogo já começou — os detalhes estão bloqueados.</p>
+            <p className={s.lockedNote}>{t('games.detail.lockedNote')}</p>
           )}
 
           {(game.status === 'scheduled' || game.status === 'open') && (
@@ -291,20 +290,20 @@ export function GameDetailPage() {
               onClick={closeRegistrations}
               loading={updateGame.isPending || assignTeams.isPending}
             >
-              Encerrar inscrições e formar equipas
+              {t('games.detail.closeRegistrationsAndForm')}
             </Button>
           )}
 
           {/* Terminar (o placar segue os eventos registados) */}
           {game.status === 'in_progress' && (
             <div className={s.resultBox}>
-              <p className={s.resultLabel}>Resultado atual (dos eventos)</p>
+              <p className={s.resultLabel}>{t('games.detail.currentResult')}</p>
               <p className={s.resultScore}>
                 {game.team_a_score ?? 0} <span className={s.resultDash}>–</span>{' '}
                 {game.team_b_score ?? 0}
               </p>
               <Button block onClick={finishGame} loading={updateStatus.isPending}>
-                Terminar jogo
+                {t('games.detail.finishGame')}
               </Button>
             </div>
           )}
@@ -312,32 +311,32 @@ export function GameDetailPage() {
           {/* Apurar MVP/Flop (após terminar) — automático ou abre desempate */}
           {game.status === 'finished' && (
             <Button block onClick={resolveGameAwards} loading={resolveAwards.isPending}>
-              Apurar MVP/Flop
+              {t('games.detail.resolveAwards')}
             </Button>
           )}
 
           {/* Outras transições */}
-          {transitions.filter((t) => t !== 'finished').length > 0 && (
+          {transitions.filter((tr) => tr !== 'finished').length > 0 && (
             <div className={s.btnGroup}>
               {transitions
-                .filter((t) => t !== 'finished')
-                .map((t) => (
+                .filter((tr) => tr !== 'finished')
+                .map((tr) => (
                   <Button
-                    key={t}
+                    key={tr}
                     block
                     variant={
-                      t === 'cancelled' ? 'danger' : t === 'closed' ? 'secondary' : 'primary'
+                      tr === 'cancelled' ? 'danger' : tr === 'closed' ? 'secondary' : 'primary'
                     }
-                    onClick={() => changeStatus(t)}
+                    onClick={() => changeStatus(tr)}
                     loading={updateStatus.isPending}
                   >
-                    {GAME_TRANSITION_LABELS[t] ?? GAME_STATUS_LABELS[t]}
+                    {t(GAME_TRANSITION_KEY[tr] ?? GAME_STATUS_KEY[tr])}
                   </Button>
                 ))}
             </div>
           )}
 
-          {noManageActions && <p className={s.emptyNote}>Sem ações disponíveis neste estado.</p>}
+          {noManageActions && <p className={s.emptyNote}>{t('games.detail.noActions')}</p>}
         </div>
       </Modal>
 
@@ -345,7 +344,7 @@ export function GameDetailPage() {
       <Modal
         open={editOpen}
         onClose={() => setEditOpen(false)}
-        title="Editar jogo"
+        title={t('games.detail.editTitle')}
         variant="sheet"
         size="lg"
       >

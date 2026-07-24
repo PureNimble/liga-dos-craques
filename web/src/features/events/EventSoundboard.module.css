@@ -41,7 +41,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   line-height: 1.2;
-  color: var(--gray-200);
+  color: var(--text-color);
 }
 
 /* Grelha de jogadores (adapta ao contentor) */
@@ -90,9 +90,9 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  background-color: var(--gray-800);
+  background-color: var(--surface-panel-hover);
   padding: var(--space-sm);
   text-align: left;
   cursor: pointer;
@@ -100,7 +100,7 @@
 }
 .player:hover {
   border-color: var(--accent-border);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
 }
 .player:active {
   transform: scale(0.98);
@@ -162,7 +162,7 @@
   gap: var(--space-sm);
 }
 .tag {
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-full);
   background: transparent;
   padding: var(--space-xs) var(--space-md);
@@ -173,7 +173,7 @@
   transition: all var(--transition);
 }
 .tag:hover {
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
 }
 .tagActive,
 .tagActive:hover {

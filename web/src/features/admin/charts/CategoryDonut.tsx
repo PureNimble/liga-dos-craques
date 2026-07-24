@@ -1,5 +1,5 @@
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { DONUT_COLORS, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
+import { DONUT_COLORS, LEGEND_STYLE, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
 import s from './chartEmpty.module.css';
 
 interface Props {
@@ -32,7 +32,7 @@ export function CategoryDonut({ data, height = 220, empty = 'Sem dados no perío
           ))}
         </Pie>
         <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} />
-        <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} iconType="circle" />
+        <Legend wrapperStyle={LEGEND_STYLE} iconType="circle" />
       </PieChart>
     </ResponsiveContainer>
   );

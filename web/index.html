@@ -2,6 +2,20 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Aplica o tema guardado antes do primeiro paint (sem isto, a app pintava
+      // sempre a escuro por uma fração de segundo antes do React montar).
+      (function () {
+        try {
+          var stored = localStorage.getItem('peladinhas-theme');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (e) {
+          /* localStorage indisponível (modo privado) — mantém-se o tema por omissão. */
+        }
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />

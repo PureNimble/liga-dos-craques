@@ -1,7 +1,7 @@
 .card {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-faint);
-  background-image: linear-gradient(to bottom, var(--surface-card), var(--gray-850));
+  background-image: linear-gradient(to bottom, var(--surface-card), var(--surface-panel));
   box-shadow: var(--shadow-card);
 }
 .padded {
@@ -12,7 +12,7 @@
 }
 .interactive:hover {
   border-color: var(--border-faint-hover);
-  background-image: linear-gradient(to bottom, var(--surface-card-hover), var(--gray-800));
+  background-image: linear-gradient(to bottom, var(--surface-card-hover), var(--surface-panel-hover));
 }
 .interactive:active {
   transform: scale(0.995);

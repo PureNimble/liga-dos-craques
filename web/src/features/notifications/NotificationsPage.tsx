@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/shared/components/ui';
+import { Button, Card, EmptyState, Page, PageTitle } from '@/shared/components/ui';
+import { BellIcon } from '@/shared/components/ui/icons';
 import { formatGameDateTime } from '@/shared/lib/datetime';
 import { useProfile } from '@/features/profile/profileHooks';
+import { useT } from '@/shared/i18n/useT';
 import { useMarkNotificationsRead, useNotifications, type Notification } from './notificationHooks';
 import s from './NotificationsPage.module.css';
 
@@ -22,8 +24,8 @@ function gameIdOf(item: Notification): string | null {
 function NotificationRow({ item }: { item: Notification }) {
   const gameId = gameIdOf(item);
 
-  const content = (
-    <>
+  const card = (
+    <Card interactive className={item.read_at ? s.card : `${s.card} ${s.unread}`}>
       <span className={s.icon} aria-hidden="true">
         {KIND_ICON[item.kind] ?? '🔔'}
       </span>
@@ -32,17 +34,17 @@ function NotificationRow({ item }: { item: Notification }) {
         {item.body && <p className={s.body}>{item.body}</p>}
         <span className={s.date}>{formatGameDateTime(item.created_at)}</span>
       </div>
-    </>
+    </Card>
   );
 
   return (
-    <li className={item.read_at ? s.item : `${s.item} ${s.unread}`}>
+    <li className={s.item}>
       {gameId ? (
-        <Link to={`/games/${gameId}`} className={s.link}>
-          {content}
+        <Link to={`/games/${gameId}`} className={s.cardLink}>
+          {card}
         </Link>
       ) : (
-        <div className={s.link}>{content}</div>
+        <div className={s.cardLink}>{card}</div>
       )}
     </li>
   );
@@ -53,6 +55,7 @@ export function NotificationsPage() {
   const { data: profile } = useProfile();
   const { data: notifications, isLoading } = useNotifications(profile?.id);
   const markRead = useMarkNotificationsRead();
+  const { t } = useT();
 
   const unread = (notifications ?? []).filter((n) => !n.read_at).length;
 
@@ -63,11 +66,11 @@ export function NotificationsPage() {
   }, [unread]);
 
   return (
-    <div className={s.page}>
-      <header className={s.head}>
+    <Page>
+      <div className={s.headerRow}>
         <div>
-          <h1 className={s.pageTitle}>Notificações</h1>
-          <p className={s.subtitle}>Avisos sobre a tua conta, conquistas e jogos.</p>
+          <PageTitle>{t('notifications.title')}</PageTitle>
+          <p className={s.subtitle}>{t('notifications.subtitle')}</p>
         </div>
         {(notifications?.length ?? 0) > 0 && (
           <Button
@@ -75,17 +78,19 @@ export function NotificationsPage() {
             onClick={() => markRead.mutate(undefined)}
             disabled={markRead.isPending || unread === 0}
           >
-            Marcar como lidas
+            {t('notifications.markRead')}
           </Button>
         )}
-      </header>
+      </div>
 
       {isLoading ? (
-        <p className={s.empty}>A carregar…</p>
+        <p className={s.empty}>{t('notifications.loading')}</p>
       ) : (notifications?.length ?? 0) === 0 ? (
-        <p className={s.empty}>
-          Sem avisos. Quando houver novidades sobre a tua conta, ficam aqui.
-        </p>
+        <EmptyState
+          icon={<BellIcon width={26} height={26} />}
+          title={t('notifications.empty.title')}
+          description={t('notifications.empty.description')}
+        />
       ) : (
         <ul className={s.list}>
           {notifications?.map((n) => (
@@ -93,6 +98,6 @@ export function NotificationsPage() {
           ))}
         </ul>
       )}
-    </div>
+    </Page>
   );
 }

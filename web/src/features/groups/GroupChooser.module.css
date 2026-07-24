@@ -30,8 +30,8 @@
   align-items: flex-start;
   gap: var(--space-xs);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   padding: var(--space-lg);
   text-align: left;
   transition:
@@ -63,7 +63,7 @@
 .tileTitle {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  color: var(--white);
+  color: var(--text-color);
 }
 .tileDesc {
   font-size: var(--font-size-xs);
@@ -100,8 +100,8 @@
   justify-content: space-between;
   gap: var(--space-md);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   padding: var(--space-md) var(--space-lg);
 }
 .publicName {
@@ -111,7 +111,7 @@
 }
 .publicEmpty {
   border-radius: var(--radius-lg);
-  border: 1px dashed var(--gray-750);
+  border: 1px dashed var(--border-subtle);
   padding: var(--space-xl);
   text-align: center;
   font-size: var(--font-size-sm);
@@ -127,9 +127,9 @@
   gap: var(--space-xs);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-faint);
-  background-image: linear-gradient(to bottom, var(--surface-card), var(--gray-850));
+  background-image: linear-gradient(to bottom, var(--surface-card), var(--surface-panel));
   padding: var(--space-xl);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: var(--shadow-card);
 }
 .back {
   display: inline-flex;

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Card, LockOverlay } from '@/shared/components/ui';
 import { NamedIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import { ratingText } from '@/features/stats/ratingColor';
 import { MIN_GAMES_FOR_STATS, statsLockMessage } from '@/features/stats/statsHooks';
 import s from './PlayerHeader.module.css';
@@ -21,20 +22,21 @@ export function PlayerHeader({
   own = false,
   featured,
 }: PlayerHeaderProps) {
+  const { t } = useT();
   // Bloqueado até jogar o mínimo de jogos: mostra o cartão desfocado com cadeado.
   if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
     return (
-      <LockOverlay locked className={s.lockWrap} message={statsLockMessage(own)}>
+      <LockOverlay locked className={s.lockWrap} message={statsLockMessage(t, own)}>
         <Card className={s.header}>
           <div className={s.rating}>
             <span className={`${s.ratingValue} ${ratingText(7.4)}`}>7.4</span>
-            <span className={s.ratingLabel}>Nota média</span>
+            <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
           </div>
           <div className={s.divider} />
           <div className={s.body}>
-            <p className={s.caption}>Média das avaliações por jogo</p>
+            <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
             <div className={s.chips}>
-              <Chip>{MIN_GAMES_FOR_STATS} jogos</Chip>
+              <Chip>{t('profile.header.games', { count: MIN_GAMES_FOR_STATS })}</Chip>
             </div>
           </div>
         </Card>
@@ -45,16 +47,18 @@ export function PlayerHeader({
     <Card className={s.header}>
       <div className={s.rating}>
         <span className={`${s.ratingValue} ${ratingText(avgRating)}`}>{avgRating.toFixed(1)}</span>
-        <span className={s.ratingLabel}>Nota média</span>
+        <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
       </div>
 
       <div className={s.divider} />
 
       <div className={s.body}>
-        <p className={s.caption}>Média das avaliações por jogo</p>
+        <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
         <div className={s.chips}>
-          {footLabel && <Chip>Pé {footLabel.toLowerCase()}</Chip>}
-          {games != null && games > 0 && <Chip>{games} jogos</Chip>}
+          {footLabel && <Chip>{t('profile.header.foot', { foot: footLabel })}</Chip>}
+          {games != null && games > 0 && (
+            <Chip>{t('profile.header.games', { count: games })}</Chip>
+          )}
         </div>
         {featured && (
           <div className={s.featured}>

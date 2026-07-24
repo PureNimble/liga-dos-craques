@@ -9,35 +9,37 @@ import {
   TrophyIcon,
   UserIcon,
 } from '@/shared/components/ui/icons';
+import type { NavTranslationKey } from './nav.i18n';
 import type { ComponentType, SVGProps } from 'react';
 
 export type NavItem = {
   to: string;
-  label: string;
+  /** Chave de tradução (ver nav.i18n.ts) — não o texto em si. */
+  label: NavTranslationKey;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   end?: boolean;
 };
 
 export const navItems: NavItem[] = [
-  { to: '/', label: 'Início', icon: HomeIcon, end: true },
-  { to: '/games', label: 'Jogos', icon: BallIcon },
-  { to: '/rankings', label: 'Rankings', icon: TrophyIcon },
-  { to: '/challenges', label: 'Desafios', icon: TargetIcon },
-  { to: '/places', label: 'Campos', icon: PinIcon },
-  { to: '/profile', label: 'Perfil', icon: UserIcon },
+  { to: '/', label: 'nav.home', icon: HomeIcon, end: true },
+  { to: '/games', label: 'nav.games', icon: BallIcon },
+  { to: '/rankings', label: 'nav.rankings', icon: TrophyIcon },
+  { to: '/challenges', label: 'nav.challenges', icon: TargetIcon },
+  { to: '/places', label: 'nav.places', icon: PinIcon },
+  { to: '/profile', label: 'nav.profile', icon: UserIcon },
 ];
 
-export const adminNavItem: NavItem = { to: '/admin', label: 'Admin', icon: ShieldIcon };
+export const adminNavItem: NavItem = { to: '/admin', label: 'nav.admin', icon: ShieldIcon };
 
 /** Ficam fora da navegação principal — vivem na gaveta, junto às ações da conta. */
 export const notificationsNavItem: NavItem = {
   to: '/notifications',
-  label: 'Notificações',
+  label: 'nav.notifications',
   icon: BellIcon,
 };
 
 export const settingsNavItem: NavItem = {
   to: '/settings',
-  label: 'Definições',
+  label: 'nav.settings',
   icon: SettingsIcon,
 };

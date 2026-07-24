@@ -4,34 +4,58 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
+import { useT } from '@/shared/i18n/useT';
 import { AuthLayout } from './AuthLayout';
 import { loginSchema, type LoginValues } from './auth.schemas';
 import s from './auth.module.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { t } = useT();
   const [error, setError] = useState<string | null>(null);
   const form = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
   async function onSubmit(values: LoginValues) {
     setError(null);
-    const { error } = await supabase.auth.signInWithPassword(values);
+    const identifier = values.identifier.trim();
+
+    let email = identifier;
+    if (!identifier.includes('@')) {
+      const { data, error: lookupError } = await supabase.rpc('get_email_by_username', {
+        p_username: identifier,
+      });
+      if (lookupError || !data) {
+        setError(t('auth.login.error'));
+        return;
+      }
+      email = data;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password: values.password });
     if (error) {
-      setError('Email ou password incorretos.');
+      setError(t('auth.login.error'));
       return;
     }
     navigate('/', { replace: true });
   }
 
   return (
-    <AuthLayout title="Entra na tua conta">
+    <AuthLayout title={t('auth.login.title')}>
       {error && <Alert kind="error">{error}</Alert>}
 
       <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
-        <Field label="Email" htmlFor="email" error={form.formState.errors.email?.message}>
-          <Input id="email" type="email" autoComplete="email" {...form.register('email')} />
+        <Field
+          label={t('auth.login.identifier')}
+          htmlFor="identifier"
+          error={form.formState.errors.identifier?.message}
+        >
+          <Input id="identifier" autoComplete="username" {...form.register('identifier')} />
         </Field>
-        <Field label="Password" htmlFor="password" error={form.formState.errors.password?.message}>
+        <Field
+          label={t('auth.login.password')}
+          htmlFor="password"
+          error={form.formState.errors.password?.message}
+        >
           <Input
             id="password"
             type="password"
@@ -40,19 +64,19 @@ export function LoginPage() {
           />
         </Field>
         <Button type="submit" loading={form.formState.isSubmitting}>
-          Entrar
+          {t('auth.login.submit')}
         </Button>
         <div className={s.centerSm}>
           <Link to="/recover" className={s.link}>
-            Esqueci-me da password
+            {t('auth.login.forgot')}
           </Link>
         </div>
       </form>
 
       <p className={s.switch}>
-        Ainda não tens conta?{' '}
+        {t('auth.login.noAccount')}{' '}
         <Link to="/signup" className={s.linkStrong}>
-          Cria uma
+          {t('auth.login.createOne')}
         </Link>
       </p>
     </AuthLayout>

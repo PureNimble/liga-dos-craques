@@ -92,8 +92,8 @@
   gap: var(--space-2xs);
   padding: var(--space-md);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   text-align: left;
   cursor: pointer;
   transition:

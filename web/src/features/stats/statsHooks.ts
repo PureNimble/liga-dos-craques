@@ -9,10 +9,8 @@ export type PlayerStats = Database['public']['Views']['v_player_stats']['Row'];
 export const MIN_GAMES_FOR_STATS = 5;
 
 /** Mensagem do estado bloqueado — no próprio perfil convida a jogar; nos outros, informa. */
-export function statsLockMessage(own: boolean): string {
-  return own
-    ? `Joga ${MIN_GAMES_FOR_STATS} jogos para desbloquear`
-    : `Disponível a partir de ${MIN_GAMES_FOR_STATS} jogos`;
+export function statsLockMessage(t: (key: string, vars?: Record<string, string | number>) => string, own: boolean): string {
+  return t(own ? 'stats.lock.own' : 'stats.lock.other', { count: MIN_GAMES_FOR_STATS });
 }
 
 const EMPTY: Omit<PlayerStats, 'player_id' | 'group_id' | 'name'> = {

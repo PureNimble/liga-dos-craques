@@ -24,7 +24,7 @@
 .switch {
   display: flex;
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);
   padding: var(--space-xs);
 }
@@ -45,7 +45,7 @@
   transition: background-color var(--transition);
 }
 .switchBtn:hover {
-  background-color: var(--gray-850);
+  background-color: var(--surface-panel);
 }
 .switchActiveA,
 .switchActiveA:hover {
@@ -99,7 +99,7 @@
 
 .unassigned {
   margin-top: var(--space-lg);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
   padding-top: var(--space-md);
 }
 .unassignedTitle {
@@ -162,7 +162,7 @@
 /* TeamColumn */
 .column {
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);
   padding: var(--space-md);
 }
@@ -179,7 +179,7 @@
 }
 .columnTotal {
   border-radius: var(--radius-full);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   padding: var(--space-2xs) var(--space-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);

@@ -1,0 +1,100 @@
+/* Desktop: rótulo à esquerda, ação à direita, linha a toda a largura.
+   Mobile (≤640px): vira uma linha de lista compacta — o botão desaparece e
+   a linha toda fica clicável, com seta à direita (padrão nativo). */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) 1fr;
+  align-items: center;
+  gap: var(--space-lg);
+  min-height: 4.5rem;
+  padding-block: var(--space-lg);
+}
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr auto;
+    min-height: 3rem;
+    padding-block: var(--space-md);
+  }
+}
+
+.text {
+  min-width: 0;
+}
+.label {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.label.danger {
+  color: var(--danger);
+}
+
+.control {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.desktopControl {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 640px) {
+  .desktopControl {
+    display: none;
+  }
+}
+/* Controlo do desktop (ex.: SegmentedTabs) que dá lugar, no mobile, a um
+   resumo + seta que abre um subecrã — ver .mobileTap/.mobileValue. */
+@media (max-width: 640px) {
+  .controlDesktopOnly {
+    display: none;
+  }
+}
+/* Todos os botões de ação com a mesma largura e altura fixas, seja qual for
+   o texto. */
+.actionButton {
+  width: 13rem;
+  height: 2.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botão transparente esticado sobre a linha toda — só visível no mobile,
+   onde substitui o botão do desktop por uma linha de lista tocável. */
+.mobileTap {
+  display: none;
+}
+@media (max-width: 640px) {
+  .mobileTap {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+  }
+}
+/* Força a mesma linha clicável com seta também acima dos 640px (ver prop
+   `arrowStyle`), substituindo o botão do desktop. */
+.alwaysTap {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+.mobileValue {
+  font-size: var(--font-size-base);
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chevron {
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}

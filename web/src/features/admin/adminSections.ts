@@ -12,8 +12,9 @@ import {
 
 export type AdminSection = {
   key: string;
-  label: string;
-  description: string;
+  /** Chave i18n (`admin.i18n.ts`) — usar com `t(labelKey)` / `t(descriptionKey)`. */
+  labelKey: string;
+  descriptionKey: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Rota relativa a /admin; ausente enquanto a secção não está construída. */
   to?: string;
@@ -23,57 +24,57 @@ export type AdminSection = {
 export const adminSections: AdminSection[] = [
   {
     key: 'players',
-    label: 'Jogadores',
-    description: 'Gerir contas, funções e reposição de password.',
+    labelKey: 'admin.section.players.label',
+    descriptionKey: 'admin.section.players.description',
     icon: UsersIcon,
     to: 'players',
   },
   {
     key: 'games',
-    label: 'Jogos & eventos',
-    description: 'Corrigir, cancelar ou apagar jogos.',
+    labelKey: 'admin.section.games.label',
+    descriptionKey: 'admin.section.games.description',
     icon: BallIcon,
     to: 'games',
   },
   {
     key: 'goals',
-    label: 'Golos icónicos',
-    description: 'Criar e editar os golos do desafio.',
+    labelKey: 'admin.section.goals.label',
+    descriptionKey: 'admin.section.goals.description',
     icon: TargetIcon,
     to: 'goals',
   },
   {
     key: 'achievements',
-    label: 'Conquistas',
-    description: 'Definições de conquistas e critérios.',
+    labelKey: 'admin.section.achievements.label',
+    descriptionKey: 'admin.section.achievements.description',
     icon: MedalIcon,
     to: 'achievements',
   },
   {
     key: 'reference',
-    label: 'Dados de referência',
-    description: 'Formatos, posições, tipos de evento e tags.',
+    labelKey: 'admin.section.reference.label',
+    descriptionKey: 'admin.section.reference.description',
     icon: WhistleIcon,
     to: 'reference',
   },
   {
     key: 'reports',
-    label: 'Reportes de bugs',
-    description: 'Problemas reportados pela malta.',
+    labelKey: 'admin.section.reports.label',
+    descriptionKey: 'admin.section.reports.description',
     icon: AlertIcon,
     to: 'reports',
   },
   {
     key: 'analytics',
-    label: 'Analytics',
-    description: 'Atividade, adesão e tendências ao longo do tempo.',
+    labelKey: 'admin.section.analytics.label',
+    descriptionKey: 'admin.section.analytics.description',
     icon: ChartIcon,
     to: 'analytics',
   },
   {
     key: 'system',
-    label: 'Sistema',
-    description: 'Estado da ligação, backfill e regras de XP.',
+    labelKey: 'admin.section.system.label',
+    descriptionKey: 'admin.section.system.description',
     icon: ShieldIcon,
     to: 'system',
   },

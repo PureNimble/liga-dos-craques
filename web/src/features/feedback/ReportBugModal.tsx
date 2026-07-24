@@ -33,6 +33,7 @@ export function ReportBugModal({ open, onClose }: { open: boolean; onClose: () =
       onClose={onClose}
       title="Reportar um problema"
       description="Encontraste um bug ou algo estranho? Conta-nos."
+      variant="sheet"
       size="sm"
       footer={
         <>

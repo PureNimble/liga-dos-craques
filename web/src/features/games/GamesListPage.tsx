@@ -19,6 +19,7 @@ import {
   ChevronRightIcon,
 } from '@/shared/components/ui/icons';
 import { formatGameDateTime } from '@/shared/lib/datetime';
+import { useT } from '@/shared/i18n/useT';
 import { useGames, type GameWithFormat } from './gameHooks';
 import { StatusBadge } from './StatusBadge';
 import { UPCOMING_STATUSES } from './gameStatus';
@@ -28,6 +29,7 @@ import s from './GamesListPage.module.css';
 type Tab = 'upcoming' | 'past';
 
 export function GamesListPage() {
+  const { t } = useT();
   const { data: games, isLoading, isError } = useGames();
   const [tab, setTab] = useState<Tab>('upcoming');
   const [createOpen, setCreateOpen] = useState(false);
@@ -42,10 +44,10 @@ export function GamesListPage() {
   return (
     <Page>
       <div className={s.headerRow}>
-        <PageTitle>Jogos</PageTitle>
+        <PageTitle>{t('games.title')}</PageTitle>
         <Button onClick={() => setCreateOpen(true)}>
           <PlusIcon width={18} height={18} />
-          Criar jogo
+          {t('games.create')}
         </Button>
       </div>
 
@@ -53,8 +55,8 @@ export function GamesListPage() {
         value={tab}
         onChange={setTab}
         items={[
-          { value: 'upcoming', label: 'Próximos' },
-          { value: 'past', label: 'Anteriores' },
+          { value: 'upcoming', label: t('games.tab.upcoming') },
+          { value: 'past', label: t('games.tab.past') },
         ]}
       />
 
@@ -65,21 +67,21 @@ export function GamesListPage() {
           <CardSkeleton />
         </div>
       )}
-      {isError && <Alert kind="error">Não foi possível carregar os jogos.</Alert>}
+      {isError && <Alert kind="error">{t('games.loadError')}</Alert>}
 
       {!isLoading && !isError && filtered.length === 0 && (
         <EmptyState
           icon={<BallIcon width={26} height={26} />}
-          title={tab === 'upcoming' ? 'Sem jogos por jogar' : 'Ainda não há jogos passados'}
+          title={tab === 'upcoming' ? t('games.empty.upcoming.title') : t('games.empty.past.title')}
           description={
             tab === 'upcoming'
-              ? 'Marca o próximo jogo e convoca a malta.'
-              : 'Os jogos concluídos aparecem aqui.'
+              ? t('games.empty.upcoming.description')
+              : t('games.empty.past.description')
           }
           action={
             tab === 'upcoming' ? (
               <Button onClick={() => setCreateOpen(true)}>
-                <PlusIcon width={18} height={18} /> Criar o primeiro
+                <PlusIcon width={18} height={18} /> {t('games.createFirst')}
               </Button>
             ) : undefined
           }
@@ -95,8 +97,8 @@ export function GamesListPage() {
       <Modal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        title="Criar jogo"
-        description="Marca a data, o formato e convoca a malta."
+        title={t('games.createModal.title')}
+        description={t('games.createModal.description')}
         variant="sheet"
         size="lg"
       >

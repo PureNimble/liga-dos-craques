@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/shared/lib/supabase';
 import { Alert, Button, Field, Input } from '@/shared/components/ui';
+import { useT } from '@/shared/i18n/useT';
 import { AuthLayout } from './AuthLayout';
 import { updatePasswordSchema, type UpdatePasswordValues } from './auth.schemas';
 import s from './auth.module.css';
@@ -15,6 +16,7 @@ import s from './auth.module.css';
  */
 export function UpdatePasswordPage() {
   const navigate = useNavigate();
+  const { t } = useT();
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const form = useForm<UpdatePasswordValues>({ resolver: zodResolver(updatePasswordSchema) });
@@ -31,17 +33,17 @@ export function UpdatePasswordPage() {
   }
 
   return (
-    <AuthLayout title="Definir nova password">
+    <AuthLayout title={t('auth.updatePassword.title')}>
       {error && <Alert kind="error">{error}</Alert>}
 
       {done ? (
-        <Alert kind="success">Password atualizada. A redirecionar…</Alert>
+        <Alert kind="success">{t('auth.updatePassword.done')}</Alert>
       ) : (
         <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
           <Field
-            label="Nova password"
+            label={t('auth.updatePassword.newPassword')}
             htmlFor="password"
-            hint="Mínimo 8 caracteres"
+            hint={t('auth.updatePassword.passwordHint')}
             error={form.formState.errors.password?.message}
           >
             <Input
@@ -52,7 +54,7 @@ export function UpdatePasswordPage() {
             />
           </Field>
           <Field
-            label="Confirmar password"
+            label={t('auth.updatePassword.confirmPassword')}
             htmlFor="confirm"
             error={form.formState.errors.confirm?.message}
           >
@@ -64,7 +66,7 @@ export function UpdatePasswordPage() {
             />
           </Field>
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Guardar password
+            {t('auth.updatePassword.submit')}
           </Button>
         </form>
       )}

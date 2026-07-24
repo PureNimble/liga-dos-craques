@@ -4,8 +4,15 @@ import { z } from 'zod';
 const emptyToNull = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess((v) => (v === '' || v === undefined ? null : v), schema);
 
+export const USERNAME_REGEX = /^[a-z0-9_]{3,20}$/;
+
 export const profileFormSchema = z.object({
   name: z.string().trim().min(2, 'Indica o teu nome'),
+  username: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(USERNAME_REGEX, 'Só minúsculas, números e _ (3-20 carateres)'),
   birth_date: emptyToNull(z.string().nullable()),
   weight_kg: emptyToNull(
     z.coerce.number().positive('Valor inválido').max(399, 'Valor inválido').nullable(),
@@ -38,4 +45,11 @@ export const FOOT_LABELS: Record<string, string> = {
   left: 'Esquerdo',
   right: 'Direito',
   both: 'Ambidextro',
+};
+
+/** Chave i18n (`profile.i18n.ts`) do pé preferido — usada no chip do `PlayerHeader`. */
+export const FOOT_LABEL_KEY: Record<string, string> = {
+  left: 'profile.foot.left',
+  right: 'profile.foot.right',
+  both: 'profile.foot.both',
 };

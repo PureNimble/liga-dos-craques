@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Button, Card, Select } from '@/shared/components/ui';
+import { useT } from '@/shared/i18n/useT';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
 import type { Team } from '@/types/database';
 import {
@@ -48,6 +49,7 @@ export function TeamsPanel({
   playersPerSide,
   currentMinute = 0,
 }: TeamsPanelProps) {
+  const { t } = useT();
   const ids = players.map((p) => p.player_id);
   const { data: ratings } = usePlayerRatings(ids);
   const assignTeams = useAssignTeams(gameId);
@@ -238,43 +240,41 @@ export function TeamsPanel({
   return (
     <Card>
       <div className={s.head}>
-        <h2 className={s.title}>Equipas</h2>
+        <h2 className={s.title}>{t('teams.title')}</h2>
         {canManage && canGenerate && (
           <Button variant="secondary" size="sm" onClick={generate} loading={assignTeams.isPending}>
-            {hasTeams ? 'Regenerar' : 'Gerar equipas'}
+            {hasTeams ? t('teams.regenerate') : t('teams.generate')}
           </Button>
         )}
       </div>
 
       {assignTeams.isError && (
         <div className={s.errorSlot}>
-          <Alert kind="error">Não foi possível gerar as equipas.</Alert>
+          <Alert kind="error">{t('teams.generateError')}</Alert>
         </div>
       )}
 
       {!hasTeams ? (
         <p className={s.empty}>
-          {canManage && canGenerate
-            ? 'Ainda não há equipas. Gera equipas equilibradas automaticamente.'
-            : 'As equipas ainda não foram geradas.'}
+          {canManage && canGenerate ? t('teams.emptyManageable') : t('teams.emptyLocked')}
         </p>
       ) : (
         <div className={s.body}>
           {/* Switch entre equipas (estilo app de resultados) */}
           <div className={s.switch}>
-            {(['A', 'B'] as Team[]).map((t) => {
-              const active = selectedTeam === t;
-              const activeClass = t === 'A' ? s.switchActiveA : s.switchActiveB;
+            {(['A', 'B'] as Team[]).map((team) => {
+              const active = selectedTeam === team;
+              const activeClass = team === 'A' ? s.switchActiveA : s.switchActiveB;
               return (
                 <button
-                  key={t}
+                  key={team}
                   type="button"
-                  onClick={() => setSelectedTeam(t)}
+                  onClick={() => setSelectedTeam(team)}
                   className={`${s.switchBtn} ${active ? activeClass : ''}`}
                 >
-                  {!active && <span className={`${s.dot} ${t === 'A' ? s.dotA : s.dotB}`} />}
-                  Equipa {t}
-                  <span className={s.switchSum}>{sum(t === 'A' ? teamA : teamB)}</span>
+                  {!active && <span className={`${s.dot} ${team === 'A' ? s.dotA : s.dotB}`} />}
+                  {t('teams.team', { team })}
+                  <span className={s.switchSum}>{sum(team === 'A' ? teamA : teamB)}</span>
                 </button>
               );
             })}
@@ -296,7 +296,8 @@ export function TeamsPanel({
             <>
               <div className={s.formRow}>
                 <FormationSelect
-                  label={`Formação · Equipa ${selectedTeam}`}
+                  label={t('teams.formation', { team: selectedTeam })}
+                  customLabel={t('teams.formationCustom')}
                   dotClass={selectedTeam === 'A' ? s.dotA : s.dotB}
                   value={selFormName}
                   size={selSize}
@@ -308,49 +309,51 @@ export function TeamsPanel({
                   onClick={autoFill}
                   loading={persist.isPending}
                 >
-                  Auto-preencher
+                  {t('teams.autoFill')}
                 </Button>
               </div>
-              <p className={s.dragHint}>ou arrasta um jogador para mover ou trocar</p>
+              <p className={s.dragHint}>{t('teams.dragHint')}</p>
             </>
           )}
 
           <div className={s.columns}>
             <TeamColumn
-              title="Equipa A"
+              title={t('teams.team', { team: 'A' })}
               total={sum(teamA)}
               list={teamA}
               ratingOf={ratingOf}
               canManage={canManage}
               onMove={(playerId) => setPlayerTeam.mutate({ playerId, team: 'B' })}
               moveLabel="→ B"
+              fallbackName={t('teams.fallbackName')}
             />
             <TeamColumn
-              title="Equipa B"
+              title={t('teams.team', { team: 'B' })}
               total={sum(teamB)}
               list={teamB}
               ratingOf={ratingOf}
               canManage={canManage}
               onMove={(playerId) => setPlayerTeam.mutate({ playerId, team: 'A' })}
               moveLabel="→ A"
+              fallbackName={t('teams.fallbackName')}
             />
           </div>
         </div>
       )}
 
       {hasTeams && (
-        <p className={s.diff}>Diferença de rating: {Math.abs(sum(teamA) - sum(teamB))}</p>
+        <p className={s.diff}>{t('teams.ratingDiff', { diff: Math.abs(sum(teamA) - sum(teamB)) })}</p>
       )}
 
       {/* Jogadores por atribuir */}
       {unassigned.length > 0 && (
         <div className={s.unassigned}>
-          <p className={s.unassignedTitle}>Por atribuir</p>
+          <p className={s.unassignedTitle}>{t('teams.unassigned')}</p>
           <ul className={s.list}>
             {unassigned.map((p) => (
               <li key={p.player_id} className={s.row}>
                 <span className={s.name}>
-                  {p.profile?.name ?? 'Jogador'}{' '}
+                  {p.profile?.name ?? t('teams.fallbackName')}{' '}
                   <span className={s.rating}>({ratingOf(p.player_id)})</span>
                 </span>
                 {canManage && (
@@ -380,12 +383,14 @@ export function TeamsPanel({
 
 function FormationSelect({
   label,
+  customLabel,
   dotClass,
   value,
   size,
   onChange,
 }: {
   label: string;
+  customLabel: string;
   dotClass: string;
   value: string;
   size: number;
@@ -403,7 +408,7 @@ function FormationSelect({
             {o.name}
           </option>
         ))}
-        <option value={CUSTOM}>Personalizada</option>
+        <option value={CUSTOM}>{customLabel}</option>
       </Select>
     </label>
   );
@@ -417,6 +422,7 @@ function TeamColumn({
   canManage,
   onMove,
   moveLabel,
+  fallbackName,
 }: {
   title: string;
   total: number;
@@ -425,6 +431,7 @@ function TeamColumn({
   canManage: boolean;
   onMove: (playerId: string) => void;
   moveLabel: string;
+  fallbackName: string;
 }) {
   return (
     <div className={s.column}>
@@ -436,7 +443,7 @@ function TeamColumn({
         {list.map((p) => (
           <li key={p.player_id} className={s.row}>
             <span className={s.name}>
-              {p.profile?.name ?? 'Jogador'}{' '}
+              {p.profile?.name ?? fallbackName}{' '}
               <span className={s.rating}>({ratingOf(p.player_id)})</span>
             </span>
             {canManage && (

@@ -37,7 +37,7 @@
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-black);
   letter-spacing: var(--tracking-tight);
-  color: var(--white);
+  color: var(--text-color);
 }
 .subtitle {
   margin-top: var(--space-xs);
@@ -51,7 +51,7 @@
   gap: var(--space-xl);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-faint);
-  background-image: linear-gradient(to bottom, var(--surface-card), var(--gray-850));
+  background-image: linear-gradient(to bottom, var(--surface-card), var(--surface-panel));
   padding: var(--space-xl);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: var(--shadow-card);
 }

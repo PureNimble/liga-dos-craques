@@ -12,7 +12,7 @@
   justify-content: space-between;
   gap: var(--space-md);
   padding-block: var(--space-sm);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
 }
 .item:first-child {
   border-top: 0;
@@ -63,7 +63,7 @@
 }
 .tag {
   border-radius: var(--radius-sm);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   padding: var(--space-2xs) var(--space-xs);
   font-size: var(--font-size-xs);
   color: var(--text-muted);

@@ -44,5 +44,8 @@ enable_confirmations = false
 [functions.health]
 verify_jwt = false  # endpoint público de saúde, usado pelo keep-alive
 
+[functions.send-push]
+verify_jwt = false  # chamada pelo trigger via pg_net, autenticado por segredo partilhado
+
 [analytics]
 enabled = false

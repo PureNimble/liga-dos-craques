@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Loading } from '@/shared/components/ui';
 import { ChevronLeftIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import { usePlayerStats } from '@/features/stats/statsHooks';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { PlayerCharts } from '@/features/stats/PlayerCharts';
@@ -13,10 +14,11 @@ import { usePublicProfile } from './profileHooks';
 import { PlayerCard } from './PlayerCard';
 import { PlayerHeader } from './PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from './cardStats';
-import { FOOT_LABELS } from './profile.schemas';
+import { FOOT_LABEL_KEY } from './profile.schemas';
 import s from './profileLayout.module.css';
 
 export function PlayerDetailPage() {
+  const { t } = useT();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,7 +34,7 @@ export function PlayerDetailPage() {
   if (isError || !profile) {
     return (
       <div className={s.errorPage}>
-        <Alert kind="error">Jogador não encontrado.</Alert>
+        <Alert kind="error">{t('profile.detail.notFound')}</Alert>
       </div>
     );
   }
@@ -44,7 +46,7 @@ export function PlayerDetailPage() {
   return (
     <div className={s.page}>
       <button type="button" onClick={goBack} className={s.back}>
-        <ChevronLeftIcon width={16} height={16} /> Voltar
+        <ChevronLeftIcon width={16} height={16} /> {t('profile.detail.back')}
       </button>
 
       {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
@@ -62,7 +64,9 @@ export function PlayerDetailPage() {
           </div>
         )}
         <PlayerHeader
-          footLabel={profile.preferred_foot ? FOOT_LABELS[profile.preferred_foot] : null}
+          footLabel={
+            profile.preferred_foot ? t(FOOT_LABEL_KEY[profile.preferred_foot]) : null
+          }
           avgRating={stats?.avg_rating ?? null}
           games={stats?.games}
           featured={featured ? { icon: featured.icon, label: featured.label } : null}
@@ -72,7 +76,7 @@ export function PlayerDetailPage() {
       {xp && <XpBar xp={xp} />}
       {stats && (
         <section>
-          <h2 className={s.sectionTitle}>Estatísticas</h2>
+          <h2 className={s.sectionTitle}>{t('profile.statsTitle')}</h2>
           <StatsGrid stats={stats} />
         </section>
       )}

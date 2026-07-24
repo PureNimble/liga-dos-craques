@@ -2,9 +2,10 @@
   margin-inline: auto;
   display: flex;
   width: 100%;
-  max-width: 28rem;
+  /* `max-width` vem de inline style (Pitch.tsx) — escala com o nº de titulares. */
   flex-direction: column;
   gap: var(--space-sm);
+  transition: max-width var(--transition);
 }
 .field {
   position: relative;
@@ -187,18 +188,18 @@
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  background-color: var(--gray-800);
+  background-color: var(--surface-chip);
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  color: var(--gray-200);
+  color: var(--text-color);
   cursor: pointer;
   transition: background-color var(--transition);
 }
 .benchBtn:hover:not(:disabled) {
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip-strong);
 }
 .benchBtn:disabled {
   cursor: default;

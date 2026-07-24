@@ -9,7 +9,7 @@
   gap: var(--space-lg);
 }
 .recordCard {
-  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+  background-image: linear-gradient(to bottom right, var(--surface-panel-hover), var(--surface-panel));
 }
 .recordLabel {
   font-size: var(--font-size-xs);
@@ -46,8 +46,8 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   box-shadow: var(--shadow-card);
 }
 .historyItem {
@@ -56,13 +56,13 @@
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-sm);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
 }
 .historyItem:first-child {
   border-top: 0;
 }
 .historyName {
-  color: var(--gray-200);
+  color: var(--text-color);
 }
 .historyMeta {
   color: var(--text-subtle);
@@ -101,8 +101,8 @@
   gap: var(--space-2xs);
   padding: var(--space-lg) var(--space-md);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   cursor: pointer;
   transition:
     border-color var(--transition),
@@ -132,7 +132,7 @@
   /* Altura igual em todas as linhas, tenham ou não o botão de apagar (IconButton = 2.25rem). */
   min-height: 2.25rem;
   padding: var(--space-sm) var(--space-md);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
 }
 .sessionItem:first-child {
   border-top: 0;

@@ -46,7 +46,7 @@
   align-items: center;
   gap: var(--space-sm);
   font-size: var(--font-size-sm);
-  color: var(--gray-200);
+  color: var(--text-color);
 }
 
 /* Grelha de seleção (toggle) */
@@ -64,8 +64,8 @@
   font-size: var(--font-size-sm);
   color: var(--text-color);
   text-align: left;
-  background-color: var(--gray-850);
-  border: 1px solid var(--gray-750);
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition);
@@ -98,8 +98,8 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-subtle);
-  background-color: var(--gray-850);
-  border: 1px solid var(--gray-750);
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
 }
 .phaseSd {
   color: var(--text-on-accent);
@@ -114,7 +114,7 @@
   align-items: center;
   gap: var(--space-sm);
   text-align: center;
-  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+  background-image: linear-gradient(to bottom right, var(--surface-panel-hover), var(--surface-panel));
 }
 .sdShooterName {
   font-size: var(--font-size-2xl);
@@ -154,8 +154,8 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   box-shadow: var(--shadow-card);
 }
 .boardRow {
@@ -163,7 +163,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
 }
 .boardRow:first-child {
   border-top: 0;
@@ -201,7 +201,7 @@
   border-radius: var(--radius-full);
 }
 .dot {
-  background-color: var(--gray-700);
+  background-color: var(--surface-chip-strong);
 }
 .dotHit {
   background-color: var(--accent);
@@ -255,8 +255,8 @@
 }
 .missBtn {
   color: var(--text-color);
-  background-color: var(--gray-800);
-  border-color: var(--gray-700);
+  background-color: var(--surface-panel-hover);
+  border-color: var(--border-default);
 }
 .missBtn:hover:not(:disabled) {
   border-color: var(--text-error);
@@ -274,7 +274,7 @@
   align-items: center;
   gap: var(--space-sm);
   text-align: center;
-  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+  background-image: linear-gradient(to bottom right, var(--surface-panel-hover), var(--surface-panel));
 }
 .winnerLabel {
   font-size: var(--font-size-xs);

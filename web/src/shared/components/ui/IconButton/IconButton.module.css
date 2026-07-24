@@ -10,6 +10,6 @@
   transition: all var(--transition);
 }
 .iconButton:hover {
-  background-color: var(--gray-750);
-  color: var(--white);
+  background-color: var(--surface-chip);
+  color: var(--text-color);
 }

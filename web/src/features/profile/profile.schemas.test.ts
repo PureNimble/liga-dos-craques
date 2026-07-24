@@ -11,6 +11,7 @@ describe('profileFormSchema', () => {
   it('converte campos vazios em null', () => {
     const r = profileFormSchema.parse({
       name: 'Vasco',
+      username: 'vasco10',
       birth_date: '',
       weight_kg: '',
       height_cm: '',
@@ -28,6 +29,7 @@ describe('profileFormSchema', () => {
   it('coage números e valida limites físicos', () => {
     const ok = profileFormSchema.parse({
       name: 'Vasco',
+      username: 'vasco10',
       weight_kg: '74.5',
       height_cm: '180',
       main_position_id: '5',
@@ -38,8 +40,12 @@ describe('profileFormSchema', () => {
     expect(ok.main_position_id).toBe(5);
 
     expect(
-      profileFormSchema.safeParse({ name: 'Vasco', weight_kg: '500', secondaryPositionIds: [] })
-        .success,
+      profileFormSchema.safeParse({
+        name: 'Vasco',
+        username: 'vasco10',
+        weight_kg: '500',
+        secondaryPositionIds: [],
+      }).success,
     ).toBe(false);
   });
 });

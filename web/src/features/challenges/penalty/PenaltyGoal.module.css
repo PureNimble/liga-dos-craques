@@ -171,7 +171,7 @@
   place-items: center;
   border: 1px solid var(--accent-ring);
   background-color: var(--pen-zone-bg);
-  color: var(--text-muted);
+  color: var(--gray-300); /* fixo — cena de estádio sempre escura, não segue o tema */
   font-weight: var(--font-weight-extrabold);
   font-size: clamp(0.9rem, 6cqw, 1.6rem);
   backdrop-filter: blur(2px);
@@ -190,20 +190,20 @@
 .zoneSelected {
   border-color: var(--accent);
   background-color: var(--accent-surface);
-  color: var(--text-color);
+  color: var(--gray-100);
 }
 .zoneTarget {
   border: 2px solid var(--accent);
   background-color: var(--accent-surface);
   box-shadow: inset 0 0 12px var(--accent-ring);
-  color: var(--text-color);
+  color: var(--gray-100);
   z-index: 1;
   animation: targetPulse 1.1s ease-in-out infinite;
 }
 .zoneOn {
   border: 1px solid var(--green-400);
   background-color: var(--status-success-bg);
-  color: var(--status-success-fg);
+  color: var(--green-400);
 }
 .mark {
   line-height: 1;

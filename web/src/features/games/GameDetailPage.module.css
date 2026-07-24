@@ -41,7 +41,7 @@
 }
 .soundboardWrap {
   margin-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--gray-750);
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: var(--space-lg);
 }
 .grid {
@@ -61,7 +61,7 @@
 }
 .lockedNote {
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);
   padding: var(--space-sm) var(--space-md);
   text-align: center;
@@ -70,7 +70,7 @@
 }
 .resultBox {
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);
   padding: var(--space-lg);
   text-align: center;
@@ -84,7 +84,7 @@
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-black);
   font-variant-numeric: tabular-nums;
-  color: var(--white);
+  color: var(--text-color);
 }
 .resultDash {
   color: var(--text-faint);

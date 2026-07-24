@@ -4,7 +4,8 @@ import { useToast } from '@/shared/components/toast/useToast';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { formatGameDateTime } from '@/shared/lib/datetime';
 import { useGames, type GameWithFormat } from '@/features/games/gameHooks';
-import { GAME_STATUS_LABELS, GAME_STATUS_TONE } from '@/features/games/gameStatus';
+import { GAME_STATUS_KEY, GAME_STATUS_TONE } from '@/features/games/gameStatus';
+import { useT } from '@/shared/i18n/useT';
 import { useAdminCancelGame, useAdminDeleteGame, useAdminReopenGame } from './adminHooks';
 import cards from './adminCards.module.css';
 import s from './AdminGamesPage.module.css';
@@ -39,6 +40,7 @@ export function AdminGamesPage() {
 }
 
 function GameRow({ game }: { game: GameWithFormat }) {
+  const { t } = useT();
   const cancel = useAdminCancelGame();
   const del = useAdminDeleteGame();
   const reopen = useAdminReopenGame();
@@ -115,7 +117,7 @@ function GameRow({ game }: { game: GameWithFormat }) {
         </span>
       </div>
 
-      <Badge tone={GAME_STATUS_TONE[game.status]}>{GAME_STATUS_LABELS[game.status]}</Badge>
+      <Badge tone={GAME_STATUS_TONE[game.status]}>{t(GAME_STATUS_KEY[game.status])}</Badge>
 
       <div className={s.actions}>
         <Link to={`/games/${game.id}`} className={s.openLink}>

@@ -12,6 +12,8 @@ export { Field } from './Field/Field';
 export { IconButton } from './IconButton/IconButton';
 export { Avatar } from './Avatar/Avatar';
 export { SegmentedTabs } from './SegmentedTabs/SegmentedTabs';
+export { SettingsRow } from './SettingsRow/SettingsRow';
+export { Switch } from './Switch/Switch';
 export { PillTabs } from './PillTabs/PillTabs';
 export { Skeleton, CardSkeleton } from './Skeleton/Skeleton';
 export { Alert } from './Alert/Alert';

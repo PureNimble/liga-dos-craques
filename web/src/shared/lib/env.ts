@@ -7,6 +7,7 @@ import { z } from 'zod';
 const envSchema = z.object({
   VITE_SUPABASE_URL: z.string().url('VITE_SUPABASE_URL deve ser um URL válido'),
   VITE_SUPABASE_ANON_KEY: z.string().min(1, 'VITE_SUPABASE_ANON_KEY em falta'),
+  VITE_VAPID_PUBLIC_KEY: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(import.meta.env);

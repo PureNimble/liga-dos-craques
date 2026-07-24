@@ -32,8 +32,8 @@ describe('profileCompletion', () => {
   });
 
   it('dados físicos só contam com peso e altura', () => {
-    expect(profileCompletion({ ...cheio, height_cm: null }).missing).toEqual(['os dados físicos']);
-    expect(profileCompletion({ ...cheio, weight_kg: null }).missing).toEqual(['os dados físicos']);
+    expect(profileCompletion({ ...cheio, height_cm: null }).missing).toEqual(['physical']);
+    expect(profileCompletion({ ...cheio, weight_kg: null }).missing).toEqual(['physical']);
   });
 
   it('marca a posição à parte (é a única que o gerador de equipas usa)', () => {
@@ -44,10 +44,11 @@ describe('profileCompletion', () => {
 });
 
 describe('listMissing', () => {
-  it('enumera em português', () => {
-    expect(listMissing([])).toBe('');
-    expect(listMissing(['o pé preferido'])).toBe('o pé preferido');
-    expect(listMissing(['a', 'b'])).toBe('a e b');
-    expect(listMissing(['a', 'b', 'c'])).toBe('a, b e c');
+  it('enumera com a conjunção indicada', () => {
+    expect(listMissing([], 'e')).toBe('');
+    expect(listMissing(['o pé preferido'], 'e')).toBe('o pé preferido');
+    expect(listMissing(['a', 'b'], 'e')).toBe('a e b');
+    expect(listMissing(['a', 'b', 'c'], 'e')).toBe('a, b e c');
+    expect(listMissing(['a', 'b', 'c'], 'and')).toBe('a, b and c');
   });
 });

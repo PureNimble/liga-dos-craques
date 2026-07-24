@@ -3,10 +3,8 @@
   overflow: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-faint);
-  background-image: linear-gradient(to bottom, var(--gray-800), var(--gray-900));
-  box-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.06),
-    0 12px 32px -16px rgb(0 0 0 / 0.8);
+  background-image: linear-gradient(to bottom, var(--surface-panel-hover), var(--surface-well));
+  box-shadow: var(--shadow-card);
 }
 .glow {
   pointer-events: none;
@@ -54,7 +52,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   font-variant-numeric: tabular-nums;
-  color: var(--white);
+  color: var(--text-color);
 }
 
 .scoreboard {
@@ -113,7 +111,7 @@
   font-size: var(--font-size-5xl);
   font-weight: var(--font-weight-extrabold);
   font-variant-numeric: tabular-nums;
-  color: var(--white);
+  color: var(--text-color);
 }
 .scoreColon {
   font-size: var(--font-size-2xl);
@@ -131,7 +129,7 @@
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   text-transform: capitalize;
-  color: var(--white);
+  color: var(--text-color);
 }
 
 .meta {
@@ -142,7 +140,7 @@
   justify-content: center;
   column-gap: var(--space-md);
   row-gap: var(--space-xs);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
   padding: var(--space-sm) var(--space-lg);
   font-size: var(--font-size-sm);
   color: var(--text-subtle);

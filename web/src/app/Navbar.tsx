@@ -9,6 +9,7 @@ import { Avatar, IconButton } from '@/shared/components/ui';
 import { BallIcon, MenuIcon } from '@/shared/components/ui/icons';
 import { ReportBugModal } from '@/features/feedback/ReportBugModal';
 import { useUnreadNotificationCount } from '@/features/notifications/notificationHooks';
+import { useT } from '@/shared/i18n/useT';
 import s from './Navbar.module.css';
 
 /** Cabeçalho fixo: logótipo, avatar e menu — a navegação (e os grupos) vive toda na gaveta. */
@@ -16,6 +17,7 @@ export function Navbar({ profile }: { profile: FullProfile }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const { t } = useT();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const { data: unread = 0 } = useUnreadNotificationCount(profile.id);
@@ -28,9 +30,9 @@ export function Navbar({ profile }: { profile: FullProfile }) {
   async function handleSignOut() {
     setDrawerOpen(false);
     const ok = await confirm({
-      title: 'Terminar sessão?',
-      message: 'Vais precisar de iniciar sessão novamente.',
-      confirmLabel: 'Sair',
+      title: t('settings.session.confirmTitle'),
+      message: t('settings.session.confirmMessage'),
+      confirmLabel: t('settings.session.confirmLabel'),
     });
     if (!ok) return;
     await signOut();
@@ -48,12 +50,14 @@ export function Navbar({ profile }: { profile: FullProfile }) {
         </Link>
 
         <div className={s.actions}>
-          <Link to="/profile" aria-label="Ver perfil" className={s.avatarLink}>
+          <Link to="/profile" aria-label={t('navbar.viewProfile')} className={s.avatarLink}>
             <Avatar name={profile.name} src={profile.photo_url} size="sm" />
           </Link>
           <span className={s.menuWrap}>
             <IconButton
-              label={unread > 0 ? `Abrir menu (${unread} por ler)` : 'Abrir menu'}
+              label={
+                unread > 0 ? t('navbar.openMenuUnread', { count: unread }) : t('navbar.openMenu')
+              }
               onClick={() => setDrawerOpen(true)}
             >
               <MenuIcon width={20} height={20} />

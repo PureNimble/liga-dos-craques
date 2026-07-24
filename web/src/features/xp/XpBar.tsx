@@ -1,8 +1,10 @@
+import { useT } from '@/shared/i18n/useT';
 import type { PlayerXp } from './xpHooks';
 import s from './XpBar.module.css';
 
 /** Barra de nível/XP com progresso para o nível seguinte. */
 export function XpBar({ xp }: { xp: PlayerXp }) {
+  const { t } = useT();
   const atMax = xp.next_level_xp === null;
   const span = atMax ? 1 : xp.next_level_xp! - xp.level_min_xp;
   const gained = xp.total_xp - xp.level_min_xp;
@@ -14,9 +16,9 @@ export function XpBar({ xp }: { xp: PlayerXp }) {
       <div className={s.head}>
         <span className={s.level}>
           <span className={s.levelBadge}>{xp.level}</span>
-          Nível {xp.level}
+          {t('xp.level', { level: xp.level })}
         </span>
-        <span className={s.total}>{xp.total_xp} XP</span>
+        <span className={s.total}>{t('xp.total', { value: xp.total_xp })}</span>
       </div>
 
       <div className={s.track}>
@@ -24,7 +26,7 @@ export function XpBar({ xp }: { xp: PlayerXp }) {
       </div>
 
       <p className={s.foot}>
-        {atMax ? 'Nível máximo atingido' : `${toNext} XP para o nível ${xp.level + 1}`}
+        {atMax ? t('xp.maxLevel') : t('xp.toNext', { amount: toNext, level: xp.level + 1 })}
       </p>
     </div>
   );

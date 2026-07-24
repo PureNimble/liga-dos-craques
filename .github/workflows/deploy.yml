@@ -36,4 +36,6 @@ jobs:
         run: supabase db push
 
       - name: Deploy das Edge Functions
-        run: supabase functions deploy health --project-ref "$PROJECT_REF"
+        run: |
+          supabase functions deploy health --project-ref "$PROJECT_REF"
+          supabase functions deploy send-push --project-ref "$PROJECT_REF"

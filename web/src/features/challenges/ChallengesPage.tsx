@@ -16,6 +16,7 @@ import {
 } from '@/shared/components/ui';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { CloseIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import { useAuth } from '@/features/auth/useAuth';
 import { useGroupMembers } from '@/features/groups/groupHooks';
 import { useActiveGroupId } from '@/features/groups/useActiveGroup';
@@ -32,8 +33,8 @@ import {
   type Challenge,
   type ChallengeLeaderboardRow,
 } from './challengeHooks';
-import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
-import { PENALTY_ENTRIES, PENALTY_MODES } from './penalty/penaltyModes';
+import { spotCount, type CrossbarVariant } from './crossbar/crossbarSpots';
+import { PENALTY_ENTRIES } from './penalty/penaltyModes';
 import { IconicGoalsEntry } from './iconic/IconicGoalsEntry';
 import type { PenaltyMode } from '@/types/database';
 import s from './ChallengesPage.module.css';
@@ -43,6 +44,7 @@ const PENALTY_CODE = 'penalty';
 const ICONIC_CODE = 'iconic_goals';
 
 export function ChallengesPage() {
+  const { t } = useT();
   const { data: challenges } = useChallenges();
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -51,8 +53,8 @@ export function ChallengesPage() {
   return (
     <Page>
       <div>
-        <PageTitle>Desafios</PageTitle>
-        <p className={s.note}>Área separada — não conta para as estatísticas dos jogos.</p>
+        <PageTitle>{t('challenges.title')}</PageTitle>
+        <p className={s.note}>{t('challenges.note')}</p>
       </div>
 
       {challenges && (
@@ -84,6 +86,7 @@ function bestValue(row: ChallengeLeaderboardRow): number | null {
 }
 
 function ChallengeView({ challenge }: { challenge: Challenge }) {
+  const { t } = useT();
   const isVersus = challenge.scoring_type === 'versus';
   const isCrossbar = challenge.code === CROSSBAR_CODE;
   const isPenalty = challenge.code === PENALTY_CODE;
@@ -111,12 +114,16 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
     player_id: r.player_id,
     name: r.name,
     photo_url: r.photo_url,
-    value: isVersus ? `${r.wins}V` : isSession ? `${r.wins}` : `${bestValue(r) ?? '—'}`,
+    value: isVersus
+      ? t('challenges.stats.winsShort', { count: r.wins })
+      : isSession
+        ? `${r.wins}`
+        : `${bestValue(r) ?? '—'}`,
     sub: isVersus
-      ? `${r.wins}V-${r.losses}D · ${r.attempts} jogos`
+      ? t('challenges.stats.record', { wins: r.wins, losses: r.losses, games: r.attempts })
       : isSession
         ? undefined
-        : `${r.attempts} tentativas`,
+        : t('challenges.stats.attempts', { count: r.attempts }),
   }));
 
   return (
@@ -124,14 +131,16 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
       {/* Recorde (não nas sessões ao vivo — o ranking já mostra as vitórias). */}
       {!isSession && (
         <Card className={s.recordCard}>
-          <p className={s.recordLabel}>Recorde</p>
+          <p className={s.recordLabel}>{t('challenges.record.label')}</p>
           {record ? (
             <p className={s.recordValue}>
-              {isWinsBased ? `${record.wins} vitórias` : `${bestValue(record)}`}{' '}
+              {isWinsBased
+                ? t('challenges.record.wins', { count: record.wins })
+                : `${bestValue(record)}`}{' '}
               <span className={s.recordSub}>· {record.name}</span>
             </p>
           ) : (
-            <p className={s.recordEmpty}>Ainda sem registos.</p>
+            <p className={s.recordEmpty}>{t('challenges.record.empty')}</p>
           )}
         </Card>
       )}
@@ -145,22 +154,22 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
       )}
 
       <div>
-        <h2 className={s.sectionTitle}>Ranking</h2>
+        <h2 className={s.sectionTitle}>{t('challenges.ranking.title')}</h2>
         <RankingList rows={rankingRows} />
       </div>
 
       {!isSession && attempts && attempts.length > 0 && (
         <div>
-          <h2 className={s.sectionTitle}>Histórico recente</h2>
+          <h2 className={s.sectionTitle}>{t('challenges.history.title')}</h2>
           <ul className={s.historyList}>
             {attempts.map((a) => (
               <li key={a.id} className={s.historyItem}>
                 <span className={s.historyName}>
-                  {a.profile?.name ?? 'Jogador'}
+                  {a.profile?.name ?? t('challenges.history.fallbackName')}
                   {a.opponent?.name ? ` vs ${a.opponent.name}` : ''}
                 </span>
                 <span className={s.historyMeta}>
-                  {isWinsBased ? resultLabel(a.result) : a.score}{' '}
+                  {isWinsBased ? t(RESULT_KEY[a.result]) : a.score}{' '}
                   <span className={s.historyDate}>· {formatDate(a.played_at)}</span>
                 </span>
               </li>
@@ -172,14 +181,17 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
   );
 }
 
-function resultLabel(r: ChallengeResult) {
-  return r === 'win' ? 'Vitória' : r === 'loss' ? 'Derrota' : r === 'draw' ? 'Empate' : '—';
-}
+const RESULT_KEY: Record<ChallengeResult, string> = {
+  win: 'challenges.result.win',
+  loss: 'challenges.result.loss',
+  draw: 'challenges.result.draw',
+  na: 'challenges.result.na',
+};
 
-const SESSION_STATUS_LABEL: Record<ChallengeSessionStatus, string> = {
-  setup: 'Por começar',
-  active: 'A decorrer',
-  finished: 'Terminada',
+const SESSION_STATUS_KEY: Record<ChallengeSessionStatus, string> = {
+  setup: 'challenges.session.status.setup',
+  active: 'challenges.session.status.active',
+  finished: 'challenges.session.status.finished',
 };
 const SESSION_STATUS_TONE: Record<ChallengeSessionStatus, BadgeTone> = {
   setup: 'gray',
@@ -187,8 +199,14 @@ const SESSION_STATUS_TONE: Record<ChallengeSessionStatus, BadgeTone> = {
   finished: 'indigo',
 };
 
+const CROSSBAR_VARIANT_KEY: Record<CrossbarVariant, string> = {
+  quick: 'challenges.crossbar.variant.quick',
+  long: 'challenges.crossbar.variant.long',
+};
+
 /** Entrada do Crossbar: escolhe a versão (cria no setup) e lista as sessões a decorrer. */
 function CrossbarEntry({ challenge }: { challenge: Challenge }) {
+  const { t } = useT();
   const navigate = useNavigate();
   const { user } = useAuth();
   const confirm = useConfirm();
@@ -196,14 +214,14 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
   const { data: sessions } = useChallengeSessions(challenge.id);
 
   async function remove(sessionId: string) {
-    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    const ok = await confirm({ title: t('challenges.session.deleteConfirmTitle'), danger: true });
     if (ok) deleteSession.mutate(sessionId);
   }
 
   return (
     <>
       <Card>
-        <h2 className={s.cardTitle}>Nova sessão de Crossbar</h2>
+        <h2 className={s.cardTitle}>{t('challenges.crossbar.newSession')}</h2>
         <div className={s.versionGrid}>
           {(['quick', 'long'] as CrossbarVariant[]).map((v) => (
             <button
@@ -211,8 +229,10 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
               className={s.versionCard}
               onClick={() => navigate(`/challenges/crossbar/new?v=${v}`)}
             >
-              <span className={s.versionName}>{CROSSBAR_VARIANT_LABEL[v]}</span>
-              <span className={s.versionSpots}>{spotCount(v)} posições</span>
+              <span className={s.versionName}>{t(CROSSBAR_VARIANT_KEY[v])}</span>
+              <span className={s.versionSpots}>
+                {t('challenges.crossbar.spotsCount', { count: spotCount(v) })}
+              </span>
             </button>
           ))}
         </div>
@@ -220,7 +240,7 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
 
       {sessions && sessions.length > 0 && (
         <div>
-          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
+          <h2 className={s.sectionTitle}>{t('challenges.sessions.ongoing')}</h2>
           <ul className={s.historyList}>
             {sessions.map((sess) => (
               <li key={sess.id} className={s.sessionItem}>
@@ -229,15 +249,21 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
                   onClick={() => navigate(`/challenges/crossbar/${sess.id}`)}
                 >
                   <Badge tone={SESSION_STATUS_TONE[sess.status]}>
-                    {SESSION_STATUS_LABEL[sess.status]}
+                    {t(SESSION_STATUS_KEY[sess.status])}
                   </Badge>
                   <span className={s.sessionMeta}>
-                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
-                    {sess.spot_count} posições · {formatDateShort(sess.created_at)}
+                    {sess.player_count}{' '}
+                    {t(
+                      sess.player_count === 1
+                        ? 'challenges.sessions.player'
+                        : 'challenges.sessions.players',
+                    )}{' '}
+                    · {t('challenges.crossbar.spotsCount', { count: sess.spot_count })} ·{' '}
+                    {formatDateShort(sess.created_at)}
                   </span>
                 </button>
                 {sess.created_by === user?.id && (
-                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                  <IconButton label={t('challenges.session.delete')} onClick={() => remove(sess.id)}>
                     <CloseIcon />
                   </IconButton>
                 )}
@@ -251,7 +277,19 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
 }
 
 /** Entrada dos Penáltis: escolhe o modo (cria no setup) e lista as sessões a decorrer. */
+const PENALTY_ENTRY_KEY: Record<string, { label: string; hint: string }> = {
+  goals: { label: 'challenges.penalty.entry.goals.label', hint: 'challenges.penalty.entry.goals.hint' },
+  zones: { label: 'challenges.penalty.entry.zones.label', hint: 'challenges.penalty.entry.zones.hint' },
+};
+
+const PENALTY_MODE_KEY: Record<PenaltyMode, string> = {
+  pen_goals: 'challenges.penalty.mode.pen_goals',
+  pen_zones: 'challenges.penalty.mode.pen_zones',
+  pen_target: 'challenges.penalty.mode.pen_target',
+};
+
 function PenaltyEntry({ challenge }: { challenge: Challenge }) {
+  const { t } = useT();
   const navigate = useNavigate();
   const { user } = useAuth();
   const confirm = useConfirm();
@@ -259,14 +297,14 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
   const { data: sessions } = useChallengeSessions(challenge.id);
 
   async function remove(sessionId: string) {
-    const ok = await confirm({ title: 'Apagar esta sessão?', danger: true });
+    const ok = await confirm({ title: t('challenges.session.deleteConfirmTitle'), danger: true });
     if (ok) deleteSession.mutate(sessionId);
   }
 
   return (
     <>
       <Card>
-        <h2 className={s.cardTitle}>Nova sessão de Penáltis</h2>
+        <h2 className={s.cardTitle}>{t('challenges.penalty.newSession')}</h2>
         <div className={s.versionGrid}>
           {PENALTY_ENTRIES.map((entry) => (
             <button
@@ -274,8 +312,8 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
               className={s.versionCard}
               onClick={() => navigate(`/challenges/penalty/new?m=${entry.key}`)}
             >
-              <span className={s.versionName}>{entry.label}</span>
-              <span className={s.versionSpots}>{entry.hint}</span>
+              <span className={s.versionName}>{t(PENALTY_ENTRY_KEY[entry.key].label)}</span>
+              <span className={s.versionSpots}>{t(PENALTY_ENTRY_KEY[entry.key].hint)}</span>
             </button>
           ))}
         </div>
@@ -283,7 +321,7 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
 
       {sessions && sessions.length > 0 && (
         <div>
-          <h2 className={s.sectionTitle}>Sessões a decorrer</h2>
+          <h2 className={s.sectionTitle}>{t('challenges.sessions.ongoing')}</h2>
           <ul className={s.historyList}>
             {sessions.map((sess) => (
               <li key={sess.id} className={s.sessionItem}>
@@ -292,16 +330,20 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
                   onClick={() => navigate(`/challenges/penalty/${sess.id}`)}
                 >
                   <Badge tone={SESSION_STATUS_TONE[sess.status]}>
-                    {PENALTY_MODES[sess.mode as PenaltyMode]?.label ??
-                      SESSION_STATUS_LABEL[sess.status]}
+                    {t(PENALTY_MODE_KEY[sess.mode as PenaltyMode] ?? SESSION_STATUS_KEY[sess.status])}
                   </Badge>
                   <span className={s.sessionMeta}>
-                    {sess.player_count} {sess.player_count === 1 ? 'jogador' : 'jogadores'} ·{' '}
-                    {formatDateShort(sess.created_at)}
+                    {sess.player_count}{' '}
+                    {t(
+                      sess.player_count === 1
+                        ? 'challenges.sessions.player'
+                        : 'challenges.sessions.players',
+                    )}{' '}
+                    · {formatDateShort(sess.created_at)}
                   </span>
                 </button>
                 {sess.created_by === user?.id && (
-                  <IconButton label="Apagar sessão" onClick={() => remove(sess.id)}>
+                  <IconButton label={t('challenges.session.delete')} onClick={() => remove(sess.id)}>
                     <CloseIcon />
                   </IconButton>
                 )}
@@ -315,6 +357,7 @@ function PenaltyEntry({ challenge }: { challenge: Challenge }) {
 }
 
 function AddAttemptForm({ challenge }: { challenge: Challenge }) {
+  const { t } = useT();
   const { user } = useAuth();
   const groupId = useActiveGroupId();
   const { data: profiles } = useGroupMembers(groupId);
@@ -330,15 +373,15 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
   async function submit() {
     setError(null);
     if (!playerId) {
-      setError('Escolhe o jogador.');
+      setError(t('challenges.form.error.player'));
       return;
     }
     if (isVersus && !opponentId) {
-      setError('Escolhe o adversário.');
+      setError(t('challenges.form.error.opponent'));
       return;
     }
     if (isVersus && opponentId === playerId) {
-      setError('O adversário tem de ser diferente.');
+      setError(t('challenges.form.error.opponentSame'));
       return;
     }
     try {
@@ -351,22 +394,22 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
       });
       setScore('');
     } catch {
-      setError('Não foi possível registar a tentativa.');
+      setError(t('challenges.form.error.submit'));
     }
   }
 
   return (
     <Card>
-      <h2 className={s.cardTitle}>Registar tentativa</h2>
+      <h2 className={s.cardTitle}>{t('challenges.form.title')}</h2>
       {error && (
         <div className={s.slotTop}>
           <Alert kind="error">{error}</Alert>
         </div>
       )}
       <div className={s.form}>
-        <Field label="Jogador" htmlFor="ch-player">
+        <Field label={t('challenges.form.playerLabel')} htmlFor="ch-player">
           <Select id="ch-player" value={playerId} onChange={(e) => setPlayerId(e.target.value)}>
-            <option value="">Escolher…</option>
+            <option value="">{t('challenges.form.choose')}</option>
             {profiles?.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -377,13 +420,13 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
 
         {isVersus ? (
           <>
-            <Field label="Adversário" htmlFor="ch-opp">
+            <Field label={t('challenges.form.opponentLabel')} htmlFor="ch-opp">
               <Select
                 id="ch-opp"
                 value={opponentId}
                 onChange={(e) => setOpponentId(e.target.value)}
               >
-                <option value="">Escolher…</option>
+                <option value="">{t('challenges.form.choose')}</option>
                 {profiles
                   ?.filter((p) => p.id !== playerId)
                   .map((p) => (
@@ -393,20 +436,24 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
                   ))}
               </Select>
             </Field>
-            <Field label="Resultado" htmlFor="ch-res">
+            <Field label={t('challenges.form.resultLabel')} htmlFor="ch-res">
               <Select
                 id="ch-res"
                 value={result}
                 onChange={(e) => setResult(e.target.value as ChallengeResult)}
               >
-                <option value="win">Vitória</option>
-                <option value="loss">Derrota</option>
-                <option value="draw">Empate</option>
+                <option value="win">{t('challenges.result.win')}</option>
+                <option value="loss">{t('challenges.result.loss')}</option>
+                <option value="draw">{t('challenges.result.draw')}</option>
               </Select>
             </Field>
           </>
         ) : (
-          <Field label="Pontuação" htmlFor="ch-score" hint="Ex.: nº de acertos/golos">
+          <Field
+            label={t('challenges.form.scoreLabel')}
+            htmlFor="ch-score"
+            hint={t('challenges.form.scoreHint')}
+          >
             <Input
               id="ch-score"
               type="number"
@@ -418,7 +465,7 @@ function AddAttemptForm({ challenge }: { challenge: Challenge }) {
 
         <div className={s.actions}>
           <Button onClick={submit} loading={addAttempt.isPending}>
-            Registar
+            {t('challenges.form.submit')}
           </Button>
         </div>
       </div>

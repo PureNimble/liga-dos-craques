@@ -99,6 +99,22 @@ export function useUpdateProfile() {
   });
 }
 
+export function useUpdateUsername() {
+  const { user } = useAuth();
+  const userId = user?.id as string;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (username: string) => {
+      const { error } = await supabase.from('profile').update({ username }).eq('id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile', userId] });
+    },
+  });
+}
+
 export interface ProfileSummary {
   id: string;
   name: string;

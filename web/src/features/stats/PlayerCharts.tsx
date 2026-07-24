@@ -1,5 +1,6 @@
 import { Card, LockOverlay } from '@/shared/components/ui';
 import { BallIcon, BootIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import {
   useRatingTrend,
   useContributions,
@@ -29,10 +30,10 @@ const MOCK_CONTRIB: GameContribution[] = [
   { gameId: '5', label: 'J5', goals: 3, assists: 0 },
 ];
 const MOCK_XP = [
-  { label: 'Jogos', value: 120 },
-  { label: 'Golos', value: 80 },
-  { label: 'Assistências', value: 50 },
-  { label: 'Conquistas', value: 30 },
+  { key: 'stats.games', value: 120 },
+  { key: 'stats.goals', value: 80 },
+  { key: 'stats.assists', value: 50 },
+  { key: 'achievements.title', value: 30 },
 ];
 const MOCK_RECENT: RecentGame[] = [
   {
@@ -97,6 +98,7 @@ export function PlayerCharts({
   games: number;
   own?: boolean;
 }) {
+  const { t } = useT();
   const { data: trend } = useRatingTrend(playerId);
   const { data: contrib } = useContributions(playerId);
   const { data: xp } = useXpBreakdown(playerId);
@@ -107,30 +109,37 @@ export function PlayerCharts({
   // sob uma única sobreposição bem desfocada.
   if (games < MIN_GAMES_FOR_STATS) {
     return (
-      <LockOverlay locked className={s.lockedWrap} message={statsLockMessage(own)}>
+      <LockOverlay locked className={s.lockedWrap} message={statsLockMessage(t, own)}>
         <div className={s.lockedGrid}>
           <RecentMatchesCard data={MOCK_RECENT} />
           <Card className={s.chartCard}>
-            <ChartHead title="Forma" hint={`Últimos ${MOCK_TREND.length} jogos`} />
+            <ChartHead
+              title={t('stats.chart.form')}
+              hint={t('stats.chart.lastGames', { count: MOCK_TREND.length })}
+            />
             <div className={s.trendRow}>
               <RatingTrend points={MOCK_TREND} />
             </div>
           </Card>
           <Card>
-            <ChartHead title="Golos e assistências" hint="Por jogo" />
-            <ContributionBars data={MOCK_CONTRIB} />
+            <ChartHead
+              title={t('stats.chart.goalsAssists')}
+              hint={t('stats.chart.perGame')}
+            />
+            <ContributionBars data={MOCK_CONTRIB} t={t} />
             <div className={s.legend}>
               <span className={s.legendItem}>
-                <BallIcon width={14} height={14} className={s.iconGoal} /> Golos
+                <BallIcon width={14} height={14} className={s.iconGoal} /> {t('stats.goals')}
               </span>
               <span className={s.legendItem}>
-                <BootIcon width={14} height={14} className={s.iconAssist} /> Assist.
+                <BootIcon width={14} height={14} className={s.iconAssist} />{' '}
+                {t('stats.assistsShort')}
               </span>
             </div>
           </Card>
           <Card className={s.chartCard}>
-            <ChartHead title="XP por fonte" hint="De onde vem o XP" />
-            <HBars items={MOCK_XP} suffix=" XP" />
+            <ChartHead title={t('stats.chart.xpBySource')} hint={t('stats.chart.xpSourceHint')} />
+            <HBars items={MOCK_XP.map((x) => ({ label: t(x.key), value: x.value }))} suffix=" XP" />
           </Card>
         </div>
       </LockOverlay>
@@ -141,7 +150,10 @@ export function PlayerCharts({
     <>
       {trend && trend.length >= 2 && (
         <Card className={s.chartCard}>
-          <ChartHead title="Forma" hint={`Últimos ${trend.length} jogos`} />
+          <ChartHead
+            title={t('stats.chart.form')}
+            hint={t('stats.chart.lastGames', { count: trend.length })}
+          />
           <div className={s.trendRow}>
             <RatingTrend points={trend} />
           </div>
@@ -150,14 +162,15 @@ export function PlayerCharts({
 
       {hasContrib && (
         <Card>
-          <ChartHead title="Golos e assistências" hint="Por jogo" />
-          <ContributionBars data={contrib ?? []} />
+          <ChartHead title={t('stats.chart.goalsAssists')} hint={t('stats.chart.perGame')} />
+          <ContributionBars data={contrib ?? []} t={t} />
           <div className={s.legend}>
             <span className={s.legendItem}>
-              <BallIcon width={14} height={14} className={s.iconGoal} /> Golos
+              <BallIcon width={14} height={14} className={s.iconGoal} /> {t('stats.goals')}
             </span>
             <span className={s.legendItem}>
-              <BootIcon width={14} height={14} className={s.iconAssist} /> Assist.
+              <BootIcon width={14} height={14} className={s.iconAssist} />{' '}
+              {t('stats.assistsShort')}
             </span>
           </div>
         </Card>
@@ -165,7 +178,7 @@ export function PlayerCharts({
 
       {xp && xp.length > 0 && (
         <Card className={s.chartCard}>
-          <ChartHead title="XP por fonte" hint="De onde vem o XP" />
+          <ChartHead title={t('stats.chart.xpBySource')} hint={t('stats.chart.xpSourceHint')} />
           <HBars items={xp.map((x) => ({ label: x.label, value: x.points }))} suffix=" XP" />
         </Card>
       )}
@@ -224,7 +237,13 @@ function run(v: number, slots: number) {
   return { plain: slots - 1, count: v - (slots - 1) };
 }
 
-function ContributionBars({ data }: { data: GameContribution[] }) {
+function ContributionBars({
+  data,
+  t,
+}: {
+  data: GameContribution[];
+  t: (key: string, vars?: Record<string, string | number>) => string;
+}) {
   return (
     <div className={s.bars}>
       {data.map((d) => {
@@ -236,7 +255,7 @@ function ContributionBars({ data }: { data: GameContribution[] }) {
             <div
               className={s.stack}
               style={{ height: STACK_BOX }}
-              title={`${d.goals} golo${d.goals === 1 ? '' : 's'} · ${d.assists} assist.`}
+              title={t('stats.chart.tooltip', { goals: d.goals, assists: d.assists })}
             >
               {Array.from({ length: g.plain }).map((_, i) => (
                 <BallIcon key={`g${i}`} width={ICON} height={ICON} className={s.iconGoal} />

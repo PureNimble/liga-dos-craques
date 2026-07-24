@@ -1,5 +1,6 @@
 import { CalendarIcon, PinIcon } from '@/shared/components/ui/icons';
 import { formatGameDateTime } from '@/shared/lib/datetime';
+import { useT } from '@/shared/i18n/useT';
 import { StatusBadge } from './StatusBadge';
 import type { MatchClock } from './useMatchClock';
 import type { GameWithFormat } from './gameHooks';
@@ -10,13 +11,14 @@ interface MatchHeaderProps {
   clock: MatchClock;
 }
 
-/** Nome curto e "crest" de cada equipa (A verde, B azul). */
+/** "Crest" de cada equipa (A verde, B azul) — o nome vem de `teams.team`. */
 const TEAMS = [
-  { key: 'A' as const, name: 'Equipa A', team: s.teamA, crest: s.crestA },
-  { key: 'B' as const, name: 'Equipa B', team: s.teamB, crest: s.crestB },
+  { key: 'A' as const, team: s.teamA, crest: s.crestA },
+  { key: 'B' as const, team: s.teamB, crest: s.crestB },
 ];
 
 export function MatchHeader({ game, clock }: MatchHeaderProps) {
+  const { t } = useT();
   const isLive = game.status === 'in_progress';
   const hasScore = game.team_a_score !== null || game.team_b_score !== null;
   const showScore = hasScore || isLive;
@@ -32,7 +34,7 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
         {isLive ? (
           <span className={s.live}>
             <span className={s.liveDot} />
-            Ao vivo
+            {t('games.detail.live')}
           </span>
         ) : (
           <StatusBadge status={game.status} />
@@ -43,10 +45,10 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
       {/* Placar */}
       {showScore ? (
         <div className={s.scoreboard}>
-          {TEAMS.map((t) => (
-            <div key={t.key} className={`${s.team} ${t.team}`}>
-              <span className={`${s.crest} ${t.crest}`}>{t.key}</span>
-              <span className={s.teamName}>{t.name}</span>
+          {TEAMS.map((team) => (
+            <div key={team.key} className={`${s.team} ${team.team}`}>
+              <span className={`${s.crest} ${team.crest}`}>{team.key}</span>
+              <span className={s.teamName}>{t('teams.team', { team: team.key })}</span>
             </div>
           ))}
           <div className={s.score}>

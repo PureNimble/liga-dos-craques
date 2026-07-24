@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
+import { I18nProvider } from '@/shared/i18n/I18nProvider';
+import { i18nRegistry } from '@/app/i18nRegistry';
 import { HomePage } from './HomePage';
 
 // Isola a Home das suas dependências de dados/rede.
@@ -43,7 +45,11 @@ describe('HomePage', () => {
       },
     ]);
 
-    render(<RouterProvider router={router} />);
+    render(
+      <I18nProvider dictionary={i18nRegistry}>
+        <RouterProvider router={router} />
+      </I18nProvider>,
+    );
     expect(screen.getByRole('heading', { name: /vasco/i })).toBeInTheDocument();
   });
 });

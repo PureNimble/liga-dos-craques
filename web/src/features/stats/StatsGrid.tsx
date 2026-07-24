@@ -1,3 +1,4 @@
+import { useT } from '@/shared/i18n/useT';
 import type { PlayerStats } from './statsHooks';
 import s from './StatsGrid.module.css';
 
@@ -18,16 +19,17 @@ function StatTile({ label, value, accent }: StatTileProps) {
 
 /** Grelha de estatísticas individuais. `compact` mostra só o essencial. */
 export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; compact?: boolean }) {
+  const { t } = useT();
   const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
 
   if (compact) {
     return (
       <div className={s.compact}>
         <div className={s.grid4}>
-          <StatTile label="Jogos" value={stats.games} />
-          <StatTile label="Golos" value={stats.goals} accent />
-          <StatTile label="Assist." value={stats.assists} />
-          <StatTile label="Vitórias" value={stats.wins} />
+          <StatTile label={t('stats.games')} value={stats.games} />
+          <StatTile label={t('stats.goals')} value={stats.goals} accent />
+          <StatTile label={t('stats.assistsShort')} value={stats.assists} />
+          <StatTile label={t('stats.wins')} value={stats.wins} />
         </div>
       </div>
     );
@@ -45,12 +47,12 @@ export function StatsGrid({ stats, compact = false }: { stats: PlayerStats; comp
 
   // Jogos e nota média já vivem no cabeçalho — aqui só o que não se repete.
   const tiles: StatTileProps[] = [
-    { label: '% Vitórias', value: `${winRate}%`, accent: true },
-    { label: 'Golos', value: stats.goals, accent: true },
-    { label: 'Assistências', value: stats.assists },
-    { label: 'Defesas', value: stats.saves },
-    { label: 'MVPs', value: stats.mvps, accent: true },
-    { label: 'Flops', value: stats.flops },
+    { label: t('stats.winRate'), value: `${winRate}%`, accent: true },
+    { label: t('stats.goals'), value: stats.goals, accent: true },
+    { label: t('stats.assists'), value: stats.assists },
+    { label: t('stats.saves'), value: stats.saves },
+    { label: t('stats.mvps'), value: stats.mvps, accent: true },
+    { label: t('stats.flops'), value: stats.flops },
   ];
 
   return (

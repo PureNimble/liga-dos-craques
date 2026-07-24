@@ -8,6 +8,7 @@ import { useUnreadNotificationCount } from '@/features/notifications/notificatio
 import { useActiveGroup } from '@/features/groups/useActiveGroup';
 import { AddGroupModal } from '@/features/groups/AddGroupModal';
 import { GroupSwitcherModal } from '@/features/groups/GroupSwitcherModal';
+import { useT } from '@/shared/i18n/useT';
 import { navItems, adminNavItem, notificationsNavItem, settingsNavItem } from './navItems';
 import s from './NavDrawer.module.css';
 
@@ -21,6 +22,7 @@ interface Props {
 
 /** Navegação lateral (telemóvel): gaveta que desliza da direita, aberta pelo menu. */
 export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props) {
+  const { t } = useT();
   const items = profile.role === 'admin' ? [...navItems, adminNavItem] : navItems;
   const { data: unread = 0 } = useUnreadNotificationCount(profile.id);
   const { groupId, myGroups, switchGroup } = useActiveGroup();
@@ -44,7 +46,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
   if (!open) return null;
 
   return createPortal(
-    <div className={s.overlay} role="dialog" aria-modal="true" aria-label="Navegação">
+    <div className={s.overlay} role="dialog" aria-modal="true" aria-label={t('navDrawer.ariaLabel')}>
       <div className={s.backdrop} onClick={onClose} />
 
       <div className={s.panel}>
@@ -53,7 +55,12 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
             <Avatar name={profile.name} src={profile.photo_url} size="sm" />
             <span className={s.name}>{profile.name}</span>
           </NavLink>
-          <button type="button" onClick={onClose} aria-label="Fechar" className={s.close}>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t('navDrawer.close')}
+            className={s.close}
+          >
             <CloseIcon width={20} height={20} />
           </button>
         </div>
@@ -61,7 +68,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
         {/* No tablet/desktop a troca de grupo já vive na coluna (GroupRail);
             aqui fica só para o telemóvel, que não tem espaço para a coluna. */}
         <div className={s.groupsSection}>
-          <h3 className={s.groupsTitle}>Grupos</h3>
+          <h3 className={s.groupsTitle}>{t('navDrawer.groups')}</h3>
           <ul className={s.groupList}>
             {myGroups.map((g) => {
               const active = g.group_id === groupId;
@@ -83,7 +90,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
                   <button
                     type="button"
                     className={s.groupManage}
-                    aria-label={`Gerir ${g.name}`}
+                    aria-label={t('navDrawer.manageGroup', { name: g.name })}
                     onClick={() => setManageGroupId(g.group_id)}
                   >
                     <MoreIcon width={18} height={18} />
@@ -93,7 +100,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
             })}
           </ul>
           <button type="button" className={s.addGroupLink} onClick={() => setAddGroupOpen(true)}>
-            + Adicionar grupo
+            {t('navDrawer.addGroup')}
           </button>
         </div>
 
@@ -109,7 +116,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
               {({ isActive }) => (
                 <>
                   <item.icon width={20} height={20} strokeWidth={isActive ? 2.1 : 1.7} />
-                  {item.label}
+                  {t(item.label)}
                 </>
               )}
             </NavLink>
@@ -122,7 +129,7 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
           className={({ isActive }) => (isActive ? `${s.link} ${s.linkActive}` : s.link)}
         >
           <notificationsNavItem.icon width={20} height={20} />
-          {notificationsNavItem.label}
+          {t(notificationsNavItem.label)}
           {unread > 0 && <span className={s.count}>{unread > 99 ? '99+' : unread}</span>}
         </NavLink>
         <NavLink
@@ -131,15 +138,15 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
           className={({ isActive }) => (isActive ? `${s.link} ${s.linkActive}` : s.link)}
         >
           <settingsNavItem.icon width={20} height={20} />
-          {settingsNavItem.label}
+          {t(settingsNavItem.label)}
         </NavLink>
         <button type="button" className={s.link} onClick={onReport}>
           <AlertIcon width={20} height={20} />
-          Reportar problema
+          {t('navDrawer.reportProblem')}
         </button>
         <button type="button" className={s.signOut} onClick={onSignOut}>
           <LogoutIcon width={20} height={20} />
-          Terminar sessão
+          {t('navDrawer.signOut')}
         </button>
       </div>
 

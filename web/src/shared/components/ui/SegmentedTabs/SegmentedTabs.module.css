@@ -6,8 +6,8 @@
   align-self: stretch;
   gap: var(--space-xs);
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   padding: var(--space-xs);
 }
 .tab {
@@ -15,6 +15,9 @@
      mais uma fatia igual do resto, e a junta caía ao lado do meio — "Anteriores"
      é mais comprida do que "Próximos". */
   flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-md);
   font-size: var(--font-size-sm);
@@ -25,6 +28,25 @@
   transition:
     color var(--transition),
     background-color var(--transition);
+}
+/* Iguala o tamanho do `Button` md (2.75rem × 13rem, ver .actionButton em
+   Definições) — usar quando a barra fica ao lado de botões normais, não numa
+   faixa de navegação por abas. Sem padding: a aba ativa preenche a moldura
+   toda (só a borda de 1px de folga), para ficar do mesmo peso visual que um
+   botão em vez de uma pastilha pequena dentro de uma caixa maior. `.tab.tabMd`
+   (duas classes) tem mais especificidade do que a media query de baixo, que
+   só é pensada para o `sm` de barra de navegação — sem isso, as abas
+   perdiam o `flex: 1 1 0` no desktop e já não enchiam os 13rem por igual. */
+.tabsMd {
+  height: 2.75rem;
+  width: 13rem;
+  padding: 0;
+}
+.tabMd {
+  padding: var(--space-sm) var(--space-lg);
+}
+.tab.tabMd {
+  flex: 1 1 0;
 }
 
 @media (min-width: 640px) {

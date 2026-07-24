@@ -4,7 +4,12 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-750);
   background-image: linear-gradient(to bottom, var(--gray-900), var(--gray-850), var(--gray-900));
-  box-shadow: var(--shadow-card);
+  /* Fixo (não `var(--shadow-card)`) — janela do spinner é um elemento de marca
+     sempre escuro, igual nos dois temas; o token de sombra achata no tema
+     claro, o que esvaziaria a profundidade aqui. */
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.05), 0 1px 1px 0 rgb(0 0 0 / 0.2),
+    0 10px 30px -18px rgb(0 0 0 / 0.55);
 }
 
 .reel {
@@ -25,11 +30,11 @@
 .cardScorer {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--text-color);
+  color: var(--gray-100); /* fixo — janela do carrossel sempre escura, não segue o tema */
 }
 .cardTitle {
   font-size: var(--font-size-xs);
-  color: var(--text-subtle);
+  color: var(--gray-400); /* fixo — janela do carrossel sempre escura, não segue o tema */
 }
 
 /* Moldura central fixa: a carta que aterra aqui fica "selecionada". Altura = CARD_H. */

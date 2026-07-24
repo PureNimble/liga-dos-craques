@@ -1,8 +1,9 @@
 .sidebar {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: var(--space-lg);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-card);
   padding: var(--space-lg) var(--space-md);
@@ -28,7 +29,7 @@
 .brandText {
   font-weight: var(--font-weight-black);
   letter-spacing: var(--tracking-tight);
-  color: var(--white);
+  color: var(--text-color);
 }
 
 .nav {
@@ -62,7 +63,7 @@
 }
 .link:hover {
   background-color: var(--surface-ghost-hover);
-  color: var(--white);
+  color: var(--text-color);
 }
 .linkActive,
 .linkActive:hover {
@@ -80,14 +81,14 @@
   height: 0.4rem;
   width: 0.4rem;
   border-radius: var(--radius-full);
-  background-color: var(--gray-700);
+  background-color: var(--surface-chip-strong);
 }
 
 .backToApp {
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
   padding: var(--space-md) var(--space-sm) 0;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -98,19 +99,18 @@
   color: var(--text-color);
 }
 
-/* Telemóvel: a barra passa a topo, horizontal e deslizável. */
+/* Só existe em telemóvel — ver media query abaixo. */
+.navDropdown {
+  display: none;
+}
+
+/* Telemóvel: a barra passa a topo; a lista vertical vira um dropdown de secção. */
 @media (max-width: 899px) {
   .sidebar {
     flex-direction: row;
     align-items: center;
     gap: var(--space-md);
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     padding: var(--space-sm) var(--space-md);
-  }
-  .sidebar::-webkit-scrollbar {
-    display: none;
   }
   .brand {
     flex-shrink: 0;
@@ -119,22 +119,77 @@
     display: none;
   }
   .nav {
-    flex-direction: row;
-    align-items: center;
-  }
-  .group {
     display: none;
   }
-  .link span:not(.soonDot) {
+
+  .navDropdown {
+    position: relative;
+    display: block;
+    flex: 1;
+    min-width: 0;
+  }
+  .navTrigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: var(--space-sm);
+    border: 0;
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    background-color: var(--accent-surface);
+    color: var(--accent-strong);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    appearance: none;
+  }
+  .navTrigger span {
+    flex: 1;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .chevron,
+  .chevronOpen {
+    flex-shrink: 0;
+    transition: transform var(--transition);
+  }
+  .chevronOpen {
+    transform: rotate(180deg);
+  }
+
+  .navMenu {
+    position: absolute;
+    top: calc(100% + var(--space-xs));
+    left: 0;
+    z-index: 20;
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    max-width: min(20rem, 90vw);
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: var(--space-xs);
+    list-style: none;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-tooltip);
+    box-shadow: var(--shadow-elevated);
+  }
+  .navMenu .link span {
+    white-space: nowrap;
+  }
+
   .soon {
     display: none;
   }
   .backToApp {
     flex-shrink: 0;
     border-top: 0;
-    border-left: 1px solid var(--gray-750);
+    border-left: 1px solid var(--border-subtle);
     padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
   }
 }

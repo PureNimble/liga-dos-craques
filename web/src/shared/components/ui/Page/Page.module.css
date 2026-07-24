@@ -3,12 +3,17 @@
   flex-direction: column;
   gap: var(--space-lg);
   padding-block: var(--space-lg);
+  /* Sem efeito nas páginas normais (o pai não é flex); nas vistas de altura
+     fixa (`AppLayout` com `containerFill`) deixa a página preencher o `main`
+     em vez de crescer com o conteúdo. */
+  min-height: 0;
+  flex: 1;
 }
 .title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tightest);
-  color: var(--white);
+  color: var(--text-color);
 }
 @media (min-width: 640px) {
   .page {

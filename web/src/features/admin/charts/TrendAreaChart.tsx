@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { AXIS_TICK, GRID_STROKE, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
+import { AXIS_TICK, GRID_STROKE, LEGEND_STYLE, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
 import emptyStyles from './chartEmpty.module.css';
 
 export interface TrendSeries {
@@ -62,9 +62,7 @@ export function TrendAreaChart({
           labelStyle={TOOLTIP_LABEL_STYLE}
           cursor={{ stroke: GRID_STROKE }}
         />
-        {legend && (
-          <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} iconType="plainline" />
-        )}
+        {legend && <Legend wrapperStyle={LEGEND_STYLE} iconType="plainline" />}
         {series.map((se) => (
           <Area
             key={se.key}

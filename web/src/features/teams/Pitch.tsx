@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import type { Team } from '@/types/database';
 import type { GamePlayerWithProfile } from '@/features/games/gameHooks';
+import { useT } from '@/shared/i18n/useT';
 import { positionCode, type PitchPos } from './pitchLayout';
 import s from './Pitch.module.css';
 
@@ -28,7 +29,8 @@ interface PitchProps {
 // com o campo via container queries (`cqw`) — ver Pitch.module.css.
 const CREST: Record<Team, string> = { A: s.crestA, B: s.crestB };
 
-const firstName = (name?: string | null) => (name ?? 'Jogador').trim().split(/\s+/)[0];
+const firstName = (name: string | null | undefined, fallback: string) =>
+  (name ?? fallback).trim().split(/\s+/)[0];
 
 interface DragState {
   id: string;
@@ -50,10 +52,15 @@ export function Pitch({
   onDrop,
   onSubstitute,
 }: PitchProps) {
+  const { t } = useT();
   const fieldRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
   // Suplente selecionado (à espera de escolher o titular que sai).
   const [subIn, setSubIn] = useState<string | null>(null);
+
+  // Campo mais pequeno com poucos titulares — evita relva vazia a mais com 1-2
+  // jogadores; a partir de 8 usa a largura máxima (28rem), como antes.
+  const maxWidthRem = Math.min(28, Math.max(14, 14 + (players.length - 1) * 2));
 
   /** Posição do token: a que o lugar declara; fora dos lugares, adivinha-se. */
   const codeAt = (x: number, y: number) =>
@@ -115,7 +122,7 @@ export function Pitch({
     });
 
   return (
-    <div className={s.wrap}>
+    <div className={s.wrap} style={{ maxWidth: `${maxWidthRem}rem` }}>
       <div ref={fieldRef} className={s.field}>
         {/* Marcações (campo inteiro, traço fino como na escolha de posições) */}
         <svg className={s.lines} viewBox="0 0 100 133.33" aria-hidden focusable="false">
@@ -180,7 +187,7 @@ export function Pitch({
               <span className={`${s.crest} ${CREST[team]} ${subTarget ? s.crestSub : ''}`}>
                 {codeAt(at.x, at.y)}
               </span>
-              <span className={s.label}>{firstName(p.profile?.name)}</span>
+              <span className={s.label}>{firstName(p.profile?.name, t('teams.fallbackName'))}</span>
             </div>
           );
         })}
@@ -191,15 +198,15 @@ export function Pitch({
         <div className={s.bench}>
           {subIn && (
             <p className={s.subHint}>
-              Escolhe o titular que sai (toca num jogador em campo) ·{' '}
+              {t('teams.subHint')} ·{' '}
               <button type="button" className={s.subCancel} onClick={() => setSubIn(null)}>
-                cancelar
+                {t('teams.subCancel')}
               </button>
             </p>
           )}
           <div className={s.benchRow}>
             <span className={`${s.benchDot} ${team === 'A' ? s.benchDotA : s.benchDotB}`} />
-            <span className={s.benchLabel}>Banco</span>
+            <span className={s.benchLabel}>{t('teams.bench')}</span>
             <div className={s.benchList}>
               {bench.map((b) => {
                 const selected = subIn === b.player_id;
@@ -211,7 +218,7 @@ export function Pitch({
                     onClick={() => setSubIn(selected ? null : b.player_id)}
                     className={`${s.benchBtn} ${selected ? s.benchBtnActive : ''}`}
                   >
-                    {firstName(b.profile?.name)}
+                    {firstName(b.profile?.name, t('teams.fallbackName'))}
                   </button>
                 );
               })}

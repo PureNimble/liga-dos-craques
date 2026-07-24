@@ -3,7 +3,7 @@
    repartir o espaço, por isso o ecrã nunca faz scroll. */
 .shell {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: var(--space-md);
   flex: 1;

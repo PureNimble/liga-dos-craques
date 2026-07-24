@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AlertIcon, BallIcon, ShieldIcon, UserIcon, UsersIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import { useHealthCheck } from '@/features/health/healthHooks';
 import { useOnlineCount } from '@/features/health/useOnlineCount';
 import { useOpenBugReportCount } from '@/features/feedback/feedbackHooks';
@@ -17,6 +18,7 @@ import { SERIES } from './charts/chartTheme';
 import s from './AdminDashboard.module.css';
 
 export function AdminDashboard() {
+  const { t } = useT();
   const { data: metrics, isLoading } = useAdminMetrics();
   const { data: openReports } = useOpenBugReportCount();
   const { data: trends } = useAdminTrends(12);
@@ -30,7 +32,11 @@ export function AdminDashboard() {
 
   const serverOk = !health.isError && health.data?.status === 'ok';
   const serverState = health.isLoading ? 'loading' : serverOk ? 'ok' : 'error';
-  const serverLabel = { loading: 'A ligar…', ok: 'Online', error: 'Offline' }[serverState];
+  const serverLabel = {
+    loading: t('admin.dashboard.server.connecting'),
+    ok: t('admin.dashboard.server.online'),
+    error: t('admin.dashboard.server.offline'),
+  }[serverState];
   const serverClass = serverState === 'error' ? s.down : s.teal;
 
   const trendData = (trends?.players ?? []).map((p, i) => ({
@@ -48,64 +54,69 @@ export function AdminDashboard() {
           <span className={s.heroValue}>{online}</span>
           <span className={s.heroLabel}>
             <span className={s.liveDot} />
-            Utilizadores online
+            {t('admin.dashboard.onlineUsers')}
           </span>
         </div>
         <div className={`${s.heroTile} ${serverClass}`} role="status">
           <ShieldIcon width={22} height={22} className={s.heroIcon} />
           <span className={`${s.heroValue} ${s.heroText}`}>{serverLabel}</span>
-          <span className={s.heroLabel}>Servidor</span>
+          <span className={s.heroLabel}>{t('admin.dashboard.server')}</span>
         </div>
         <div className={s.metric}>
           <span className={s.metricIcon}>
             <UserIcon width={18} height={18} />
           </span>
           <span className={s.metricValue}>{val(metrics?.players)}</span>
-          <span className={s.metricLabel}>Jogadores</span>
+          <span className={s.metricLabel}>{t('admin.dashboard.metric.players')}</span>
         </div>
         <div className={s.metric}>
           <span className={s.metricIcon}>
             <BallIcon width={18} height={18} />
           </span>
           <span className={s.metricValue}>{val(metrics?.games)}</span>
-          <span className={s.metricLabel}>Jogos</span>
+          <span className={s.metricLabel}>{t('admin.dashboard.metric.games')}</span>
         </div>
         <Link to="reports" className={`${s.metric} ${openReports ? s.metricAlert : ''}`}>
           <span className={s.metricIcon}>
             <AlertIcon width={18} height={18} />
           </span>
           <span className={s.metricValue}>{openReports ?? '—'}</span>
-          <span className={s.metricLabel}>Reportes por resolver</span>
+          <span className={s.metricLabel}>{t('admin.dashboard.metric.openReports')}</span>
         </Link>
       </section>
 
       <section className={s.card}>
         <div className={s.cardHead}>
-          <h2 className={s.cardTitle}>Atividade</h2>
-          <span className={s.cardMeta}>últimos 12 meses</span>
+          <h2 className={s.cardTitle}>{t('admin.dashboard.activity')}</h2>
+          <span className={s.cardMeta}>{t('admin.dashboard.last12Months')}</span>
         </div>
         <TrendAreaChart
           data={trendData}
           series={[
-            { key: 'players', name: 'Novos jogadores', color: SERIES.players },
-            { key: 'games', name: 'Jogos', color: SERIES.games },
-            { key: 'goals', name: 'Golos', color: SERIES.goals },
+            { key: 'players', name: t('admin.dashboard.series.newPlayers'), color: SERIES.players },
+            { key: 'games', name: t('admin.dashboard.series.games'), color: SERIES.games },
+            { key: 'goals', name: t('admin.dashboard.series.goals'), color: SERIES.goals },
           ]}
+          empty={t('admin.dashboard.noData')}
         />
       </section>
 
       <section className={s.chartsRow}>
         <div className={s.card}>
           <div className={s.cardHead}>
-            <h2 className={s.cardTitle}>Jogos por formato</h2>
+            <h2 className={s.cardTitle}>{t('admin.dashboard.gamesByFormat')}</h2>
           </div>
-          <CategoryDonut data={byFormat ?? []} empty="Sem jogos." />
+          <CategoryDonut data={byFormat ?? []} empty={t('admin.dashboard.noGames')} />
         </div>
         <div className={s.card}>
           <div className={s.cardHead}>
-            <h2 className={s.cardTitle}>Jogos por dia da semana</h2>
+            <h2 className={s.cardTitle}>{t('admin.dashboard.gamesByWeekday')}</h2>
           </div>
-          <CategoryBar data={byWeekday ?? []} color={SERIES.games} />
+          <CategoryBar
+            data={byWeekday ?? []}
+            color={SERIES.games}
+            empty={t('admin.dashboard.noData')}
+          />
         </div>
       </section>
     </>

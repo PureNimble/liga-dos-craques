@@ -1,25 +1,12 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-  margin-inline: auto;
-  max-width: 48rem;
-  padding-block: var(--space-lg);
-}
-.head {
+.headerRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
   flex-wrap: wrap;
 }
-.pageTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-black);
-  color: var(--white);
-}
 .subtitle {
-  margin-top: var(--space-2xs);
+  margin-top: var(--space-xs);
   font-size: var(--font-size-sm);
   color: var(--text-subtle);
 }
@@ -29,20 +16,19 @@
   flex-direction: column;
   gap: var(--space-sm);
 }
+/* A linha do grid é o <li>: o link e o cartão têm de a preencher, senão o cartão
+   mantinha a altura do conteúdo e a linha é que crescia. */
 .item {
-  border: 1px solid var(--gray-750);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-card);
-  transition: background-color var(--transition);
-}
-.item:hover {
-  background-color: var(--surface-card-hover);
-}
-/* A linha inteira é o alvo (leva ao jogo quando o aviso é sobre um). */
-.link {
   display: flex;
+}
+.cardLink {
+  display: flex;
+  flex: 1;
+}
+.card {
+  display: flex;
+  flex: 1;
   gap: var(--space-md);
-  padding: var(--space-lg);
 }
 /* Por ler: barra de destaque à esquerda, sem mudar o fundo. */
 .unread {
@@ -55,12 +41,13 @@
 .text {
   display: flex;
   min-width: 0;
+  flex: 1;
   flex-direction: column;
   gap: var(--space-2xs);
 }
 .itemTitle {
   font-weight: var(--font-weight-semibold);
-  color: var(--white);
+  color: var(--text-color);
 }
 .body {
   font-size: var(--font-size-sm);

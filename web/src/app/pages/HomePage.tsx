@@ -10,33 +10,45 @@ import { XpBar } from '@/features/xp/XpBar';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
 import { listMissing, profileCompletion } from '@/features/profile/profileCompletion';
+import { useT } from '@/shared/i18n/useT';
 import s from './HomePage.module.css';
-
-const quickActions = [
-  { to: '/games', label: 'Ver jogos', hint: 'Próximos e resultados', icon: BallIcon },
-  { to: '/rankings', label: 'Rankings', hint: 'Classificações da malta', icon: TrophyIcon },
-];
 
 export function HomePage() {
   const { user } = useAuth();
+  const { t } = useT();
 
   const { profile } = useOutletContext<{ profile: FullProfile }>();
   const { data: stats } = usePlayerStatsSuspense(profile.id);
   const { data: xp } = usePlayerXpSuspense(profile.id);
 
-  const displayName = profile.name || user?.email?.split('@')[0] || 'jogador';
+  const displayName = profile.name || user?.email?.split('@')[0] || t('home.fallbackName');
   const completion = profileCompletion(profile);
   const [editOpen, setEditOpen] = useState(false);
+
+  const quickActions = [
+    {
+      to: '/games',
+      label: t('home.action.games.label'),
+      hint: t('home.action.games.hint'),
+      icon: BallIcon,
+    },
+    {
+      to: '/rankings',
+      label: t('home.action.rankings.label'),
+      hint: t('home.action.rankings.hint'),
+      icon: TrophyIcon,
+    },
+  ];
 
   return (
     <div className={s.page}>
       {/* Saudação */}
       <header className={s.greeting}>
-        <Link to="/profile" aria-label="Ver perfil" className={s.avatarLink}>
+        <Link to="/profile" aria-label={t('navbar.viewProfile')} className={s.avatarLink}>
           <Avatar name={profile.name} src={profile.photo_url} size="lg" />
         </Link>
         <div>
-          <p className={s.welcome}>Bem-vindo de volta</p>
+          <p className={s.welcome}>{t('home.welcome')}</p>
           <h1 className={s.name}>{displayName}</h1>
         </div>
       </header>
@@ -46,9 +58,9 @@ export function HomePage() {
       {stats.games > 0 && (
         <section>
           <div className={s.sectionHead}>
-            <h2 className={s.sectionTitle}>O teu resumo</h2>
+            <h2 className={s.sectionTitle}>{t('home.summaryTitle')}</h2>
             <Link to="/profile" className={s.seeAll}>
-              Ver tudo <ChevronRightIcon width={14} height={14} />
+              {t('home.seeAll')} <ChevronRightIcon width={14} height={14} />
             </Link>
           </div>
           <StatsGrid stats={stats} compact />
@@ -57,17 +69,22 @@ export function HomePage() {
 
       {/* Perfil incompleto */}
       {!completion.isComplete && (
-        <Card className={s.onboard}>
-          <h2 className={s.onboardTitle}>Completa o teu perfil</h2>
+        <Card>
+          <h2 className={s.onboardTitle}>{t('home.onboard.title')}</h2>
           <p className={s.onboardText}>
-            Falta {listMissing(completion.missing)}.{' '}
+            {t('home.onboard.missing', {
+              missing: listMissing(
+                completion.missing.map((key) => t(`home.onboard.field.${key}`)),
+                t('home.onboard.and'),
+              ),
+            })}{' '}
             {/* Só a posição entra no gerador de equipas. */}
             {completion.positionMissing
-              ? 'A posição principal é o que o gerador de equipas usa para te encaixar.'
-              : 'Ajuda a malta a conhecer-te melhor.'}
+              ? t('home.onboard.positionHint')
+              : t('home.onboard.genericHint')}
           </p>
           <button type="button" className={s.cta} onClick={() => setEditOpen(true)}>
-            Completar perfil <ChevronRightIcon width={16} height={16} />
+            {t('home.onboard.cta')} <ChevronRightIcon width={16} height={16} />
           </button>
         </Card>
       )}
@@ -77,7 +94,7 @@ export function HomePage() {
 
       {/* Acessos rápidos */}
       <section className={s.quick}>
-        <h2 className={s.sectionTitle}>Acessos rápidos</h2>
+        <h2 className={s.sectionTitle}>{t('home.quickAccess')}</h2>
         {quickActions.map((a) => (
           <Link key={a.to} to={a.to}>
             <Card interactive className={s.action}>

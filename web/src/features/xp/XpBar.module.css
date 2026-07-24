@@ -1,7 +1,7 @@
 .card {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-faint);
-  background-image: linear-gradient(to bottom right, var(--surface-card), var(--gray-850));
+  background-image: linear-gradient(to bottom right, var(--surface-card), var(--surface-panel));
   box-shadow: var(--shadow-card);
   padding: var(--space-lg);
 }
@@ -41,7 +41,7 @@
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-full);
-  background-color: var(--gray-900);
+  background-color: var(--surface-well);
 }
 .fill {
   height: 100%;

@@ -20,7 +20,7 @@
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tightest);
-  color: var(--white);
+  color: var(--text-color);
 }
 
 .sectionHead {
@@ -48,12 +48,9 @@
   color: var(--accent-soft);
 }
 
-.onboard {
-  background-image: linear-gradient(to bottom right, var(--accent-deep-surface), var(--gray-850));
-}
 .onboardTitle {
   font-weight: var(--font-weight-bold);
-  color: var(--white);
+  color: var(--text-color);
 }
 .onboardText {
   margin-top: var(--space-xs);
@@ -96,7 +93,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   color: var(--accent-strong);
 }
 .actionBody {

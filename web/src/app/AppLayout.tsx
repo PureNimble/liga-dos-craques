@@ -36,9 +36,11 @@ function AppShellContent({ profile }: { profile: FullProfile }) {
   const { groupId } = useActiveGroup();
   const { data: consent } = useAnalyticsConsent(profile.id);
   usePageTracking(profile.id, consent === 'granted');
-  // O admin é uma vista de altura fixa (barra lateral imóvel + conteúdo com
-  // scroll próprio): o container preenche o `main` em vez de crescer com o conteúdo.
-  const isAdmin = useLocation().pathname.startsWith('/admin');
+  // Vistas de altura fixa (admin, mapa de campos): barra lateral/painel imóvel
+  // + conteúdo com scroll próprio — o container preenche o `main` em vez de
+  // crescer com o conteúdo.
+  const pathname = useLocation().pathname;
+  const isFixedHeight = pathname.startsWith('/admin') || pathname.startsWith('/places');
 
   return (
     <OnlinePresenceProvider userId={profile.id}>
@@ -49,8 +51,8 @@ function AppShellContent({ profile }: { profile: FullProfile }) {
         <div className={s.column}>
           <Navbar profile={profile} />
 
-          <main className={`${s.main}${isAdmin ? ` ${s.mainFill}` : ''}`}>
-            <div className={`${s.container}${isAdmin ? ` ${s.containerFill}` : ''}`}>
+          <main className={`${s.main}${isFixedHeight ? ` ${s.mainFill}` : ''}`}>
+            <div className={`${s.container}${isFixedHeight ? ` ${s.containerFill}` : ''}`}>
               <Suspense fallback={<Loading />}>
                 {/* key={groupId}: ao trocar de grupo, remonta a página a partir do zero
                     (evita estado local "à mistura" de dados do grupo anterior). */}

@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   border-radius: var(--radius-lg);
-  border: 1px dashed var(--gray-700);
+  border: 1px dashed var(--border-default);
   background-color: var(--surface-muted);
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
@@ -16,7 +16,7 @@
   justify-content: center;
   margin-bottom: var(--space-md);
   border-radius: var(--radius-lg);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   color: var(--text-subtle);
 }
 .title {

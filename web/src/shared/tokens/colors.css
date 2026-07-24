@@ -1,38 +1,56 @@
-/* Cor — paleta base (primitivos, por família + tom) + camada semântica (por uso). */
+/* Cor — paleta base (primitivos, por família + tom) + camada semântica (por uso).
+   Os primitivos são os mesmos nos dois temas; é a camada semântica que muda
+   de valor consoante o tema (ver bloco [data-theme='light'] no fim). */
 :root {
-  /* Primitivos: neutros (escuro → claro) */
-  --gray-950: #08090c;
-  --gray-900: #0c0e12;
-  --gray-850: #131519;
-  --gray-800: #191c22;
-  --gray-750: #23262e;
-  --gray-700: #31353f;
-  --gray-500: #64748b;
-  --gray-400: #94a3b8;
-  --gray-300: #cbd5e1;
-  --gray-200: #e2e8f0;
+  /* Primitivos: neutros (claro → escuro) */
+  --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-700: #31353f;
+  --gray-750: #23262e;
+  --gray-800: #191c22;
+  --gray-850: #131519;
+  --gray-900: #0c0e12;
+  --gray-950: #08090c;
   --orange-300: #fdba74;
   --orange-400: #fb923c;
   --orange-600: #ea580c;
-  /* Primitivos: verde (marca) e vermelho (perigo) */
+  /* Primitivos: verde (marca) e vermelho (perigo) — 300/400/500 para uso em
+     fundo/decoração escura, 600/700 para texto legível sobre fundo claro. */
   --green-300: #6ee7b7;
   --green-400: #34d399;
   --green-500: #10b981;
+  --green-700: #047857;
   --red-300: #fca5a5;
   --red-400: #f87171;
   --red-500: #ef4444;
-  /* Primitivos: tons de etiqueta (estado/categoria) */
+  --red-600: #dc2626;
+  /* Primitivos: tons de etiqueta (estado/categoria) — 300 para texto em fundo
+     escuro, 600/700 para texto em fundo claro (contraste AA em ambos). */
   --sky-300: #7dd3fc;
   --sky-500: #0ea5e9;
+  --sky-700: #0369a1;
   --indigo-300: #a5b4fc;
+  --indigo-600: #4f46e5;
   --amber-300: #fcd34d;
   --amber-400: #fbbf24;
   --amber-500: #f59e0b;
+  --amber-700: #b45309;
   --emerald-600: #059669;
   --purple-300: #d8b4fe;
+  --purple-600: #9333ea;
   --white: #ffffff;
+}
 
+/* ==========================================================================
+   Tema escuro — valores por omissão (também o `:root` sem `data-theme`, para
+   quem não decidiu ainda e o sistema não indica preferência).
+   ========================================================================== */
+:root,
+[data-theme='dark'] {
   /* Texto */
   --text-color: var(--gray-100);
   --text-muted: var(--gray-300);
@@ -63,6 +81,17 @@
   --surface-translucent-hover: rgb(255 255 255 / 0.08);
   --surface-ghost-hover: rgb(255 255 255 / 0.06);
 
+  /* Superfícies de elevação neutra (painéis, chips, poços) — introduzidas para
+     tirar cores hard-coded (`var(--gray-7/8/9xx)`) dos módulos que só faziam
+     sentido no escuro; cada `*.module.css` deve referenciar estas, nunca os
+     primitivos `--gray-*` diretamente, para o tema claro poder inverter. */
+  --surface-well: var(--gray-900); /* poço recuado (rail de grupos, placeholder de vídeo) */
+  --surface-panel: var(--gray-850); /* painel sólido elevado (modal, faixa de abas) */
+  --surface-panel-hover: var(--gray-800);
+  --surface-chip: var(--gray-750); /* chip/pílula/ícone sólido */
+  --surface-chip-strong: var(--gray-700); /* chip em hover/estado ativo */
+  --shimmer-highlight: rgb(255 255 255 / 0.05); /* faixa de brilho do skeleton */
+
   --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
   --accent-surface-faint: rgb(16 185 129 / 0.05);
   --accent-ring: rgb(16 185 129 / 0.25);
@@ -91,6 +120,8 @@
 
   /* Bordas */
   --border-input: var(--gray-700);
+  --border-default: var(--gray-700); /* borda sólida mais forte (avatar, spinner, modal) */
+  --border-subtle: var(--gray-750); /* borda sólida mais fraca (separadores, faixas) */
   --border-faint: rgb(255 255 255 / 0.07);
   --border-faint-hover: rgb(255 255 255 / 0.12);
   --border-light: rgb(255 255 255 / 0.1);
@@ -164,7 +195,8 @@
   --tier-bronze-accent: var(--orange-300);
   --tier-bronze-glow: rgb(251 146 60 / 0.2);
 
-  /* Penáltis — cena de estádio (baliza, bancadas, painéis, relva) */
+  /* Penáltis — cena de estádio (baliza, bancadas, painéis, relva). Ilustração
+     de "noite sob holofotes": mantém-se igual nos dois temas de propósito. */
   --pen-sky-top: #0a1220;
   --pen-sky-bottom: #143047;
   --pen-stand: #1b2330;
@@ -173,7 +205,7 @@
   --pen-crowd-3: var(--red-400);
   --pen-crowd-4: var(--gray-300);
   --pen-billboard-bg: #05070b;
-  --pen-billboard-fg: var(--accent-soft);
+  --pen-billboard-fg: var(--green-300); /* fixo — cena de estádio sempre escura, não segue o tema */
   --pen-billboard-shine: rgb(255 255 255 / 0.28);
   --pen-grass-1: #1c7a41;
   --pen-grass-2: #176a38;
@@ -193,4 +225,153 @@
   --chart-ref: rgb(148 163 184 / 0.35);
   --chart-crosshair: rgb(255 255 255 / 0.18);
   --chart-point-stroke: var(--gray-850);
+}
+
+/* ==========================================================================
+   Tema claro — só a camada semântica muda; os primitivos são os mesmos.
+   `@media` cobre quem não decidiu explicitamente (segue o sistema); o
+   seletor de atributo tem mais especificidade e ganha sempre que o utilizador
+   escolhe um tema no `ThemeProvider` (que escreve `data-theme` no `<html>`).
+   Grupos decorativos/ilustrados (equipas, campo, pódio, escalão do cartão,
+   estádio de penáltis) ficam de propósito iguais nos dois temas — são
+   elementos "de marca", não cromo de interface.
+   ========================================================================== */
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-color: var(--gray-950);
+    --text-muted: var(--gray-700);
+    --text-subtle: var(--gray-500);
+    --text-faint: var(--gray-400);
+    --text-on-accent: var(--gray-950);
+    --text-placeholder: var(--gray-400);
+    --text-error: var(--red-600);
+
+    --accent-soft: var(--green-700);
+
+    --surface-page: var(--gray-50);
+    --surface-glass: rgb(248 250 252 / 0.85);
+    --surface-input: var(--white);
+    --surface-card: rgb(255 255 255 / 0.9);
+    --surface-card-hover: var(--gray-100);
+    --surface-translucent: rgb(0 0 0 / 0.04);
+    --surface-translucent-hover: rgb(0 0 0 / 0.08);
+    --surface-ghost-hover: rgb(0 0 0 / 0.06);
+
+    --surface-well: var(--gray-200);
+    --surface-panel: var(--white);
+    --surface-panel-hover: var(--gray-100);
+    --surface-chip: var(--gray-200);
+    --surface-chip-strong: var(--gray-300);
+    --shimmer-highlight: rgb(0 0 0 / 0.06);
+
+    --surface-muted: var(--gray-100);
+    --surface-sunken: var(--gray-200);
+    --surface-tooltip: rgb(255 255 255 / 0.98);
+
+    --border-input: var(--gray-300);
+    --border-default: var(--gray-300);
+    --border-subtle: var(--gray-200);
+    --border-faint: rgb(0 0 0 / 0.14);
+    --border-faint-hover: rgb(0 0 0 / 0.22);
+    --border-light: rgb(0 0 0 / 0.12);
+
+    --status-error-fg: var(--red-600);
+    --status-success-fg: var(--green-700);
+    --status-info-fg: var(--text-muted);
+    --status-info-bg: var(--gray-200);
+    --status-info-border: var(--gray-300);
+
+    --tone-gray-fg: var(--gray-700);
+    --tone-sky-fg: var(--sky-700);
+    --tone-green-fg: var(--green-700);
+    --tone-indigo-fg: var(--indigo-600);
+    --tone-amber-fg: var(--amber-700);
+    --tone-purple-fg: var(--purple-600);
+    --tone-red-fg: var(--red-600);
+
+    --rating-top-text: var(--green-700);
+    --rating-good-text: var(--green-700);
+    --rating-mid-text: var(--amber-700);
+    --rating-low-text: var(--red-600);
+    --rating-none-bg: var(--gray-200);
+
+    --chart-line: var(--green-700);
+    --chart-grid: rgb(0 0 0 / 0.06);
+    --chart-axis: var(--gray-500);
+    --chart-ref: rgb(71 85 105 / 0.35);
+    --chart-crosshair: rgb(0 0 0 / 0.18);
+    --chart-point-stroke: var(--white);
+  }
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --text-color: var(--gray-950);
+  --text-muted: var(--gray-700);
+  --text-subtle: var(--gray-500);
+  --text-faint: var(--gray-400);
+  --text-on-accent: var(--gray-950);
+  --text-placeholder: var(--gray-400);
+  --text-error: var(--red-600);
+
+  --accent-soft: var(--green-700);
+
+  --surface-page: var(--gray-50);
+  --surface-glass: rgb(248 250 252 / 0.85);
+  --surface-input: var(--white);
+  --surface-card: rgb(255 255 255 / 0.9);
+  --surface-card-hover: var(--gray-100);
+  --surface-translucent: rgb(0 0 0 / 0.04);
+  --surface-translucent-hover: rgb(0 0 0 / 0.08);
+  --surface-ghost-hover: rgb(0 0 0 / 0.06);
+
+  --surface-well: var(--gray-200);
+  --surface-panel: var(--white);
+  --surface-panel-hover: var(--gray-100);
+  --surface-chip: var(--gray-200);
+  --surface-chip-strong: var(--gray-300);
+  --shimmer-highlight: rgb(0 0 0 / 0.06);
+
+  --surface-muted: var(--gray-100);
+  --surface-sunken: var(--gray-200);
+  --surface-tooltip: rgb(255 255 255 / 0.98);
+
+  --border-input: var(--gray-300);
+  --border-default: var(--gray-300);
+  --border-subtle: var(--gray-200);
+  --border-faint: rgb(0 0 0 / 0.14);
+  --border-faint-hover: rgb(0 0 0 / 0.22);
+  --border-light: rgb(0 0 0 / 0.12);
+
+  --status-error-fg: var(--red-600);
+  --status-success-fg: var(--green-700);
+  --status-info-fg: var(--text-muted);
+  --status-info-bg: var(--gray-200);
+  --status-info-border: var(--gray-300);
+
+  --tone-gray-fg: var(--gray-700);
+  --tone-sky-fg: var(--sky-700);
+  --tone-green-fg: var(--green-700);
+  --tone-indigo-fg: var(--indigo-600);
+  --tone-amber-fg: var(--amber-700);
+  --tone-purple-fg: var(--purple-600);
+  --tone-red-fg: var(--red-600);
+
+  --rating-top-text: var(--green-700);
+  --rating-good-text: var(--green-700);
+  --rating-mid-text: var(--amber-700);
+  --rating-low-text: var(--red-600);
+  --rating-none-bg: var(--gray-200);
+
+  --chart-line: var(--green-700);
+  --chart-grid: rgb(0 0 0 / 0.06);
+  --chart-axis: var(--gray-500);
+  --chart-ref: rgb(71 85 105 / 0.35);
+  --chart-crosshair: rgb(0 0 0 / 0.18);
+  --chart-point-stroke: var(--white);
 }

@@ -117,6 +117,7 @@ export interface Database {
         Row: {
           id: string;
           name: string;
+          username: string;
           photo_url: string | null;
           gender: Gender | null;
           locality: string | null;
@@ -131,6 +132,7 @@ export interface Database {
         Insert: {
           id: string;
           name?: string;
+          username: string;
           photo_url?: string | null;
           gender?: Gender | null;
           locality?: string | null;
@@ -140,6 +142,7 @@ export interface Database {
         // O cliente só pode atualizar estas colunas (GRANTs por coluna).
         Update: {
           name?: string;
+          username?: string;
           photo_url?: string | null;
           gender?: Gender | null;
           locality?: string | null;
@@ -745,6 +748,19 @@ export interface Database {
         Update: { read_at?: string | null };
         Relationships: [];
       };
+      push_subscription: {
+        Row: {
+          id: number;
+          user_id: string;
+          endpoint: string;
+          p256dh: string;
+          auth_key: string;
+          created_at: string;
+        };
+        Insert: { user_id: string; endpoint: string; p256dh: string; auth_key: string };
+        Update: never;
+        Relationships: [];
+      };
       analytics_consent: {
         Row: { user_id: string; granted: boolean; decided_at: string };
         Insert: never;
@@ -1004,6 +1020,8 @@ export interface Database {
         Args: { p_group_id: string; p_player_id: string };
         Returns: undefined;
       };
+      get_email_by_username: { Args: { p_username: string }; Returns: string | null };
+      username_available: { Args: { p_username: string }; Returns: boolean };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

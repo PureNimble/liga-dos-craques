@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Alert, Avatar, Badge, Button, Card, Select, type BadgeTone } from '@/shared/components/ui';
 import { useGroupMembers } from '@/features/groups/groupHooks';
+import { useT } from '@/shared/i18n/useT';
 import type { GamePlayerStatus } from '@/types/database';
 import {
   useAddGamePlayer,
@@ -20,11 +21,11 @@ interface PlayerRosterProps {
   editable: boolean; // estado do jogo permite alterar plantel
 }
 
-const STATUS_LABEL: Record<GamePlayerStatus, string> = {
-  invited: 'Convidado',
-  confirmed: 'Confirmado',
-  played: 'Jogou',
-  no_show: 'Faltou',
+const STATUS_KEY: Record<GamePlayerStatus, string> = {
+  invited: 'games.roster.status.invited',
+  confirmed: 'games.roster.status.confirmed',
+  played: 'games.roster.status.played',
+  no_show: 'games.roster.status.no_show',
 };
 
 const STATUS_TONE: Record<GamePlayerStatus, BadgeTone> = {
@@ -43,6 +44,7 @@ export function PlayerRoster({
   currentUserId,
   editable,
 }: PlayerRosterProps) {
+  const { t } = useT();
   const { data: allProfiles } = useGroupMembers(groupId);
   const addPlayer = useAddGamePlayer(gameId);
   const removePlayer = useRemoveGamePlayer(gameId);
@@ -69,7 +71,7 @@ export function PlayerRoster({
       await addPlayer.mutateAsync({ playerId, status });
       setSelectedId('');
     } catch {
-      setError('Não foi possível adicionar o jogador.');
+      setError(t('games.roster.addError'));
     }
   }
 
@@ -78,17 +80,19 @@ export function PlayerRoster({
     try {
       await removePlayer.mutateAsync(gamePlayerId);
     } catch {
-      setError('Não foi possível remover o jogador.');
+      setError(t('games.roster.removeError'));
     }
   }
 
   return (
     <Card>
       <div className={s.head}>
-        <h2 className={s.title}>Jogadores</h2>
+        <h2 className={s.title}>{t('games.roster.title')}</h2>
         <span className={s.count}>
-          {players.length} inscritos · {confirmedCount} conf.
-          {subs > 0 && <span className={s.countSubs}> · {subs} supl.</span>}
+          {t('games.roster.count', { count: players.length, confirmed: confirmedCount })}
+          {subs > 0 && (
+            <span className={s.countSubs}> · {t('games.roster.subs', { count: subs })}</span>
+          )}
         </span>
       </div>
 
@@ -99,7 +103,7 @@ export function PlayerRoster({
       )}
 
       {players.length === 0 ? (
-        <p className={s.empty}>Ainda ninguém está inscrito.</p>
+        <p className={s.empty}>{t('games.roster.empty')}</p>
       ) : (
         <ul className={s.list}>
           {players.map((gp) => {
@@ -112,9 +116,9 @@ export function PlayerRoster({
                     src={gp.profile?.photo_url ?? null}
                     size="sm"
                   />
-                  <span className={s.name}>{gp.profile?.name ?? 'Jogador'}</span>
+                  <span className={s.name}>{gp.profile?.name ?? t('games.roster.fallbackName')}</span>
                   {gp.team && <Badge tone="gray">{gp.team}</Badge>}
-                  <Badge tone={STATUS_TONE[gp.status]}>{STATUS_LABEL[gp.status]}</Badge>
+                  <Badge tone={STATUS_TONE[gp.status]}>{t(STATUS_KEY[gp.status])}</Badge>
                 </div>
 
                 <div className={s.actions}>
@@ -124,7 +128,7 @@ export function PlayerRoster({
                       onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'confirmed' })}
                       className={`${s.link} ${s.linkConfirm}`}
                     >
-                      Confirmar
+                      {t('games.roster.confirm')}
                     </button>
                   )}
                   {editable && isSelf && gp.status === 'confirmed' && (
@@ -132,7 +136,7 @@ export function PlayerRoster({
                       onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'invited' })}
                       className={`${s.link} ${s.linkNeutral}`}
                     >
-                      Desmarcar
+                      {t('games.roster.unconfirm')}
                     </button>
                   )}
                   {editable && (canManage || isSelf) && (
@@ -140,7 +144,7 @@ export function PlayerRoster({
                       onClick={() => handleRemove(gp.id)}
                       className={`${s.link} ${s.linkDanger}`}
                     >
-                      Remover
+                      {t('games.roster.remove')}
                     </button>
                   )}
                 </div>
@@ -155,7 +159,7 @@ export function PlayerRoster({
           {canManage && (
             <div className={s.invite}>
               <Select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
-                <option value="">Convidar jogador…</option>
+                <option value="">{t('games.roster.invitePlaceholder')}</option>
                 {availableProfiles.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
@@ -169,21 +173,21 @@ export function PlayerRoster({
                 loading={addPlayer.isPending}
                 onClick={() => selectedId && handleAdd(selectedId, 'invited')}
               >
-                Convidar
+                {t('games.roster.invite')}
               </Button>
             </div>
           )}
 
           {!canManage &&
             (isInGame ? (
-              <p className={s.note}>Estás neste jogo.</p>
+              <p className={s.note}>{t('games.roster.alreadyIn')}</p>
             ) : (
               <Button
                 type="button"
                 loading={addPlayer.isPending}
                 onClick={() => handleAdd(currentUserId, 'confirmed')}
               >
-                Inscrever-me
+                {t('games.roster.joinMe')}
               </Button>
             ))}
         </div>

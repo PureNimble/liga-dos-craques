@@ -22,7 +22,7 @@
   padding: var(--space-xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--accent-border);
-  background-image: linear-gradient(to bottom right, var(--gray-800), var(--gray-850));
+  background-image: linear-gradient(to bottom right, var(--surface-panel-hover), var(--surface-panel));
   animation: pulse 0.9s ease-in-out infinite;
 }
 .shuffleName {
@@ -54,8 +54,8 @@
   gap: var(--space-md);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-750);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-panel);
   opacity: 0;
   animation: slideIn 0.4s ease forwards;
 }

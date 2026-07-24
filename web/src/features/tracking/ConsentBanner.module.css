@@ -12,7 +12,7 @@
   flex-wrap: wrap;
   margin-inline: auto;
   max-width: 44rem;
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-input);
   padding: var(--space-lg);
@@ -25,7 +25,7 @@
 .title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  color: var(--white);
+  color: var(--text-color);
 }
 .body {
   margin-top: var(--space-2xs);

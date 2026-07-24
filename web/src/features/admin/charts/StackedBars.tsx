@@ -8,7 +8,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { AXIS_TICK, GRID_STROKE, SURFACE, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from './chartTheme';
+import {
+  AXIS_TICK,
+  CURSOR_FILL,
+  GRID_STROKE,
+  LEGEND_STYLE,
+  SURFACE,
+  TOOLTIP_LABEL_STYLE,
+  TOOLTIP_STYLE,
+} from './chartTheme';
 import s from './chartEmpty.module.css';
 
 export interface StackSeries {
@@ -49,9 +57,9 @@ export function StackedBars({
         <Tooltip
           contentStyle={TOOLTIP_STYLE}
           labelStyle={TOOLTIP_LABEL_STYLE}
-          cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+          cursor={{ fill: CURSOR_FILL }}
         />
-        <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} iconType="circle" />
+        <Legend wrapperStyle={LEGEND_STYLE} iconType="circle" />
         {series.map((se, i) => (
           <Bar
             key={se.key}

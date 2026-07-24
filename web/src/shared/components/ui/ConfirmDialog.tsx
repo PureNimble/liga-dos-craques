@@ -56,6 +56,7 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
       <Modal
         open={state.open}
         onClose={() => settle(false)}
+        variant="sheet"
         size="sm"
         footer={
           <>

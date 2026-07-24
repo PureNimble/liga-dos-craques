@@ -30,6 +30,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       name: profile.name,
+      username: profile.username,
       birth_date: profile.birth_date,
       weight_kg: profile.weight_kg,
       height_cm: profile.height_cm,
@@ -43,6 +44,12 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
 
   const selectedSecondary = form.watch('secondaryPositionIds');
   const mainPositionId = Number(form.watch('main_position_id')) || null;
+
+  const isUsernameTaken =
+    updateProfile.isError && (updateProfile.error as { code?: string })?.code === '23505';
+  const usernameError = isUsernameTaken
+    ? 'Esse nome de utilizador já está a ser usado.'
+    : undefined;
 
   /** Um clique no campo mexe na principal e nas secundárias. */
   function togglePosition(id: number) {
@@ -58,6 +65,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     await updateProfile.mutateAsync({
       public: {
         name: values.name,
+        username: values.username,
         photo_url: photoUrl,
         gender: values.gender,
         locality: values.locality,
@@ -105,6 +113,15 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
 
         <Field label="Nome" htmlFor="name" error={form.formState.errors.name?.message}>
           <Input id="name" {...form.register('name')} />
+        </Field>
+
+        <Field
+          label="Nome de utilizador"
+          htmlFor="username"
+          hint="Único — minúsculas, números e _."
+          error={form.formState.errors.username?.message ?? usernameError}
+        >
+          <Input id="username" placeholder="ex: vasco10" {...form.register('username')} />
         </Field>
 
         <div className={s.grid2}>
@@ -167,7 +184,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           />
         </fieldset>
 
-        {updateProfile.isError && (
+        {updateProfile.isError && !isUsernameTaken && (
           <Alert kind="error">Não foi possível guardar. Tenta novamente.</Alert>
         )}
       </form>

@@ -1,0 +1,43 @@
+/* Cabeçalho estilo nativo: seta de voltar (círculo) à esquerda, título ao
+   centro — só faz sentido no mobile (é lá que este subecrã é alcançável). */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--space-lg);
+}
+.back {
+  position: absolute;
+  inset-inline-start: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+}
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+
+.panel {
+  padding-inline: var(--space-lg);
+}
+.panel > * + * {
+  border-top: 1px solid var(--border-faint);
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-lg);
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  text-align: left;
+}
+.check {
+  color: var(--accent);
+  flex-shrink: 0;
+}

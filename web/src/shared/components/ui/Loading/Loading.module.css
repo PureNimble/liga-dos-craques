@@ -14,7 +14,7 @@
   height: 1.5rem;
   width: 1.5rem;
   border-radius: var(--radius-full);
-  border: 2px solid var(--gray-700);
+  border: 2px solid var(--border-default);
   border-top-color: var(--accent);
   animation: spin 1s linear infinite;
 }

@@ -78,8 +78,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Tema "estádio": near-black com um brilho de relvado subtil e frio. */
-  background-color: var(--gray-950);
+  /* Tema "estádio" no escuro (brilho de relvado subtil e frio); no claro é só a
+     superfície de página do tema, sem o glow (pensado para fundo near-black). */
+  background-color: var(--surface-page);
   background-image:
     radial-gradient(115% 55% at 50% -12%, rgb(16 185 129 / 0.06), transparent 62%),
     radial-gradient(90% 40% at 100% 0%, rgb(56 189 248 / 0.035), transparent 55%);

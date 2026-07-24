@@ -1,27 +1,28 @@
 import type { GameStatus } from '@/types/database';
 import type { BadgeTone } from '@/shared/components/ui';
 
-export const GAME_STATUS_LABELS: Record<GameStatus, string> = {
-  draft: 'Rascunho',
-  scheduled: 'Agendado',
-  open: 'Inscrições abertas',
-  teams_generated: 'Equipas geradas',
-  in_progress: 'A decorrer',
-  finished: 'Terminado',
-  voting_open: 'Votação aberta',
-  closed: 'Fechado',
-  cancelled: 'Cancelado',
+/** Chave i18n (`games.i18n.ts`) por estado — usar com `t(GAME_STATUS_KEY[status])`. */
+export const GAME_STATUS_KEY: Record<GameStatus, string> = {
+  draft: 'games.status.draft',
+  scheduled: 'games.status.scheduled',
+  open: 'games.status.open',
+  teams_generated: 'games.status.teams_generated',
+  in_progress: 'games.status.in_progress',
+  finished: 'games.status.finished',
+  voting_open: 'games.status.voting_open',
+  closed: 'games.status.closed',
+  cancelled: 'games.status.cancelled',
 };
 
-/** Texto de ação (verbo) para os botões de transição de estado. */
-export const GAME_TRANSITION_LABELS: Partial<Record<GameStatus, string>> = {
-  scheduled: 'Agendar',
-  open: 'Abrir inscrições',
-  teams_generated: 'Gerar equipas',
-  in_progress: 'Iniciar jogo',
-  finished: 'Terminar jogo',
-  closed: 'Fechar (sem votação)',
-  cancelled: 'Cancelar jogo',
+/** Chave i18n do texto de ação (verbo) para os botões de transição de estado. */
+export const GAME_TRANSITION_KEY: Partial<Record<GameStatus, string>> = {
+  scheduled: 'games.transition.scheduled',
+  open: 'games.transition.open',
+  teams_generated: 'games.transition.teams_generated',
+  in_progress: 'games.transition.in_progress',
+  finished: 'games.transition.finished',
+  closed: 'games.transition.closed',
+  cancelled: 'games.transition.cancelled',
 };
 
 export const GAME_STATUS_TONE: Record<GameStatus, BadgeTone> = {

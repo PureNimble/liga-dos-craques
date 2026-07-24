@@ -4,18 +4,25 @@ import { queryClient } from '@/shared/lib/queryClient';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ToastProvider } from '@/shared/components/toast/ToastProvider';
 import { ConfirmProvider } from '@/shared/components/ui/ConfirmDialog';
+import { ThemeProvider } from '@/shared/theme/ThemeProvider';
+import { I18nProvider } from '@/shared/i18n/I18nProvider';
+import { i18nRegistry } from './i18nRegistry';
 import { router } from './router';
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <ConfirmProvider>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
-        </ConfirmProvider>
-      </ToastProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <I18nProvider dictionary={i18nRegistry}>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider>
+            <ConfirmProvider>
+              <AuthProvider>
+                <RouterProvider router={router} />
+              </AuthProvider>
+            </ConfirmProvider>
+          </ToastProvider>
+        </QueryClientProvider>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }

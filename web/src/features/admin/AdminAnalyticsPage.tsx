@@ -208,7 +208,10 @@ export function AdminAnalyticsPage() {
                   />
                 </article>
 
-                <article className={s.card}>
+                {/* Sem outro cartão do mesmo tipo nesta secção condicional para
+                    emparelhar (lista vs. donut tinham alturas muito diferentes) —
+                    fica cada um a ocupar a linha toda em vez de forçar o par. */}
+                <article className={`${s.card} ${s.wide}`}>
                   <div className={s.cardHead}>
                     <h2 className={s.title}>Por onde entram</h2>
                     <span className={s.meta}>primeira página da sessão</span>
@@ -220,7 +223,7 @@ export function AdminAnalyticsPage() {
                   />
                 </article>
 
-                <article className={s.card}>
+                <article className={`${s.card} ${s.wide}`}>
                   <div className={s.cardHead}>
                     <h2 className={s.title}>Dispositivos</h2>
                     <span className={s.meta}>por largura de ecrã</span>
@@ -267,6 +270,59 @@ export function AdminAnalyticsPage() {
               <StackedBars data={data.monthlyActions} series={areaSeries} />
             </article>
 
+            {/* Par: dois donuts, mesma altura por omissão — alinham sem sobrar
+                espaço morto num dos dois. */}
+            <article className={s.card}>
+              <div className={s.cardHead}>
+                <h2 className={s.title}>Peso de cada área</h2>
+                <span className={s.meta}>repartição das ações</span>
+              </div>
+              <CategoryDonut data={data.areaActions} empty="Sem ações no período." />
+            </article>
+
+            <article className={s.card}>
+              <div className={s.cardHead}>
+                <h2 className={s.title}>Estado das contas</h2>
+                <span className={s.meta}>{int(data.totalUsers)} contas</span>
+              </div>
+              <CategoryDonut data={data.accountMix} empty="Ainda sem contas." />
+            </article>
+
+            <article className={`${s.card} ${s.wide}`}>
+              <div className={s.cardHead}>
+                <h2 className={s.title}>Quando usam a app</h2>
+                <span className={s.meta}>ações por dia da semana e faixa horária</span>
+              </div>
+              <UsageHeatmap rows={data.heatmap} unit="ações" />
+            </article>
+
+            {/* Par: os dois gráficos vêm com a mesma altura (200px) e sem
+                legenda — encaixam sem esticar. */}
+            <article className={s.card}>
+              <div className={s.cardHead}>
+                <h2 className={s.title}>Retenção mensal</h2>
+                <span className={s.meta}>% da base que usou a app</span>
+              </div>
+              <TrendAreaChart
+                data={data.monthlyUsers.map((m) => ({ label: m.label, activeRate: m.activeRate }))}
+                series={[{ key: 'activeRate', name: '% ativos', color: SERIES.xp }]}
+                height={200}
+                legend={false}
+              />
+            </article>
+
+            <article className={s.card}>
+              <div className={s.cardHead}>
+                <h2 className={s.title}>Reportes de bugs</h2>
+                <span className={s.meta}>
+                  {int(bugs?.total ?? 0)} no período · {int(bugs?.open ?? 0)} por resolver
+                </span>
+              </div>
+              <CategoryBar data={bugs?.byMonth ?? []} color={SERIES.challenges} height={200} />
+            </article>
+
+            {/* Par: duas listas de magnitude semelhante (6 áreas vs. até 8
+                utilizadores) — número de linhas comparável, sem gaveta vazia. */}
             <article className={s.card}>
               <div className={s.cardHead}>
                 <h2 className={s.title}>Alcance das funcionalidades</h2>
@@ -287,43 +343,6 @@ export function AdminAnalyticsPage() {
 
             <article className={s.card}>
               <div className={s.cardHead}>
-                <h2 className={s.title}>Peso de cada área</h2>
-                <span className={s.meta}>repartição das ações</span>
-              </div>
-              <CategoryDonut data={data.areaActions} empty="Sem ações no período." />
-            </article>
-
-            <article className={`${s.card} ${s.wide}`}>
-              <div className={s.cardHead}>
-                <h2 className={s.title}>Quando usam a app</h2>
-                <span className={s.meta}>ações por dia da semana e faixa horária</span>
-              </div>
-              <UsageHeatmap rows={data.heatmap} unit="ações" />
-            </article>
-
-            <article className={s.card}>
-              <div className={s.cardHead}>
-                <h2 className={s.title}>Retenção mensal</h2>
-                <span className={s.meta}>% da base que usou a app</span>
-              </div>
-              <TrendAreaChart
-                data={data.monthlyUsers.map((m) => ({ label: m.label, activeRate: m.activeRate }))}
-                series={[{ key: 'activeRate', name: '% ativos', color: SERIES.xp }]}
-                height={200}
-                legend={false}
-              />
-            </article>
-
-            <article className={s.card}>
-              <div className={s.cardHead}>
-                <h2 className={s.title}>Estado das contas</h2>
-                <span className={s.meta}>{int(data.totalUsers)} contas</span>
-              </div>
-              <CategoryDonut data={data.accountMix} empty="Ainda sem contas." />
-            </article>
-
-            <article className={s.card}>
-              <div className={s.cardHead}>
                 <h2 className={s.title}>Quem sustenta a app</h2>
                 <span className={s.meta}>ações no período</span>
               </div>
@@ -332,16 +351,6 @@ export function AdminAnalyticsPage() {
                 empty="Sem atividade no período."
                 color={SERIES.games}
               />
-            </article>
-
-            <article className={s.card}>
-              <div className={s.cardHead}>
-                <h2 className={s.title}>Reportes de bugs</h2>
-                <span className={s.meta}>
-                  {int(bugs?.total ?? 0)} no período · {int(bugs?.open ?? 0)} por resolver
-                </span>
-              </div>
-              <CategoryBar data={bugs?.byMonth ?? []} color={SERIES.challenges} height={200} />
             </article>
 
             <article className={`${s.card} ${s.wide}`}>

@@ -40,7 +40,8 @@
   box-shadow: var(--shadow-glow);
 }
 .primary:hover {
-  background-image: linear-gradient(to bottom, var(--accent-soft), var(--accent-strong));
+  /* Verde-claro fixo — realce decorativo do gradiente, não texto, não segue o tema. */
+  background-image: linear-gradient(to bottom, var(--green-300), var(--accent-strong));
 }
 
 .secondary {
@@ -57,7 +58,7 @@
 }
 .ghost:hover {
   background-color: var(--surface-ghost-hover);
-  color: var(--white);
+  color: var(--text-color);
 }
 
 .danger {

@@ -10,7 +10,7 @@
   /* Tem de bater certo com o viewBox do SVG (100 × PITCH_H). */
   aspect-ratio: 100 / 80;
   border-radius: var(--radius-md);
-  background-image: linear-gradient(to bottom, var(--accent-deep-surface), var(--gray-850));
+  background-image: linear-gradient(to bottom, var(--accent-deep-surface), var(--surface-panel));
   border: 1px solid var(--border-faint);
 }
 .lines {
@@ -32,8 +32,8 @@
   height: 2.125rem;
   width: 2.125rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--gray-700);
-  background-color: var(--gray-850);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-panel);
   font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-bold);
   color: var(--text-subtle);
@@ -55,7 +55,7 @@
 .secondary {
   border-color: var(--accent-ring);
   background-color: var(--accent-surface);
-  color: var(--accent-soft);
+  color: var(--tone-green-fg);
 }
 
 .main,
@@ -71,7 +71,7 @@
   color: var(--text-subtle);
 }
 .helpMain {
-  color: var(--accent-soft);
+  color: var(--tone-green-fg);
 }
 .helpSecondary {
   color: var(--text-color);

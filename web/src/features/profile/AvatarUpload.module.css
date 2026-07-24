@@ -8,7 +8,7 @@
   width: 5rem;
   overflow: hidden;
   border-radius: var(--radius-full);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
 }
 .image {
   height: 100%;

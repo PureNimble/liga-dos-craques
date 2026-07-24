@@ -1,4 +1,5 @@
 import { NamedIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import { useAchievements, usePlayerAchievements } from './achievementHooks';
 import s from './AchievementsGrid.module.css';
 
@@ -16,6 +17,7 @@ export function AchievementsGrid({
   featuredId,
   onSelect,
 }: AchievementsGridProps) {
+  const { t } = useT();
   const { data: achievements } = useAchievements();
   const { data: unlocked } = usePlayerAchievements(playerId);
 
@@ -26,14 +28,12 @@ export function AchievementsGrid({
   return (
     <section>
       <div className={s.head}>
-        <h2 className={s.title}>Conquistas</h2>
+        <h2 className={s.title}>{t('achievements.title')}</h2>
         <span className={s.count}>
           {unlockedCount}/{achievements.length}
         </span>
       </div>
-      {editable && (
-        <p className={s.hint}>Toca numa conquista desbloqueada para a destacares no cartão.</p>
-      )}
+      {editable && <p className={s.hint}>{t('achievements.hint')}</p>}
 
       <div className={s.grid}>
         {achievements.map((a) => {

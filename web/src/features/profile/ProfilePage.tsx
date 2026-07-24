@@ -6,7 +6,7 @@ import { ProfileEditModal } from './ProfileEditModal';
 import { PlayerCard } from './PlayerCard';
 import { PlayerHeader } from './PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from './cardStats';
-import { FOOT_LABELS } from './profile.schemas';
+import { FOOT_LABEL_KEY } from './profile.schemas';
 import { usePlayerStats } from '@/features/stats/statsHooks';
 import { StatsGrid } from '@/features/stats/StatsGrid';
 import { PlayerCharts } from '@/features/stats/PlayerCharts';
@@ -18,9 +18,11 @@ import {
   useAchievements,
   useSetFeaturedAchievement,
 } from '@/features/achievements/achievementHooks';
+import { useT } from '@/shared/i18n/useT';
 import s from './profileLayout.module.css';
 
 export function ProfilePage() {
+  const { t } = useT();
   const { data: profile, isLoading, isError } = useProfile();
   const { data: positions } = usePositions();
   const { data: stats } = usePlayerStats(profile?.id);
@@ -35,7 +37,7 @@ export function ProfilePage() {
   if (isError || !profile) {
     return (
       <div className={s.errorPage}>
-        <Alert kind="error">Não foi possível carregar o teu perfil.</Alert>
+        <Alert kind="error">{t('profile.loadError')}</Alert>
       </div>
     );
   }
@@ -66,7 +68,9 @@ export function ProfilePage() {
           </div>
         )}
         <PlayerHeader
-          footLabel={profile.preferred_foot ? FOOT_LABELS[profile.preferred_foot] : null}
+          footLabel={
+            profile.preferred_foot ? t(FOOT_LABEL_KEY[profile.preferred_foot]) : null
+          }
           avgRating={stats?.avg_rating ?? null}
           games={stats?.games}
           own
@@ -76,10 +80,10 @@ export function ProfilePage() {
 
       <div className={s.actions}>
         <Button block onClick={() => setEditOpen(true)}>
-          Editar perfil
+          {t('profile.editProfile')}
         </Button>
         <Link to="/update-password">
-          <Button variant="secondary">Password</Button>
+          <Button variant="secondary">{t('profile.password')}</Button>
         </Link>
       </div>
 
@@ -87,7 +91,7 @@ export function ProfilePage() {
 
       {stats && (
         <section>
-          <h2 className={s.sectionTitle}>Estatísticas</h2>
+          <h2 className={s.sectionTitle}>{t('profile.statsTitle')}</h2>
           <StatsGrid stats={stats} />
         </section>
       )}

@@ -1,0 +1,36 @@
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 1.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-input);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+.switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.switch.on {
+  border-color: var(--accent);
+  background-color: var(--accent);
+}
+
+.knob {
+  position: absolute;
+  inset-block-start: 0.1875rem;
+  inset-inline-start: 0.1875rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-full);
+  background-color: var(--white);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition);
+}
+.on .knob {
+  transform: translateX(1.25rem);
+}

@@ -10,7 +10,7 @@
 }
 .count {
   border-radius: var(--radius-full);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   padding: var(--space-2xs) var(--space-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
@@ -38,7 +38,7 @@
   justify-content: space-between;
   gap: var(--space-sm);
   padding-block: var(--space-sm);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
 }
 .item:first-child {
   border-top: 0;
@@ -87,7 +87,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  border-top: 1px solid var(--gray-750);
+  border-top: 1px solid var(--border-subtle);
   padding-top: var(--space-lg);
 }
 .invite {

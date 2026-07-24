@@ -1,7 +1,14 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from './icons';
 import s from './Modal.module.css';
+
+/** Acima disto (px) ou com velocidade suficiente, largar o grip fecha o sheet. */
+const CLOSE_DISTANCE_RATIO = 0.3;
+const CLOSE_VELOCITY = 0.6;
+/** Resistência ao arrastar para cima (não há mais alto para expandir, só feedback). */
+const RESIST_UP = 0.35;
+const SNAP_MS = 240;
 
 interface ModalProps {
   open: boolean;
@@ -36,6 +43,11 @@ export function Modal({
   dismissible = true,
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ startY: number; lastY: number; lastTime: number; velocity: number } | null>(
+    null,
+  );
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
 
   // Fecha com Esc + bloqueia scroll do body enquanto aberto.
   useEffect(() => {
@@ -54,9 +66,50 @@ export function Modal({
     };
   }, [open, onClose, dismissible]);
 
+  // Repõe a posição ao reabrir (evita reaparecer a meio caminho de um close anterior).
+  useEffect(() => {
+    if (open) setDragY(0);
+  }, [open]);
+
   if (!open) return null;
 
   const isSheet = variant === 'sheet';
+
+  function handleGripPointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    if (!isSheet || !dismissible) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = { startY: e.clientY, lastY: e.clientY, lastTime: performance.now(), velocity: 0 };
+    setDragging(true);
+  }
+
+  function handleGripPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    if (!drag) return;
+    const now = performance.now();
+    const dt = now - drag.lastTime;
+    if (dt > 0) drag.velocity = (e.clientY - drag.lastY) / dt;
+    drag.lastY = e.clientY;
+    drag.lastTime = now;
+    const delta = e.clientY - drag.startY;
+    setDragY(delta >= 0 ? delta : delta * RESIST_UP);
+  }
+
+  function handleGripPointerEnd(e: ReactPointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    dragRef.current = null;
+    setDragging(false);
+    if (!drag) return;
+    const delta = e.clientY - drag.startY;
+    const offset = delta >= 0 ? delta : delta * RESIST_UP;
+    const panelHeight = panelRef.current?.offsetHeight ?? 0;
+    const shouldClose = offset > panelHeight * CLOSE_DISTANCE_RATIO || drag.velocity > CLOSE_VELOCITY;
+    if (shouldClose) {
+      setDragY(panelHeight + 48);
+      window.setTimeout(onClose, SNAP_MS);
+    } else {
+      setDragY(0);
+    }
+  }
 
   return createPortal(
     <div
@@ -72,8 +125,24 @@ export function Modal({
         ref={panelRef}
         tabIndex={-1}
         className={[s.panel, sizeClass[size], isSheet ? s.sheet : s.center].join(' ')}
+        style={
+          isSheet && dragY !== 0
+            ? {
+                transform: `translateY(${dragY}px)`,
+                transition: dragging ? 'none' : `transform ${SNAP_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`,
+              }
+            : undefined
+        }
       >
-        {isSheet && <div className={s.grip} />}
+        {isSheet && (
+          <div
+            className={[s.grip, dismissible ? s.gripDraggable : ''].join(' ')}
+            onPointerDown={handleGripPointerDown}
+            onPointerMove={handleGripPointerMove}
+            onPointerUp={handleGripPointerEnd}
+            onPointerCancel={handleGripPointerEnd}
+          />
+        )}
 
         {(title || dismissible) && (
           <div className={s.header}>

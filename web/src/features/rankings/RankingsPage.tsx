@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Page, PageTitle, Alert, CardSkeleton, PillTabs, Select } from '@/shared/components/ui';
 import { useGameFormats } from '@/features/games/gameHooks';
+import { useT } from '@/shared/i18n/useT';
 import type { PositionCategory } from '@/types/database';
 import { RankingList, type RankingRow } from './RankingList';
 import {
@@ -13,40 +14,45 @@ import s from './RankingsPage.module.css';
 
 type Scope = 'geral' | 'posicao' | 'formato' | 'mensal' | 'anual';
 
-const SCOPES: { key: Scope; label: string }[] = [
-  { key: 'geral', label: 'Geral' },
-  { key: 'posicao', label: 'Posição' },
-  { key: 'formato', label: 'Formato' },
-  { key: 'mensal', label: 'Mensal' },
-  { key: 'anual', label: 'Anual' },
-];
-
-const POSITION_LABELS: Record<PositionCategory, string> = {
-  GK: 'Guarda-redes',
-  DEF: 'Defesas',
-  MID: 'Médios',
-  FWD: 'Avançados',
+const SCOPE_KEY: Record<Scope, string> = {
+  geral: 'rankings.scope.overall',
+  posicao: 'rankings.scope.position',
+  formato: 'rankings.scope.format',
+  mensal: 'rankings.scope.monthly',
+  anual: 'rankings.scope.annual',
 };
 
-const MONTHS = [
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
+const SCOPES: Scope[] = ['geral', 'posicao', 'formato', 'mensal', 'anual'];
+
+const POSITION_KEY: Record<PositionCategory, string> = {
+  GK: 'rankings.position.GK',
+  DEF: 'rankings.position.DEF',
+  MID: 'rankings.position.MID',
+  FWD: 'rankings.position.FWD',
+};
+
+const MONTH_KEYS = [
+  'rankings.month.1',
+  'rankings.month.2',
+  'rankings.month.3',
+  'rankings.month.4',
+  'rankings.month.5',
+  'rankings.month.6',
+  'rankings.month.7',
+  'rankings.month.8',
+  'rankings.month.9',
+  'rankings.month.10',
+  'rankings.month.11',
+  'rankings.month.12',
 ];
 
-const wdg = (r: { games: number; wins: number; goals: number }) =>
-  `${r.games}J · ${r.wins}V · ${r.goals}G`;
-
 export function RankingsPage() {
+  const { t } = useT();
+  const wdg = useCallback(
+    (r: { games: number; wins: number; goals: number }) =>
+      t('rankings.summary.wdg', { games: r.games, wins: r.wins, goals: r.goals }),
+    [t],
+  );
   const now = new Date();
   const [scope, setScope] = useState<Scope>('geral');
   const [position, setPosition] = useState<PositionCategory>('FWD');
@@ -75,8 +81,8 @@ export function RankingsPage() {
             player_id: r.player_id,
             name: r.name,
             photo_url: r.photo_url,
-            value: `${r.total_xp} XP`,
-            sub: `${wdg(r)} · ${r.mvps} MVP`,
+            value: t('rankings.summary.xp', { value: r.total_xp }),
+            sub: t('rankings.summary.mvps', { summary: wdg(r), mvps: r.mvps }),
           })),
           isLoading: overall.isLoading,
           isError: overall.isError,
@@ -90,7 +96,7 @@ export function RankingsPage() {
               player_id: r.player_id,
               name: r.name,
               photo_url: r.photo_url,
-              value: `${r.total_xp} XP`,
+              value: t('rankings.summary.xp', { value: r.total_xp }),
               sub: wdg(r),
             })),
           isLoading: overall.isLoading,
@@ -103,7 +109,7 @@ export function RankingsPage() {
             player_id: r.player_id,
             name: r.name,
             photo_url: r.photo_url,
-            value: `${r.points} pts`,
+            value: t('rankings.summary.points', { value: r.points }),
             sub: wdg(r),
           })),
           isLoading: byFormat.isLoading,
@@ -119,7 +125,7 @@ export function RankingsPage() {
               player_id: r.player_id,
               name: r.name,
               photo_url: r.photo_url,
-              value: `${r.points} pts`,
+              value: t('rankings.summary.points', { value: r.points }),
               sub: wdg(r),
             })),
           isLoading: byPeriod.isLoading,
@@ -135,7 +141,7 @@ export function RankingsPage() {
               player_id: r.player_id,
               name: r.name,
               photo_url: r.photo_url,
-              value: `${r.points} pts`,
+              value: t('rankings.summary.points', { value: r.points }),
               sub: wdg(r),
             })),
           isLoading: annual.isLoading,
@@ -157,25 +163,27 @@ export function RankingsPage() {
     annual.data,
     annual.isLoading,
     annual.isError,
+    t,
+    wdg,
   ]);
 
   return (
     <Page>
-      <PageTitle>Rankings</PageTitle>
+      <PageTitle>{t('rankings.title')}</PageTitle>
 
       {/* Seletor de âmbito */}
       <PillTabs<Scope>
         value={scope}
         onChange={setScope}
-        items={SCOPES.map((s) => ({ value: s.key, label: s.label }))}
+        items={SCOPES.map((key) => ({ value: key, label: t(SCOPE_KEY[key]) }))}
       />
 
       {/* Filtros dependentes do âmbito */}
       {scope === 'posicao' && (
         <Select value={position} onChange={(e) => setPosition(e.target.value as PositionCategory)}>
-          {(Object.keys(POSITION_LABELS) as PositionCategory[]).map((c) => (
+          {(Object.keys(POSITION_KEY) as PositionCategory[]).map((c) => (
             <option key={c} value={c}>
-              {POSITION_LABELS[c]}
+              {t(POSITION_KEY[c])}
             </option>
           ))}
         </Select>
@@ -200,9 +208,9 @@ export function RankingsPage() {
           </Select>
           {scope === 'mensal' && (
             <Select value={month} onChange={(e) => setMonth(Number(e.target.value))}>
-              {MONTHS.map((m, i) => (
-                <option key={m} value={i + 1}>
-                  {m}
+              {MONTH_KEYS.map((key, i) => (
+                <option key={key} value={i + 1}>
+                  {t(key)}
                 </option>
               ))}
             </Select>
@@ -217,7 +225,7 @@ export function RankingsPage() {
           <CardSkeleton />
         </div>
       )}
-      {isError && <Alert kind="error">Não foi possível carregar o ranking.</Alert>}
+      {isError && <Alert kind="error">{t('rankings.loadError')}</Alert>}
       {!isLoading && !isError && <RankingList rows={rows} />}
     </Page>
   );

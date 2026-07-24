@@ -13,8 +13,8 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-md);
-    border-right: 1px solid var(--gray-750);
-    background-color: var(--gray-900);
+    border-right: 1px solid var(--border-subtle);
+    background-color: var(--surface-well);
     padding-block: var(--space-lg);
   }
 }
@@ -39,7 +39,7 @@
   overflow: hidden;
   border-radius: var(--radius-lg);
   padding: 0;
-  background-color: var(--gray-800);
+  background-color: var(--surface-panel-hover);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   color: var(--text-subtle);
@@ -113,7 +113,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-lg);
-  border: 1px dashed var(--gray-700);
+  border: 1px dashed var(--border-default);
   color: var(--text-faint);
   transition:
     border-color var(--transition),

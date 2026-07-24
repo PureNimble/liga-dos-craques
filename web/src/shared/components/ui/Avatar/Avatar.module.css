@@ -2,7 +2,7 @@
 .fallback {
   flex-shrink: 0;
   border-radius: var(--radius-full);
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-default);
 }
 .image {
   object-fit: cover;
@@ -11,7 +11,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(to bottom right, var(--gray-700), var(--gray-800));
+  background-image: linear-gradient(to bottom right, var(--surface-chip-strong), var(--surface-panel-hover));
   color: var(--text-color);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;

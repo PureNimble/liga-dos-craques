@@ -33,7 +33,7 @@
   align-items: center;
   gap: var(--space-md);
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-750);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);
   padding: var(--space-sm);
 }
@@ -52,7 +52,7 @@
   flex: 1;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--gray-200);
+  color: var(--text-color);
 }
 .pointsWrap {
   position: relative;

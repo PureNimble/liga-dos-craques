@@ -31,7 +31,7 @@
   padding: var(--space-xs) var(--space-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  background-color: var(--gray-750);
+  background-color: var(--surface-chip);
   color: var(--text-muted);
   cursor: pointer;
   transition:
@@ -39,8 +39,8 @@
     background-color var(--transition);
 }
 .pill:hover {
-  background-color: var(--gray-700);
-  color: var(--white);
+  background-color: var(--surface-chip-strong);
+  color: var(--text-color);
 }
 .active,
 .active:hover {

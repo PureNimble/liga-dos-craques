@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Avatar, EmptyState } from '@/shared/components/ui';
 import { TrophyIcon } from '@/shared/components/ui/icons';
+import { useT } from '@/shared/i18n/useT';
 import s from './RankingList.module.css';
 
 export interface RankingRow {
@@ -16,12 +17,14 @@ const PODIUM_BADGE = [s.badge1, s.badge2, s.badge3];
 const PODIUM_RING = [s.ring1, s.ring2, s.ring3];
 
 export function RankingList({ rows }: { rows: RankingRow[] }) {
+  const { t } = useT();
+
   if (rows.length === 0) {
     return (
       <EmptyState
         icon={<TrophyIcon width={26} height={26} />}
-        title="Ainda não há dados"
-        description="Este ranking preenche-se assim que houver jogos registados."
+        title={t('rankings.empty.title')}
+        description={t('rankings.empty.description')}
       />
     );
   }
