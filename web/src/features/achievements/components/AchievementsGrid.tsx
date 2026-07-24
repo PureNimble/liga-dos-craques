@@ -1,5 +1,6 @@
-import { NamedIcon } from '@/shared/components/ui/icons';
+import { NamedIcon, LockIcon, StarIcon } from '@/shared/components/ui/icons';
 import { useT } from '@/shared/i18n/useT';
+import { formatDateShort } from '@/shared/lib/datetime';
 import { useAchievements, usePlayerAchievements } from '../hooks/achievementHooks';
 import s from './AchievementsGrid.module.css';
 
@@ -17,7 +18,7 @@ export function AchievementsGrid({
   featuredId,
   onSelect,
 }: AchievementsGridProps) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const { data: achievements } = useAchievements();
   const { data: unlocked } = usePlayerAchievements(playerId);
 
@@ -38,23 +39,47 @@ export function AchievementsGrid({
       <div className={s.grid}>
         {achievements.map((a) => {
           const isUnlocked = unlocked?.has(a.id) ?? false;
+          const unlockedAt = unlocked?.get(a.id);
           const isFeatured = featuredId === a.id;
           const clickable = Boolean(editable && isUnlocked && onSelect);
+          const label = lang === 'en' ? (a.label_en ?? a.label) : a.label;
+          const description = lang === 'en' ? (a.description_en ?? a.description) : a.description;
           return (
             <button
               key={a.id}
               type="button"
+              disabled={!clickable}
               onClick={clickable ? () => onSelect?.(isFeatured ? null : a.id) : undefined}
-              title={`${a.label} — ${a.description}`}
-              className={`${s.item} ${isFeatured ? s.featured : ''} ${
-                !isFeatured && !isUnlocked ? s.locked : ''
+              className={`${s.card} ${isFeatured ? s.featured : ''} ${
+                !isUnlocked ? s.locked : ''
               } ${clickable ? s.clickable : ''}`}
             >
-              {a.image_url ? (
-                <img className={s.photo} src={a.image_url} alt="" aria-hidden />
-              ) : (
-                <NamedIcon name={a.icon} width={26} height={26} aria-hidden />
-              )}
+              <span className={s.icon} aria-hidden>
+                {a.image_url ? (
+                  <img className={s.photo} src={a.image_url} alt="" />
+                ) : (
+                  <NamedIcon name={a.icon} width={22} height={22} />
+                )}
+              </span>
+
+              <span className={s.body}>
+                <span className={s.labelRow}>
+                  <span className={s.label}>{label}</span>
+                  {isFeatured && <StarIcon width={13} height={13} className={s.featuredIcon} />}
+                </span>
+                <span className={s.description}>{description}</span>
+                {isUnlocked ? (
+                  <span className={s.unlockedAt}>
+                    {unlockedAt
+                      ? t('achievements.unlockedAt', { date: formatDateShort(unlockedAt) })
+                      : t('achievements.unlocked')}
+                  </span>
+                ) : (
+                  <span className={s.lockedTag}>
+                    <LockIcon width={11} height={11} /> {t('achievements.locked')}
+                  </span>
+                )}
+              </span>
             </button>
           );
         })}

@@ -4,7 +4,7 @@
 -- Para o dashboard de analytics saber o que se usa mesmo (páginas, sessões),
 -- e não só inferir a partir dos dados de domínio.
 --
--- Privacidade: nada é registado sem consentimento — o INSERT em `app_event`
+-- Privacidade: nada é registado sem consentimento - o INSERT em `app_event`
 -- exige uma linha `analytics_consent` com `granted = true`. Retirar o
 -- consentimento apaga o histórico do próprio (RPC `analytics_set_consent`).
 -- Só o admin lê os eventos; ninguém os altera ou apaga diretamente.
@@ -30,7 +30,7 @@ create policy "analytics_consent_select"
   to authenticated
   using (user_id = auth.uid() or public.is_admin());
 
--- Escrita só pela RPC (security definer) — daí não haver políticas de escrita.
+-- Escrita só pela RPC (security definer) - daí não haver políticas de escrita.
 revoke insert, update, delete on public.analytics_consent from authenticated;
 grant select on public.analytics_consent to authenticated;
 
@@ -48,7 +48,7 @@ create table if not exists public.app_event (
 );
 
 comment on table public.app_event is 'Eventos de utilização (page_view, session_start). Só com consentimento.';
-comment on column public.app_event.path is 'Rota normalizada (ex.: /games/:id) — não guarda ids de entidades.';
+comment on column public.app_event.path is 'Rota normalizada (ex.: /games/:id) - não guarda ids de entidades.';
 
 create index if not exists app_event_created_at_idx on public.app_event (created_at desc);
 create index if not exists app_event_user_idx on public.app_event (user_id);

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Peladinhas — plataforma de futebol entre amigos (frontend)",
+  "description": "Peladinhas - plataforma de futebol entre amigos (frontend)",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

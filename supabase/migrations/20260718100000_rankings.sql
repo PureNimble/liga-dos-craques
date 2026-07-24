@@ -6,7 +6,7 @@
 --   v_ranking_by_format  → por formato (5v5, 7v7, 11v11, …)
 --   v_ranking_by_period  → mensal (ano+mês)
 --   v_ranking_annual     → anual (ver 20260804100000_ranking_annual_view.sql)
--- Tudo derivado de eventos/resultados — consistente por construção.
+-- Tudo derivado de eventos/resultados - consistente por construção.
 -- "points" = 3*vitórias + empates (pontos à moda de liga).
 -- =============================================================================
 

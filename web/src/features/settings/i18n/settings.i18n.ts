@@ -27,8 +27,8 @@ export const settingsTranslations = {
 
   'settings.help.faq.xp.q': { pt: 'Como ganho XP?', en: 'How do I earn XP?' },
   'settings.help.faq.xp.a': {
-    pt: 'O XP fica registado por jogo assim que é fechado — não é preciso pedir nada, é automático. Vês o total e o nível no teu perfil.',
-    en: "XP is recorded per game as soon as it's closed — nothing to request, it's automatic. Your total and level show up on your profile.",
+    pt: 'O XP fica registado por jogo assim que é fechado - não é preciso pedir nada, é automático. Vês o total e o nível no teu perfil.',
+    en: "XP is recorded per game as soon as it's closed - nothing to request, it's automatic. Your total and level show up on your profile.",
   },
 
   'settings.help.faq.groups.q': { pt: 'Como mudo de grupo?', en: 'How do I switch groups?' },
@@ -42,13 +42,13 @@ export const settingsTranslations = {
     en: 'How do the challenges (Crossbar, Penalties, Iconic Goals) work?',
   },
   'settings.help.faq.challenges.a': {
-    pt: 'Crossbar e Penáltis são sessões ao vivo entre jogadores — o ranking conta vitórias, não pontos. Golos Icónicos é individual: rodas um carrossel para tentares replicar um golo histórico.',
-    en: 'Crossbar and Penalties are live sessions between players — the ranking counts wins, not points. Iconic Goals is solo: you spin a carousel and try to replicate a historic goal.',
+    pt: 'Crossbar e Penáltis são sessões ao vivo entre jogadores - o ranking conta vitórias, não pontos. Golos Icónicos é individual: rodas um carrossel para tentares replicar um golo histórico.',
+    en: 'Crossbar and Penalties are live sessions between players - the ranking counts wins, not points. Iconic Goals is solo: you spin a carousel and try to replicate a historic goal.',
   },
 
   'settings.help.faq.reopenGame.q': {
     pt: 'Fechei um jogo com dados errados, como corrijo?',
-    en: 'I closed a game with wrong data — how do I fix it?',
+    en: 'I closed a game with wrong data - how do I fix it?',
   },
   'settings.help.faq.reopenGame.a': {
     pt: 'Pede a um admin do grupo para reabrir o jogo. O XP já atribuído é estornado e recalculado quando o jogo for fechado de novo com os dados certos.',
@@ -60,8 +60,8 @@ export const settingsTranslations = {
     en: "Didn't find what you were looking for?",
   },
   'settings.help.faq.stillStuck.a': {
-    pt: 'Usa "Reportar problema" logo abaixo — a mensagem chega diretamente a quem trata da app.',
-    en: 'Use "Report a problem" right below — the message goes straight to whoever runs the app.',
+    pt: 'Usa "Reportar problema" logo abaixo - a mensagem chega diretamente a quem trata da app.',
+    en: 'Use "Report a problem" right below - the message goes straight to whoever runs the app.',
   },
 
   'settings.session.title': { pt: 'Sessão', en: 'Session' },

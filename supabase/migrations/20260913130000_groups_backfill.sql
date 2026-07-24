@@ -4,11 +4,11 @@
 -- A app já tem jogos/xp/conquistas/tentativas de desafio e perfis reais em
 -- produção. Cria-se UM grupo original com todos os perfis existentes como
 -- membros (admins da app tornam-se também admins deste grupo) e todo o
--- histórico é associado a ele — nada se perde, a app continua a funcionar
+-- histórico é associado a ele - nada se perde, a app continua a funcionar
 -- como antes para quem já lá está, só que agora dentro de um grupo com nome.
 --
 -- Idempotente: identifica o grupo original pelo invite_code fixo 'ORIGINAL'.
--- Numa BD vazia (sem perfis), não há nada para associar — os NOT NULL a seguir
+-- Numa BD vazia (sem perfis), não há nada para associar - os NOT NULL a seguir
 -- ficam corretos na mesma porque as tabelas ficam vazias.
 -- =============================================================================
 
@@ -52,7 +52,7 @@ alter table public.challenge_attempt alter column group_id set not null;
 alter table public.challenge_session alter column group_id set not null;
 
 -- Conquistas passam a ser desbloqueadas por grupo (o mesmo jogador pode
--- desbloquear "10 jogos" outra vez num grupo diferente) — a chave primária
+-- desbloquear "10 jogos" outra vez num grupo diferente) - a chave primária
 -- ganha group_id.
 alter table public.user_achievement drop constraint if exists user_achievement_pkey;
 alter table public.user_achievement alter column group_id set not null;

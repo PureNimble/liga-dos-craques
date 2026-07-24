@@ -4,8 +4,8 @@ import type { TranslationDict } from '@/shared/i18n/translations';
 export const challengesTranslations = {
   'challenges.title': { pt: 'Desafios', en: 'Challenges' },
   'challenges.note': {
-    pt: 'Área separada — não conta para as estatísticas dos jogos.',
-    en: "Separate area — doesn't count towards game stats.",
+    pt: 'Área separada - não conta para as estatísticas dos jogos.',
+    en: "Separate area - doesn't count towards game stats.",
   },
 
   'challenges.record.label': { pt: 'Recorde', en: 'Record' },
@@ -19,7 +19,7 @@ export const challengesTranslations = {
   'challenges.result.win': { pt: 'Vitória', en: 'Win' },
   'challenges.result.loss': { pt: 'Derrota', en: 'Loss' },
   'challenges.result.draw': { pt: 'Empate', en: 'Draw' },
-  'challenges.result.na': { pt: '—', en: '—' },
+  'challenges.result.na': { pt: '-', en: '-' },
 
   'challenges.stats.winsShort': { pt: '{count}V', en: '{count}W' },
   'challenges.stats.record': {

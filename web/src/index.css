@@ -111,7 +111,7 @@ input[type='number'] {
 
 /* Bloqueia o scroll enquanto um modal está aberto. Fica no `html` (é o
    contentor de scroll, por causa do `overflow-x: clip`) e não tira nada do
-   fluxo — a página por trás mantém-se exatamente como está. */
+   fluxo - a página por trás mantém-se exatamente como está. */
 html.modal-open {
   overflow: hidden;
 }

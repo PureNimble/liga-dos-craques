@@ -89,7 +89,7 @@ select is(
   'profile não tem política de UPDATE por admin (só o dono se edita)'
 );
 
--- 9) Reabrir um jogo é operação de servidor (admin) — nunca um UPDATE do cliente.
+-- 9) Reabrir um jogo é operação de servidor (admin) - nunca um UPDATE do cliente.
 select is(
   (
     select prosecdef

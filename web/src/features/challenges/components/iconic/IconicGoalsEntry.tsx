@@ -80,7 +80,7 @@ export function IconicGoalsEntry() {
   async function onForfeit() {
     const ok = await confirm({
       title: 'Desistir deste golo?',
-      message: 'O próximo sorteio é aleatório — podes não calhar neste tão cedo.',
+      message: 'O próximo sorteio é aleatório - podes não calhar neste tão cedo.',
       confirmLabel: 'Desistir',
       danger: true,
     });
@@ -148,13 +148,13 @@ export function IconicGoalsEntry() {
             </div>
             <YouTubeEmbed
               videoId={activeGoal.youtube_id}
-              title={`${activeGoal.scorer} — ${activeGoal.title}`}
+              title={`${activeGoal.scorer} - ${activeGoal.title}`}
               start={activeGoal.video_start}
               embeddable={activeGoal.embeddable}
             />
             <p className={s.hint}>
               Replica este golo numa pelada para o marcares como conseguido. Ainda não consegues?
-              Desiste — mas o próximo é à sorte.
+              Desiste - mas o próximo é à sorte.
             </p>
             <div className={s.actions}>
               <Button onClick={onReplicate} loading={replicate.isPending}>
@@ -228,7 +228,7 @@ export function IconicGoalsEntry() {
         {preview && (
           <YouTubeEmbed
             videoId={preview.youtube_id}
-            title={`${preview.scorer} — ${preview.title}`}
+            title={`${preview.scorer} - ${preview.title}`}
             start={preview.video_start}
             embeddable={preview.embeddable}
           />

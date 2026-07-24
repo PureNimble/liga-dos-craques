@@ -6,6 +6,8 @@ import { computeRating } from '@/features/teams/lib/playerRating';
 export interface CardAttribute {
   key: string;
   label: string;
+  /** Chave i18n (`profile.i18n.ts`) do nome por extenso - usada no `AttributeRadar`. */
+  fullLabelKey: string;
   value: number;
 }
 
@@ -23,7 +25,7 @@ export function positionShort(category: PositionCategory | null | undefined): st
     case 'FWD':
       return 'AVA';
     default:
-      return '—';
+      return '-';
   }
 }
 
@@ -49,11 +51,41 @@ export function cardAttributes(stats: PlayerStats): CardAttribute[] {
   const base = stats.games === 0 ? 55 : 40;
   const winRate = stats.games ? stats.wins / stats.games : 0;
   return [
-    { key: 'fin', label: 'FIN', value: clamp(base + (stats.goals / g) * 45) },
-    { key: 'ass', label: 'ASS', value: clamp(base + (stats.assists / g) * 45) },
-    { key: 'def', label: 'DEF', value: clamp(base + (stats.saves / g) * 35) },
-    { key: 'vit', label: 'VIT', value: clamp(base + winRate * 55) },
-    { key: 'exp', label: 'EXP', value: clamp(base + (Math.min(stats.games, 20) / 20) * 55) },
-    { key: 'mvp', label: 'MVP', value: clamp(base + (stats.mvps / g) * 60) },
+    {
+      key: 'fin',
+      label: 'FIN',
+      fullLabelKey: 'profile.attr.fin',
+      value: clamp(base + (stats.goals / g) * 45),
+    },
+    {
+      key: 'ass',
+      label: 'ASS',
+      fullLabelKey: 'profile.attr.ass',
+      value: clamp(base + (stats.assists / g) * 45),
+    },
+    {
+      key: 'def',
+      label: 'DEF',
+      fullLabelKey: 'profile.attr.def',
+      value: clamp(base + (stats.saves / g) * 35),
+    },
+    {
+      key: 'vit',
+      label: 'VIT',
+      fullLabelKey: 'profile.attr.vit',
+      value: clamp(base + winRate * 55),
+    },
+    {
+      key: 'exp',
+      label: 'EXP',
+      fullLabelKey: 'profile.attr.exp',
+      value: clamp(base + (Math.min(stats.games, 20) / 20) * 55),
+    },
+    {
+      key: 'mvp',
+      label: 'MVP',
+      fullLabelKey: 'profile.attr.mvp',
+      value: clamp(base + (stats.mvps / g) * 60),
+    },
   ];
 }

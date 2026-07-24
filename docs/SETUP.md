@@ -1,6 +1,6 @@
 # Setup para desenvolvimento
 
-Como pôr o Peladinhas a correr localmente. Este guia não contém segredos —
+Como pôr o Peladinhas a correr localmente. Este guia não contém segredos -
 cada pessoa usa as suas próprias credenciais e nunca as committa.
 
 ## Pré-requisitos
@@ -33,7 +33,7 @@ npm run db:types      # regenera os tipos TypeScript a partir do schema
 ```
 
 O `supabase/seed.sql` corre no `db reset` (nunca no `db push`/produção) e concede
-localmente os privilégios base que a plataforma alojada dá por omissão — sem ele, o
+localmente os privilégios base que a plataforma alojada dá por omissão - sem ele, o
 app apanha `permission denied for table ...` ao ler como autenticado.
 
 Depois de `npx supabase status`, apontar o `web/.env.local` ao stack local:
@@ -62,7 +62,7 @@ docker compose up     # frontend em http://localhost:5173
 ```
 
 O browser corre no host, por isso fala diretamente com o Supabase em
-`127.0.0.1:44321` — os containers não precisam de estar na mesma rede.
+`127.0.0.1:44321` - os containers não precisam de estar na mesma rede.
 
 ## Scripts (em `web/`)
 
@@ -77,8 +77,8 @@ O browser corre no host, por isso fala diretamente com o Supabase em
 
 ## Onde fica o quê
 
-- `web/` — frontend React (Vite + TypeScript).
-- `supabase/` — backend como código: migrações SQL, Edge Functions e testes.
-- `docs/` — documentação técnica.
+- `web/` - frontend React (Vite + TypeScript).
+- `supabase/` - backend como código: migrações SQL, Edge Functions e testes.
+- `docs/` - documentação técnica.
 
 Para a arquitetura e as decisões técnicas, ver [ARQUITETURA.md](ARQUITETURA.md).

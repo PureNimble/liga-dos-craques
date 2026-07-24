@@ -1,33 +1,56 @@
-.header {
-  display: flex;
-  width: 100%;
+/* Mesma linguagem visual do PlayerCard ao lado: segue o tema + brilho de relvado. */
+.card {
+  position: relative;
   height: 100%;
-  align-items: center;
-  gap: var(--space-xl);
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  background-image: linear-gradient(to bottom, var(--surface-card-hover), var(--surface-card));
+  box-shadow: var(--shadow-card), var(--shadow-elevated);
+}
+.topGlow {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  top: -2.5rem;
+  height: 8rem;
+  background: radial-gradient(60% 100% at 50% 0%, var(--accent-glow), transparent 70%);
 }
 .lockWrap {
   width: 100%;
 }
-@media (min-width: 640px) {
-  .header {
-    flex: 1;
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
   }
-  .lockWrap {
-    flex: 1;
-  }
+}
+.row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+  animation: fadeUp 400ms ease-out both;
 }
 
 .rating {
+  display: flex;
   flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
 }
 .ratingValue {
   display: block;
   font-family: var(--font-display);
-  font-size: var(--font-size-6xl);
-  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-black);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
+  letter-spacing: var(--tracking-tightest);
+  line-height: 0.95;
 }
 .ratingLabel {
   display: block;
@@ -35,12 +58,11 @@
   font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-faint);
+  letter-spacing: 0.14em;
+  color: var(--text-subtle);
 }
 
 .divider {
-  height: 4rem;
   width: 1px;
   flex-shrink: 0;
   background-color: var(--border-light);
@@ -50,6 +72,7 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
+  justify-content: center;
   gap: var(--space-sm);
 }
 .caption {
@@ -96,4 +119,10 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    animation: none;
+  }
 }

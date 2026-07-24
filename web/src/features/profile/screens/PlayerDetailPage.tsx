@@ -7,14 +7,13 @@ import { StatsGrid } from '@/features/stats/components/StatsGrid';
 import { PlayerCharts } from '@/features/stats/components/PlayerCharts';
 import { RecentMatches } from '@/features/stats/components/RecentMatches';
 import { usePlayerXp } from '@/features/xp/hooks/xpHooks';
-import { XpBar } from '@/features/xp/components/XpBar';
 import { AchievementsGrid } from '@/features/achievements/components/AchievementsGrid';
 import { useAchievements } from '@/features/achievements/hooks/achievementHooks';
 import { usePublicProfile } from '../hooks/profileHooks';
 import { PlayerCard } from '../components/PlayerCard';
 import { PlayerHeader } from '../components/PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from '../lib/cardStats';
-import { FOOT_LABEL_KEY } from '../schemas/profile.schemas';
+import { FOOT_LABEL_KEY, POSITION_LABEL_KEY } from '../schemas/profile.schemas';
 import s from './profileLayout.module.css';
 
 /** Public profile page for any player: card, stats, XP, achievements and recent matches. */
@@ -40,7 +39,12 @@ export function PlayerDetailPage() {
   }
 
   const category = profile.main_position?.category ?? null;
-  const subtitle = [profile.main_position?.label, profile.locality].filter(Boolean).join(' · ');
+  const subtitle = [
+    profile.main_position ? t(POSITION_LABEL_KEY[profile.main_position.code]) : null,
+    profile.locality,
+  ]
+    .filter(Boolean)
+    .join(' · ');
   const featured = achievements?.find((a) => a.id === profile.featured_achievement_id) ?? null;
 
   return (
@@ -49,18 +53,17 @@ export function PlayerDetailPage() {
         <ChevronLeftIcon width={16} height={16} /> {t('profile.detail.back')}
       </button>
 
-      <div className={s.hero}>
+      <div className={s.topGrid}>
         {stats && (
-          <div className={s.cardCol}>
-            <PlayerCard
-              name={profile.name}
-              photoUrl={profile.photo_url}
-              overall={overallOf(stats, category)}
-              position={positionShort(category)}
-              attributes={cardAttributes(stats)}
-              subtitle={subtitle || null}
-            />
-          </div>
+          <PlayerCard
+            name={profile.name}
+            photoUrl={profile.photo_url}
+            overall={overallOf(stats, category)}
+            position={positionShort(category)}
+            attributes={cardAttributes(stats)}
+            subtitle={subtitle || null}
+            xp={xp}
+          />
         )}
         <PlayerHeader
           footLabel={
@@ -72,7 +75,6 @@ export function PlayerDetailPage() {
         />
       </div>
 
-      {xp && <XpBar xp={xp} />}
       {stats && (
         <section>
           <h2 className={s.sectionTitle}>{t('profile.statsTitle')}</h2>

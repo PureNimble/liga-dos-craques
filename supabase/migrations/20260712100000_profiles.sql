@@ -10,7 +10,7 @@
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- POSITION (lookup) — populado pelo seed. Sem escrita por clientes.
+-- POSITION (lookup) - populado pelo seed. Sem escrita por clientes.
 -- -----------------------------------------------------------------------------
 create table if not exists public.position (
   id         bigint generated always as identity primary key,
@@ -46,7 +46,7 @@ create policy "position_select_all"
   using (true);
 
 -- -----------------------------------------------------------------------------
--- PROFILE — 1:1 com auth.users.
+-- PROFILE - 1:1 com auth.users.
 -- -----------------------------------------------------------------------------
 create table if not exists public.profile (
   id               uuid primary key references auth.users (id) on delete cascade,

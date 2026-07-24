@@ -1,5 +1,5 @@
 -- =============================================================================
--- MVP / Flop SEM votação — sempre decididos pela app
+-- MVP / Flop SEM votação - sempre decididos pela app
 -- =============================================================================
 -- O melhor rating do jogo é MVP, o pior é Flop. Em caso de EMPATE no topo/fundo,
 -- desempata pela CONSISTÊNCIA (média histórica das avaliações do jogador):
@@ -61,7 +61,7 @@ where p.category = 'mvp'
    );
 
 comment on view public.v_game_award is
-  'MVP/Flop apurado por jogo — melhor/pior rating; empate desfeito pela consistência (média).';
+  'MVP/Flop apurado por jogo - melhor/pior rating; empate desfeito pela consistência (média).';
 
 -- -----------------------------------------------------------------------------
 -- Apurar = simplesmente fechar o jogo (o apuramento é derivado da vista acima).

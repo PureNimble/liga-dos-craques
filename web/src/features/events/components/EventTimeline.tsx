@@ -50,7 +50,7 @@ export function EventTimeline({ gameId, canManage }: EventTimelineProps) {
                     <span className={s.subIn}>↑ {ev.profile?.name ?? 'Jogador'}</span>
                     <span className={s.faint}>
                       {' '}
-                      ↓ {(ev.meta as { outName?: string } | null)?.outName ?? '—'}
+                      ↓ {(ev.meta as { outName?: string } | null)?.outName ?? '-'}
                     </span>
                     {ev.team && <span className={s.faint}> · {ev.team}</span>}
                   </p>
@@ -65,7 +65,7 @@ export function EventTimeline({ gameId, canManage }: EventTimelineProps) {
                     {ev.team && <span className={s.faint}> · {ev.team}</span>}
                     {assistBy && (
                       <span className={s.assist}>
-                        <AssistIcon width={12} height={12} /> {nameById.get(assistBy) ?? '—'}
+                        <AssistIcon width={12} height={12} /> {nameById.get(assistBy) ?? '-'}
                       </span>
                     )}
                   </p>

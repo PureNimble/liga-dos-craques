@@ -1,5 +1,5 @@
 -- =============================================================================
--- Login por username — o Supabase Auth só autentica por email
+-- Login por username - o Supabase Auth só autentica por email
 -- (signInWithPassword não aceita username), por isso o login resolve o
 -- username para o email correspondente antes de autenticar. Corre como
 -- `anon` (ainda sem sessão), daí o security definer para ler auth.users.

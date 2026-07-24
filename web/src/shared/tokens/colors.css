@@ -1,4 +1,4 @@
-/* Cor — paleta base (primitivos, por família + tom) + camada semântica (por uso).
+/* Cor - paleta base (primitivos, por família + tom) + camada semântica (por uso).
    Os primitivos são os mesmos nos dois temas; é a camada semântica que muda
    de valor consoante o tema (ver bloco [data-theme='light'] no fim). */
 :root {
@@ -18,7 +18,7 @@
   --orange-300: #fdba74;
   --orange-400: #fb923c;
   --orange-600: #ea580c;
-  /* Primitivos: verde (marca) e vermelho (perigo) — 300/400/500 para uso em
+  /* Primitivos: verde (marca) e vermelho (perigo) - 300/400/500 para uso em
      fundo/decoração escura, 600/700 para texto legível sobre fundo claro. */
   --green-300: #6ee7b7;
   --green-400: #34d399;
@@ -28,7 +28,7 @@
   --red-400: #f87171;
   --red-500: #ef4444;
   --red-600: #dc2626;
-  /* Primitivos: tons de etiqueta (estado/categoria) — 300 para texto em fundo
+  /* Primitivos: tons de etiqueta (estado/categoria) - 300 para texto em fundo
      escuro, 600/700 para texto em fundo claro (contraste AA em ambos). */
   --sky-300: #7dd3fc;
   --sky-500: #0ea5e9;
@@ -46,7 +46,7 @@
 }
 
 /* ==========================================================================
-   Tema escuro — valores por omissão (também o `:root` sem `data-theme`, para
+   Tema escuro - valores por omissão (também o `:root` sem `data-theme`, para
    quem não decidiu ainda e o sistema não indica preferência).
    ========================================================================== */
 :root,
@@ -81,7 +81,7 @@
   --surface-translucent-hover: rgb(255 255 255 / 0.08);
   --surface-ghost-hover: rgb(255 255 255 / 0.06);
 
-  /* Superfícies de elevação neutra (painéis, chips, poços) — introduzidas para
+  /* Superfícies de elevação neutra (painéis, chips, poços) - introduzidas para
      tirar cores hard-coded (`var(--gray-7/8/9xx)`) dos módulos que só faziam
      sentido no escuro; cada `*.module.css` deve referenciar estas, nunca os
      primitivos `--gray-*` diretamente, para o tema claro poder inverter. */
@@ -100,7 +100,7 @@
   --danger-border: rgb(239 68 68 / 0.25);
   --accent-glow: rgb(16 185 129 / 0.13); /* brilho de relvado (cabeçalho de jogo) */
 
-  /* Equipas (A verde, B azul) — reutilizado em cabeçalho, campo e painel */
+  /* Equipas (A verde, B azul) - reutilizado em cabeçalho, campo e painel */
   --team-a: var(--green-500);
   --team-a-ring: rgb(16 185 129 / 0.6);
   --team-a-token-ring: rgb(110 231 183 / 0.5);
@@ -126,7 +126,7 @@
   --border-faint-hover: rgb(255 255 255 / 0.12);
   --border-light: rgb(255 255 255 / 0.1);
 
-  /* Estados (alertas) — texto / fundo / borda por tipo */
+  /* Estados (alertas) - texto / fundo / borda por tipo */
   --status-error-fg: var(--red-300);
   --status-error-bg: rgb(239 68 68 / 0.1);
   --status-error-border: rgb(239 68 68 / 0.4);
@@ -137,7 +137,7 @@
   --status-info-bg: var(--gray-850);
   --status-info-border: var(--gray-700);
 
-  /* Tons de etiqueta — fundo translúcido + texto, por cor (badges de estado) */
+  /* Tons de etiqueta - fundo translúcido + texto, por cor (badges de estado) */
   --tone-gray-bg: rgb(100 116 139 / 0.15);
   --tone-gray-fg: var(--gray-300);
   --tone-sky-bg: rgb(14 165 233 / 0.15);
@@ -153,7 +153,7 @@
   --tone-red-bg: var(--danger-surface);
   --tone-red-fg: var(--red-300);
 
-  /* Escala de rating (0–10) — pílula sólida (bg + fg) e texto */
+  /* Escala de rating (0–10) - pílula sólida (bg + fg) e texto */
   --rating-top-bg: var(--accent);
   --rating-top-fg: var(--text-on-accent);
   --rating-good-bg: var(--emerald-600);
@@ -170,7 +170,7 @@
   --rating-low-text: var(--danger-hover);
   --rating-none-text: var(--text-muted);
 
-  /* Pódio (rankings 1º/2º/3º) — gradiente do emblema + anel da linha */
+  /* Pódio (rankings 1º/2º/3º) - gradiente do emblema + anel da linha */
   --podium-1-from: var(--amber-300);
   --podium-1-to: var(--amber-500);
   --podium-1-fg: var(--text-on-accent);
@@ -184,18 +184,7 @@
   --podium-3-fg: var(--white);
   --podium-3-ring: rgb(249 115 22 / 0.2);
 
-  /* Escalão do cartão de jogador (estilo FIFA): anel + destaque + brilho */
-  --tier-gold-ring: rgb(252 211 77 / 0.6);
-  --tier-gold-accent: var(--amber-300);
-  --tier-gold-glow: rgb(252 211 77 / 0.25);
-  --tier-silver-ring: rgb(226 232 240 / 0.5);
-  --tier-silver-accent: var(--gray-100);
-  --tier-silver-glow: rgb(226 232 240 / 0.18);
-  --tier-bronze-ring: rgb(251 146 60 / 0.5);
-  --tier-bronze-accent: var(--orange-300);
-  --tier-bronze-glow: rgb(251 146 60 / 0.2);
-
-  /* Penáltis — cena de estádio (baliza, bancadas, painéis, relva). Ilustração
+  /* Penáltis - cena de estádio (baliza, bancadas, painéis, relva). Ilustração
      de "noite sob holofotes": mantém-se igual nos dois temas de propósito. */
   --pen-sky-top: #0a1220;
   --pen-sky-bottom: #143047;
@@ -205,7 +194,7 @@
   --pen-crowd-3: var(--red-400);
   --pen-crowd-4: var(--gray-300);
   --pen-billboard-bg: #05070b;
-  --pen-billboard-fg: var(--green-300); /* fixo — cena de estádio sempre escura, não segue o tema */
+  --pen-billboard-fg: var(--green-300); /* fixo - cena de estádio sempre escura, não segue o tema */
   --pen-billboard-shine: rgb(255 255 255 / 0.28);
   --pen-grass-1: #1c7a41;
   --pen-grass-2: #176a38;
@@ -228,12 +217,12 @@
 }
 
 /* ==========================================================================
-   Tema claro — só a camada semântica muda; os primitivos são os mesmos.
+   Tema claro - só a camada semântica muda; os primitivos são os mesmos.
    `@media` cobre quem não decidiu explicitamente (segue o sistema); o
    seletor de atributo tem mais especificidade e ganha sempre que o utilizador
    escolhe um tema no `ThemeProvider` (que escreve `data-theme` no `<html>`).
    Grupos decorativos/ilustrados (equipas, campo, pódio, escalão do cartão,
-   estádio de penáltis) ficam de propósito iguais nos dois temas — são
+   estádio de penáltis) ficam de propósito iguais nos dois temas - são
    elementos "de marca", não cromo de interface.
    ========================================================================== */
 @media (prefers-color-scheme: light) {

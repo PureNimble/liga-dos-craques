@@ -38,7 +38,7 @@ jobs:
       - name: Testes de BD/RLS (pgTAP)
         run: supabase test db
 
-      # Verificação de drift de tipos (informativa — o ficheiro é mantido à mão).
+      # Verificação de drift de tipos (informativa - o ficheiro é mantido à mão).
       # Quando migrarmos para tipos gerados, tornar este passo bloqueante.
       - name: Drift de tipos (informativo)
         continue-on-error: true

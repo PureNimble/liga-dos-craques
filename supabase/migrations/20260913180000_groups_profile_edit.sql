@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Um admin do grupo pode renomear e definir uma foto (avatar) do grupo, no
 -- mesmo padrão do avatar de perfil (bucket público, upload direto do
--- browser, path prefixado pelo dono — aqui o group_id em vez do user_id).
+-- browser, path prefixado pelo dono - aqui o group_id em vez do user_id).
 -- =============================================================================
 
 alter table public.app_group

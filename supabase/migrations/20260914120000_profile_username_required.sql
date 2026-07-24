@@ -1,5 +1,5 @@
 -- =============================================================================
--- Nome de utilizador deixa de ser opcional — passa a ser pedido no registo
+-- Nome de utilizador deixa de ser opcional - passa a ser pedido no registo
 -- (necessário para o login por username, ver 20260914110000) e a ser
 -- exigido para sempre haver um valor a resolver.
 -- =============================================================================
@@ -69,7 +69,7 @@ end $$;
 
 -- -----------------------------------------------------------------------------
 -- Verificação de disponibilidade a partir do formulário de registo (ainda
--- sem sessão, por isso security definer — profile só é legível a
+-- sem sessão, por isso security definer - profile só é legível a
 -- `authenticated`).
 -- -----------------------------------------------------------------------------
 create or replace function public.username_available(p_username text)

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   theme.css — agrega TODOS os tokens de design da app numa única entrada.
+   theme.css - agrega TODOS os tokens de design da app numa única entrada.
    Importar este ficheiro (feito em main.tsx); os componentes referenciam os
    tokens nos seus `*.module.css`. Um token só existe se for usado.
    ========================================================================== */

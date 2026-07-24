@@ -48,3 +48,24 @@ export function isoToLocalInput(iso: string): string {
   const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
   return local.toISOString().slice(0, 16);
 }
+
+/**
+ * Formata data/hora consoante a linguagem selecionata useT (ver i18n/useT.tsx) - para mostrar no ecrã.
+ * @param iso Data/hora em ISO (timestamptz)
+ * @param lang Código da linguagem ('pt' ou 'en')
+ * @returns Data/hora formatada consoante a linguagem
+ */
+
+export function formatGameDateTimeByLang(iso: string, lang: 'pt' | 'en'): string {
+  const date = new Date(iso);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: TZ,
+  };
+
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(date);
+}

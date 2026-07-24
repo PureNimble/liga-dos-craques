@@ -5,10 +5,10 @@ geração de equipas, estatísticas, rankings, desafios, XP e conquistas.
 
 ## Funcionalidades
 
-- **Jogos** — marcação, inscrições e composição de equipas equilibradas.
-- **Ao vivo** — registo de eventos (golos, assistências, cartões) com placar automático.
-- **Jogadores** — cartão de jogador, estatísticas e histórico de jogos.
-- **Progresso** — rankings da malta, sistema de XP e conquistas.
+- **Jogos** - marcação, inscrições e composição de equipas equilibradas.
+- **Ao vivo** - registo de eventos (golos, assistências, cartões) com placar automático.
+- **Jogadores** - cartão de jogador, estatísticas e histórico de jogos.
+- **Progresso** - rankings da malta, sistema de XP e conquistas.
 
 ## Stack
 

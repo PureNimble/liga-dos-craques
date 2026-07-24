@@ -6,7 +6,7 @@
 -- continua aberta a todos os autenticados. Não há delete: desativa-se com
 -- active=false (apagar arrastaria em cascata os replicados dos jogadores).
 --
--- Nota: golos criados pela app vivem só na BD — não ficam versionados em
+-- Nota: golos criados pela app vivem só na BD - não ficam versionados em
 -- migrações, por isso um `db reset` local não os traz de volta.
 -- =============================================================================
 

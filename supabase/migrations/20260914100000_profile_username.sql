@@ -1,5 +1,5 @@
 -- =============================================================================
--- Nome de utilizador (username) — identificador único e opcional, além do
+-- Nome de utilizador (username) - identificador único e opcional, além do
 -- nome de exibição (que continua livre e não-único).
 -- =============================================================================
 

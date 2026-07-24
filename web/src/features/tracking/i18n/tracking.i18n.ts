@@ -18,8 +18,8 @@ export const trackingTranslations = {
 
   'consent.title': { pt: 'Ajudas a melhorar a app?', en: 'Help improve the app?' },
   'consent.body': {
-    pt: 'Com a tua autorização, registamos que páginas visitas dentro da app — sem cookies de terceiros, sem publicidade e sem sair daqui. Só o admin vê os totais, e podes voltar atrás a qualquer momento em Definições (o histórico é apagado).',
-    en: 'With your permission, we log which pages you visit inside the app — no third-party cookies, no ads, and it never leaves here. Only the admin sees the totals, and you can change your mind anytime in Settings (your history gets deleted).',
+    pt: 'Com a tua autorização, registamos que páginas visitas dentro da app - sem cookies de terceiros, sem publicidade e sem sair daqui. Só o admin vê os totais, e podes voltar atrás a qualquer momento em Definições (o histórico é apagado).',
+    en: 'With your permission, we log which pages you visit inside the app - no third-party cookies, no ads, and it never leaves here. Only the admin sees the totals, and you can change your mind anytime in Settings (your history gets deleted).',
   },
   'consent.decline': { pt: 'Não, obrigado', en: 'No, thanks' },
   'consent.accept': { pt: 'Aceitar', en: 'Accept' },

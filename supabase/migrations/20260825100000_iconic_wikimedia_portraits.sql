@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Retratos dos jogadores (Wikimedia Commons) nas conquistas de golos icónicos
 -- =============================================================================
--- Fotos livres da Wikimedia Commons (licença CC — atribuição fica no crédito da
+-- Fotos livres da Wikimedia Commons (licença CC - atribuição fica no crédito da
 -- Wikipédia). Substituem o frame do golo por um retrato reconhecível do jogador.
 -- =============================================================================
 

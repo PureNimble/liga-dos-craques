@@ -2,7 +2,7 @@
 -- MVP / Flop por RATING calculado (a app decide; votação só desempata)
 -- =============================================================================
 -- Cada jogador recebe uma avaliação por jogo (base 6.0, impactada pelos eventos
--- e pelo resultado). O melhor rating é MVP, o pior é Flop — escolhidos pela app.
+-- e pelo resultado). O melhor rating é MVP, o pior é Flop - escolhidos pela app.
 -- Só quando há EMPATE no topo (MVP) ou no fundo (Flop) é aberta uma votação,
 -- e apenas entre os empatados dessa categoria. MVP nunca é igual ao Flop e não
 -- se pode votar na mesma pessoa para as duas. No perfil faz-se a média.
@@ -133,7 +133,7 @@ where f.category = 'mvp'
    );
 
 comment on view public.v_game_award is
-  'MVP/Flop apurado por jogo — automático (rating único) ou por votação de desempate.';
+  'MVP/Flop apurado por jogo - automático (rating único) ou por votação de desempate.';
 
 grant select on public.v_game_award to anon, authenticated;
 

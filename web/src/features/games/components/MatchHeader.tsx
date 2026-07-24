@@ -64,7 +64,7 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
       <div className={s.meta}>
         <span className={s.metaItem}>
           <CalendarIcon width={14} height={14} />
-          {game.game_format?.label ?? '—'}
+          {game.game_format?.label ?? '-'}
         </span>
         {game.location && (
           <span className={s.metaItem}>

@@ -1,5 +1,5 @@
 -- =============================================================================
--- Campos (places) — mapa por distrito
+-- Campos (places) - mapa por distrito
 -- =============================================================================
 -- Lista de campos conhecidos pelo grupo, puramente informativa (sem reserva).
 -- =============================================================================
@@ -22,7 +22,7 @@ create table if not exists public.place (
   updated_at  timestamptz not null default now()
 );
 
-comment on table public.place is 'Campos conhecidos pelo grupo, por distrito — só informativo, sem reserva.';
+comment on table public.place is 'Campos conhecidos pelo grupo, por distrito - só informativo, sem reserva.';
 
 create index if not exists idx_place_district on public.place (district);
 

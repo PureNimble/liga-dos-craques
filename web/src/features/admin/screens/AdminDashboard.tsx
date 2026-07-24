@@ -29,7 +29,7 @@ export function AdminDashboard() {
   const online = useOnlineCount();
   const health = useHealthCheck();
 
-  const val = (n: number | undefined) => (isLoading ? '—' : (n ?? 0).toLocaleString('pt-PT'));
+  const val = (n: number | undefined) => (isLoading ? '-' : (n ?? 0).toLocaleString('pt-PT'));
 
   const serverOk = !health.isError && health.data?.status === 'ok';
   const serverState = health.isLoading ? 'loading' : serverOk ? 'ok' : 'error';
@@ -81,7 +81,7 @@ export function AdminDashboard() {
           <span className={s.metricIcon}>
             <AlertIcon width={18} height={18} />
           </span>
-          <span className={s.metricValue}>{openReports ?? '—'}</span>
+          <span className={s.metricValue}>{openReports ?? '-'}</span>
           <span className={s.metricLabel}>{t('admin.dashboard.metric.openReports')}</span>
         </Link>
       </section>

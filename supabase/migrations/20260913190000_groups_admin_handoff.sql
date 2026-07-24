@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Um admin pode promover outro membro a admin. Sair do grupo (ou ser
 -- removido) fica bloqueado se isso deixasse o grupo sem nenhum admin e ainda
--- com outros membros lá dentro — força a transferência de posse antes de
+-- com outros membros lá dentro - força a transferência de posse antes de
 -- sair. Se o admin for o único membro (ninguém para "ficar sem admin"),
 -- sair continua permitido.
 -- =============================================================================
@@ -26,7 +26,7 @@ $$;
 
 grant execute on function public.is_last_group_admin(uuid, uuid) to authenticated;
 
--- Sair/remover passa a falhar (0 linhas afetadas, sem erro — RLS filtra a
+-- Sair/remover passa a falhar (0 linhas afetadas, sem erro - RLS filtra a
 -- linha) quando a vítima é o último admin de um grupo com outros membros.
 drop policy if exists "group_member_delete" on public.group_member;
 create policy "group_member_delete"

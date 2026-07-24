@@ -2,7 +2,7 @@
 -- Nome de conquista de cada golo icónico
 -- =============================================================================
 -- Ao replicar um golo mostra-se um "toast" estilo consola. O título é o nome da
--- conquista — enigmático de propósito, não diz o golo nem o jogador (isso vem
+-- conquista - enigmático de propósito, não diz o golo nem o jogador (isso vem
 -- na linha de baixo). Curado à mão, um por golo; fica nulo nos golos que ainda
 -- não tenham nome e o frontend cai para o título do golo.
 -- =============================================================================
@@ -19,7 +19,7 @@ from (values
   ('ig_ronaldo_porto',      'O Primeiro Puskás de Sempre'),
   -- Lateral a marcar o golo do ano: Puskás 2018.
   ('ig_pavard',             'O Lateral Ganhou o Prémio'),
-  -- "Nunca tinha tentado um voleio de esquerda assim" — Zidane, Hampden 2002.
+  -- "Nunca tinha tentado um voleio de esquerda assim" - Zidane, Hampden 2002.
   ('ig_zidane_volley',      'Nunca Tinha Tentado à Canhota'),
   -- O apanha-bolas atrás da baliza baixou-se; o guarda-redes nem se mexeu.
   ('ig_roberto_carlos',     'O Apanha-Bolas Baixou-se'),

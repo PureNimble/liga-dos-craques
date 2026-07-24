@@ -70,7 +70,7 @@ function XpRulesCard() {
   return (
     <Card>
       <h2 className={s.cardTitle}>Regras de XP</h2>
-      <p className={s.cardDesc}>Alterar cria uma nova versão — o histórico de XP fica intacto.</p>
+      <p className={s.cardDesc}>Alterar cria uma nova versão - o histórico de XP fica intacto.</p>
       <ul className={s.rules}>
         {rules?.map((rule) => (
           <XpRuleRow key={rule.id} rule={rule} />

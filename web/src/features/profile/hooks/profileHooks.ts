@@ -151,7 +151,7 @@ export interface PublicProfile {
   locality: string | null;
   preferred_foot: PreferredFoot | null;
   featured_achievement_id: number | null;
-  main_position: { label: string; category: PositionCategory } | null;
+  main_position: { code: string; label: string; category: PositionCategory } | null;
 }
 
 /** Fetches the public profile of any player. */
@@ -163,7 +163,7 @@ export function usePublicProfile(playerId: string | undefined) {
       const { data, error } = await supabase
         .from('profile')
         .select(
-          'id, name, photo_url, locality, preferred_foot, featured_achievement_id, main_position:main_position_id(label, category)',
+          'id, name, photo_url, locality, preferred_foot, featured_achievement_id, main_position:main_position_id(code, label, category)',
         )
         .eq('id', playerId as string)
         .single();

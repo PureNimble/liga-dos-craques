@@ -12,7 +12,7 @@ alter table public.app_group
     check (visibility in ('public', 'private'));
 
 -- SELECT já tinha "membro vê o seu grupo" (app_group_select_member); esta
--- policy é ADITIVA (múltiplas policies permissivas juntam-se por OR) — dá
+-- policy é ADITIVA (múltiplas policies permissivas juntam-se por OR) - dá
 -- visibilidade extra a grupos públicos, mesmo a quem ainda não é membro.
 drop policy if exists "app_group_select_public" on public.app_group;
 create policy "app_group_select_public"

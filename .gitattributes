@@ -2,7 +2,7 @@
 # e em scripts shell dentro dos workflows). Editores no Windows lidam com isto.
 * text=auto eol=lf
 
-# Binários — não tocar.
+# Binários - não tocar.
 *.png binary
 *.jpg binary
 *.jpeg binary

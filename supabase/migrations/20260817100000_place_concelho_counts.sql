@@ -2,7 +2,7 @@
 -- Place: concelho + telefone; vistas de contagem para o mapa por distrito/concelho
 -- =============================================================================
 -- O concelho fica guardado no próprio registo (escolhido no formulário, em
--- cascata a partir do distrito) — evita ter de testar ponto-em-polígono no
+-- cascata a partir do distrito) - evita ter de testar ponto-em-polígono no
 -- frontend para saber a que concelho cada campo pertence. As contagens usadas
 -- pelo mapa (quantos campos por distrito/concelho) vêm de vistas SQL, não de
 -- ciclos em JS sobre a lista de campos.
@@ -30,10 +30,10 @@ begin
   end if;
 end $$;
 
-comment on column public.place.concelho is 'Concelho (município) — texto livre; são 300+ valores, não vale a pena um enum.';
-comment on column public.place.phone is 'Telefone de contacto do campo — opcional.';
+comment on column public.place.concelho is 'Concelho (município) - texto livre; são 300+ valores, não vale a pena um enum.';
+comment on column public.place.phone is 'Telefone de contacto do campo - opcional.';
 
--- created_by continua de fora — só os campos abaixo se juntam ao GRANT existente.
+-- created_by continua de fora - só os campos abaixo se juntam ao GRANT existente.
 grant update (concelho, phone) on public.place to authenticated;
 
 -- =============================================================================
@@ -49,7 +49,7 @@ select
 from public.place
 group by district;
 
-comment on view public.v_place_count_by_district is 'Nº de campos e centro médio por distrito — para o pin agregado do mapa.';
+comment on view public.v_place_count_by_district is 'Nº de campos e centro médio por distrito - para o pin agregado do mapa.';
 
 grant select on public.v_place_count_by_district to authenticated;
 
@@ -64,6 +64,6 @@ select
 from public.place
 group by district, concelho;
 
-comment on view public.v_place_count_by_concelho is 'Nº de campos e centro médio por concelho — para o pin agregado do mapa.';
+comment on view public.v_place_count_by_concelho is 'Nº de campos e centro médio por concelho - para o pin agregado do mapa.';
 
 grant select on public.v_place_count_by_concelho to authenticated;

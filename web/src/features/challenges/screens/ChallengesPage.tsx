@@ -118,7 +118,7 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
       ? t('challenges.stats.winsShort', { count: r.wins })
       : isSession
         ? `${r.wins}`
-        : `${bestValue(r) ?? '—'}`,
+        : `${bestValue(r) ?? '-'}`,
     sub: isVersus
       ? t('challenges.stats.record', { wins: r.wins, losses: r.losses, games: r.attempts })
       : isSession

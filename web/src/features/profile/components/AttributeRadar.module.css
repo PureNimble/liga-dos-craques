@@ -1,0 +1,73 @@
+.svg {
+  display: block;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 15rem;
+  height: auto;
+  overflow: visible;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--chart-grid);
+}
+.spoke {
+  stroke: var(--chart-grid);
+}
+
+/* A série desenha-se do centro para fora ao entrar. */
+@keyframes radarIn {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+.area,
+.line,
+.point {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: radarIn 500ms 250ms ease-out both;
+}
+.area {
+  fill: var(--chart-area-top);
+  fill-opacity: 0.35;
+  stroke: none;
+}
+.line {
+  fill: none;
+  stroke: var(--chart-line);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.point {
+  fill: var(--chart-line);
+  stroke: var(--chart-point-stroke);
+  stroke-width: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .area,
+  .line,
+  .point {
+    animation: none;
+  }
+}
+
+.badge {
+  fill: var(--accent-surface);
+  stroke: var(--accent-ring);
+  stroke-width: 1;
+}
+/* Tamanhos em unidades do viewBox: compensam o SVG renderizado mais pequeno. */
+.badgeText {
+  fill: var(--accent-strong);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.label {
+  fill: var(--text-subtle);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+}

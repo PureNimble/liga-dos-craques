@@ -1,8 +1,8 @@
 -- =============================================================================
--- F0 · Migração inicial — prova de vida (health) + função ping()
+-- F0 · Migração inicial - prova de vida (health) + função ping()
 -- =============================================================================
 -- Objetivo: validar o pipeline de migrações e o padrão de segurança (RLS ativo
--- desde o primeiro dia). NÃO contém tabelas de domínio — essas chegam na F1.
+-- desde o primeiro dia). NÃO contém tabelas de domínio - essas chegam na F1.
 -- =============================================================================
 
 -- Tabela mínima de saúde. Serve para o keep-alive e para provar leituras.
@@ -24,7 +24,7 @@ insert into public.health (note) values ('bootstrap') on conflict do nothing;
 alter table public.health enable row level security;
 
 -- Leitura pública permitida (é só uma tabela de saúde, sem dados sensíveis).
--- Escrita NÃO é concedida a anon/authenticated — fica reservada ao service role.
+-- Escrita NÃO é concedida a anon/authenticated - fica reservada ao service role.
 drop policy if exists "health_select_public" on public.health;
 create policy "health_select_public"
   on public.health
@@ -34,7 +34,7 @@ create policy "health_select_public"
 
 -- -----------------------------------------------------------------------------
 -- Função ping(): resposta leve para health-check do frontend.
--- SECURITY INVOKER (default) — não precisa de privilégios elevados.
+-- SECURITY INVOKER (default) - não precisa de privilégios elevados.
 -- -----------------------------------------------------------------------------
 create or replace function public.ping()
 returns text

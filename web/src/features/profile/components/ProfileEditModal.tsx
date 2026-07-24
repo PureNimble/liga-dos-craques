@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, Field, Input, Modal, Select } from '@/shared/components/ui';
+import { LockIcon } from '@/shared/components/ui/icons';
 import { useToast } from '@/shared/components/toast/useToast';
 import { AvatarUpload } from './AvatarUpload';
 import { PositionPicker } from './PositionPicker';
@@ -118,7 +120,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         <Field
           label="Nome de utilizador"
           htmlFor="username"
-          hint="Único — minúsculas, números e _."
+          hint="Único - minúsculas, números e _."
           error={form.formState.errors.username?.message ?? usernameError}
         >
           <Input id="username" placeholder="ex: vasco10" {...form.register('username')} />
@@ -155,7 +157,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         <div className={s.grid2}>
           <Field label="Género" htmlFor="gender">
             <Select id="gender" {...form.register('gender')}>
-              <option value="">—</option>
+              <option value="">-</option>
               {Object.entries(GENDER_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -165,7 +167,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Field>
           <Field label="Pé preferido" htmlFor="preferred_foot">
             <Select id="preferred_foot" {...form.register('preferred_foot')}>
-              <option value="">—</option>
+              <option value="">-</option>
               {Object.entries(FOOT_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -183,6 +185,14 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
             onToggle={togglePosition}
           />
         </fieldset>
+
+        <div className={s.account}>
+          <Link to="/update-password">
+            <Button variant="secondary" type="button">
+              <LockIcon width={16} height={16} /> Alterar password
+            </Button>
+          </Link>
+        </div>
 
         {updateProfile.isError && !isUsernameTaken && (
           <Alert kind="error">Não foi possível guardar. Tenta novamente.</Alert>

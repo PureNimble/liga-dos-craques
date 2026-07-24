@@ -54,8 +54,8 @@ export const gamesTranslations = {
     en: 'Review phase: add or fix missing events. Once MVP/Flop is resolved, events are locked.',
   },
   'games.detail.eventsClosed': {
-    pt: 'Jogo apurado — os eventos estão fechados.',
-    en: 'Game resolved — events are closed.',
+    pt: 'Jogo apurado - os eventos estão fechados.',
+    en: 'Game resolved - events are closed.',
   },
   'games.detail.cancelTitle': { pt: 'Cancelar este jogo?', en: 'Cancel this game?' },
   'games.detail.cancelMessage': {
@@ -85,8 +85,8 @@ export const gamesTranslations = {
   'games.detail.manageTitle': { pt: 'Gerir jogo', en: 'Manage game' },
   'games.detail.editDetails': { pt: 'Editar detalhes', en: 'Edit details' },
   'games.detail.lockedNote': {
-    pt: 'O jogo já começou — os detalhes estão bloqueados.',
-    en: 'The game has already started — details are locked.',
+    pt: 'O jogo já começou - os detalhes estão bloqueados.',
+    en: 'The game has already started - details are locked.',
   },
   'games.detail.closeRegistrationsAndForm': {
     pt: 'Encerrar inscrições e formar equipas',
@@ -132,6 +132,11 @@ export const gamesTranslations = {
   'games.roster.invite': { pt: 'Convidar', en: 'Invite' },
   'games.roster.alreadyIn': { pt: 'Estás neste jogo.', en: "You're in this game." },
   'games.roster.joinMe': { pt: 'Inscrever-me', en: 'Join' },
+
+  // NextGameTeaser
+  'games.nextGameTeaser.noGames': { pt: 'Sem jogos', en: 'No games' },
+  'games.nextGameTeaser.nextGame': { pt: 'Próximo jogo:', en: 'Next game:' },
+
 } satisfies TranslationDict;
 
 /** Union of all translation keys defined for the `games` feature. */

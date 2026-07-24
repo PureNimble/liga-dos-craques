@@ -13,7 +13,7 @@
 --   • foi retirado       → o jogador
 --
 -- Quem faz a ação nunca é notificado da própria ação. Como os avisos nascem em
--- trigger, valem para qualquer caminho de escrita — app, admin ou SQL à mão.
+-- trigger, valem para qualquer caminho de escrita - app, admin ou SQL à mão.
 -- =============================================================================
 
 create or replace function public.trg_notify_game_player()

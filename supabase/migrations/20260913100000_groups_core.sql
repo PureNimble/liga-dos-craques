@@ -4,11 +4,11 @@
 -- Um grupo é um círculo de amigos que organiza jogos entre si. Um utilizador
 -- pode pertencer a vários grupos; `profile.active_group_id` guarda qual está
 -- ativo (persistido no servidor, sobrevive entre dispositivos). Toda a escrita
--- em app_group/group_member passa por RPCs security definer — sem INSERT/
+-- em app_group/group_member passa por RPCs security definer - sem INSERT/
 -- UPDATE direto por clientes (evita, por exemplo, alguém inserir-se a si
 -- próprio como admin de um grupo arbitrário).
 --
--- Nome da tabela: `app_group`, não `group` — é palavra reservada em SQL e
+-- Nome da tabela: `app_group`, não `group` - é palavra reservada em SQL e
 -- obrigaria a citá-la em todas as migrações/políticas seguintes.
 -- =============================================================================
 
@@ -42,7 +42,7 @@ comment on table public.group_member is 'Pertença a um grupo. role admin gere m
 
 -- -----------------------------------------------------------------------------
 -- Helpers de autorização (mesma forma de is_admin()/is_game_organizer()).
--- is_admin() é sempre um bypass — o admin global vê/gere qualquer grupo.
+-- is_admin() é sempre um bypass - o admin global vê/gere qualquer grupo.
 -- -----------------------------------------------------------------------------
 create or replace function public.is_group_member(p_group_id uuid)
 returns boolean
@@ -76,7 +76,7 @@ grant execute on function public.is_group_admin(uuid) to authenticated;
 
 -- -----------------------------------------------------------------------------
 -- Grupo ativo do utilizador (qual está a ver/usar agora). Só as RPCs abaixo
--- escrevem — não entra nos GRANTs por coluna de profile.
+-- escrevem - não entra nos GRANTs por coluna de profile.
 -- -----------------------------------------------------------------------------
 alter table public.profile
   add column if not exists active_group_id uuid references public.app_group (id) on delete set null;
@@ -101,7 +101,7 @@ create policy "group_member_select"
   on public.group_member for select to authenticated
   using (public.is_group_member(group_id));
 
--- Sair do grupo (a própria linha) ou remover um membro (admin do grupo) — a
+-- Sair do grupo (a própria linha) ou remover um membro (admin do grupo) - a
 -- mesma policy cobre "sair" e "remover", sem precisar de RPCs dedicadas.
 drop policy if exists "group_member_delete" on public.group_member;
 create policy "group_member_delete"

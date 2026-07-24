@@ -2,7 +2,7 @@
 -- Gestão de dados de referência pelo admin (renomear + reordenar)
 -- =============================================================================
 -- Deixa o admin corrigir rótulos e ordenar as tabelas de referência (formatos,
--- posições, tipos de evento, tags) pela interface. Só label/sort_order — os
+-- posições, tipos de evento, tags) pela interface. Só label/sort_order - os
 -- campos estruturais (players_per_side, category, affects_score, …) alteram a
 -- lógica do jogo e continuam a viver em migrações. Escrita restrita a is_admin().
 -- =============================================================================

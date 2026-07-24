@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Obrigado por reportares um problema! Preenche os campos abaixo com o máximo de detalhe possível — isso acelera muito a resolução.
+        Obrigado por reportares um problema! Preenche os campos abaixo com o máximo de detalhe possível - isso acelera muito a resolução.
 
   - type: textarea
     id: description
@@ -59,10 +59,10 @@ body:
     attributes:
       label: Severidade
       options:
-        - Crítica — bloqueia utilização da app
-        - Alta — funcionalidade principal afetada
-        - Média — funcionalidade secundária afetada
-        - Baixa — cosmético / menor
+        - Crítica - bloqueia utilização da app
+        - Alta - funcionalidade principal afetada
+        - Média - funcionalidade secundária afetada
+        - Baixa - cosmético / menor
     validations:
       required: true
 

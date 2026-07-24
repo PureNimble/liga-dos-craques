@@ -78,7 +78,7 @@ export function AdminAnalyticsPage() {
     <>
       <header className={s.head}>
         <p className={s.subtitle}>
-          Uso da plataforma nos {period} — quem entra, o que usa e quando. Comparado com os {months}{' '}
+          Uso da plataforma nos {period} - quem entra, o que usa e quando. Comparado com os {months}{' '}
           meses anteriores.
         </p>
         <div className={s.range} role="group" aria-label="Período">
@@ -151,7 +151,7 @@ export function AdminAnalyticsPage() {
               </div>
               {!tracking?.hasData ? (
                 <p className={s.empty}>
-                  Ainda sem dados de navegação — os cartões seguintes usam as ações registadas na
+                  Ainda sem dados de navegação - os cartões seguintes usam as ações registadas na
                   base de dados. Assim que alguém aceitar o tracking no perfil, as visitas aparecem
                   aqui.
                 </p>
@@ -215,7 +215,7 @@ export function AdminAnalyticsPage() {
                   </div>
                   <RankedBars
                     items={tracking.entryPages.map((p) => ({ id: p.label, ...p }))}
-                    empty="Ainda sem sessões registadas — aparecem no primeiro separador aberto com tracking ativo."
+                    empty="Ainda sem sessões registadas - aparecem no primeiro separador aberto com tracking ativo."
                     color={SERIES.games}
                   />
                 </article>
@@ -227,7 +227,7 @@ export function AdminAnalyticsPage() {
                   </div>
                   <CategoryDonut
                     data={tracking.devices}
-                    empty="Ainda sem sessões registadas — o dispositivo é lido no arranque da sessão."
+                    empty="Ainda sem sessões registadas - o dispositivo é lido no arranque da sessão."
                   />
                 </article>
 

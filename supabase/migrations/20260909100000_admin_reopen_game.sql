@@ -7,7 +7,7 @@
 --
 -- `admin_reopen_game` devolve o jogo à fase de revisão ('finished'), onde o
 -- organizador corrige eventos e resultado e volta a fechar por "Apurar
--- MVP/Flop" — que reatribui a XP com os dados certos.
+-- MVP/Flop" - que reatribui a XP com os dados certos.
 --
 -- O ledger continua append-only: a XP já atribuída não é apagada, é **estornada**
 -- com movimentos simétricos (mesma fonte, pontos negativos). O total de cada

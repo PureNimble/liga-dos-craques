@@ -1,5 +1,5 @@
 -- =============================================================================
--- P1.4 · Administração — editar regras de XP (versionadas)
+-- P1.4 · Administração - editar regras de XP (versionadas)
 -- =============================================================================
 -- Alterar uma regra de XP NUNCA edita a antiga: fecha-a (valid_to/active=false)
 -- e cria uma nova versão. O histórico (xp_ledger aponta para xp_rule_id) fica

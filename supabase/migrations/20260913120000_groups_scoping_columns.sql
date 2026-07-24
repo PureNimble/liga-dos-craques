@@ -1,12 +1,12 @@
 -- =============================================================================
--- Grupos · colunas de âmbito (ainda sem RLS/backfill — ver migrações seguintes)
+-- Grupos · colunas de âmbito (ainda sem RLS/backfill - ver migrações seguintes)
 -- =============================================================================
 -- `game` é a "raiz" do âmbito: game_player/event/event_tag/session_player/
 -- session_turn não ganham a sua própria coluna, seguem o group_id do
 -- game_id/session_id a que pertencem. As restantes tabelas ganham group_id
 -- diretamente porque não têm todas uma FK comum para o derivar.
 --
--- Colunas nullable por agora — a migração de backfill (seguinte) preenche os
+-- Colunas nullable por agora - a migração de backfill (seguinte) preenche os
 -- dados existentes e só depois é que ficam NOT NULL. Isto evita uma janela em
 -- que a app fica sem conseguir escrever por falta de valor.
 -- =============================================================================

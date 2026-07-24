@@ -65,7 +65,7 @@ export function ChangeUsernameModal({ open, currentUsername, onClose }: ChangeUs
         <Field
           label="Nome de utilizador"
           htmlFor="username"
-          hint="Único — minúsculas, números e _."
+          hint="Único - minúsculas, números e _."
           error={form.formState.errors.username?.message ?? usernameError}
         >
           <Input id="username" {...form.register('username')} />

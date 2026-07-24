@@ -98,7 +98,9 @@ function AchievementRow({ achievement, onEdit }: { achievement: Achievement; onE
 
 interface FormValues {
   label: string;
+  label_en: string;
   description: string;
+  description_en: string;
   icon: string;
   type: 'stat' | 'special';
   metric: string;
@@ -125,7 +127,9 @@ function AchievementModal({
   const form = useForm<FormValues>({
     defaultValues: {
       label: achievement?.label ?? '',
+      label_en: achievement?.label_en ?? '',
       description: achievement?.description ?? '',
+      description_en: achievement?.description_en ?? '',
       icon: achievement?.icon ?? 'medal',
       type: parsed?.type ?? 'stat',
       metric: parsed?.type === 'stat' ? parsed.metric : STAT_METRICS[0].value,
@@ -144,6 +148,8 @@ function AchievementModal({
     if (!label) return setError('Indica o nome da conquista.');
     if (!description) return setError('Indica a descrição.');
 
+    const label_en = v.label_en.trim() || null;
+    const description_en = v.description_en.trim() || null;
     const criteria =
       v.type === 'stat'
         ? buildCriteria({ type: 'stat', metric: v.metric, gte: Number(v.gte) })
@@ -154,14 +160,24 @@ function AchievementModal({
       if (achievement) {
         await update.mutateAsync({
           id: achievement.id,
-          patch: { label, description, icon: v.icon || 'medal', criteria, image_url },
+          patch: {
+            label,
+            label_en,
+            description,
+            description_en,
+            icon: v.icon || 'medal',
+            criteria,
+            image_url,
+          },
         });
         toast.show('Conquista atualizada.', 'success');
       } else {
         await add.mutateAsync({
           code: buildAchievementCode(label),
           label,
+          label_en,
           description,
+          description_en,
           icon: v.icon || 'medal',
           criteria,
           image_url,
@@ -221,6 +237,19 @@ function AchievementModal({
         </Field>
 
         <div className={s.grid}>
+          <Field label="Nome (EN)" htmlFor="a-label-en" hint="Opcional - sem tradução, mostra o PT">
+            <Input id="a-label-en" {...form.register('label_en')} />
+          </Field>
+          <Field
+            label="Descrição (EN)"
+            htmlFor="a-desc-en"
+            hint="Opcional - sem tradução, mostra o PT"
+          >
+            <Input id="a-desc-en" {...form.register('description_en')} />
+          </Field>
+        </div>
+
+        <div className={s.grid}>
           <Field label="Tipo de critério" htmlFor="a-type">
             <Select id="a-type" {...form.register('type')}>
               <option value="stat">Estatística</option>
@@ -256,7 +285,7 @@ function AchievementModal({
           )}
         </div>
 
-        <Field label="Imagem (URL)" htmlFor="a-img" hint="Opcional — tem prioridade sobre o emoji">
+        <Field label="Imagem (URL)" htmlFor="a-img" hint="Opcional - tem prioridade sobre o emoji">
           <Input id="a-img" {...form.register('image_url')} placeholder="https://…" />
         </Field>
       </form>

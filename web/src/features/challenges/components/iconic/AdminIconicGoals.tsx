@@ -32,7 +32,7 @@ export function AdminIconicGoals() {
       </div>
       <p className={s.desc}>
         Criar e editar os golos do desafio. Golos criados aqui vivem só na base de dados (não entram
-        em migrações). Para remover, desativa — apagar arrastaria os replicados dos jogadores.
+        em migrações). Para remover, desativa - apagar arrastaria os replicados dos jogadores.
       </p>
 
       {isLoading ? (

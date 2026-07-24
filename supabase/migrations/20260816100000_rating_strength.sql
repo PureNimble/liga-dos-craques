@@ -6,7 +6,7 @@
 -- uma mais fraca custa mais (e vice-versa). Equipas equilibradas mantêm ±0.3.
 --
 -- Força de uma equipa = MÉDIA da skill-base dos seus jogadores. A skill-base é um
--- proxy calculado SÓ de tabelas cruas (jogos/eventos) e SEM o termo de MVP — assim
+-- proxy calculado SÓ de tabelas cruas (jogos/eventos) e SEM o termo de MVP - assim
 -- não depende do rating por jogo e evita-se a circularidade
 -- (v_player_stats → v_game_player_rating → … → skill).
 --
@@ -116,7 +116,7 @@ where gp.team is not null;
 grant select on public.v_game_player_result to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 3. Rating por jogo — troca o ±0.3 vitória/derrota por 0.6·dv (Elo).
+-- 3. Rating por jogo - troca o ±0.3 vitória/derrota por 0.6·dv (Elo).
 --    Eventos individuais inalterados. Colunas iguais → create or replace seguro.
 -- -----------------------------------------------------------------------------
 create or replace view public.v_game_player_rating
@@ -164,7 +164,7 @@ comment on view public.v_game_player_rating is
 grant select on public.v_game_player_rating to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 4. v_player_stats — mesma definição + coluna strength_delta = média do dv.
+-- 4. v_player_stats - mesma definição + coluna strength_delta = média do dv.
 -- -----------------------------------------------------------------------------
 create or replace view public.v_player_stats
 with (security_invoker = on) as

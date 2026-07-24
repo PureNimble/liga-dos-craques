@@ -3,12 +3,12 @@
 -- =============================================================================
 -- A app conduz o desafio no dia: adiciona-se os jogadores, sorteia-se a ordem e
 -- vai-se registando acerto/falha remate a remate. Ganha o primeiro que acerta em
--- todas as posições — e é gravado como uma tentativa vencedora em challenge_attempt
+-- todas as posições - e é gravado como uma tentativa vencedora em challenge_attempt
 -- (alimenta o v_challenge_leaderboard existente).
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- CHALLENGE_SESSION — uma sessão ao vivo de um desafio (por agora, crossbar).
+-- CHALLENGE_SESSION - uma sessão ao vivo de um desafio (por agora, crossbar).
 -- -----------------------------------------------------------------------------
 create table if not exists public.challenge_session (
   id                 uuid primary key default gen_random_uuid(),
@@ -47,7 +47,7 @@ create policy "challenge_session_delete"
   using (created_by = auth.uid() or public.is_admin());
 
 -- -----------------------------------------------------------------------------
--- SESSION_PLAYER — participantes da sessão, ordem de jogo e progresso.
+-- SESSION_PLAYER - participantes da sessão, ordem de jogo e progresso.
 -- current_spot = índice da posição que o jogador vai tentar a seguir.
 -- current_spot == challenge_session.spot_count ⇒ completou todas.
 -- -----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ create policy "session_player_write"
   );
 
 -- -----------------------------------------------------------------------------
--- SESSION_TURN — histórico de cada remate (auditável, base para futura anulação).
+-- SESSION_TURN - histórico de cada remate (auditável, base para futura anulação).
 -- -----------------------------------------------------------------------------
 create table if not exists public.session_turn (
   id         uuid primary key default gen_random_uuid(),
@@ -123,7 +123,7 @@ create policy "session_turn_write"
   );
 
 -- -----------------------------------------------------------------------------
--- crossbar_start_session — sorteia a ordem e arranca a sessão.
+-- crossbar_start_session - sorteia a ordem e arranca a sessão.
 -- -----------------------------------------------------------------------------
 create or replace function public.crossbar_start_session(p_session_id uuid)
 returns void
@@ -170,7 +170,7 @@ end $$;
 grant execute on function public.crossbar_start_session(uuid) to authenticated;
 
 -- -----------------------------------------------------------------------------
--- crossbar_record_turn — regista o remate do jogador da vez e avança o jogo.
+-- crossbar_record_turn - regista o remate do jogador da vez e avança o jogo.
 -- Acerta → sobe uma posição; se completar todas, termina e grava a vitória.
 -- Passa sempre a vez ao jogador seguinte (1 remate por turno).
 -- Devolve o novo status ('active' | 'finished').

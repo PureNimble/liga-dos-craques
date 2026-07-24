@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card, LockOverlay } from '@/shared/components/ui';
+import { LockOverlay } from '@/shared/components/ui';
 import { NamedIcon } from '@/shared/components/ui/icons';
 import { useT } from '@/shared/i18n/useT';
 import { ratingText } from '@/features/stats/lib/ratingColor';
@@ -26,49 +26,57 @@ export function PlayerHeader({
   if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
     return (
       <LockOverlay locked className={s.lockWrap} message={statsLockMessage(t, own)}>
-        <Card className={s.header}>
-          <div className={s.rating}>
-            <span className={`${s.ratingValue} ${ratingText(7.4)}`}>7.4</span>
-            <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
-          </div>
-          <div className={s.divider} />
-          <div className={s.body}>
-            <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
-            <div className={s.chips}>
-              <Chip>{t('profile.header.games', { count: MIN_GAMES_FOR_STATS })}</Chip>
+        <div className={s.card}>
+          <div aria-hidden className={s.topGlow} />
+          <div className={s.row}>
+            <div className={s.rating}>
+              <span className={`${s.ratingValue} ${ratingText(7.4)}`}>7.4</span>
+              <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
+            </div>
+            <div className={s.divider} />
+            <div className={s.body}>
+              <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
+              <div className={s.chips}>
+                <Chip>{t('profile.header.games', { count: MIN_GAMES_FOR_STATS })}</Chip>
+              </div>
             </div>
           </div>
-        </Card>
+        </div>
       </LockOverlay>
     );
   }
   return (
-    <Card className={s.header}>
-      <div className={s.rating}>
-        <span className={`${s.ratingValue} ${ratingText(avgRating)}`}>{avgRating.toFixed(1)}</span>
-        <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
-      </div>
+    <div className={s.card}>
+      <div aria-hidden className={s.topGlow} />
+      <div className={s.row}>
+        <div className={s.rating}>
+          <span className={`${s.ratingValue} ${ratingText(avgRating)}`}>
+            {avgRating.toFixed(1)}
+          </span>
+          <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
+        </div>
 
-      <div className={s.divider} />
+        <div className={s.divider} />
 
-      <div className={s.body}>
-        <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
-        <div className={s.chips}>
-          {footLabel && <Chip>{t('profile.header.foot', { foot: footLabel })}</Chip>}
-          {games != null && games > 0 && (
-            <Chip>{t('profile.header.games', { count: games })}</Chip>
+        <div className={s.body}>
+          <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
+          <div className={s.chips}>
+            {footLabel && <Chip>{t('profile.header.foot', { foot: footLabel })}</Chip>}
+            {games != null && games > 0 && (
+              <Chip>{t('profile.header.games', { count: games })}</Chip>
+            )}
+          </div>
+          {featured && (
+            <div className={s.featured}>
+              <span className={s.featuredIcon} aria-hidden>
+                <NamedIcon name={featured.icon} width={18} height={18} />
+              </span>
+              <span className={s.featuredLabel}>{featured.label}</span>
+            </div>
           )}
         </div>
-        {featured && (
-          <div className={s.featured}>
-            <span className={s.featuredIcon} aria-hidden>
-              <NamedIcon name={featured.icon} width={18} height={18} />
-            </span>
-            <span className={s.featuredLabel}>{featured.label}</span>
-          </div>
-        )}
       </div>
-    </Card>
+    </div>
   );
 }
 

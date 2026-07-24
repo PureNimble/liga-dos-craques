@@ -54,9 +54,9 @@ body:
     attributes:
       label: Prioridade sugerida
       options:
-        - Alta — bloqueia ou afeta muito a experiência
-        - Média — traria valor claro a curto prazo
-        - Baixa — ideia para o futuro
+        - Alta - bloqueia ou afeta muito a experiência
+        - Média - traria valor claro a curto prazo
+        - Baixa - ideia para o futuro
     validations:
       required: false
 

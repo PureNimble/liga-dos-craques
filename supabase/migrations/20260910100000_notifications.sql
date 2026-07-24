@@ -3,12 +3,12 @@
 -- =============================================================================
 -- Reabrir e corrigir um jogo pode fazer um jogador deixar de cumprir o critério
 -- de uma conquista. Até aqui a avaliação só dava conquistas; passa a tirá-las
--- também — e ninguém fica a descobrir sozinho: cada remoção deixa um aviso na
+-- também - e ninguém fica a descobrir sozinho: cada remoção deixa um aviso na
 -- caixa de notificações do jogador (`/notifications`).
 --
 -- A avaliação só revoga o que sabe avaliar (critérios `stat` com métrica
 -- conhecida e o `special` do hat-trick). Critério que não saiba ler nunca tira
--- nada — uma conquista nova mal configurada não apaga o que já foi ganho.
+-- nada - uma conquista nova mal configurada não apaga o que já foi ganho.
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------

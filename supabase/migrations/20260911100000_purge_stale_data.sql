@@ -4,7 +4,7 @@
 -- Há dados que só interessam enquanto são recentes: avisos já lidos, eventos de
 -- tracking antigos, sessões de desafio que ficaram a meio (a app apaga-as ao
 -- terminar, mas um separador fechado a meio deixa lixo) e sorteios de golo
--- icónico abandonados. Nada disto é histórico — o que é histórico (xp_ledger,
+-- icónico abandonados. Nada disto é histórico - o que é histórico (xp_ledger,
 -- jogos, eventos, conquistas, réplicas) nunca é tocado aqui.
 --
 -- Corre pelo workflow `cleanup.yml` (semanal) com a service_role.

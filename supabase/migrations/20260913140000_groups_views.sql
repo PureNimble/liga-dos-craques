@@ -2,7 +2,7 @@
 -- Grupos · vistas derivadas passam a ser por (jogador, grupo)
 -- =============================================================================
 -- Toda a cadeia de estatísticas/rating/XP/rankings passa a agrupar por
--- (player_id, group_id) em vez de só player_id — um jogador tem nível/rating/
+-- (player_id, group_id) em vez de só player_id - um jogador tem nível/rating/
 -- estatísticas INDEPENDENTES em cada grupo a que pertence. A tabela condutora
 -- deixa de ser `profile` e passa a ser `group_member`: só existe uma linha
 -- para os pares (jogador, grupo) que realmente existem, e os totais ficam a
@@ -23,7 +23,7 @@ drop view if exists public.v_ranking_annual cascade;
 drop view if exists public.v_challenge_leaderboard cascade;
 
 -- -----------------------------------------------------------------------------
--- 1. Skill-base por (jogador, grupo) — só de dados crus, sem termo de MVP.
+-- 1. Skill-base por (jogador, grupo) - só de dados crus, sem termo de MVP.
 -- -----------------------------------------------------------------------------
 create view public.v_player_skill
 with (security_invoker = on) as
@@ -124,7 +124,7 @@ where gp.team is not null;
 grant select on public.v_game_player_result to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 3. Rating por jogo (0–10, base 6.0) — inalterado, só ganha group_id.
+-- 3. Rating por jogo (0–10, base 6.0) - inalterado, só ganha group_id.
 -- -----------------------------------------------------------------------------
 create view public.v_game_player_rating
 with (security_invoker = on) as
@@ -172,7 +172,7 @@ comment on view public.v_game_player_rating is
 grant select on public.v_game_player_rating to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 4. MVP/Flop por jogo — desempate pela consistência DENTRO DO MESMO GRUPO.
+-- 4. MVP/Flop por jogo - desempate pela consistência DENTRO DO MESMO GRUPO.
 -- -----------------------------------------------------------------------------
 create view public.v_game_award
 with (security_invoker = on) as
@@ -227,12 +227,12 @@ where p.category = 'mvp'
    );
 
 comment on view public.v_game_award is
-  'MVP/Flop apurado por jogo — melhor/pior rating; empate desfeito pela consistência (média) dentro do mesmo grupo.';
+  'MVP/Flop apurado por jogo - melhor/pior rating; empate desfeito pela consistência (média) dentro do mesmo grupo.';
 
 grant select on public.v_game_award to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 5. Estatísticas por (jogador, grupo) — condutora passa a ser group_member,
+-- 5. Estatísticas por (jogador, grupo) - condutora passa a ser group_member,
 --    não profile: só há linha para pares que existem, zeros nos que não jogaram.
 -- -----------------------------------------------------------------------------
 create view public.v_player_stats
@@ -342,7 +342,7 @@ from totals t;
 grant select on public.v_player_xp to anon, authenticated;
 
 -- -----------------------------------------------------------------------------
--- 7. Rankings — geral/posição, por formato, mensal, anual — todos por grupo.
+-- 7. Rankings - geral/posição, por formato, mensal, anual - todos por grupo.
 -- -----------------------------------------------------------------------------
 create view public.v_ranking_overall
 with (security_invoker = on) as

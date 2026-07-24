@@ -2,10 +2,10 @@
 -- GAME-DAY: cronómetro em direto, autogolo e posições no campo
 -- =============================================================================
 -- Suporta:
---   1. Cronómetro do jogo (started_at) — marcado quando entra "in_progress".
---   2. Tipo de evento "autogolo" — soma ao adversário, NÃO conta como golo do
+--   1. Cronómetro do jogo (started_at) - marcado quando entra "in_progress".
+--   2. Tipo de evento "autogolo" - soma ao adversário, NÃO conta como golo do
 --      jogador (as estatísticas só contam event_type.code = 'goal').
---   3. Posição de cada jogador no campo (pos_x/pos_y em %) — para o alinhamento
+--   3. Posição de cada jogador no campo (pos_x/pos_y em %) - para o alinhamento
 --      visual (auto-preenchido por posição e ajustável manualmente).
 -- =============================================================================
 

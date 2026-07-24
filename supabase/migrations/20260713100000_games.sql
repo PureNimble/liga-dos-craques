@@ -7,7 +7,7 @@
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- Helper: is_admin() — SECURITY DEFINER para ler profile.role sem recursão RLS.
+-- Helper: is_admin() - SECURITY DEFINER para ler profile.role sem recursão RLS.
 -- -----------------------------------------------------------------------------
 create or replace function public.is_admin()
 returns boolean
@@ -24,7 +24,7 @@ $$;
 grant execute on function public.is_admin() to authenticated;
 
 -- -----------------------------------------------------------------------------
--- GAME_FORMAT (lookup) — dados de referência na migração (chegam a produção).
+-- GAME_FORMAT (lookup) - dados de referência na migração (chegam a produção).
 -- -----------------------------------------------------------------------------
 create table if not exists public.game_format (
   id               bigint generated always as identity primary key,
@@ -92,7 +92,7 @@ create trigger trg_game_updated_at
   before update on public.game
   for each row execute function public.set_updated_at();
 
--- Helper: is_game_organizer(game_id) — criador do jogo ou admin.
+-- Helper: is_game_organizer(game_id) - criador do jogo ou admin.
 create or replace function public.is_game_organizer(p_game_id uuid)
 returns boolean
 language sql

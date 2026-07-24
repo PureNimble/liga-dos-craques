@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # ---------------------------------------------------------------------------
-# Frontend (servidor de dev do Vite) em container — para clonar e correr sem
+# Frontend (servidor de dev do Vite) em container - para clonar e correr sem
 # instalar Node. O backend (Supabase) corre à parte via `npx supabase start`
 # (já é dockerizado pelo CLI); o browser fala com ele em http://127.0.0.1:44321
 # (ver web/.env.local). Ver docs/SETUP.md.

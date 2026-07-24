@@ -33,7 +33,7 @@ export function OrderReveal({ players, onDone }: OrderRevealProps) {
         <p className={s.title}>A sortear a ordem…</p>
         <div className={s.shuffleCard}>
           <Avatar name={p?.profile?.name} src={p?.profile?.photo_url} size="lg" />
-          <span className={s.shuffleName}>{p?.profile?.name ?? '—'}</span>
+          <span className={s.shuffleName}>{p?.profile?.name ?? '-'}</span>
         </div>
       </div>
     );

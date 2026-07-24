@@ -2,10 +2,10 @@
 -- Grupos · convites diretos a utilizadores existentes
 -- =============================================================================
 -- Complementa o código de convite (join_group_by_code) com um convite dirigido
--- a um utilizador já registado — assíncrono, por isso fica pendente até ser
+-- a um utilizador já registado - assíncrono, por isso fica pendente até ser
 -- aceite/recusado. Não há sistema de notificações na app: a superfície é a
 -- própria lista de convites pendentes (invitee_id = auth.uid()), sem bell/inbox
--- genérico — seria over-engineering para este único caso de uso.
+-- genérico - seria over-engineering para este único caso de uso.
 -- =============================================================================
 
 create table if not exists public.group_invite (
@@ -21,7 +21,7 @@ create table if not exists public.group_invite (
 create index if not exists idx_group_invite_invitee on public.group_invite (invitee_id);
 create index if not exists idx_group_invite_group on public.group_invite (group_id);
 
--- Só um convite PENDENTE por (grupo, convidado) de cada vez — recusar/cancelar
+-- Só um convite PENDENTE por (grupo, convidado) de cada vez - recusar/cancelar
 -- liberta para voltar a convidar a mesma pessoa mais tarde.
 create unique index if not exists uq_group_invite_pending
   on public.group_invite (group_id, invitee_id)

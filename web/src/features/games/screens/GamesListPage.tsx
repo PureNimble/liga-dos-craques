@@ -129,7 +129,7 @@ function GameCard({ game }: { game: GameWithFormat }) {
             <p className={s.date}>{formatGameDateTime(game.scheduled_at)}</p>
             <p className={s.meta}>
               <CalendarIcon width={13} height={13} />
-              {game.game_format?.label ?? '—'}
+              {game.game_format?.label ?? '-'}
               {game.location && (
                 <>
                   <PinIcon width={13} height={13} className={s.metaLoc} />

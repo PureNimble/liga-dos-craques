@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Frontend em container ("clonar e correr" sem instalar Node localmente).
 #
-# O backend (Supabase) NÃO está aqui — já é dockerizado pelo Supabase CLI.
+# O backend (Supabase) NÃO está aqui - já é dockerizado pelo Supabase CLI.
 # Fluxo completo a partir da raiz do repositório:
 #   1. npx supabase start                     # sobe o backend em Docker
 #   2. npx supabase db reset                  # migrações + seed
@@ -11,7 +11,7 @@
 #   4. docker compose up                      # frontend em http://localhost:5173
 #
 # O browser corre no host, por isso fala com o Supabase em 127.0.0.1:44321
-# diretamente — não é preciso ligar os containers à mesma rede.
+# diretamente - não é preciso ligar os containers à mesma rede.
 # ---------------------------------------------------------------------------
 services:
   web:

@@ -4,7 +4,7 @@
 -- =============================================================================
 -- Até aqui `game`, `game_player`, `event`, `event_tag`, `xp_ledger`,
 -- `user_achievement`, `challenge_attempt`, `challenge_session`, `session_player`
--- e `session_turn` eram legíveis por QUALQUER autenticado (`using (true)`) —
+-- e `session_turn` eram legíveis por QUALQUER autenticado (`using (true)`) -
 -- correto numa app de um grupo só, mas uma fuga real agora que há vários. Esta
 -- migração fecha isso e atualiza as funções que escrevem XP/conquistas/sessões
 -- para propagarem group_id. Corre DEPOIS do backfill (migração anterior), por
@@ -30,7 +30,7 @@ create policy "gplayer_select_authenticated"
   using (public.is_game_group_member(game_id));
 
 -- O organizador continua a poder juntar convidados avulsos (que não sejam
--- membros formais do grupo) — só quem FAZ a inserção tem de pertencer ao grupo.
+-- membros formais do grupo) - só quem FAZ a inserção tem de pertencer ao grupo.
 drop policy if exists "gplayer_insert" on public.game_player;
 create policy "gplayer_insert"
   on public.game_player for insert to authenticated
@@ -60,7 +60,7 @@ create policy "gplayer_delete"
   );
 
 -- =============================================================================
--- RLS: EVENT / EVENT_TAG (só a leitura muda — a escrita já passa por
+-- RLS: EVENT / EVENT_TAG (só a leitura muda - a escrita já passa por
 -- is_game_events_editable(), que chama is_game_organizer() e portanto já
 -- implica que o autor pertence ao grupo do jogo).
 -- =============================================================================
@@ -119,11 +119,11 @@ create policy "session_turn_select"
   on public.session_turn for select to authenticated
   using (public.is_session_group_member(session_id));
 
--- group_id é imutável depois de criado (tal como created_by) — não entra nos
+-- group_id é imutável depois de criado (tal como created_by) - não entra nos
 -- GRANTs por coluna existentes de `game`, por isso não precisa de alteração.
 
 -- =============================================================================
--- award_game_xp — cada xp_ledger passa a levar o group_id do jogo.
+-- award_game_xp - cada xp_ledger passa a levar o group_id do jogo.
 -- =============================================================================
 create or replace function public.award_game_xp(p_game_id uuid)
 returns void
@@ -182,7 +182,7 @@ begin
 end $$;
 
 -- =============================================================================
--- Conquistas — avaliação passa a ser por (jogador, grupo). Mantém o
+-- Conquistas - avaliação passa a ser por (jogador, grupo). Mantém o
 -- comportamento "dá e tira" de 20260910100000_notifications.sql (só revoga
 -- critérios que sabe avaliar, e avisa o jogador em cada remoção), agora
 -- escopado ao grupo.
@@ -308,7 +308,7 @@ begin
   return new;
 end $$;
 
--- Backfill (admin, re-executável) — segunda passagem corre por (jogador, grupo).
+-- Backfill (admin, re-executável) - segunda passagem corre por (jogador, grupo).
 create or replace function public.backfill_progression()
 returns table (games_awarded int, players_evaluated int)
 language plpgsql
@@ -340,7 +340,7 @@ begin
 end $$;
 
 -- =============================================================================
--- Crossbar / Penáltis — as RPCs de criação passam a exigir p_group_id (os
+-- Crossbar / Penáltis - as RPCs de criação passam a exigir p_group_id (os
 -- jogadores têm de pertencer a esse grupo) e as de fecho gravam group_id em
 -- challenge_attempt.
 -- =============================================================================
@@ -417,7 +417,7 @@ end $$;
 
 grant execute on function public.crossbar_create_and_start(bigint, int, uuid[], uuid, int) to authenticated;
 
--- crossbar_record_turn — mesma assinatura; passa a ler group_id da própria
+-- crossbar_record_turn - mesma assinatura; passa a ler group_id da própria
 -- sessão e a repassá-lo ao crossbar_finish.
 create or replace function public.crossbar_record_turn(p_session_id uuid, p_hit boolean)
 returns jsonb
@@ -567,7 +567,7 @@ end $$;
 grant execute on function public.crossbar_record_turn(uuid, boolean) to authenticated;
 
 -- -----------------------------------------------------------------------------
--- Penáltis — mesma ideia: create_and_start ganha p_group_id, finish grava-o.
+-- Penáltis - mesma ideia: create_and_start ganha p_group_id, finish grava-o.
 -- -----------------------------------------------------------------------------
 drop function if exists public.penalty_finish(uuid, bigint, uuid, int);
 

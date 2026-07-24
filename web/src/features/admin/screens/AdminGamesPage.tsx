@@ -106,7 +106,7 @@ function GameRow({ game }: { game: GameWithFormat }) {
       <div className={s.info}>
         <span className={s.date}>{formatGameDateTime(game.scheduled_at)}</span>
         <span className={s.meta}>
-          {game.game_format?.label ?? '—'}
+          {game.game_format?.label ?? '-'}
           {hasScore && (
             <>
               {' · '}

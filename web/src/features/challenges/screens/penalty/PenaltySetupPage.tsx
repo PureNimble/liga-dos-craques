@@ -103,7 +103,7 @@ export function PenaltySetupPage() {
             <p className={cb.muted}>
               {difficulty === 'dificil'
                 ? 'O jogo sorteia a zona onde tens de marcar.'
-                : 'Remata para onde quiseres — só conta marcar.'}
+                : 'Remata para onde quiseres - só conta marcar.'}
             </p>
           </Card>
         )}

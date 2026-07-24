@@ -3,9 +3,9 @@
 -- =============================================================================
 -- Reutiliza o esquema de sessão do Crossbar (challenge_session/session_player/
 -- session_turn), generalizado com um discriminador `mode`. Modos:
---   • pen_goals  — X rondas; ganha quem marca mais golos (sem zonas).
---   • pen_zones  — corrida: o jogador escolhe a zona vazia; ganha o 1º a fazer as 6.
---   • pen_target — X rondas; o jogo sorteia a zona; ganha quem marca mais golos.
+--   • pen_goals  - X rondas; ganha quem marca mais golos (sem zonas).
+--   • pen_zones  - corrida: o jogador escolhe a zona vazia; ganha o 1º a fazer as 6.
+--   • pen_target - X rondas; o jogo sorteia a zona; ganha quem marca mais golos.
 -- Empate nos modos por golos → morte súbita. A sessão é efémera: apagada no fim,
 -- fica só o +1 no ranking (challenge_attempt). As 6 zonas são um bitmask (0..63).
 -- =============================================================================
@@ -20,7 +20,7 @@ alter table public.session_player
   add column if not exists target int;
 
 -- -----------------------------------------------------------------------------
--- penalty_finish — grava a vitória e apaga a sessão. NÃO exposta (só uso interno).
+-- penalty_finish - grava a vitória e apaga a sessão. NÃO exposta (só uso interno).
 -- -----------------------------------------------------------------------------
 create or replace function public.penalty_finish(
   p_session_id uuid,
@@ -43,7 +43,7 @@ end $$;
 revoke all on function public.penalty_finish(uuid, bigint, uuid, int) from public;
 
 -- -----------------------------------------------------------------------------
--- penalty_create_and_start — cria a sessão já a decorrer, com a ordem sorteada.
+-- penalty_create_and_start - cria a sessão já a decorrer, com a ordem sorteada.
 -- p_rounds só se aplica aos modos por golos (pen_zones é corrida, sem limite).
 -- No pen_target, sorteia já a zona-alvo do 1º rematador (turn_order 0).
 -- -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ end $$;
 grant execute on function public.penalty_create_and_start(bigint, text, uuid[], int) to authenticated;
 
 -- -----------------------------------------------------------------------------
--- penalty_record_turn — regista o remate do jogador da vez e avança o jogo.
+-- penalty_record_turn - regista o remate do jogador da vez e avança o jogo.
 -- p_zone: zona escolhida (pen_zones) ou zona-alvo confirmada (pen_target); 0..5.
 -- Devolve jsonb { status: active|sudden_death|finished, winner_id }.
 -- -----------------------------------------------------------------------------

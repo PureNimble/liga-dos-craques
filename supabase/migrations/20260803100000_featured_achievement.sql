@@ -3,7 +3,7 @@
 -- =============================================================================
 -- O jogador escolhe uma das suas conquistas para aparecer no cartão (ao lado do
 -- cartão do jogador). Coluna própria + grant por coluna (o resto continua
--- protegido — o padrão de segurança da tabela profile mantém-se).
+-- protegido - o padrão de segurança da tabela profile mantém-se).
 -- =============================================================================
 
 alter table public.profile

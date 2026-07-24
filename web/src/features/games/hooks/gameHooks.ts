@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { Database, GameStatus, GamePlayerStatus } from '@/types/database';
+import { UPCOMING_STATUSES } from '../lib/gameStatus';
 
 /** Row type for `game_format`. */
 export type GameFormat = Database['public']['Tables']['game_format']['Row'];
@@ -71,6 +72,26 @@ export function useGames() {
         .order('scheduled_at', { ascending: false });
       if (error) throw error;
       return (data ?? []) as unknown as GameWithFormat[];
+    },
+  });
+}
+
+/** Fetches the next upcoming game for the active group, or null if none is scheduled. */
+export function useNextGameSuspense() {
+  const groupId = useActiveGroupId();
+  return useSuspenseQuery({
+    queryKey: ['games', groupId, 'next'],
+    queryFn: async (): Promise<Game | null> => {
+      const { data, error } = await supabase
+        .from('game')
+        .select('*')
+        .eq('group_id', groupId)
+        .in('status', UPCOMING_STATUSES)
+        .order('scheduled_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
     },
   });
 }

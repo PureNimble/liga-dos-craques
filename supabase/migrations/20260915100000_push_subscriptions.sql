@@ -6,7 +6,7 @@
 -- subscrição; qualquer INSERT em `notification` dispara, de forma assíncrona,
 -- a Edge Function `send-push` (via pg_net), que envia o push a cada subscrição
 -- do jogador. O URL da function e o segredo partilhado ficam no Supabase Vault
--- (configurados fora deste ficheiro) — nunca em texto numa migração.
+-- (configurados fora deste ficheiro) - nunca em texto numa migração.
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ grant insert (user_id, endpoint, p256dh, auth_key) on public.push_subscription t
 -- -----------------------------------------------------------------------------
 -- Trigger: cada novo aviso dispara o envio do push (assíncrono, via pg_net).
 -- -----------------------------------------------------------------------------
--- pg_net não é relocatable — instala sempre no seu próprio schema `net`.
+-- pg_net não é relocatable - instala sempre no seu próprio schema `net`.
 create extension if not exists pg_net;
 
 create or replace function public.push_notify_trigger()

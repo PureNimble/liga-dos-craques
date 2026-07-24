@@ -1,5 +1,5 @@
 -- =============================================================================
--- Golos Icónicos — substitui o desafio "Livres"
+-- Golos Icónicos - substitui o desafio "Livres"
 -- =============================================================================
 -- Cada golo icónico tem um vídeo (YouTube) e uma conquista associada. O jogador
 -- roda um spinner que sorteia um golo AINDA por replicar; tem sempre 1 golo

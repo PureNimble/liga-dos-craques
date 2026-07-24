@@ -3,7 +3,7 @@
 -- =============================================================================
 -- O setup passa a ser client-side (nada é gravado antes de começar). A sessão só
 -- existe na BD enquanto está a decorrer: cria-se já 'active' com a ordem sorteada,
--- e ao terminar é apagada — fica apenas o +1 no ranking (challenge_attempt).
+-- e ao terminar é apagada - fica apenas o +1 no ranking (challenge_attempt).
 -- =============================================================================
 
 -- Cria a sessão já a decorrer, com os jogadores e a ordem sorteada. Devolve o id.

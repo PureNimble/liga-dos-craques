@@ -142,6 +142,16 @@ export function PlusIcon(props: IconProps) {
   );
 }
 
+/** Pencil/edit icon. */
+export function EditIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 20h4L18.5 9.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 15.5V20Z" />
+      <path d="m14 6 4 4" />
+    </svg>
+  );
+}
+
 /** Close (X) icon. */
 export function CloseIcon(props: IconProps) {
   return (

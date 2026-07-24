@@ -1,9 +1,10 @@
 import { useState, type FocusEvent, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import { useActiveGroup } from '@/features/groups/hooks/useActiveGroup';
 import { GroupSwitcherModal } from '@/features/groups/components/GroupSwitcherModal';
 import { AddGroupModal } from '@/features/groups/components/AddGroupModal';
-import { PlusIcon } from '@/shared/components/ui/icons';
+import { BallIcon, PlusIcon } from '@/shared/components/ui/icons';
 import s from './GroupRail.module.css';
 
 function groupInitials(name: string): string {
@@ -40,6 +41,11 @@ export function GroupRail() {
 
   return (
     <nav className={s.rail} aria-label="Grupos">
+      <Link to="/" className={s.home} aria-label="Página inicial">
+        <BallIcon width={20} height={20} />
+      </Link>
+      <div className={s.homeDivider} />
+
       <ul className={s.list}>
         {myGroups.map((g) => {
           const active = g.group_id === groupId;

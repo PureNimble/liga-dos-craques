@@ -22,7 +22,7 @@ export function GroupChooser({ onDone }: { onDone?: () => void }) {
           <ChoiceTile
             icon={<WhistleIcon width={22} height={22} />}
             title="Criar um grupo"
-            description="Ficas como admin — convida os teus amigos depois."
+            description="Ficas como admin - convida os teus amigos depois."
             onClick={() => setMode('create')}
           />
           <ChoiceTile
@@ -163,7 +163,7 @@ function CreateGroupForm({ onBack, onDone }: { onBack: () => void; onDone?: () =
     <div className={s.formCard}>
       <BackButton onClick={onBack} />
       <h2 className={s.formTitle}>Criar um grupo novo</h2>
-      <p className={s.formDesc}>Ficas como admin — depois convida os teus amigos com o código ou diretamente.</p>
+      <p className={s.formDesc}>Ficas como admin - depois convida os teus amigos com o código ou diretamente.</p>
       {error && (
         <div className={s.slotTop}>
           <Alert kind="error">{error}</Alert>
@@ -185,7 +185,7 @@ function CreateGroupForm({ onBack, onDone }: { onBack: () => void; onDone?: () =
           <p className={s.visibilityHint}>
             {visibility === 'private'
               ? 'Só entra quem tiver o código de convite.'
-              : 'Aparece na lista de grupos públicos — qualquer jogador pode entrar.'}
+              : 'Aparece na lista de grupos públicos - qualquer jogador pode entrar.'}
           </p>
         </Field>
         <Button block onClick={submit} loading={createGroup.isPending}>
@@ -218,7 +218,7 @@ function BrowsePublicGroups({ onBack, onDone }: { onBack: () => void; onDone?: (
     <div className={s.formCard}>
       <BackButton onClick={onBack} />
       <h2 className={s.formTitle}>Grupos públicos</h2>
-      <p className={s.formDesc}>Aberto a todos — entra com um toque, sem código.</p>
+      <p className={s.formDesc}>Aberto a todos - entra com um toque, sem código.</p>
 
       {isLoading ? (
         <Loading />

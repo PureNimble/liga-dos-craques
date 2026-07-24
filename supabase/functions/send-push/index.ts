@@ -4,7 +4,7 @@
 // nasce um aviso em `notification`. Envia Web Push a cada dispositivo inscrito
 // do jogador; subscrições mortas (404/410) são apagadas.
 //
-// Autenticação: segredo partilhado (não JWT — quem chama é o Postgres do
+// Autenticação: segredo partilhado (não JWT - quem chama é o Postgres do
 // próprio projeto, via pg_net, não um utilizador). `verify_jwt = false` em
 // `config.toml`, como a `health`.
 // Deploy: `supabase functions deploy send-push` (feito pelo workflow de CD).

@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Alert, Button, Loading } from '@/shared/components/ui';
+import { Alert, Loading } from '@/shared/components/ui';
 import { useProfile, usePositions } from '../hooks/profileHooks';
 import { ProfileEditModal } from '../components/ProfileEditModal';
 import { PlayerCard } from '../components/PlayerCard';
 import { PlayerHeader } from '../components/PlayerHeader';
 import { cardAttributes, overallOf, positionShort } from '../lib/cardStats';
-import { FOOT_LABEL_KEY } from '../schemas/profile.schemas';
+import { FOOT_LABEL_KEY, POSITION_LABEL_KEY } from '../schemas/profile.schemas';
 import { usePlayerStats } from '@/features/stats/hooks/statsHooks';
 import { StatsGrid } from '@/features/stats/components/StatsGrid';
 import { PlayerCharts } from '@/features/stats/components/PlayerCharts';
 import { RecentMatches } from '@/features/stats/components/RecentMatches';
 import { usePlayerXp } from '@/features/xp/hooks/xpHooks';
-import { XpBar } from '@/features/xp/components/XpBar';
 import { AchievementsGrid } from '@/features/achievements/components/AchievementsGrid';
 import {
   useAchievements,
@@ -43,9 +41,10 @@ export function ProfilePage() {
     );
   }
 
-  const category = positions?.find((p) => p.id === profile.main_position_id)?.category ?? null;
+  const mainPosition = positions?.find((p) => p.id === profile.main_position_id) ?? null;
+  const category = mainPosition?.category ?? null;
   const subtitle = [
-    positions?.find((p) => p.id === profile.main_position_id)?.label,
+    mainPosition ? t(POSITION_LABEL_KEY[mainPosition.code]) : null,
     profile.locality,
   ]
     .filter(Boolean)
@@ -54,19 +53,20 @@ export function ProfilePage() {
 
   return (
     <div className={s.page}>
-      <div className={s.hero}>
+      <div className={s.topGrid}>
         {stats && (
-          <div className={s.cardCol}>
-            <PlayerCard
-              name={profile.name}
-              photoUrl={profile.photo_url}
-              overall={overallOf(stats, category)}
-              position={positionShort(category)}
-              attributes={cardAttributes(stats)}
-              subtitle={subtitle || null}
-            />
-          </div>
+          <PlayerCard
+            name={profile.name}
+            photoUrl={profile.photo_url}
+            overall={overallOf(stats, category)}
+            position={positionShort(category)}
+            attributes={cardAttributes(stats)}
+            subtitle={subtitle || null}
+            xp={xp}
+            onEdit={() => setEditOpen(true)}
+          />
         )}
+
         <PlayerHeader
           footLabel={
             profile.preferred_foot ? t(FOOT_LABEL_KEY[profile.preferred_foot]) : null
@@ -77,17 +77,6 @@ export function ProfilePage() {
           featured={featured ? { icon: featured.icon, label: featured.label } : null}
         />
       </div>
-
-      <div className={s.actions}>
-        <Button block onClick={() => setEditOpen(true)}>
-          {t('profile.editProfile')}
-        </Button>
-        <Link to="/update-password">
-          <Button variant="secondary">{t('profile.password')}</Button>
-        </Link>
-      </div>
-
-      {xp && <XpBar xp={xp} />}
 
       {stats && (
         <section>

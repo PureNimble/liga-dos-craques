@@ -41,13 +41,13 @@ export function AwardsPanel({ gameId, players }: AwardsPanelProps) {
       <div className={s.grid}>
         <AwardCard
           title="MVP"
-          name={mvpId ? (nameById.get(mvpId) ?? '—') : null}
+          name={mvpId ? (nameById.get(mvpId) ?? '-') : null}
           rating={mvpId ? ratingById.get(mvpId) : undefined}
           accent
         />
         <AwardCard
           title="Flop"
-          name={flopId ? (nameById.get(flopId) ?? '—') : null}
+          name={flopId ? (nameById.get(flopId) ?? '-') : null}
           rating={flopId ? ratingById.get(flopId) : undefined}
         />
       </div>
@@ -93,14 +93,14 @@ function AwardCard({
           {rating != null && <RatingBadge value={rating} />}
         </div>
       ) : (
-        <p className={s.cardEmpty}>—</p>
+        <p className={s.cardEmpty}>-</p>
       )}
     </div>
   );
 }
 
 function RatingBadge({ value }: { value: number | null }) {
-  if (value == null) return <span className={s.badgeNull}>—</span>;
+  if (value == null) return <span className={s.badgeNull}>-</span>;
   const tone =
     value >= 7.5 ? s.badgeTop : value >= 6 ? s.badgeGood : value >= 5 ? s.badgeMid : s.badgeLow;
   return <span className={`${s.badge} ${tone}`}>{value.toFixed(1)}</span>;

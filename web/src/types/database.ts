@@ -413,7 +413,9 @@ export interface Database {
           id: number;
           code: string;
           label: string;
+          label_en: string | null;
           description: string;
+          description_en: string | null;
           icon: string;
           image_url: string | null;
           criteria: Json;
@@ -424,7 +426,9 @@ export interface Database {
           id?: number;
           code: string;
           label: string;
+          label_en?: string | null;
           description: string;
+          description_en?: string | null;
           icon?: string;
           image_url?: string | null;
           criteria: Json;
@@ -433,7 +437,9 @@ export interface Database {
         };
         Update: {
           label?: string;
+          label_en?: string | null;
           description?: string;
+          description_en?: string | null;
           icon?: string;
           image_url?: string | null;
           criteria?: Json;

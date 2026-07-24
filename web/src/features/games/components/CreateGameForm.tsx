@@ -139,7 +139,7 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
       <Field
         label="Formato"
         htmlFor="format_id"
-        hint="Define quantos jogam (tamanho do campo). Sem limite de inscrições — quem vier a mais fica suplente."
+        hint="Define quantos jogam (tamanho do campo). Sem limite de inscrições - quem vier a mais fica suplente."
         error={form.formState.errors.format_id?.message}
       >
         <Select id="format_id" {...form.register('format_id')}>

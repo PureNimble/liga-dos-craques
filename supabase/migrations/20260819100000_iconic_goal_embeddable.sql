@@ -2,7 +2,7 @@
 -- Golos icónicos: flag de "embutível"
 -- =============================================================================
 -- Alguns golos têm o vídeo bloqueado para reprodução embutida pelo dono dos
--- direitos (FIFA/UEFA/ligas) via Content ID — o iframe mostra "vídeo indisponível".
+-- direitos (FIFA/UEFA/ligas) via Content ID - o iframe mostra "vídeo indisponível".
 -- Esses passam a mostrar-se como miniatura com link para o YouTube, em vez do
 -- leitor embutido. Data-driven: marcar como bloqueado é só um UPDATE.
 -- =============================================================================

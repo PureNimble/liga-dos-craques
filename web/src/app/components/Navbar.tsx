@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
@@ -6,7 +6,8 @@ import { NavDrawer } from './NavDrawer';
 import type { FullProfile } from '@/features/profile/hooks/profileHooks';
 import { useConfirm } from '@/shared/components/ui/ConfirmDialog';
 import { Avatar, IconButton } from '@/shared/components/ui';
-import { BallIcon, MenuIcon } from '@/shared/components/ui/icons';
+import { MenuIcon } from '@/shared/components/ui/icons';
+import { NextGameTeaser } from '@/features/games/components/NextGameTeaser';
 import { ReportBugModal } from '@/features/feedback/components/ReportBugModal';
 import { useUnreadNotificationCount } from '@/features/notifications/hooks/notificationHooks';
 import { useT } from '@/shared/i18n/useT';
@@ -42,12 +43,9 @@ export function Navbar({ profile }: { profile: FullProfile }) {
   return (
     <header className={s.header}>
       <div className={s.inner}>
-        <Link to="/" className={s.logo}>
-          <span className={s.logoMark}>
-            <BallIcon width={18} height={18} />
-          </span>
-          Peladinhas
-        </Link>
+        <Suspense fallback={null}>
+          <NextGameTeaser />
+        </Suspense>
 
         <div className={s.actions}>
           <Link to="/profile" aria-label={t('navbar.viewProfile')} className={s.avatarLink}>

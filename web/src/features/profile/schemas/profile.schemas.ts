@@ -47,8 +47,28 @@ export const FOOT_LABELS: Record<string, string> = {
   both: 'Ambidextro',
 };
 
+/** i18n key (`profile.i18n.ts`) for the preferred foot, used in the `PlayerHeader` chip. */
 export const FOOT_LABEL_KEY: Record<string, string> = {
   left: 'profile.foot.left',
   right: 'profile.foot.right',
   both: 'profile.foot.both',
+};
+
+/** i18n key (`profile.i18n.ts`) for a position's name by `code`, used in the `PlayerCard` subtitle. */
+export const POSITION_LABEL_KEY: Record<string, string> = {
+  GK: 'profile.position.gk',
+  CB: 'profile.position.cb',
+  RB: 'profile.position.rb',
+  LB: 'profile.position.lb',
+  RWB: 'profile.position.rwb',
+  LWB: 'profile.position.lwb',
+  DM: 'profile.position.dm',
+  CM: 'profile.position.cm',
+  AM: 'profile.position.am',
+  RM: 'profile.position.rm',
+  LM: 'profile.position.lm',
+  RW: 'profile.position.rw',
+  LW: 'profile.position.lw',
+  SS: 'profile.position.ss',
+  ST: 'profile.position.st',
 };

@@ -1,13 +1,13 @@
-/* Sombra — elevação padrão. Os tons de preto/branco servem os dois temas por
-   igual; o brilho verde (`--shadow-glow`) é um efeito só de tema escuro — uma
+/* Sombra - elevação padrão. Os tons de preto/branco servem os dois temas por
+   igual; o brilho verde (`--shadow-glow`) é um efeito só de tema escuro - uma
    cor saturada a irradiar de um fundo quase preto lê-se como luz, mas em
    fundo claro não há fundo escuro para irradiar, por isso o tema claro não
    tem sombra nenhuma aqui; o destaque de marca continua a vir do
    preenchimento sólido do elemento (badge/botão). Os cartões (`--shadow-card`)
-   também não têm sombra no tema claro — no fundo branco a sombra lia-se como
+   também não têm sombra no tema claro - no fundo branco a sombra lia-se como
    uma mancha, não como elevação; os cartões distinguem-se do fundo só pelo
    `border`. As duas variantes "sem sombra" usam `0 0 0 0 transparent` em vez
-   de `none` — `none` só é válido como valor único de `box-shadow`; alguns
+   de `none` - `none` só é válido como valor único de `box-shadow`; alguns
    sítios combinam o token com outra sombra numa lista separada por vírgulas
    (ex. o anel do pódio em RankingList, o brilho do AchievementToast), e
    `none` dentro dessa lista invalida a declaração toda. */

@@ -1,7 +1,7 @@
 -- =============================================================================
 -- F4 · Estatísticas (derivadas)
 -- =============================================================================
--- Estatísticas individuais como VISTA derivada dos eventos e resultados — nunca
+-- Estatísticas individuais como VISTA derivada dos eventos e resultados - nunca
 -- há contadores mantidos à mão que possam divergir. MVPs/Flops entram na F5.
 --
 -- security_invoker = on: a vista respeita o RLS do utilizador que consulta

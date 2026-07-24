@@ -1,4 +1,4 @@
-# Peladinhas — Documento Técnico de Arquitetura
+# Peladinhas - Documento Técnico de Arquitetura
 
 > Plataforma web para gestão de jogos de futebol entre amigos: jogos, estatísticas, rankings, desafios, XP e conquistas.
 > **Estado:** Proposta de arquitetura para aprovação. **Não contém código.**
@@ -12,7 +12,7 @@
 |---|---|---|
 | Frontend | **React + Vite + TypeScript** | 0 € |
 | Hosting frontend | **Vercel** (ou Cloudflare Pages) via GitHub | 0 € |
-| Backend / API | **Supabase** (Postgres + PostgREST + Edge Functions) — sem servidor próprio | 0 € |
+| Backend / API | **Supabase** (Postgres + PostgREST + Edge Functions) - sem servidor próprio | 0 € |
 | Base de dados | **PostgreSQL** (gerido pelo Supabase) | 0 € |
 | Autenticação | **Supabase Auth** (email+password, magic link, reset embutido) | 0 € |
 | Armazenamento de imagens | **Supabase Storage** (buckets + RLS) | 0 € |
@@ -20,7 +20,7 @@
 | Tarefas agendadas | **pg_cron** (fecho de votações) + **GitHub Actions cron** (keep-alive/backup) | 0 € |
 | CI/CD | **GitHub Actions** + deploy automático Vercel | 0 € |
 
-**Padrão arquitetural:** *Backend-as-a-Service (BaaS) com segurança na base de dados (Row Level Security)*. O React comunica diretamente com o Postgres através da API do Supabase; toda a autorização é imposta na base de dados por RLS, e a lógica que **não pode** confiar no cliente (equilíbrio de equipas, cálculo de XP, fecho de votações, conquistas) vive em funções no servidor. Isto elimina a operação de um servidor aplicacional próprio — o principal fator de custo e de manutenção.
+**Padrão arquitetural:** *Backend-as-a-Service (BaaS) com segurança na base de dados (Row Level Security)*. O React comunica diretamente com o Postgres através da API do Supabase; toda a autorização é imposta na base de dados por RLS, e a lógica que **não pode** confiar no cliente (equilíbrio de equipas, cálculo de XP, fecho de votações, conquistas) vive em funções no servidor. Isto elimina a operação de um servidor aplicacional próprio - o principal fator de custo e de manutenção.
 
 **O risco número 1 a mitigar:** projetos Supabase no plano gratuito **suspendem após ~7 dias de inatividade**. Resolvido com um *ping* agendado (secção 3.9). É o único ponto que ameaça o requisito "online 24/7" e tem solução gratuita e automática.
 
@@ -95,7 +95,7 @@
 | R1 | Suspensão do projeto Supabase por inatividade (~7 dias) | Alto (viola 24/7) | Alta (app de amigos tem períodos mortos) | *Ping* agendado (GitHub Actions cron + Edge Function/health endpoint) |
 | R2 | Limites do plano gratuito (≈500 MB BD, 1 GB storage, 5 GB banda, 50k MAU) | Médio | Baixa a esta escala | Fotos comprimidas; limpeza de logs; monitorizar; caminho de upgrade existe |
 | R3 | Perda de dados / sem backup automático rico no free tier | Alto | Baixa | `pg_dump` semanal via GitHub Action para o próprio repo/artefacto privado |
-| R4 | Vendor lock-in (Supabase/Vercel) | Médio | — | Postgres padrão + migrações versionadas; RLS/SQL portável; frontend estático migrável |
+| R4 | Vendor lock-in (Supabase/Vercel) | Médio | - | Postgres padrão + migrações versionadas; RLS/SQL portável; frontend estático migrável |
 | R5 | Chave `anon` é pública → confiança indevida no cliente | Alto (segurança) | Média se mal desenhado | **RLS obrigatório em todas as tabelas**; lógica sensível em funções `SECURITY DEFINER` |
 | R6 | Regras de XP mudam e corrompem histórico | Médio | Média | XP como **ledger append-only** versionado por regra; nunca recalcular destrutivamente |
 | R7 | Estatísticas divergem dos eventos (dupla fonte de verdade) | Médio | Média | Estatísticas **derivadas** (vistas/materialized views), não colunas mantidas à mão |
@@ -105,7 +105,7 @@
 
 ### 1.4 Desafios Técnicos
 
-1. **"24/7 a custo zero"** é uma contradição parcial: nenhum free tier garante SLA. A arquitetura assume *best-effort* com keep-alive — adequado para uso entre amigos, e honesto quanto às garantias.
+1. **"24/7 a custo zero"** é uma contradição parcial: nenhum free tier garante SLA. A arquitetura assume *best-effort* com keep-alive - adequado para uso entre amigos, e honesto quanto às garantias.
 2. **Extensibilidade orientada a dados** (eventos, tags, XP, conquistas) sem refatoração exige modelação por *lookup tables* e regras-como-dados desde o início.
 3. **Consistência das estatísticas** com histórico grande: derivar vs. materializar. Escolha: derivar por vistas; materializar rankings pesados quando necessário.
 4. **Segurança sem backend próprio**: toda a autorização tem de ser expressável em RLS/funções SQL. É poderoso mas exige rigor.
@@ -152,11 +152,11 @@
 
 ### 2.2 Componentes
 
-- **React SPA (cliente):** UI, estado de servidor via TanStack Query, formulários e validação (Zod), chamadas ao Supabase JS. Nunca é fonte de autoridade — só apresenta e pede.
+- **React SPA (cliente):** UI, estado de servidor via TanStack Query, formulários e validação (Zod), chamadas ao Supabase JS. Nunca é fonte de autoridade - só apresenta e pede.
 - **Supabase Auth (GoTrue):** emissão de JWT, email+password, magic link, reset e alteração de password embutidos.
 - **PostgREST:** API REST automática sobre as tabelas/vistas, filtrada por RLS. Também *realtime* (websockets) para atualizações ao vivo do jogo.
 - **PostgreSQL:** fonte única de verdade. Contém RLS, vistas de estatísticas/rankings, funções RPC (votar, registar evento, gerar equipas), e `pg_cron` para o fecho automático de votações.
-- **Edge Functions (Deno):** lógica que beneficia de linguagem imperativa ou de correr fora da transação SQL — algoritmo de equilíbrio, atribuição de XP/conquistas em lote, health endpoint para keep-alive.
+- **Edge Functions (Deno):** lógica que beneficia de linguagem imperativa ou de correr fora da transação SQL - algoritmo de equilíbrio, atribuição de XP/conquistas em lote, health endpoint para keep-alive.
 - **Supabase Storage:** bucket `avatars` (fotos de perfil) com políticas de acesso.
 - **GitHub + Actions:** repositório, CI, aplicação de migrações (Supabase CLI), cron de keep-alive e de backup.
 - **Vercel:** build e distribuição CDN do SPA, preview deployments por PR.
@@ -166,7 +166,7 @@
 **Registar um golo com tags (durante o jogo):**
 1. Cliente chama RPC `register_event(game_id, player_id, type='goal', minute, tags[])`.
 2. A função valida (RLS + regras): o autor é participante/organizador; o jogo está `in_progress`; o jogador pertence ao jogo.
-3. Insere em `event` e `event_tag`. (XP não é atribuído aqui — ver abaixo.)
+3. Insere em `event` e `event_tag`. (XP não é atribuído aqui - ver abaixo.)
 4. *Realtime* propaga a alteração; as vistas de estatísticas refletem-na imediatamente.
 
 **Fecho de votação + XP + conquistas (automático):**
@@ -178,22 +178,22 @@
 
 ### 2.4 Decisões arquiteturais (ADR resumidos)
 
-- **ADR-1 — BaaS em vez de servidor próprio.** Elimina o custo e a manutenção de um backend/host aplicacional. *Trade-off:* toda a autorização tem de caber em RLS/SQL. **Aceite** — é o que torna "0 € + manutenção mínima" viável.
-- **ADR-2 — Postgres relacional (não NoSQL/Firestore).** O domínio é fortemente relacional (jogos↔jogadores↔eventos↔votos↔rankings com agregações e joins). Postgres dá integridade referencial, vistas e SQL analítico. **Aceite.**
-- **ADR-3 — Estatísticas derivadas, não duplicadas.** Fonte de verdade = eventos + resultados; estatísticas via vistas; rankings pesados via *materialized views* com refresh agendado. Evita divergência (R7). **Aceite.**
-- **ADR-4 — XP como ledger append-only + regras versionadas.** Preserva histórico quando as regras mudam (R6/RF-21). **Aceite.**
-- **ADR-5 — Tipos de evento, tags, regras de XP e conquistas como *dados*.** Novos tipos sem deploy de código (RF-13/RF-21/RF-25). **Aceite.**
-- **ADR-6 — Algoritmo de equilíbrio como módulo isolado com pesos configuráveis.** Permite evolução sem tocar no resto (RF-08). **Aceite.**
-- **ADR-7 — Desafios em esquema/tabelas separadas.** Isolamento total das estatísticas de jogos (RF-24). **Aceite.**
+- **ADR-1 - BaaS em vez de servidor próprio.** Elimina o custo e a manutenção de um backend/host aplicacional. *Trade-off:* toda a autorização tem de caber em RLS/SQL. **Aceite** - é o que torna "0 € + manutenção mínima" viável.
+- **ADR-2 - Postgres relacional (não NoSQL/Firestore).** O domínio é fortemente relacional (jogos↔jogadores↔eventos↔votos↔rankings com agregações e joins). Postgres dá integridade referencial, vistas e SQL analítico. **Aceite.**
+- **ADR-3 - Estatísticas derivadas, não duplicadas.** Fonte de verdade = eventos + resultados; estatísticas via vistas; rankings pesados via *materialized views* com refresh agendado. Evita divergência (R7). **Aceite.**
+- **ADR-4 - XP como ledger append-only + regras versionadas.** Preserva histórico quando as regras mudam (R6/RF-21). **Aceite.**
+- **ADR-5 - Tipos de evento, tags, regras de XP e conquistas como *dados*.** Novos tipos sem deploy de código (RF-13/RF-21/RF-25). **Aceite.**
+- **ADR-6 - Algoritmo de equilíbrio como módulo isolado com pesos configuráveis.** Permite evolução sem tocar no resto (RF-08). **Aceite.**
+- **ADR-7 - Desafios em esquema/tabelas separadas.** Isolamento total das estatísticas de jogos (RF-24). **Aceite.**
 
 ### 2.5 Justificação das tecnologias
 
-- **React + Vite + TypeScript:** React é imposto; Vite dá build rápido e output estático (ideal para hosting gratuito); TypeScript reduz bugs e documenta o modelo — crítico para 1 manutentor.
+- **React + Vite + TypeScript:** React é imposto; Vite dá build rápido e output estático (ideal para hosting gratuito); TypeScript reduz bugs e documenta o modelo - crítico para 1 manutentor.
 - **Supabase:** único serviço que, no plano gratuito, entrega **Postgres + Auth + Storage + API + Realtime + cron** de forma integrada. Substitui 4 serviços por 1, minimizando manutenção. Sem lock-in severo: por baixo é Postgres padrão exportável.
 - **PostgREST/RLS:** dá uma API segura sem escrever/servidor manter uma. A segurança "por linha" é exatamente o modelo certo para "cada um só mexe no que pode".
 - **Edge Functions (Deno):** para a lógica que não convém em SQL puro, ainda dentro do mesmo fornecedor e do free tier.
-- **Vercel/Cloudflare Pages:** deploy Git-driven, CDN global, HTTPS automático, previews por PR — tudo gratuito.
-- **GitHub Actions:** CI/CD, cron de keep-alive e backups — sem infra adicional.
+- **Vercel/Cloudflare Pages:** deploy Git-driven, CDN global, HTTPS automático, previews por PR - tudo gratuito.
+- **GitHub Actions:** CI/CD, cron de keep-alive e backups - sem infra adicional.
 
 ---
 
@@ -250,44 +250,44 @@ Princípios: 3ª forma normal como base; *lookup tables* para tudo o que deve cr
 ### 4.1 Entidades principais
 
 **Identidade e perfil**
-- `auth.users` — gerida pelo Supabase (email, hash de password, etc.). Não tocar diretamente.
-- `profile` — 1:1 com `auth.users`. Campos: `id (=auth uid)`, `name`, `photo_url`, `birth_date` (guardar data, não idade — idade é derivada), `weight_kg`, `height_cm`, `gender`, `locality`, `preferred_foot` (enum: left/right/both), `main_position_id`, `role` (player/admin), `created_at`.
-- `position` — lookup (GK, DEF, MID, FWD, e sub-posições). `secondary_position` — N:N entre `profile` e `position`.
+- `auth.users` - gerida pelo Supabase (email, hash de password, etc.). Não tocar diretamente.
+- `profile` - 1:1 com `auth.users`. Campos: `id (=auth uid)`, `name`, `photo_url`, `birth_date` (guardar data, não idade - idade é derivada), `weight_kg`, `height_cm`, `gender`, `locality`, `preferred_foot` (enum: left/right/both), `main_position_id`, `role` (player/admin), `created_at`.
+- `position` - lookup (GK, DEF, MID, FWD, e sub-posições). `secondary_position` - N:N entre `profile` e `position`.
 
 **Jogos e equipas**
-- `game` — `id`, `created_by`, `scheduled_at (timestamptz)`, `location`, `format_id`, `max_players`, `status`, `home_score`, `away_score`, `voting_closes_at`, `created_at`.
-- `game_format` — lookup (1v1…11v11, com `players_per_side`).
-- `game_status` — enum controlado (ver 4.4).
-- `game_player` — N:N `game`↔`profile`: `game_id`, `player_id`, `status` (invited/confirmed/played/no_show), `team` (A/B/null), `added_at`.
-- `team_assignment` (opcional) — histórico da geração de equipas (rating usado, versão do algoritmo, pesos), para transparência/reprodutibilidade.
+- `game` - `id`, `created_by`, `scheduled_at (timestamptz)`, `location`, `format_id`, `max_players`, `status`, `home_score`, `away_score`, `voting_closes_at`, `created_at`.
+- `game_format` - lookup (1v1…11v11, com `players_per_side`).
+- `game_status` - enum controlado (ver 4.4).
+- `game_player` - N:N `game`↔`profile`: `game_id`, `player_id`, `status` (invited/confirmed/played/no_show), `team` (A/B/null), `added_at`.
+- `team_assignment` (opcional) - histórico da geração de equipas (rating usado, versão do algoritmo, pesos), para transparência/reprodutibilidade.
 
 **Eventos**
-- `event_type` — **lookup** (`code`, `label`, `supports_tags bool`, `default_xp` opcional, `affects_score bool`). Novos tipos = INSERT (RF-13).
-- `event` — `id`, `game_id`, `player_id`, `event_type_id`, `minute` (nullable), `team` (A/B), `meta jsonb` (informação adicional flexível), `created_by`, `created_at`.
-- `tag` — lookup (`code`, `label`, `category` p/ filtrar por tipo de evento).
-- `event_tag` — N:N `event`↔`tag`.
+- `event_type` - **lookup** (`code`, `label`, `supports_tags bool`, `default_xp` opcional, `affects_score bool`). Novos tipos = INSERT (RF-13).
+- `event` - `id`, `game_id`, `player_id`, `event_type_id`, `minute` (nullable), `team` (A/B), `meta jsonb` (informação adicional flexível), `created_by`, `created_at`.
+- `tag` - lookup (`code`, `label`, `category` p/ filtrar por tipo de evento).
+- `event_tag` - N:N `event`↔`tag`.
 
 **Votação MVP/Flop**
-- `vote` — `id`, `game_id`, `voter_id`, `category` (mvp/flop), `votee_id`, `created_at`. Constraints: `UNIQUE(game_id, voter_id, category)`; `CHECK(voter_id <> votee_id)`; inserção só permitida se `now() < game.voting_closes_at` e ambos são participantes.
+- `vote` - `id`, `game_id`, `voter_id`, `category` (mvp/flop), `votee_id`, `created_at`. Constraints: `UNIQUE(game_id, voter_id, category)`; `CHECK(voter_id <> votee_id)`; inserção só permitida se `now() < game.voting_closes_at` e ambos são participantes.
 
 **XP e progressão**
-- `xp_rule` — regras versionadas: `id`, `code` (participation/win/goal/assist/mvp…), `points`, `valid_from`, `valid_to`, `active`. Nunca editar destrutivamente — criar nova versão.
-- `xp_ledger` — **append-only**: `id`, `player_id`, `game_id` (nullable), `source_code`, `points`, `xp_rule_id`, `created_at`. XP total = `SUM(points)` por jogador. `level` derivado por curva (ver `xp_level`).
-- `xp_level` — mapa nível↔XP mínimo (curva configurável).
+- `xp_rule` - regras versionadas: `id`, `code` (participation/win/goal/assist/mvp…), `points`, `valid_from`, `valid_to`, `active`. Nunca editar destrutivamente - criar nova versão.
+- `xp_ledger` - **append-only**: `id`, `player_id`, `game_id` (nullable), `source_code`, `points`, `xp_rule_id`, `created_at`. XP total = `SUM(points)` por jogador. `level` derivado por curva (ver `xp_level`).
+- `xp_level` - mapa nível↔XP mínimo (curva configurável).
 
 **Desafios (isolados)**
-- `challenge` — lookup: `code` (crossbar/penalty/freekick/1v1), `label`, `scoring_type` (higher_better/lower_better), `record_metric`.
-- `challenge_attempt` — `id`, `challenge_id`, `player_id`, `opponent_id` (nullable, p/ 1v1), `score`, `result` (win/loss/draw/na), `played_at`, `meta jsonb`.
-- `challenge_record` — recordes correntes por desafio (derivável ou materializado).
+- `challenge` - lookup: `code` (crossbar/penalty/freekick/1v1), `label`, `scoring_type` (higher_better/lower_better), `record_metric`.
+- `challenge_attempt` - `id`, `challenge_id`, `player_id`, `opponent_id` (nullable, p/ 1v1), `score`, `result` (win/loss/draw/na), `played_at`, `meta jsonb`.
+- `challenge_record` - recordes correntes por desafio (derivável ou materializado).
 
 **Conquistas (orientadas a dados)**
-- `achievement` — `id`, `code`, `label`, `description`, `icon`, `criteria jsonb` (ex.: `{metric:'goals', op:'>=', value:1}` ou `{metric:'games', value:100}`), `active`.
-- `user_achievement` — `player_id`, `achievement_id`, `unlocked_at`. `UNIQUE(player_id, achievement_id)`.
+- `achievement` - `id`, `code`, `label`, `description`, `icon`, `criteria jsonb` (ex.: `{metric:'goals', op:'>=', value:1}` ou `{metric:'games', value:100}`), `active`.
+- `user_achievement` - `player_id`, `achievement_id`, `unlocked_at`. `UNIQUE(player_id, achievement_id)`.
 
-### 4.2 Estatísticas e rankings (derivados — não são tabelas base)
+### 4.2 Estatísticas e rankings (derivados - não são tabelas base)
 - `v_player_stats` (view): por jogador agrega de `event`, `game`, `game_player`, `vote` → jogos, V/E/D, golos, assistências, defesas, MVPs, Flops.
 - `v_ranking_general`, `v_ranking_by_position`, `v_ranking_by_format`, `v_ranking_monthly`, `v_ranking_yearly` (views; materializar as pesadas com refresh via `pg_cron`).
-- **Porquê derivar:** garante RF-08/RNF-08 (consistência) — nunca há um contador desincronizado dos eventos.
+- **Porquê derivar:** garante RF-08/RNF-08 (consistência) - nunca há um contador desincronizado dos eventos.
 
 ### 4.3 ERD textual
 
@@ -347,13 +347,13 @@ draft ─▶ scheduled ─▶ open (inscrições)
 - Supabase Auth com JWT de curta duração + refresh tokens; password hashing gerido (bcrypt/argon). Reset por email com token temporário. Confirmação de email recomendada. Política de password mínima e, opcionalmente, magic link (sem password = sem password para roubar).
 
 ### 5.2 Autorização (o núcleo do modelo)
-- **RLS ativado em TODAS as tabelas** (a chave `anon` é pública; sem RLS, tudo fica exposto — R5).
+- **RLS ativado em TODAS as tabelas** (a chave `anon` é pública; sem RLS, tudo fica exposto - R5).
 - Políticas típicas:
   - `profile`: qualquer autenticado lê campos públicos; só o dono edita o seu perfil; dados sensíveis (peso, idade) só visíveis ao próprio e/ou por opção de privacidade.
   - `game`: leitura para autenticados; escrita/edição só `created_by` ou `admin`.
   - `game_player`: gerido pelo organizador; o próprio pode confirmar/desistir.
   - `event`: inserção só por organizador/participante e só com o jogo `in_progress/finished`; edição limitada.
-  - `vote`: inserção só por participante, dentro da janela, respeitando unicidade e "não votar em si" — imposto por RLS + `CHECK` + verificação temporal no servidor.
+  - `vote`: inserção só por participante, dentro da janela, respeitando unicidade e "não votar em si" - imposto por RLS + `CHECK` + verificação temporal no servidor.
   - `xp_ledger`, `user_achievement`: **escrita só por funções `SECURITY DEFINER`** (nunca diretamente pelo cliente).
 - **Papéis:** `player` e `admin` (via claim/coluna). Ações administrativas (corrigir resultado, apagar jogo) restritas a `admin`.
 
@@ -371,7 +371,7 @@ draft ─▶ scheduled ─▶ open (inscrições)
 
 ---
 
-## 6. UX/UI — Wireframes textuais
+## 6. UX/UI - Wireframes textuais
 
 Convenções: topo = navegação; conteúdo mobile-first (a maioria vai usar telemóvel no balneário/campo).
 
@@ -471,7 +471,7 @@ Convenções: topo = navegação; conteúdo mobile-first (a maioria vai usar tel
 
 **Estatísticas (detalhe)**
 ```
-┌ Estatísticas — Vasco ─────────────────────────────┐
+┌ Estatísticas - Vasco ─────────────────────────────┐
 │ Filtros: [Época ▾][Formato ▾][Posição ▾]          │
 │ Jogos 42 · V25 E7 D10 · %V 60                     │
 │ Golos 30 (0.71/jogo) · Assist. 18 · Defesas 12    │
@@ -539,18 +539,18 @@ Complexidade: 🟢 baixa · 🟡 média · 🔴 alta. Esforço em "sessões" (un
 
 | Fase | Objetivo | Dependências | Complex. | Esforço |
 |---|---|---|---|---|
-| **F0 — Fundações** | Repo, Vite+React+TS, Tailwind, Supabase project, CI, deploy Vercel "hello world", keep-alive | — | 🟢 | 2–3 |
-| **F1 — Auth & Perfil** | Login/logout, reset/alterar password, `profile` + posições, edição de perfil, upload de avatar, RLS de perfil | F0 | 🟡 | 4–5 |
-| **F2 — Jogos (CRUD + estados)** | Criar/editar jogo, formatos, adicionar jogadores (criação/depois/durante), máquina de estados, RLS | F1 | 🟡 | 5–6 |
-| **F3 — Eventos & Tags** | `event_type`/`tag` como dados, registo de eventos (live/pós), tags em golos/defesas, timeline, RLS/funções | F2 | 🟡 | 4–5 |
-| **F4 — Estatísticas** | Vistas de stats individuais, página de estatísticas e resumo no dashboard | F3 | 🟡 | 3–4 |
-| **F5 — MVP/Flop** | Votação com regras (unicidade, não-auto-voto), janela temporal, fecho automático via `pg_cron` | F3 | 🟡 | 3–4 |
-| **F6 — Equilíbrio de equipas** | Módulo de rating + algoritmo (Edge Function), pesos configuráveis, ajuste manual | F3, F4 | 🔴 | 5–6 |
-| **F7 — XP & Níveis** | `xp_rule` versionadas, `xp_ledger`, curva de níveis, atribuição no fecho do jogo | F4, F5 | 🟡 | 3–4 |
-| **F8 — Rankings** | Views geral/posição/formato/mensal/anual, materialização + refresh agendado | F4, F7 | 🟡 | 3–4 |
-| **F9 — Conquistas** | `achievement` orientado a dados, avaliador, grelha de medalhas | F4, F7 | 🟡 | 3–4 |
-| **F10 — Desafios** | Esquema isolado, tentativas, recordes, rankings de desafios | F1 | 🟡 | 4–5 |
-| **F11 — Polimento** | Realtime no jogo ao vivo, backups automáticos, acessibilidade, PWA/instalável, empty states | tudo | 🟡 | 3–4 |
+| **F0 - Fundações** | Repo, Vite+React+TS, Tailwind, Supabase project, CI, deploy Vercel "hello world", keep-alive | - | 🟢 | 2–3 |
+| **F1 - Auth & Perfil** | Login/logout, reset/alterar password, `profile` + posições, edição de perfil, upload de avatar, RLS de perfil | F0 | 🟡 | 4–5 |
+| **F2 - Jogos (CRUD + estados)** | Criar/editar jogo, formatos, adicionar jogadores (criação/depois/durante), máquina de estados, RLS | F1 | 🟡 | 5–6 |
+| **F3 - Eventos & Tags** | `event_type`/`tag` como dados, registo de eventos (live/pós), tags em golos/defesas, timeline, RLS/funções | F2 | 🟡 | 4–5 |
+| **F4 - Estatísticas** | Vistas de stats individuais, página de estatísticas e resumo no dashboard | F3 | 🟡 | 3–4 |
+| **F5 - MVP/Flop** | Votação com regras (unicidade, não-auto-voto), janela temporal, fecho automático via `pg_cron` | F3 | 🟡 | 3–4 |
+| **F6 - Equilíbrio de equipas** | Módulo de rating + algoritmo (Edge Function), pesos configuráveis, ajuste manual | F3, F4 | 🔴 | 5–6 |
+| **F7 - XP & Níveis** | `xp_rule` versionadas, `xp_ledger`, curva de níveis, atribuição no fecho do jogo | F4, F5 | 🟡 | 3–4 |
+| **F8 - Rankings** | Views geral/posição/formato/mensal/anual, materialização + refresh agendado | F4, F7 | 🟡 | 3–4 |
+| **F9 - Conquistas** | `achievement` orientado a dados, avaliador, grelha de medalhas | F4, F7 | 🟡 | 3–4 |
+| **F10 - Desafios** | Esquema isolado, tentativas, recordes, rankings de desafios | F1 | 🟡 | 4–5 |
+| **F11 - Polimento** | Realtime no jogo ao vivo, backups automáticos, acessibilidade, PWA/instalável, empty states | tudo | 🟡 | 3–4 |
 
 **Ordem crítica:** F0→F1→F2→F3 são a espinha dorsal; F4 desbloqueia F5–F9. F6 (equilíbrio) e F10 (desafios) são relativamente independentes e podem deslizar sem bloquear o resto.
 
@@ -562,22 +562,22 @@ Complexidade: 🟢 baixa · 🟡 média · 🔴 alta. Esforço em "sessões" (un
 - **PWA desde cedo:** instalável no telemóvel + registo de eventos com tolerância a rede fraca no campo. Barato e melhora muito a UX real.
 - **Realtime seletivo:** ligar Supabase Realtime só na página de detalhe do jogo (placar/timeline ao vivo). Evita consumo desnecessário.
 - **Geração de tipos TS a partir da BD** (`supabase gen types`) para tipagem ponta-a-ponta sem escrever tipos à mão.
-- **Seed de dados de lookup versionado** (event types, tags, formatos, xp_rules, achievements) — parte das migrações, para ambientes reprodutíveis.
+- **Seed de dados de lookup versionado** (event types, tags, formatos, xp_rules, achievements) - parte das migrações, para ambientes reprodutíveis.
 - **Idempotência do fecho de votação/XP:** o job tem de poder correr duas vezes sem duplicar XP (ex.: marca `xp_processed_at` no jogo).
 
 ### 9.2 Pontos críticos (a acertar à primeira)
 - **RLS por defeito em tudo.** Uma tabela sem RLS = fuga de dados imediata (chave anon pública). Checklist obrigatório por migração.
 - **Fuso horário do "dia seguinte".** Definir `voting_closes_at` explicitamente (ex.: 23:59 `Europe/Lisbon` do dia seguinte ao jogo) e guardar em `timestamptz`. Testar com jogos à noite.
 - **XP append-only + regras versionadas.** Nunca UPDATE destrutivo em regras; sempre nova versão + `valid_from`. Caso contrário perde-se o histórico (RF-21).
-- **Estatísticas derivadas.** Resistir à tentação de manter contadores em colunas — é a fonte nº1 de inconsistência.
+- **Estatísticas derivadas.** Resistir à tentação de manter contadores em colunas - é a fonte nº1 de inconsistência.
 - **Backups.** O free tier não garante recuperação a ponto no tempo; o `pg_dump` agendado é a rede de segurança real.
-- **Justiça percebida do balanceamento.** Mostrar o rating usado e permitir ajuste manual — é tanto social quanto técnico.
+- **Justiça percebida do balanceamento.** Mostrar o rating usado e permitir ajuste manual - é tanto social quanto técnico.
 
 ### 9.3 Ajustes sugeridos ao âmbito
 - **Papel de organizador/admin explícito** (o enunciado assume ações partilhadas mas alguém tem de ter autoridade para corrigir resultados/apagar jogos).
 - **Empates em MVP/Flop:** definir desempate (ex.: mais golos; senão, sorteio/co-vencedores). Decisão de produto a fechar antes de F5.
 - **"Durante o jogo" offline:** decidir se o registo ao vivo precisa de resiliência offline (fila local) já em F3 ou fica para F11.
-- **Convites de novos amigos:** fluxo de convite (link/email) — provavelmente pós-MVP, mas convém reservar espaço no modelo.
+- **Convites de novos amigos:** fluxo de convite (link/email) - provavelmente pós-MVP, mas convém reservar espaço no modelo.
 
 ### 9.4 Decisões (estado)
 - ✅ **Fornecedor central:** Supabase confirmado.
@@ -588,4 +588,4 @@ Complexidade: 🟢 baixa · 🟡 média · 🔴 alta. Esforço em "sessões" (un
 
 ---
 
-*Fim do documento. Nenhuma linha de código foi escrita — aguardo aprovação da arquitetura antes de iniciar a implementação.*
+*Fim do documento. Nenhuma linha de código foi escrita - aguardo aprovação da arquitetura antes de iniciar a implementação.*

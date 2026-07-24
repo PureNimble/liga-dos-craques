@@ -5,7 +5,7 @@
 -- recupera o histórico já existente e deixa uma RPC (admin) para re-correr.
 -- =============================================================================
 
--- RPC re-executável (protegida por admin) — útil após criar novas conquistas.
+-- RPC re-executável (protegida por admin) - útil após criar novas conquistas.
 create or replace function public.backfill_progression()
 returns table (games_awarded int, players_evaluated int)
 language plpgsql

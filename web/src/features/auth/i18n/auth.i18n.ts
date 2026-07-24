@@ -21,8 +21,8 @@ export const authTranslations = {
   'auth.signup.name': { pt: 'Nome', en: 'Name' },
   'auth.signup.username': { pt: 'Nome de utilizador', en: 'Username' },
   'auth.signup.usernameHint': {
-    pt: 'Único — minúsculas, números e _.',
-    en: 'Unique — lowercase, numbers and _.',
+    pt: 'Único - minúsculas, números e _.',
+    en: 'Unique - lowercase, numbers and _.',
   },
   'auth.signup.usernameTaken': {
     pt: 'Esse nome de utilizador já está a ser usado.',

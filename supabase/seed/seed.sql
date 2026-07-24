@@ -15,7 +15,7 @@
 -- =============================================================================
 
 -- Nota: dados de referência (position, e futuramente game_format, event_type,
--- tag, xp_rule, achievement) vivem nas MIGRAÇÕES, não aqui — só assim chegam a
+-- tag, xp_rule, achievement) vivem nas MIGRAÇÕES, não aqui - só assim chegam a
 -- produção (`supabase db push` não corre o seed). Este ficheiro fica reservado
 -- a dados de teste úteis apenas em desenvolvimento local.
 

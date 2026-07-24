@@ -3,7 +3,7 @@ name: Limpeza da base de dados
 # Apaga dados efémeros que já não dizem nada: avisos lidos há muito, eventos de
 # tracking fora da janela de 180 dias, sessões de desafio penduradas e sorteios
 # de golo icónico abandonados. O histórico (XP, jogos, eventos, conquistas)
-# nunca é tocado — ver `purge_stale_data()` em supabase/migrations.
+# nunca é tocado - ver `purge_stale_data()` em supabase/migrations.
 #
 # Requer o segredo SUPABASE_SERVICE_ROLE_KEY (Project Settings → API) além do
 # SUPABASE_PROJECT_REF já usado pelo keep-alive.

@@ -4,7 +4,7 @@
 -- A XP é atribuída quando o jogo fecha (status='closed') e vive no xp_ledger,
 -- que é append-only. O FK xp_ledger.game_id é ON DELETE SET NULL, por isso
 -- apagar um jogo fechado deixaria a XP nos totais dos jogadores sem o jogo de
--- origem — inconsistente. Bloqueia-se a remoção no servidor (a UI já a esconde,
+-- origem - inconsistente. Bloqueia-se a remoção no servidor (a UI já a esconde,
 -- mas a garantia real vive na BD). Cancelar (status='cancelled') continua a ser
 -- o caminho reversível.
 -- =============================================================================
