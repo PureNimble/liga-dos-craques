@@ -16,6 +16,7 @@
     border-right: 1px solid var(--border-subtle);
     background-color: var(--surface-well);
     padding-block: var(--space-lg);
+    padding-top: calc(var(--space-lg) + env(safe-area-inset-top));
   }
 }
 

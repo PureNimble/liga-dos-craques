@@ -2,6 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 30;
+  /* A `.app` ocupa o ecrã todo (`viewport-fit=cover`) — sem isto o cabeçalho
+     fica por baixo do notch/status bar no iOS. */
+  padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-subtle);
   background-color: var(--surface-glass);
   backdrop-filter: saturate(130%) blur(14px);

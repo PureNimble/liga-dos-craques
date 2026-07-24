@@ -27,7 +27,8 @@
   border-left: 1px solid var(--border-default);
   background-color: var(--surface-panel);
   box-shadow: var(--shadow-modal);
-  padding: var(--space-lg) var(--space-sm) calc(var(--space-lg) + env(safe-area-inset-bottom));
+  padding: calc(var(--space-lg) + env(safe-area-inset-top)) var(--space-sm)
+    calc(var(--space-lg) + env(safe-area-inset-bottom));
   animation: slideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

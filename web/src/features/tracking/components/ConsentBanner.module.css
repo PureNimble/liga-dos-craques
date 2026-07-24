@@ -3,7 +3,7 @@
   position: fixed;
   z-index: 40;
   right: var(--space-md);
-  bottom: var(--space-md);
+  bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
   left: var(--space-md);
   display: flex;
   align-items: center;
