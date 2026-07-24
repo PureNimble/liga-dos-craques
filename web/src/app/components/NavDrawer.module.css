@@ -26,8 +26,7 @@
   border-left: 1px solid var(--border-default);
   background-color: var(--surface-panel);
   box-shadow: var(--shadow-modal);
-  padding: calc(var(--space-lg) + env(safe-area-inset-top)) var(--space-sm)
-    calc(var(--space-lg) + env(safe-area-inset-bottom));
+  padding: calc(var(--space-lg) + env(safe-area-inset-top)) var(--space-sm) var(--space-lg);
   animation: slideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -193,7 +192,7 @@
   align-items: center;
   gap: var(--space-md);
   border-top: 1px solid var(--border-subtle);
-  padding: var(--space-md) var(--space-sm) 0;
+  padding: var(--space-md) var(--space-sm) calc(var(--space-sm) + env(safe-area-inset-bottom));
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-muted);

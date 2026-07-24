@@ -12,26 +12,40 @@
 }
 .toast {
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
   width: 100%;
   max-width: 24rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-input);
+  padding: var(--space-lg);
   font-size: var(--font-size-sm);
+  color: var(--text-color);
   box-shadow: var(--shadow-card);
+}
+.message {
+  min-width: 0;
+  flex: 1;
+}
+.close {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--text-subtle);
+  transition: color var(--transition);
+}
+.close:hover {
+  color: var(--text-color);
 }
 .success {
   border-color: var(--status-success-border);
-  background-color: var(--status-success-bg);
   color: var(--status-success-fg);
 }
 .error {
   border-color: var(--status-error-border);
-  background-color: var(--status-error-bg);
   color: var(--status-error-fg);
 }
 .info {
-  border-color: var(--status-info-border);
-  background-color: var(--status-info-bg);
-  color: var(--status-info-fg);
+  color: var(--text-color);
 }

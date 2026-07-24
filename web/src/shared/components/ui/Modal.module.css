@@ -32,6 +32,7 @@
   display: flex;
   max-height: 92vh;
   width: 100%;
+  min-width: 0;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--border-default);

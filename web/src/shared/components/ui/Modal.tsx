@@ -5,7 +5,6 @@ import s from './Modal.module.css';
 
 const CLOSE_DISTANCE_RATIO = 0.3;
 const CLOSE_VELOCITY = 0.6;
-const RESIST_UP = 0.35;
 const SNAP_MS = 240;
 
 interface ModalProps {
@@ -83,8 +82,7 @@ export function Modal({
     if (dt > 0) drag.velocity = (e.clientY - drag.lastY) / dt;
     drag.lastY = e.clientY;
     drag.lastTime = now;
-    const delta = e.clientY - drag.startY;
-    setDragY(delta >= 0 ? delta : delta * RESIST_UP);
+    setDragY(Math.max(0, e.clientY - drag.startY));
   }
 
   function handleGripPointerEnd(e: ReactPointerEvent<HTMLDivElement>) {
@@ -92,8 +90,7 @@ export function Modal({
     dragRef.current = null;
     setDragging(false);
     if (!drag) return;
-    const delta = e.clientY - drag.startY;
-    const offset = delta >= 0 ? delta : delta * RESIST_UP;
+    const offset = Math.max(0, e.clientY - drag.startY);
     const panelHeight = panelRef.current?.offsetHeight ?? 0;
     const shouldClose = offset > panelHeight * CLOSE_DISTANCE_RATIO || drag.velocity > CLOSE_VELOCITY;
     if (shouldClose) {

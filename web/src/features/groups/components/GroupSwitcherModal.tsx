@@ -37,7 +37,13 @@ export function GroupSwitcherModal({ onClose, groupId: targetGroupId }: GroupSwi
   const isAdmin = group?.role === 'admin';
 
   return (
-    <Modal open onClose={onClose} title={scoped ? (group?.name ?? 'Grupo') : 'Grupos'} size="lg">
+    <Modal
+      open
+      onClose={onClose}
+      title={scoped ? (group?.name ?? 'Grupo') : 'Grupos'}
+      variant="sheet"
+      size="lg"
+    >
       <div className={s.body}>
         {!scoped && (
           <section>
@@ -258,7 +264,7 @@ function MembersCard({ groupId, isAdmin }: { groupId: string; isAdmin: boolean }
           <li key={m.id} className={s.memberItem}>
             <div className={s.memberInfo}>
               <Avatar name={m.name} src={m.photo_url} size="sm" />
-              <span>{m.name}</span>
+              <span className={s.memberName}>{m.name}</span>
               <Badge tone={m.role === 'admin' ? 'indigo' : 'gray'}>
                 {m.role === 'admin' ? 'Admin' : 'Membro'}
               </Badge>

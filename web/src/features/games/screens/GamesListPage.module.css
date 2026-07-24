@@ -16,10 +16,12 @@
 }
 .item {
   display: flex;
+  min-width: 0;
 }
 .cardLink {
   display: flex;
   flex: 1;
+  min-width: 0;
 }
 
 .card {

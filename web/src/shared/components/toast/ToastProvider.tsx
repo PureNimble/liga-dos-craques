@@ -1,4 +1,5 @@
-import { createContext, useCallback, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
+import { CloseIcon } from '@/shared/components/ui/icons';
 import s from './Toast.module.css';
 
 /** Visual/semantic kind of a toast message. */
@@ -26,14 +27,20 @@ const kindClass: Record<ToastKind, string> = {
 
 let counter = 0;
 
-/** Provides toast notifications app-wide and renders the active toast stack. */
+/** Provides toast notifications app-wide; only one toast shows at a time, a new one replaces it. */
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toast, setToast] = useState<Toast | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const dismiss = useCallback(() => {
+    clearTimeout(timeoutRef.current);
+    setToast(null);
+  }, []);
 
   const show = useCallback((message: string, kind: ToastKind = 'info') => {
-    const id = ++counter;
-    setToasts((prev) => [...prev, { id, message, kind }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3200);
+    clearTimeout(timeoutRef.current);
+    setToast({ id: ++counter, message, kind });
+    timeoutRef.current = setTimeout(() => setToast(null), 3200);
   }, []);
 
   const value = useMemo(() => ({ show }), [show]);
@@ -42,11 +49,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       <div className={s.container}>
-        {toasts.map((t) => (
-          <div key={t.id} role="status" className={[s.toast, kindClass[t.kind]].join(' ')}>
-            {t.message}
+        {toast && (
+          <div key={toast.id} role="status" className={[s.toast, kindClass[toast.kind]].join(' ')}>
+            <span className={s.message}>{toast.message}</span>
+            <button type="button" className={s.close} aria-label="Fechar" onClick={dismiss}>
+              <CloseIcon width={16} height={16} />
+            </button>
           </div>
-        ))}
+        )}
       </div>
     </ToastContext.Provider>
   );
