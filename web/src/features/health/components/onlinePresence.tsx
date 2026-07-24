@@ -4,11 +4,7 @@ import { supabase } from '@/shared/lib/supabase';
 // eslint-disable-next-line react-refresh/only-export-components
 export const OnlineCountContext = createContext(0);
 
-/**
- * Regista a presença do utilizador atual num canal partilhado em tempo real e
- * expõe quantos utilizadores estão online agora. A chave de presença é o id do
- * utilizador, por isso várias abas do mesmo utilizador contam como um só.
- */
+/** Tracks the current user's realtime presence and exposes the live online count to children. */
 export function OnlinePresenceProvider({
   userId,
   children,

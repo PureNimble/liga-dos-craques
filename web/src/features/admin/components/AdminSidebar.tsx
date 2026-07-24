@@ -13,7 +13,7 @@ interface NavItem {
   label: string;
 }
 
-/** Navegação lateral persistente do dashboard de admin; em telemóvel vira um dropdown. */
+/** Persistent admin dashboard sidebar; collapses into a dropdown on mobile. */
 export function AdminSidebar() {
   const { t } = useT();
   const location = useLocation();

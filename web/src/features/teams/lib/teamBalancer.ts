@@ -1,21 +1,13 @@
 import type { PositionCategory } from '@/types/database';
 
-/**
- * Balanceamento de equipas — módulo puro e testável.
- *
- * Estratégia (extensível):
- *   1. Guarda-redes primeiro: distribuídos alternadamente para tentar 1 por equipa.
- *   2. Restantes por rating decrescente, sempre para a equipa com menor soma
- *      de rating (que ainda tenha lugar) → minimiza a diferença global.
- *
- * Mantém as equipas equilibradas em NÚMERO (ceil/floor) e em RATING.
- */
+/** A player as input to the balancer. */
 export interface BalancePlayer {
   id: string;
   rating: number;
   category: PositionCategory | null;
 }
 
+/** Result of balancing: each team's player ids and total rating. */
 export interface BalancedTeams {
   a: string[];
   b: string[];
@@ -23,6 +15,7 @@ export interface BalancedTeams {
   ratingB: number;
 }
 
+/** Splits players into two rating-balanced teams: goalkeepers spread first, then the rest assigned to the lighter team by descending rating. */
 export function balanceTeams(players: BalancePlayer[]): BalancedTeams {
   const maxA = Math.ceil(players.length / 2);
   const maxB = players.length - maxA;
@@ -46,7 +39,6 @@ export function balanceTeams(players: BalancePlayer[]): BalancedTeams {
   const goalkeepers = players.filter((p) => p.category === 'GK').sort(byRatingDesc);
   const outfield = players.filter((p) => p.category !== 'GK').sort(byRatingDesc);
 
-  // 1) Guarda-redes: um para cada lado, preferindo a equipa mais leve/vazia.
   for (const gk of goalkeepers) {
     const preferA = a.length < b.length || (a.length === b.length && sumA <= sumB);
     if (preferA && a.length < maxA) place('a', gk);
@@ -54,7 +46,6 @@ export function balanceTeams(players: BalancePlayer[]): BalancedTeams {
     else place('a', gk);
   }
 
-  // 2) Restantes: sempre para a equipa mais leve com lugar disponível.
   for (const p of outfield) {
     const canA = a.length < maxA;
     const canB = b.length < maxB;

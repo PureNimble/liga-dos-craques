@@ -41,7 +41,6 @@
   text-align: right;
   white-space: nowrap;
 }
-/* Ocupa o lugar das barras em vez de deixar o cartão às moscas. */
 .empty {
   display: flex;
   min-height: 8rem;

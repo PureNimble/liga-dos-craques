@@ -5,32 +5,18 @@ import s from './SettingsRow.module.css';
 
 interface SettingsRowProps {
   label: ReactNode;
-  /** Botão visível no desktop; no mobile a linha toda fica clicável com seta. */
   actionLabel?: string;
   onAction?: () => void;
   actionVariant?: 'secondary' | 'danger';
-  /** Ação terminal (ex.: terminar sessão) em vez de navegação — sem seta no mobile. */
   navigational?: boolean;
   disabled?: boolean;
-  /** Controlo sempre visível no desktop (ex.: toggle/switch). No mobile continua
-   * visível, a menos que `onMobileTap` esteja definido — nesse caso dá lugar
-   * a uma linha clicável com resumo + seta (drill-down para um subecrã). */
   control?: ReactNode;
-  /** Valor atual mostrado antes da seta na linha mobile (ex.: "Automático"). */
   mobileValue?: ReactNode;
-  /** Handler do tap mobile quando difere do desktop (ex.: abrir um subecrã em
-   * vez do botão/controlo do desktop). Por omissão usa `onAction`. */
   onMobileTap?: () => void;
-  /** Usa a linha clicável com seta também no desktop, em vez do botão — para
-   * ações de navegação (ex.: abrir um modal/subecrã) sem alternativa a botão. */
   arrowStyle?: boolean;
 }
 
-/**
- * Uma linha de Definições: rótulo à esquerda, ação à direita. No desktop a
- * ação é um botão (ou controlo) de tamanho fixo; no mobile vira uma linha
- * inteira clicável com seta (padrão de lista de definições nativo).
- */
+/** A Settings row: label on the left, action on the right; collapses to a tappable row with a chevron on mobile. */
 export function SettingsRow({
   label,
   actionLabel,

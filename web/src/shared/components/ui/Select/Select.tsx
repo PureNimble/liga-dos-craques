@@ -31,7 +31,6 @@ interface OptionElementProps {
   disabled?: boolean;
 }
 
-/** Achata `<option>`/`<optgroup>` para a lista usada no popup customizado. */
 function collectOptions(children: ReactNode): SelectOption[] {
   const options: SelectOption[] = [];
   const walk = (nodes: ReactNode) => {
@@ -67,6 +66,7 @@ interface PopupPosition {
   above: boolean;
 }
 
+/** Custom-styled select with keyboard navigation, built on a hidden native `<select>`. */
 export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(
   function Select({ className = '', children, id, disabled, ...selectProps }, forwardedRef) {
     const options = useMemo(() => collectOptions(children), [children]);
@@ -94,10 +94,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
       [forwardedRef],
     );
 
-    // Sem `value`, é o modo do register()/defaultValue do react-hook-form: o valor
-    // real só existe no DOM (escrito pelo ref), por isso lemos de lá. Com `value`,
-    // o chamador controla-o — usamo-lo diretamente, nunca o DOM (que o React
-    // repõe ao valor controlado assim que o evento de change termina).
     const isControlled = selectProps.value !== undefined;
 
     useLayoutEffect(() => {
@@ -138,9 +134,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
         'value',
       )?.set;
       nativeSetter?.call(el, nextValue);
-      // Despacha o change nativo para o onChange do chamador (controlado ou register())
-      // disparar normalmente — o React repõe o valor da prop `value` logo a seguir se o
-      // chamador não atualizar o seu estado, por isso não relemos do DOM aqui.
       el.dispatchEvent(new Event('change', { bubbles: true }));
       if (!isControlled) setUncontrolledValue(nextValue);
     }
@@ -252,8 +245,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
         setOpen(false);
       }
       function handleScroll(e: Event) {
-        // Ignora o scroll interno do próprio popup (overflow-y: auto da lista) —
-        // só fecha quando o scroll é de um antepassado (página, modal, etc.).
         if (popupRef.current?.contains(e.target as Node)) return;
         setOpen(false);
       }

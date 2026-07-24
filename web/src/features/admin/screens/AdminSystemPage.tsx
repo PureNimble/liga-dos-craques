@@ -26,6 +26,7 @@ const RULE_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   mvp: StarIcon,
 };
 
+/** Admin screen for running the progression backfill and editing XP rules. */
 export function AdminSystemPage() {
   return (
     <>

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useMemo, useState, type ReactNode } from 'react';
 import s from './Toast.module.css';
 
+/** Visual/semantic kind of a toast message. */
 export type ToastKind = 'success' | 'error' | 'info';
 
 interface Toast {
@@ -9,6 +10,7 @@ interface Toast {
   kind: ToastKind;
 }
 
+/** Shape of the toast context: exposes `show` to trigger a toast. */
 export interface ToastContextValue {
   show: (message: string, kind?: ToastKind) => void;
 }
@@ -24,6 +26,7 @@ const kindClass: Record<ToastKind, string> = {
 
 let counter = 0;
 
+/** Provides toast notifications app-wide and renders the active toast stack. */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 

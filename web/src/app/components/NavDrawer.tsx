@@ -20,7 +20,7 @@ interface Props {
   onReport: () => void;
 }
 
-/** Navegação lateral (telemóvel): gaveta que desliza da direita, aberta pelo menu. */
+/** Mobile side navigation: drawer that slides in from the right, opened via the menu button. */
 export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props) {
   const { t } = useT();
   const items = profile.role === 'admin' ? [...navItems, adminNavItem] : navItems;
@@ -29,7 +29,6 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
   const [addGroupOpen, setAddGroupOpen] = useState(false);
   const [manageGroupId, setManageGroupId] = useState<string | null>(null);
 
-  // Fecha com Esc + bloqueia o scroll da página enquanto aberta (ver `html.modal-open`).
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -65,8 +64,6 @@ export function NavDrawer({ profile, open, onClose, onSignOut, onReport }: Props
           </button>
         </div>
 
-        {/* No tablet/desktop a troca de grupo já vive na coluna (GroupRail);
-            aqui fica só para o telemóvel, que não tem espaço para a coluna. */}
         <div className={s.groupsSection}>
           <h3 className={s.groupsTitle}>{t('navDrawer.groups')}</h3>
           <ul className={s.groupList}>

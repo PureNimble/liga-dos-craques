@@ -2,11 +2,7 @@ import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
-/**
- * Subscreve alterações em tempo real de um jogo e invalida as queries relevantes,
- * para o placar/timeline/plantel atualizarem sem refresh. Liga só quando a página
- * de detalhe está aberta (montada).
- */
+/** Subscribes to realtime changes on a game and invalidates the relevant queries. */
 export function useGameRealtime(gameId: string | undefined) {
   const queryClient = useQueryClient();
 

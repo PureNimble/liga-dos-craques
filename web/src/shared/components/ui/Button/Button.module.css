@@ -19,7 +19,6 @@
   transform: none;
 }
 
-/* Tamanhos (conformam à escala de espaço/tipografia) */
 .sm {
   padding: var(--space-xs) var(--space-md);
   font-size: var(--font-size-xs);
@@ -33,14 +32,12 @@
   font-size: var(--font-size-base);
 }
 
-/* Variantes */
 .primary {
   background-image: linear-gradient(to bottom, var(--accent-strong), var(--accent));
   color: var(--text-on-accent);
   box-shadow: var(--shadow-glow);
 }
 .primary:hover {
-  /* Verde-claro fixo — realce decorativo do gradiente, não texto, não segue o tema. */
   background-image: linear-gradient(to bottom, var(--green-300), var(--accent-strong));
 }
 

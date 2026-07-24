@@ -9,6 +9,7 @@ import { AuthLayout } from '../components/AuthLayout';
 import { signupSchema, type SignupValues } from '../schemas/auth.schemas';
 import s from '../auth.module.css';
 
+/** Signup screen — creates an account and handles the email-confirmation flow. */
 export function SignupPage() {
   const navigate = useNavigate();
   const { t } = useT();
@@ -40,7 +41,6 @@ export function SignupPage() {
       setError(error.message);
       return;
     }
-    // Se a confirmação de email estiver ativa, não há sessão imediata.
     if (data.session) {
       navigate('/', { replace: true });
     } else {

@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da página de Definições (exceto Privacidade, que vive em tracking). */
 export const settingsTranslations = {
   'settings.title': { pt: 'Definições', en: 'Settings' },
   'settings.back': { pt: 'Voltar', en: 'Back' },
@@ -75,4 +74,5 @@ export const settingsTranslations = {
   'settings.session.confirmLabel': { pt: 'Sair', en: 'Sign out' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the settings feature. */
 export type SettingsTranslationKey = keyof typeof settingsTranslations;

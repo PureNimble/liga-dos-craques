@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da grelha de estatísticas individuais (`StatsGrid`). */
 export const statsTranslations = {
   'stats.games': { pt: 'Jogos', en: 'Games' },
   'stats.goals': { pt: 'Golos', en: 'Goals' },
@@ -12,14 +11,12 @@ export const statsTranslations = {
   'stats.mvps': { pt: 'MVPs', en: 'MVPs' },
   'stats.flops': { pt: 'Flops', en: 'Flops' },
 
-  // Estado bloqueado (PlayerHeader, PlayerCharts)
   'stats.lock.own': { pt: 'Joga {count} jogos para desbloquear', en: 'Play {count} games to unlock' },
   'stats.lock.other': {
     pt: 'Disponível a partir de {count} jogos',
     en: 'Available from {count} games',
   },
 
-  // PlayerCharts
   'stats.chart.form': { pt: 'Forma', en: 'Form' },
   'stats.chart.lastGames': { pt: 'Últimos {count} jogos', en: 'Last {count} games' },
   'stats.chart.goalsAssists': { pt: 'Golos e assistências', en: 'Goals and assists' },
@@ -32,4 +29,5 @@ export const statsTranslations = {
   },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the stats feature. */
 export type StatsTranslationKey = keyof typeof statsTranslations;

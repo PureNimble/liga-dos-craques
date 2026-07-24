@@ -13,9 +13,6 @@
   color: var(--text-faint);
 }
 
-/* Cada grupo é um painel próprio: as suas linhas (SettingsRow) usam o
-   combinador de filho direto (em vez de border-top fixo em cada linha) para
-   não depender de saber qual é a primeira. */
 .panel {
   padding-inline: var(--space-lg);
 }

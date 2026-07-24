@@ -16,7 +16,7 @@ interface SettingsPickerProps<T extends string> {
   onBack: () => void;
 }
 
-/** Subecrã de escolha única (Aparência/Idioma no mobile) — lista com check na opção ativa. */
+/** Single-choice sub-screen (Appearance/Language on mobile) — a list with a check on the active option. */
 export function SettingsPicker<T extends string>({
   title,
   backLabel,

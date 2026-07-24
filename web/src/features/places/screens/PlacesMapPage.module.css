@@ -15,7 +15,6 @@
 }
 @media (max-width: 46rem) {
   .layout {
-    /* O mapa ocupa tudo; o painel vira "bottom sheet" flutuante por cima. */
     display: block;
   }
 }
@@ -37,22 +36,10 @@
     bottom: 0;
     z-index: 30;
     width: 100%;
-    /* Sem padding em baixo — a lista estica até ao fundo da sheet, sem faixa
-       vazia entre o último cartão e a borda arredondada. */
     padding-bottom: 0;
-    /* Estado "meio" (por omissão): alça + filtros (distrito/concelho) +
-       pesquisa + os dois primeiros cartões inteiros — alto o suficiente para
-       não cortar o 2º a meio; altura fixa (não %), como Google/Apple Maps,
-       em vez de depender da altura do mapa por baixo. */
     height: 24rem;
     transition: height var(--transition);
   }
-  /* Especificidade a dobrar (`.panel.panel`) para ganhar ao `.card` do Card
-     (mesma especificidade, ordem de import imprevisível) nestas props — o
-     Card por omissão é translúcido (pensado para o fundo da página); aqui
-     fica por cima do mapa, por isso precisa de um fundo opaco. Cantos
-     arredondados nos 4, mesmo encostada ao fundo do ecrã — o círculo do
-     canto revela o mapa por baixo, tal como já acontecia em cima. */
   .panel.panel {
     border-radius: var(--radius-lg);
     background-image: none;
@@ -60,22 +47,16 @@
     box-shadow: none;
   }
   .panelFull {
-    /* Aberta: quase a toda a altura, deixando uma faixa do mapa visível no
-       topo (contexto de onde se está) — o mesmo respiro do padrão nativo. */
     height: calc(100% - 3rem);
   }
   .panelClosed {
-    /* Fechada: só a alça fica à vista — toca para reabrir. */
     height: 3rem;
   }
-  /* Escondido "a sério" (não só cortado pela altura) para não sobrar nenhuma
-     fatia de pesquisa/lista visível por baixo da alça. */
   .panelClosed > *:not(.handle) {
     display: none;
   }
 }
 
-/* Alça de arrastar da bottom sheet — só existe visualmente no telemóvel. */
 .handle {
   display: none;
 }
@@ -104,16 +85,10 @@
 
 .filters {
   display: grid;
-  /* minmax(0, 1fr), não 1fr — sem o mínimo a 0, uma coluna com um nome
-     comprido (ex.: "Viana do Castelo") empurra a track para lá de 50%
-     (o mínimo de uma track 1fr é o min-content do conteúdo, não zero),
-     em vez de repartir o espaço a meio e deixar o Select cortar com "…". */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-sm);
 }
 
-/* Detalhe do campo selecionado — substitui filtros/pesquisa/lista dentro do
-   mesmo painel (em vez de um dialog à parte), tanto no telemóvel como no PC. */
 .detail {
   display: flex;
   min-height: 0;
@@ -234,11 +209,7 @@
   flex-direction: column;
   gap: var(--space-sm);
   overflow-y: auto;
-  /* Pequeno respiro no fim da lista — o `.panel` já não tem padding-bottom
-     no telemóvel (ver acima), este é só para o último cartão não colar à
-     borda arredondada. */
   padding-bottom: var(--space-sm);
-  /* Desliza sem barra à vista — mesmo padrão do `main`/`AdminLayout`. */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -280,10 +251,6 @@
 }
 
 .mapWrap {
-  /* `position: relative` sozinho não cria stacking context — os painéis e
-     controlos internos do Leaflet (z-index até 1000+) escapavam por cima da
-     bottom sheet no telemóvel. `z-index: 0` força o contexto próprio, contendo
-     tudo lá dentro, para a sheet (z-index: 30) ganhar sempre. */
   position: relative;
   z-index: 0;
   flex: 1;
@@ -305,7 +272,6 @@
   background-color: var(--surface-input);
 }
 
-/* Sobrepõe o estilo claro por omissão do tooltip do Leaflet (biblioteca de terceiros). */
 .tooltip {
   background-color: var(--surface-tooltip) !important;
   color: var(--text-color) !important;
@@ -323,14 +289,10 @@
   color: var(--text-subtle);
 }
 
-/* Sem isto, clicar num distrito/concelho foca o path SVG e o focus ring por
-   omissão do browser aparece como um retângulo branco à volta do bounding box. */
 :global(.leaflet-interactive):focus {
   outline: none;
 }
 
-/* Atribuição do OSM/CARTO ao estilo escuro da app — mantém-se (é exigida pela
-   licença dos tiles gratuitos), só deixa de ser uma caixa branca destacada. */
 :global(.leaflet-control-attribution) {
   background-color: var(--surface-tooltip) !important;
   color: var(--text-subtle) !important;
@@ -340,7 +302,6 @@
   color: var(--text-subtle) !important;
 }
 
-/* Botões de zoom ao estilo escuro da app. */
 :global(.leaflet-control-zoom) {
   border: 1px solid var(--border-light) !important;
   box-shadow: var(--shadow-card) !important;
@@ -360,7 +321,6 @@
   color: var(--text-faint) !important;
 }
 
-/* Pin de campo individual — mesmo reset de fundo/borda do divIcon. */
 .placeMarker {
   background: none !important;
   border: none !important;
@@ -376,8 +336,6 @@
   filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.45)) drop-shadow(0 0 8px var(--accent));
 }
 
-/* Círculo de cluster (agrupa pins próximos a zoom afastado) — substitui por
-   completo o visual por omissão do leaflet.markercluster. */
 .clusterIcon {
   display: flex;
   height: 36px;

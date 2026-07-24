@@ -1,20 +1,14 @@
-/** Meio-campo para escolher posições: coordenadas e regra de seleção. */
-
+/** A point on the pitch: x as a width percentage, y in viewBox units. */
 export interface PitchXY {
-  /** % da largura (0–100), esquerda→direita. */
   x: number;
-  /** unidades do viewBox (0–PITCH_H), topo = ataque, fundo = baliza própria. */
   y: number;
 }
 
-/** Altura do viewBox (a largura é 100). 100×80 ≈ um meio-campo real (68 m × 52,5 m). */
 export const PITCH_H = 80;
-/** Proporção do campo, para o CSS bater certo com o viewBox. */
 export const PITCH_RATIO = `100 / ${PITCH_H}`;
 
 /**
- * Lugar de cada posição, por `position.code`. Ataca-se para cima, e os lados são
- * os de quem joga: RW/RB à direita do ecrã, LW/LB à esquerda.
+ * Attack points up; sides are from the player's perspective (RW/RB on screen-right, LW/LB on screen-left):
  *
  *      LW · ST · RW
  *           SS
@@ -43,28 +37,29 @@ export const POSITION_XY: Record<string, PitchXY> = {
   GK: { x: 50, y: 73 },
 };
 
-/** Posição no campo, ou null para um código que não conheçamos. */
+/** Pitch position for a position code, or null if the code is unknown. */
 export function xyFor(code: string): PitchXY | null {
   return POSITION_XY[code] ?? null;
 }
 
+/** Whether a position id is unselected, the main pick, or a secondary pick. */
 export type PositionState = 'none' | 'main' | 'secondary';
 
+/** The currently selected main position and secondary positions. */
 export interface PositionSelection {
   mainId: number | null;
   secondaryIds: number[];
 }
 
+/** Reports whether a position id is the main pick, a secondary pick, or unselected. */
 export function stateOf(sel: PositionSelection, id: number): PositionState {
   if (sel.mainId === id) return 'main';
   return sel.secondaryIds.includes(id) ? 'secondary' : 'none';
 }
 
 /**
- * Um clique numa posição:
- *   livre      → principal, se ainda não houver; senão secundária
- *   secundária → principal (a que era principal desce a secundária)
- *   principal  → sai da seleção
+ * Toggles a position: promotes it to main (the old main becomes secondary),
+ * or deselects it if it was already the main.
  */
 export function togglePosition(sel: PositionSelection, id: number): PositionSelection {
   if (sel.mainId === id) return { mainId: null, secondaryIds: sel.secondaryIds };

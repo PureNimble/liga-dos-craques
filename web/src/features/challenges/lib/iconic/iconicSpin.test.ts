@@ -28,7 +28,6 @@ describe('buildReel', () => {
   it('tem loops passes completos antes do alvo', () => {
     const { items, targetIndex } = buildReel(goals, 2, 5);
     expect(targetIndex).toBe(5 * goals.length);
-    // cauda para as cartas de baixo espreitarem
     expect(items.length).toBe(5 * goals.length + 1 + 3);
   });
 

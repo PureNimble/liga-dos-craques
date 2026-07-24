@@ -13,6 +13,7 @@ import { listMissing, profileCompletion } from '@/features/profile/lib/profileCo
 import { useT } from '@/shared/i18n/useT';
 import s from './HomePage.module.css';
 
+/** Home screen: greeting, XP bar, stats summary, profile completion prompt and quick actions. */
 export function HomePage() {
   const { user } = useAuth();
   const { t } = useT();
@@ -42,7 +43,6 @@ export function HomePage() {
 
   return (
     <div className={s.page}>
-      {/* Saudação */}
       <header className={s.greeting}>
         <Link to="/profile" aria-label={t('navbar.viewProfile')} className={s.avatarLink}>
           <Avatar name={profile.name} src={profile.photo_url} size="lg" />
@@ -67,7 +67,6 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Perfil incompleto */}
       {!completion.isComplete && (
         <Card>
           <h2 className={s.onboardTitle}>{t('home.onboard.title')}</h2>
@@ -78,7 +77,6 @@ export function HomePage() {
                 t('home.onboard.and'),
               ),
             })}{' '}
-            {/* Só a posição entra no gerador de equipas. */}
             {completion.positionMissing
               ? t('home.onboard.positionHint')
               : t('home.onboard.genericHint')}
@@ -89,10 +87,8 @@ export function HomePage() {
         </Card>
       )}
 
-      {/* O mesmo modal da página de perfil. */}
       {editOpen && <ProfileEditModal profile={profile} onClose={() => setEditOpen(false)} />}
 
-      {/* Acessos rápidos */}
       <section className={s.quick}>
         <h2 className={s.sectionTitle}>{t('home.quickAccess')}</h2>
         {quickActions.map((a) => (

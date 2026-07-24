@@ -52,7 +52,6 @@
   text-align: center;
 }
 
-/* Cabeçalho do golo ativo */
 .activeHead {
   display: flex;
   flex-direction: column;
@@ -80,7 +79,6 @@
   color: var(--text-subtle);
 }
 
-/* Grelha dos golos */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
@@ -119,7 +117,6 @@
   filter: url(#iconic-ink) contrast(1.05);
   transition: filter var(--transition);
 }
-/* Ao passar o rato, mostra a foto real (sem posterização). */
 .goalCard:hover .goalThumb {
   filter: saturate(1.1) contrast(1.05);
 }

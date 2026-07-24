@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos das páginas de autenticação (login, registo, recuperação, nova password). */
 export const authTranslations = {
   'auth.login.title': { pt: 'Entra na tua conta', en: 'Sign in to your account' },
   'auth.login.error': { pt: 'Credenciais inválidas.', en: 'Invalid credentials.' },
@@ -60,4 +59,5 @@ export const authTranslations = {
   'auth.updatePassword.submit': { pt: 'Guardar password', en: 'Save password' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the auth feature. */
 export type AuthTranslationKey = keyof typeof authTranslations;

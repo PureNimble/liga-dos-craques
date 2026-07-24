@@ -9,6 +9,7 @@ import {
 import cards from '../adminCards.module.css';
 import s from './AdminReportsPage.module.css';
 
+/** Admin screen listing bug reports with resolve/reopen actions. */
 export function AdminReportsPage() {
   const { data: reports, isLoading } = useBugReports();
   const openCount = (reports ?? []).filter((r) => r.status === 'open').length;

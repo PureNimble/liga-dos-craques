@@ -3,17 +3,12 @@ import type { IconicGoal } from '../../hooks/iconic/iconicGoalHooks';
 import { playLand, playTick, startSpin, stopSpin } from '../../lib/iconic/spinnerSound';
 import s from './IconicSpinner.module.css';
 
-/** Altura de cada carta (px) — tem de bater certo com a moldura no CSS. */
 const CARD_H = 88;
 
-/** Duração do deslize — partilhada entre a transição CSS e o whir do som. */
 const SPIN_S = 4.2;
 
-/** Intervalo mínimo entre ticks: na fase rápida passam centenas de cartas por
-    segundo, que soariam a ruído em vez de cliques distintos. */
 const MIN_TICK_MS = 45;
 
-/** Deslocamento vertical atual do carrossel (lê o transform já interpolado). */
 function currentTranslateY(el: HTMLElement): number {
   const t = getComputedStyle(el).transform;
   if (!t || t === 'none') return 0;
@@ -24,19 +19,17 @@ interface IconicSpinnerProps {
   items: IconicGoal[];
   targetIndex: number;
   spinning: boolean;
-  /** Muda a cada rodada nova → dispara a animação. */
   spinKey: string;
   onDone?: () => void;
 }
 
-/** Carrossel vertical estilo Forza Wheelspin: rola e assenta no golo-alvo. */
+/** Forza Wheelspin-style vertical carousel: spins and settles on the target goal. */
 export function IconicSpinner({ items, targetIndex, spinning, spinKey, onDone }: IconicSpinnerProps) {
   const rest = -(targetIndex - 1) * CARD_H;
   const [offset, setOffset] = useState(rest);
   const [animate, setAnimate] = useState(false);
   const reelRef = useRef<HTMLDivElement>(null);
 
-  // Toca um tick a cada carta que passa pelo centro, enquanto roda.
   useEffect(() => {
     const el = reelRef.current;
     if (!spinning || !el) return;
@@ -48,7 +41,6 @@ export function IconicSpinner({ items, targetIndex, spinning, spinKey, onDone }:
       if (lastIndex < 0) {
         lastIndex = index;
       } else if (index > lastIndex) {
-        // A última carta fica reservada ao som de aterragem (ver onTransitionEnd).
         const now = performance.now();
         if (index < targetIndex - 1 && now - lastAt >= MIN_TICK_MS) {
           playTick();
@@ -68,7 +60,6 @@ export function IconicSpinner({ items, targetIndex, spinning, spinKey, onDone }:
       setOffset(-(targetIndex - 1) * CARD_H);
       return;
     }
-    // Recomeça no topo (sem transição) e, no frame seguinte, desliza até ao alvo.
     setAnimate(false);
     setOffset(0);
     let raf2 = 0;
@@ -126,7 +117,7 @@ export function IconicSpinner({ items, targetIndex, spinning, spinKey, onDone }:
   );
 }
 
-/** Dificuldade 1–5 em pontos preenchidos. */
+/** Difficulty 1-5 shown as filled pips. */
 export function DifficultyPips({ value }: { value: number }) {
   return (
     <span className={s.pips} aria-label={`Dificuldade ${value} de 5`}>

@@ -1,7 +1,3 @@
-/**
- * Sons do spinner. Amostras CC0 (OpenGameArt: Brian MacIntosh, rubberduck) em
- * `public/sounds`. Trocar de som é mudar o caminho aqui.
- */
 const SOUNDS = {
   tick: '/sounds/tick-typewriter.wav',
   land: '/sounds/land-slam.ogg',
@@ -10,19 +6,15 @@ const SOUNDS = {
 
 type SoundName = keyof typeof SOUNDS;
 
-/** Contexto de áudio partilhado, criado à primeira utilização. */
 let ctx: AudioContext | null = null;
 const buffers = new Map<SoundName, AudioBuffer>();
 const loading = new Map<SoundName, Promise<void>>();
 
 const MUTED_KEY = 'iconic:muted';
 
-/** Em cache: durante uma rodada o tick é chamado dezenas de vezes e não vale a
-    pena ir ao localStorage de cada vez. */
 let muted: boolean | null = null;
 
-/** Preferência de som (persistida). O localStorage pode estar indisponível
-    (modo privado, storage bloqueado), por isso nunca deita a app abaixo. */
+/** Sound preference, persisted to localStorage (falls back to false if unavailable). */
 export function isMuted(): boolean {
   if (muted === null) {
     try {
@@ -34,12 +26,13 @@ export function isMuted(): boolean {
   return muted;
 }
 
+/** Sets and persists the sound preference. */
 export function setMuted(value: boolean): void {
   muted = value;
   try {
     localStorage.setItem(MUTED_KEY, value ? '1' : '0');
+    // eslint-disable-next-line no-empty
   } catch {
-    // Sem persistência disponível — a preferência vale só para esta sessão.
   }
 }
 
@@ -50,8 +43,6 @@ function audioContext(): AudioContext | null {
   return ctx;
 }
 
-/** Descarrega e descodifica uma amostra (uma vez só). Falhar é aceitável: sem
-    som, o spinner funciona na mesma. */
 function load(c: AudioContext, name: SoundName): Promise<void> {
   const pending = loading.get(name);
   if (pending) return pending;
@@ -63,7 +54,6 @@ function load(c: AudioContext, name: SoundName): Promise<void> {
       buffers.set(name, buffer);
     })
     .catch(() => {
-      // Formato não suportado ou ficheiro em falta — segue sem este som.
     });
 
   loading.set(name, p);
@@ -77,7 +67,7 @@ function play(name: SoundName, volume: number): void {
 
   const buffer = buffers.get(name);
   if (!buffer) {
-    void load(c, name); // ainda a carregar: este toque perde-se, os próximos não
+    void load(c, name);
     return;
   }
 
@@ -90,11 +80,7 @@ function play(name: SoundName, volume: number): void {
   source.start();
 }
 
-/**
- * Cria/retoma o contexto e pré-carrega as amostras. Tem de ser chamado a partir
- * de um gesto do utilizador (o clique em "Rodar") — os browsers bloqueiam áudio
- * iniciado fora de um.
- */
+/** Creates/resumes the audio context and preloads samples; must be called from a user gesture. */
 export function primeTickAudio(): void {
   if (isMuted()) return;
   const c = audioContext();
@@ -104,20 +90,17 @@ export function primeTickAudio(): void {
   void load(c, 'land');
 }
 
-/** Clique curto a cada carta que passa pelo centro. */
+/** Short click for each card passing the center. */
 export function playTick(): void {
   play('tick', 0.45);
 }
 
-/** Impacto ao assentar no golo sorteado. */
+/** Impact sound when the reel settles on the drawn goal. */
 export function playLand(): void {
   play('land', 0.9);
 }
 
-/**
- * Prepara o áudio da conquista. Tem de ser chamado dentro do clique em
- * "Consegui!" — o som só toca depois da resposta do servidor, já fora do gesto.
- */
+/** Prepares the achievement audio; must be called from within the "Consegui!" click. */
 export function primeAchievementAudio(): void {
   if (isMuted()) return;
   const c = audioContext();
@@ -126,10 +109,7 @@ export function primeAchievementAudio(): void {
   void load(c, 'achievement');
 }
 
-/**
- * Fanfarra da conquista. Ao contrário do tick, espera pela amostra em vez de
- * desistir: toca uma única vez e não pode falhar por chegar cedo demais.
- */
+/** Plays the achievement fanfare, awaiting the sample instead of giving up early. */
 export async function playAchievement(): Promise<void> {
   if (isMuted()) return;
   const c = audioContext();
@@ -139,10 +119,8 @@ export async function playAchievement(): Promise<void> {
   play('achievement', 0.7);
 }
 
-/** Ruído branco em cache — base do whir do spin (gerado, sem ficheiro). */
 let noiseBuffer: AudioBuffer | null = null;
 
-/** Nós do whir atualmente a tocar, para os podermos parar mais cedo. */
 let spinNodes: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
 
 function noise(c: AudioContext): AudioBuffer {
@@ -155,11 +133,7 @@ function noise(c: AudioContext): AudioBuffer {
   return buf;
 }
 
-/**
- * Whir contínuo enquanto o carrossel roda: ruído filtrado cuja frequência e
- * volume descem ao longo de `durationS`, como uma roda a perder força. Os ticks
- * (cartas a passar) e o land tocam por cima. Silencioso se não houver áudio.
- */
+/** Plays a continuous filtered-noise whir while the reel spins, fading in pitch/volume over `durationS`. */
 export function startSpin(durationS: number): void {
   if (isMuted()) return;
   const c = audioContext();
@@ -190,7 +164,7 @@ export function startSpin(durationS: number): void {
   spinNodes = { src, gain };
 }
 
-/** Corta o whir com um fade curtíssimo (evita o clique de parar a seco). */
+/** Cuts the whir with a short fade to avoid an abrupt stop. */
 export function stopSpin(): void {
   if (!spinNodes || !ctx) {
     spinNodes = null;
@@ -204,7 +178,7 @@ export function stopSpin(): void {
     gain.gain.setValueAtTime(gain.gain.value, now);
     gain.gain.linearRampToValueAtTime(0.0001, now + 0.08);
     src.stop(now + 0.1);
+    // eslint-disable-next-line no-empty
   } catch {
-    // já parado — segue.
   }
 }

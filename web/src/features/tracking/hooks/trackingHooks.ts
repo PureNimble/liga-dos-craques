@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
+/** Current user's analytics consent state. */
 export type ConsentState = 'undecided' | 'granted' | 'denied';
 
-/** Decisão de tracking do utilizador atual (sem linha = ainda não decidiu). */
+/** Fetches the current user's tracking consent decision (no row = not yet decided). */
 export function useAnalyticsConsent(userId: string | undefined) {
   return useQuery({
     queryKey: ['analytics_consent', userId],
@@ -22,7 +23,7 @@ export function useAnalyticsConsent(userId: string | undefined) {
   });
 }
 
-/** Aceita ou retira o consentimento (retirar apaga os eventos já recolhidos). */
+/** Grants or revokes tracking consent (revoking deletes already collected events). */
 export function useSetAnalyticsConsent() {
   const queryClient = useQueryClient();
   return useMutation({

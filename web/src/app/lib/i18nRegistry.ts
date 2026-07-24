@@ -16,11 +16,7 @@ import { placesTranslations } from '@/features/places/i18n/places.i18n';
 import { navTranslations } from '../i18n/nav.i18n';
 import { homeTranslations } from '../i18n/home.i18n';
 
-/**
- * Junta o dicionário de cada feature num só registo, para o `I18nProvider`
- * (`shared/i18n/`, que não pode depender de `features/`). Cada feature dona
- * do seu ficheiro `*.i18n.ts` — este ficheiro só agrega, não define texto.
- */
+/** Combines every feature's translation dictionary into one registry for `I18nProvider`. */
 export const i18nRegistry: TranslationDict = {
   ...navTranslations,
   ...homeTranslations,

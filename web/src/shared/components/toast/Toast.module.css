@@ -3,8 +3,6 @@
   position: fixed;
   inset-inline: 0;
   bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
-  /* Acima de qualquer Modal (1200) ou Select (1300) — um toast tem de ficar
-     visível mesmo com um diálogo aberto por cima. */
   z-index: 1400;
   display: flex;
   flex-direction: column;

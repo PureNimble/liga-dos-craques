@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { flushNow, trackPageView } from '../lib/tracker';
 
-/** Regista cada mudança de rota enquanto houver consentimento. */
+/** Logs each route change while tracking consent is granted. */
 export function usePageTracking(userId: string | undefined, enabled: boolean) {
   const { pathname } = useLocation();
 

@@ -12,7 +12,7 @@ import { useUnreadNotificationCount } from '@/features/notifications/hooks/notif
 import { useT } from '@/shared/i18n/useT';
 import s from './Navbar.module.css';
 
-/** Cabeçalho fixo: logótipo, avatar e menu — a navegação (e os grupos) vive toda na gaveta. */
+/** Fixed header: logo, avatar and menu button — navigation and groups live entirely in the drawer. */
 export function Navbar({ profile }: { profile: FullProfile }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();

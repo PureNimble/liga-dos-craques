@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da grelha de conquistas (`AchievementsGrid`). */
 export const achievementsTranslations = {
   'achievements.title': { pt: 'Conquistas', en: 'Achievements' },
   'achievements.hint': {
@@ -9,4 +8,5 @@ export const achievementsTranslations = {
   },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the achievements feature. */
 export type AchievementsTranslationKey = keyof typeof achievementsTranslations;

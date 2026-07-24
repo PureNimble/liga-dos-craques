@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
-/** Janela de análise, em meses cheios (o mês corrente conta). */
+/** Analysis window, in full months (the current month counts). */
 export type AnalyticsMonths = 3 | 6 | 12;
 
-/** Áreas da app onde uma ação de utilizador pode acontecer. */
 export const AREAS = [
   { key: 'games', label: 'Jogos' },
   { key: 'squads', label: 'Convocatórias' },
@@ -14,25 +13,29 @@ export const AREAS = [
   { key: 'places', label: 'Locais' },
 ] as const;
 
+/** Key identifying one of the app areas in `AREAS`. */
 export type AreaKey = (typeof AREAS)[number]['key'];
 
+/** A label paired with a count. */
 export interface LabelCount {
   label: string;
   count: number;
 }
 
+/** A player identified by id/name, paired with a count. */
 export interface PlayerCount {
   id: string;
   name: string;
   count: number;
 }
 
-/** Valor do período com o homólogo anterior ao lado, para calcular variação. */
+/** A period's value alongside its prior counterpart, for computing variation. */
 export interface Kpi {
   value: number;
   previous: number;
 }
 
+/** Summary KPIs shown at the top of the usage analytics page. */
 export interface UsageSummary {
   activeUsers: Kpi;
   activityRate: Kpi;
@@ -42,9 +45,10 @@ export interface UsageSummary {
   dormant: Kpi;
 }
 
-/** Um ponto mensal com as ações repartidas por área (para barras empilhadas). */
+/** One monthly data point with actions split by area, for stacked bars. */
 export type MonthActions = { label: string } & Record<AreaKey, number>;
 
+/** One month's user counts: active, new, registered and the active rate. */
 export interface MonthUsers {
   label: string;
   activeUsers: number;
@@ -53,17 +57,20 @@ export interface MonthUsers {
   activeRate: number;
 }
 
+/** A label with a count and its share of the total. */
 export interface ReachRow {
   label: string;
   count: number;
   share: number;
 }
 
+/** One heatmap row (a time band) with per-weekday cell counts. */
 export interface HeatRow {
   band: string;
   cells: LabelCount[];
 }
 
+/** Aggregated data backing the platform usage analytics page. */
 export interface UsageData {
   summary: UsageSummary;
   monthlyActions: MonthActions[];
@@ -93,7 +100,6 @@ interface Action {
   area: AreaKey;
 }
 
-/** Primeiro dia do mês, `back` meses atrás. */
 function monthStart(back: number): Date {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth() - back, 1);
@@ -107,7 +113,6 @@ function daysBefore(from: Date, days: number): Date {
   return new Date(from.getTime() - days * 86_400_000);
 }
 
-/** Índice 2ª=0 … dom=6 (getDay devolve 0=domingo). */
 function weekdayIndex(d: Date): number {
   return (d.getDay() + 6) % 7;
 }
@@ -123,11 +128,7 @@ function byCountDesc(map: Map<string, number>): LabelCount[] {
     .sort((a, b) => b.count - a.count);
 }
 
-/**
- * Uso da plataforma: quem entra, o que usa e quando. Junta todas as ações de
- * utilizador (jogos, convocatórias, gameday, desafios, golos icónicos, locais)
- * numa só linha do tempo e agrega no cliente — os volumes desta app são pequenos.
- */
+/** Platform usage analytics: who signs in, what they use, and when — aggregated client-side. */
 export function useUsageAnalytics(months: AnalyticsMonths) {
   return useQuery({
     queryKey: ['admin_usage_analytics', months],
@@ -184,7 +185,6 @@ export function useUsageAnalytics(months: AnalyticsMonths) {
       const inWindow = actions.filter((a) => a.at >= start);
       const inPrev = actions.filter((a) => a.at >= prevStart && a.at < start);
 
-      // ---- baldes mensais -------------------------------------------------
       const monthlyActions: MonthActions[] = [];
       const monthlyUsers: MonthUsers[] = [];
       const index = new Map<string, number>();
@@ -223,7 +223,6 @@ export function useUsageAnalytics(months: AnalyticsMonths) {
         if (i !== undefined) monthlyUsers[i].newUsers += 1;
       }
 
-      // ---- áreas: volume e alcance ---------------------------------------
       const areaActions = new Map<string, number>();
       const areaUsers = new Map<string, Set<string>>();
       const perUser = new Map<string, number>();
@@ -246,7 +245,6 @@ export function useUsageAnalytics(months: AnalyticsMonths) {
         .filter((r) => r.count > 0)
         .sort((a, b) => b.count - a.count);
 
-      // ---- quando se usa a app --------------------------------------------
       const heatmap: HeatRow[] = HOUR_BANDS.map((b) => ({
         band: b.band,
         cells: WEEKDAYS.map((label) => ({ label, count: 0 })),
@@ -258,7 +256,6 @@ export function useUsageAnalytics(months: AnalyticsMonths) {
         if (row >= 0) heatmap[row].cells[weekdayIndex(a.at)].count += 1;
       }
 
-      // ---- estado das contas ----------------------------------------------
       const now = new Date();
       const lastSeen = new Map<string, Date>();
       for (const a of actions) {
@@ -329,8 +326,8 @@ export function useUsageAnalytics(months: AnalyticsMonths) {
   });
 }
 
+/** Measured (not inferred) tracking usage data — visits, sessions and pages. */
 export interface TrackingAnalytics {
-  /** Falso enquanto ninguém consentiu ou não há eventos ainda. */
   hasData: boolean;
   consented: number;
   totalUsers: number;
@@ -345,10 +342,7 @@ export interface TrackingAnalytics {
   heatmap: HeatRow[];
 }
 
-/**
- * Uso medido (não inferido): visitas, sessões e páginas, a partir dos eventos
- * de tracking — só de quem deu consentimento.
- */
+/** Fetches measured tracking usage from consented users' events. */
 export function useTrackingAnalytics(months: AnalyticsMonths) {
   return useQuery({
     queryKey: ['admin_tracking_analytics', months],
@@ -449,6 +443,7 @@ export function useTrackingAnalytics(months: AnalyticsMonths) {
   });
 }
 
+/** Aggregated bug report stats: open/total counts, by page and by month. */
 export interface BugAnalytics {
   open: number;
   total: number;
@@ -457,7 +452,7 @@ export interface BugAnalytics {
   reporters: number;
 }
 
-/** Reportes de bugs — onde a app dói e quem se dá ao trabalho de avisar. */
+/** Fetches bug report analytics for the given window. */
 export function useBugAnalytics(months: AnalyticsMonths) {
   return useQuery({
     queryKey: ['admin_bug_analytics', months],

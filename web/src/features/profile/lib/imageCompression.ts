@@ -1,8 +1,4 @@
-/**
- * Reduz e comprime uma imagem no browser antes do upload, para poupar o
- * limite de 1 GB do Storage gratuito. Redimensiona para caber num quadrado de
- * `maxSize` px (mantendo proporção) e exporta WebP.
- */
+/** Resizes an image to fit within `maxSize` px (keeping aspect ratio) and re-encodes it as WebP. */
 export async function compressImage(file: File, maxSize = 512, quality = 0.85): Promise<Blob> {
   const bitmap = await createImageBitmap(file);
 

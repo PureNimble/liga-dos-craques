@@ -17,7 +17,6 @@
   text-transform: uppercase;
 }
 
-/* Tamanhos (dimensão intrínseca do componente) */
 .sm {
   height: 2rem;
   width: 2rem;

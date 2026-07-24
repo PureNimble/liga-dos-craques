@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos do painel de equipas e do campo (`TeamsPanel`, `Pitch`). */
 export const teamsTranslations = {
   'teams.title': { pt: 'Equipas', en: 'Teams' },
   'teams.regenerate': { pt: 'Regenerar', en: 'Regenerate' },
@@ -36,4 +35,5 @@ export const teamsTranslations = {
   'teams.subCancel': { pt: 'cancelar', en: 'cancel' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the teams feature. */
 export type TeamsTranslationKey = keyof typeof teamsTranslations;

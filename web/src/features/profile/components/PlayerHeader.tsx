@@ -14,7 +14,7 @@ interface PlayerHeaderProps {
   featured?: { icon: string; label: string } | null;
 }
 
-/** Cartão de nota média (estilo SofaScore) — fica ao lado do cartão do jogador. */
+/** Average-rating card (SofaScore-style) shown alongside the player card. */
 export function PlayerHeader({
   footLabel,
   avgRating,
@@ -23,7 +23,6 @@ export function PlayerHeader({
   featured,
 }: PlayerHeaderProps) {
   const { t } = useT();
-  // Bloqueado até jogar o mínimo de jogos: mostra o cartão desfocado com cadeado.
   if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
     return (
       <LockOverlay locked className={s.lockWrap} message={statsLockMessage(t, own)}>

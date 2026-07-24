@@ -3,18 +3,14 @@ import { ZONE_COUNT } from '../../lib/penalty/penaltyModes';
 
 const STEPS = 12;
 
+/** State of an animated zone draw: the zone to highlight, whether it's spinning, and a skip action. */
 export interface ZoneSpin {
-  /** Zona a destacar agora (aleatória enquanto gira; a alvo quando pára). */
   displayZone: number | null;
   spinning: boolean;
-  /** Termina a animação já, assentando na zona-alvo. */
   skip: () => void;
 }
 
-/**
- * Sorteio animado da zona-alvo (efeito "slot"): salta ao acaso entre zonas,
- * desacelera e assenta na alvo. Joga uma vez por `revealKey` (vez de cada jogador).
- */
+/** Animates a slot-style target-zone draw (random jumps that decelerate onto the target), once per `revealKey`. */
 export function useZoneSpin(revealKey: string, target: number | null, enabled: boolean): ZoneSpin {
   const [displayZone, setDisplayZone] = useState<number | null>(target);
   const [spinning, setSpinning] = useState(false);
@@ -27,7 +23,6 @@ export function useZoneSpin(revealKey: string, target: number | null, enabled: b
       setDisplayZone(target);
       return;
     }
-    // Esta vez já foi revelada (re-render/refetch não recomeça a animação).
     if (doneKey.current === revealKey) {
       setDisplayZone(target);
       return;
@@ -48,7 +43,7 @@ export function useZoneSpin(revealKey: string, target: number | null, enabled: b
         setSpinning(false);
         return;
       }
-      timer.current = setTimeout(tick, 55 + step * 22); // desacelera até parar
+      timer.current = setTimeout(tick, 55 + step * 22);
     };
     timer.current = setTimeout(tick, 55);
     return () => clearTimeout(timer.current);

@@ -63,7 +63,6 @@
   color: var(--text-color);
   transform: translateY(-1px);
 }
-/* Com foto, o círculo é fixo — só as iniciais fazem o morph squircle→círculo. */
 .chipPhoto {
   border-radius: 50%;
 }
@@ -72,11 +71,6 @@
   position: relative;
 }
 
-/* Indicador do grupo ativo, no gutter à esquerda do avatar (estilo Discord) —
-   ponto que vira barra no hover. A .list agora tem width:100% (em vez de
-   encolher à largura do chip), por isso o gutter fica DENTRO da caixa da
-   .list e não é cortado pelo overflow-x forçado (overflow-y:auto obriga
-   overflow-x a não ser visible). */
 .indicator {
   position: absolute;
   left: -0.6rem;
@@ -128,8 +122,6 @@
   color: var(--accent-strong);
 }
 
-/* Tooltip — desenhado num portal (document.body), posicionado por JS a partir
-   do círculo em hover/foco, para nunca ser cortado pelo overflow-y da lista. */
 .tooltip {
   position: fixed;
   z-index: 50;

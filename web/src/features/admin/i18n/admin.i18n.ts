@@ -1,9 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/**
- * Textos do cromo do dashboard de admin: layout, barra lateral e página
- * índice. As restantes sub-páginas de `/admin` ainda não estão cobertas.
- */
 export const adminTranslations = {
   'admin.brand': { pt: 'Administração', en: 'Administration' },
   'admin.nav.dashboard': { pt: 'Dashboard', en: 'Dashboard' },
@@ -11,7 +7,6 @@ export const adminTranslations = {
   'admin.nav.comingSoon': { pt: 'Brevemente', en: 'Coming soon' },
   'admin.backToApp': { pt: 'Voltar à app', en: 'Back to app' },
 
-  // Secções (adminSections.ts)
   'admin.section.players.label': { pt: 'Jogadores', en: 'Players' },
   'admin.section.players.description': {
     pt: 'Gerir contas, funções e reposição de password.',
@@ -53,7 +48,6 @@ export const adminTranslations = {
     en: 'Connection status, backfill and XP rules.',
   },
 
-  // AdminDashboard
   'admin.dashboard.onlineUsers': { pt: 'Utilizadores online', en: 'Online users' },
   'admin.dashboard.server': { pt: 'Servidor', en: 'Server' },
   'admin.dashboard.server.connecting': { pt: 'A ligar…', en: 'Connecting…' },
@@ -73,4 +67,5 @@ export const adminTranslations = {
   'admin.dashboard.noData': { pt: 'Sem dados no período.', en: 'No data for this period.' },
 } satisfies TranslationDict;
 
+/** Union of every translation key defined in `adminTranslations`. */
 export type AdminTranslationKey = keyof typeof adminTranslations;

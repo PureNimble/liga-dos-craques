@@ -9,7 +9,7 @@ interface LockOverlayProps {
   children: ReactNode;
 }
 
-/** Mostra o conteúdo desfocado com um cadeado e uma mensagem quando bloqueado. */
+/** Shows blurred content with a lock icon and message when `locked` is true. */
 export function LockOverlay({ locked, message, className = '', children }: LockOverlayProps) {
   if (!locked) return <>{children}</>;
   return (

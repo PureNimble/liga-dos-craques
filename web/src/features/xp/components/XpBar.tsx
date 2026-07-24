@@ -2,7 +2,7 @@ import { useT } from '@/shared/i18n/useT';
 import type { PlayerXp } from '../hooks/xpHooks';
 import s from './XpBar.module.css';
 
-/** Barra de nível/XP com progresso para o nível seguinte. */
+/** Level/XP bar showing progress towards the next level. */
 export function XpBar({ xp }: { xp: PlayerXp }) {
   const { t } = useT();
   const atMax = xp.next_level_xp === null;

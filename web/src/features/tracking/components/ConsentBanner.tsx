@@ -4,7 +4,7 @@ import { useT } from '@/shared/i18n/useT';
 import { useSetAnalyticsConsent } from '../hooks/trackingHooks';
 import s from './ConsentBanner.module.css';
 
-/** Pedido de consentimento, mostrado até o jogador decidir. */
+/** Consent request banner, shown until the player decides. */
 export function ConsentBanner() {
   const setConsent = useSetAnalyticsConsent();
   const toast = useToast();

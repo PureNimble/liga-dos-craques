@@ -1,5 +1,3 @@
-/* Faixa horizontal com scroll (muitos itens) que "sangra" até às margens no
-   telemóvel e alinha ao conteúdo no desktop. Scrollbar escondida (mantém scroll). */
 .pills {
   display: flex;
   gap: var(--space-sm);

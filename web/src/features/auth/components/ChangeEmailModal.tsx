@@ -16,7 +16,7 @@ interface ChangeEmailModalProps {
   onClose: () => void;
 }
 
-/** Sheet para mudar o email da conta — só fica ativo depois de confirmado por link. */
+/** Sheet for changing the account email — only takes effect after confirming via the link. */
 export function ChangeEmailModal({ open, currentEmail, onClose }: ChangeEmailModalProps) {
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);

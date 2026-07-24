@@ -3,7 +3,6 @@
   flex-direction: column;
 }
 
-/* Estado bloqueado (gráficos desfocados sob uma única sobreposição). */
 .lockedWrap {
   grid-column: 1 / -1;
 }
@@ -33,7 +32,6 @@
   color: var(--text-subtle);
 }
 .hint {
-  /* Nunca parte em duas linhas nem espreme o título — é a pista mais curta. */
   flex-shrink: 0;
   white-space: nowrap;
   font-size: var(--font-size-xs);
@@ -54,8 +52,6 @@
   align-items: center;
   gap: var(--space-xs);
 }
-/* Número dentro do contador. O <svg> é de traço (fill:none + stroke), por isso o
-   texto precisa do contrário — senão saía em contorno vazado em vez de cheio. */
 .countText {
   fill: currentColor;
   stroke: none;
@@ -80,14 +76,12 @@
   align-items: center;
   gap: var(--space-xs);
 }
-/* A altura vem inline de STACK_BOX (PlayerCharts.tsx), que a deriva de
-   MAX_ICONS × ICON — uma só fonte de verdade, sem "bate com o CSS". */
 .stack {
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
-  justify-content: flex-start; /* empilha a partir do fundo */
-  gap: 0.125rem; /* 2px — bate com STACK_GAP */
+  justify-content: flex-start;
+  gap: 0.125rem;
 }
 .empty {
   padding-bottom: var(--space-xs);
@@ -102,8 +96,6 @@
 .hbars {
   container-type: inline-size;
   display: flex;
-  /* O grid estica os cartões da linha à mesma altura; sem isto as barras
-     encostavam ao topo e sobrava um vazio por baixo. */
   flex: 1;
   flex-direction: column;
   justify-content: center;
@@ -115,8 +107,6 @@
   gap: var(--space-md);
 }
 .hbarLabel {
-  /* Reage à largura do próprio cartão, não do viewport: em par (2 colunas) o
-     cartão fica ~290px e 6rem de rótulo não deixam pista para a barra. */
   width: 4rem;
   flex-shrink: 0;
   overflow: hidden;
@@ -143,7 +133,6 @@
   background-image: linear-gradient(to right, var(--emerald-600), var(--accent-strong));
 }
 .hbarValue {
-  /* min-width (não width): "200 XP" não cabe em 3rem e partia em duas linhas. */
   min-width: 3rem;
   flex-shrink: 0;
   white-space: nowrap;

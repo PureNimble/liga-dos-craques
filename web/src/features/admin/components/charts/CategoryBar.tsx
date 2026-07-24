@@ -22,11 +22,10 @@ interface Props {
   data: Array<{ label: string; count: number }>;
   color?: string;
   height?: number;
-  /** Mensagem quando não há dados — nunca deixar o cartão vazio. */
   empty?: string;
 }
 
-/** Barras verticais para contagens por categoria (hue única). */
+/** Vertical bar chart for per-category counts (single hue). */
 export function CategoryBar({
   data,
   color = SERIES.players,

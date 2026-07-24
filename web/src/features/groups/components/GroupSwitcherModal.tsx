@@ -23,22 +23,14 @@ const VISIBILITY_LABEL: Record<GroupVisibility, string> = { private: 'Privado', 
 
 interface GroupSwitcherModalProps {
   onClose: () => void;
-  /** Grupo cujas definições mostrar — omitir usa o grupo ativo (troca do Navbar/rail). */
   groupId?: string;
 }
 
-/**
- * Lista "os teus grupos" (troca) + definições de UM grupo específico —
- * `groupId`, se dado, deixa gerir um grupo sem ter de o tornar ativo primeiro
- * (clique direito/duplo clique num círculo da coluna).
- */
+/** Lists the player's groups (switcher) plus settings for one specific group. */
 export function GroupSwitcherModal({ onClose, groupId: targetGroupId }: GroupSwitcherModalProps) {
   const { groupId: activeGroupId, myGroups, switchGroup } = useActiveGroup();
   const [addOpen, setAddOpen] = useState(false);
 
-  // Um groupId explícito (clique direito/duplo clique na coluna) significa
-  // "só quero ver ESTE grupo" — esconde a lista de troca, que só faz sentido
-  // no modo genérico (Navbar no telemóvel, sem coluna para trocar por lá).
   const scoped = targetGroupId !== undefined;
   const groupId = targetGroupId ?? activeGroupId;
   const group = myGroups.find((g) => g.group_id === groupId);

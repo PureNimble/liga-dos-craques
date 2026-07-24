@@ -16,8 +16,6 @@
   flex-direction: column;
   gap: var(--space-sm);
 }
-/* A linha do grid é o <li>: o link e o cartão têm de a preencher, senão o cartão
-   mantinha a altura do conteúdo e a linha é que crescia. */
 .item {
   display: flex;
 }
@@ -30,7 +28,6 @@
   flex: 1;
   gap: var(--space-md);
 }
-/* Por ler: barra de destaque à esquerda, sem mudar o fundo. */
 .unread {
   border-left: 3px solid var(--accent);
 }

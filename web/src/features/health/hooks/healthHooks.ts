@@ -1,17 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
+/** Outcome of a health check call. */
 export type HealthStatus = 'ok' | 'error';
 
+/** Result of checking connectivity to the backend. */
 export interface HealthResult {
   status: HealthStatus;
   message: string;
 }
 
-/**
- * Prova de vida da ligação frontend ↔ Supabase (F0).
- * Chama a função RPC `ping()` — leve e sem depender de tabelas de domínio.
- */
 async function checkHealth(): Promise<HealthResult> {
   const { data, error } = await supabase.rpc('ping');
   if (error) {
@@ -20,6 +18,7 @@ async function checkHealth(): Promise<HealthResult> {
   return { status: 'ok', message: data ?? 'pong' };
 }
 
+/** Checks frontend-to-Supabase connectivity via the lightweight `ping()` RPC. */
 export function useHealthCheck() {
   return useQuery({
     queryKey: ['health'],

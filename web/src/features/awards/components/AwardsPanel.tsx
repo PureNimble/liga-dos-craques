@@ -9,10 +9,7 @@ interface AwardsPanelProps {
   players: GamePlayerWithProfile[];
 }
 
-/**
- * MVP / Flop e avaliações do jogo — decididos pela app (melhor/pior rating;
- * empate desfeito pela consistência). Não há votação.
- */
+/** Shows the game's MVP/Flop and player ratings, resolved automatically by the app. */
 export function AwardsPanel({ gameId, players }: AwardsPanelProps) {
   const { data: ratings } = useGameRatings(gameId);
   const { data: awards } = useGameAwards(gameId);

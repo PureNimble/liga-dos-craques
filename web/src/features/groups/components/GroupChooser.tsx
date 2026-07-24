@@ -11,17 +11,7 @@ type Mode = 'choose' | 'create' | 'join' | 'browse';
 
 const VISIBILITY_LABEL: Record<GroupVisibility, string> = { private: 'Privado', public: 'Público' };
 
-/**
- * Escolher um grupo: criar um novo ou entrar num existente (código ou
- * público). Usado a página inteira no onboarding (sem grupo nenhum) e dentro
- * de um modal a partir da coluna de grupos (`GroupRail`, "+") quando já se
- * tem pelo menos um grupo.
- *
- * `onDone`, se dado, corre depois de qualquer ação bem-sucedida (criar,
- * entrar) — o chamador usa para fechar o modal. No onboarding não é preciso:
- * a própria página desmonta-se sozinha assim que `myGroups` deixa de estar
- * vazio.
- */
+/** Lets the player create a group or join an existing one (invite code or public). */
 export function GroupChooser({ onDone }: { onDone?: () => void }) {
   const [mode, setMode] = useState<Mode>('choose');
 

@@ -2,11 +2,7 @@ import { BallIcon } from '@/shared/components/ui/icons';
 import { GroupChooser } from './GroupChooser';
 import s from './GroupOnboardingPage.module.css';
 
-/**
- * Ecrã forçado enquanto o utilizador não pertence a nenhum grupo — nada no
- * resto da app (jogos/rankings/desafios) faz sentido sem um grupo ativo.
- * Não é uma rota: o AppLayout renderiza isto em vez do shell normal.
- */
+/** Forced screen shown while the player belongs to no group; rendered by AppLayout, not a route. */
 export function GroupOnboardingPage() {
   return (
     <main className={s.main}>

@@ -2,8 +2,6 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  /* A `.app` ocupa o ecrã todo (`viewport-fit=cover`) — sem isto o cabeçalho
-     fica por baixo do notch/status bar no iOS. */
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-subtle);
   background-color: var(--surface-glass);
@@ -21,7 +19,6 @@
     padding-inline: var(--space-xl);
   }
 }
-/* Ecrãs grandes: cabeçalho mais alto e com mais respiração lateral. */
 @media (min-width: 1024px) {
   .inner {
     padding: var(--space-lg) var(--space-2xl);
@@ -29,7 +26,6 @@
 }
 
 .logo {
-  /* Logótipo isolado à esquerda; avatar + menu à direita. */
   margin-inline-end: auto;
   display: flex;
   align-items: center;
@@ -59,7 +55,6 @@
 .avatarLink {
   display: flex;
 }
-/* Ponto no menu quando há avisos por ler (sem acrescentar mais um controlo). */
 .menuWrap {
   position: relative;
   display: inline-flex;

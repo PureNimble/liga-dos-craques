@@ -1,3 +1,4 @@
+/** Supported UI language codes. */
 export type LangCode = 'pt' | 'en';
 
 export const LANG_LABELS: Record<LangCode, string> = {
@@ -5,5 +6,5 @@ export const LANG_LABELS: Record<LangCode, string> = {
   en: 'English',
 };
 
-/** Forma de um dicionário de traduções — cada feature exporta o seu (`<feature>.i18n.ts`). */
+/** Shape of a translation dictionary — each feature exports its own (`<feature>.i18n.ts`). */
 export type TranslationDict = Record<string, Record<LangCode, string>>;

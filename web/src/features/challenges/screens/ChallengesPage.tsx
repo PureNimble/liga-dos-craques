@@ -43,6 +43,7 @@ const CROSSBAR_CODE = 'crossbar';
 const PENALTY_CODE = 'penalty';
 const ICONIC_CODE = 'iconic_goals';
 
+/** The `/challenges` landing page: challenge tabs, leaderboard, and per-challenge entry point. */
 export function ChallengesPage() {
   const { t } = useT();
   const { data: challenges } = useChallenges();
@@ -90,7 +91,6 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
   const isVersus = challenge.scoring_type === 'versus';
   const isCrossbar = challenge.code === CROSSBAR_CODE;
   const isPenalty = challenge.code === PENALTY_CODE;
-  // Desafios em sessão ao vivo (Crossbar, Penáltis) e o 1v1 mostram nº de vitórias.
   const isSession = isCrossbar || isPenalty;
   const isWinsBased = isVersus || isSession;
   const { data: leaderboard } = useChallengeLeaderboard(challenge.id);
@@ -128,7 +128,6 @@ function ChallengeView({ challenge }: { challenge: Challenge }) {
 
   return (
     <div className={s.body}>
-      {/* Recorde (não nas sessões ao vivo — o ranking já mostra as vitórias). */}
       {!isSession && (
         <Card className={s.recordCard}>
           <p className={s.recordLabel}>{t('challenges.record.label')}</p>
@@ -204,7 +203,6 @@ const CROSSBAR_VARIANT_KEY: Record<CrossbarVariant, string> = {
   long: 'challenges.crossbar.variant.long',
 };
 
-/** Entrada do Crossbar: escolhe a versão (cria no setup) e lista as sessões a decorrer. */
 function CrossbarEntry({ challenge }: { challenge: Challenge }) {
   const { t } = useT();
   const navigate = useNavigate();
@@ -276,7 +274,6 @@ function CrossbarEntry({ challenge }: { challenge: Challenge }) {
   );
 }
 
-/** Entrada dos Penáltis: escolhe o modo (cria no setup) e lista as sessões a decorrer. */
 const PENALTY_ENTRY_KEY: Record<string, { label: string; hint: string }> = {
   goals: { label: 'challenges.penalty.entry.goals.label', hint: 'challenges.penalty.entry.goals.hint' },
   zones: { label: 'challenges.penalty.entry.zones.label', hint: 'challenges.penalty.entry.zones.hint' },

@@ -1,4 +1,3 @@
-/* Ponto pulsante do tile de utilizadores online (tempo real); herda a cor do tile. */
 .liveDot {
   flex-shrink: 0;
   width: 0.5rem;
@@ -24,15 +23,12 @@
   }
 }
 
-/* Tiles sempre em pares e todos da mesma altura. Telemóvel: 2 colunas, com o
-   estado do servidor a fechar a linha inteira. Desktop: 2 destaques + 3 métricas. */
 .hero {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   gap: var(--space-sm);
 }
-/* São 5 tiles: o último fecha a linha inteira para não sobrar meia coluna. */
 .hero > :last-child {
   grid-column: span 2;
 }
@@ -72,7 +68,6 @@
 .teal {
   background-image: var(--gradient-teal);
 }
-/* Servidor em baixo: o mesmo tile, em alarme. */
 .down {
   background-color: var(--danger);
 }
@@ -87,7 +82,6 @@
   line-height: 1;
   letter-spacing: var(--tracking-tightest);
 }
-/* Valor em palavra (estado do servidor): não pede o tamanho de um número. */
 .heroValue.heroText {
   font-size: var(--font-size-2xl);
 }
@@ -139,7 +133,6 @@
   color: var(--amber-400);
 }
 
-/* A partir de 2 colunas confortáveis, os tiles respiram mais. */
 @media (min-width: 560px) {
   .heroTile,
   .metric {
@@ -153,8 +146,6 @@
   }
 }
 
-/* `overflow: hidden` contém o tooltip do recharts, que é absoluto e, se escapar,
-   alarga o scroll horizontal da página no telemóvel. */
 .card {
   display: flex;
   min-width: 0;

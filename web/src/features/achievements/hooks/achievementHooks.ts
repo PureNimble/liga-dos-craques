@@ -8,7 +8,7 @@ export type Achievement = Database['public']['Tables']['achievement']['Row'];
 export type AchievementInsert = Database['public']['Tables']['achievement']['Insert'];
 export type AchievementUpdate = Database['public']['Tables']['achievement']['Update'];
 
-/** Define (ou limpa) a conquista destacada no cartão do próprio jogador. */
+/** Sets (or clears) the featured achievement on the player's own card. */
 export function useSetFeaturedAchievement() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export function useSetFeaturedAchievement() {
   });
 }
 
-/** Todas as conquistas ativas (definições). */
+/** All active achievement definitions. */
 export function useAchievements() {
   return useQuery({
     queryKey: ['achievements'],
@@ -44,7 +44,7 @@ export function useAchievements() {
   });
 }
 
-/** Conquistas desbloqueadas por um jogador no grupo ativo → Map achievement_id → unlocked_at. */
+/** Achievements a player has unlocked in the active group, as a Map of achievement_id to unlocked_at. */
 export function usePlayerAchievements(playerId: string | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -62,7 +62,7 @@ export function usePlayerAchievements(playerId: string | undefined) {
   });
 }
 
-/** Admin: todas as conquistas (inclui inativas), ordenadas como na grelha. */
+/** Admin: all achievements (including inactive), ordered as in the grid. */
 export function useAllAchievements() {
   return useQuery({
     queryKey: ['achievements_all'],
@@ -82,7 +82,7 @@ function invalidateAchievements(queryClient: ReturnType<typeof useQueryClient>) 
   queryClient.invalidateQueries({ queryKey: ['achievements_all'] });
 }
 
-/** Admin: cria uma conquista (RLS exige is_admin()). */
+/** Admin: creates an achievement (RLS requires `is_admin()`). */
 export function useAddAchievement() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -94,7 +94,7 @@ export function useAddAchievement() {
   });
 }
 
-/** Admin: edita uma conquista (RLS exige is_admin()). */
+/** Admin: edits an achievement (RLS requires `is_admin()`). */
 export function useUpdateAchievement() {
   const queryClient = useQueryClient();
   return useMutation({

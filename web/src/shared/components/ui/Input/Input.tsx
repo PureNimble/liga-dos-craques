@@ -1,6 +1,7 @@
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import s from './Input.module.css';
 
+/** Styled text input. */
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className = '', ...props }, ref) {
     return (

@@ -3,12 +3,16 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { Database, PositionCategory, PreferredFoot } from '@/types/database';
 
+/** Row of the profile table. */
 export type Profile = Database['public']['Tables']['profile']['Row'];
+/** Update payload for the profile table. */
 export type ProfileUpdate = Database['public']['Tables']['profile']['Update'];
+/** Row of the profile_private table. */
 export type ProfilePrivate = Database['public']['Tables']['profile_private']['Row'];
+/** Row of the position table. */
 export type Position = Database['public']['Tables']['position']['Row'];
 
-/** Perfil do próprio: campos públicos + privados (só o dono os lê) + secundárias. */
+/** The current user's full profile: public and private fields plus secondary positions. */
 export interface FullProfile extends Profile {
   birth_date: string | null;
   weight_kg: number | null;
@@ -35,6 +39,7 @@ async function fetchProfile(userId: string): Promise<FullProfile> {
   };
 }
 
+/** Fetches the current user's full profile. */
 export function useProfile() {
   const { user } = useAuth();
   const userId = user?.id;
@@ -45,7 +50,7 @@ export function useProfile() {
   });
 }
 
-/** Variante Suspense: usar apenas em rotas protegidas, onde a sessão já está garantida. */
+/** Suspense variant of useProfile; use only in protected routes where the session is guaranteed. */
 export function useProfileSuspense() {
   const { user } = useAuth();
   return useSuspenseQuery({
@@ -54,12 +59,14 @@ export function useProfileSuspense() {
   });
 }
 
+/** Input for useUpdateProfile: public fields, private fields and secondary positions. */
 export interface UpdateProfileInput {
   public: ProfileUpdate;
   private: { birth_date: string | null; weight_kg: number | null; height_cm: number | null };
   secondaryPositionIds: number[];
 }
 
+/** Updates the current user's public and private profile fields plus secondary positions. */
 export function useUpdateProfile() {
   const { user } = useAuth();
   const userId = user?.id as string;
@@ -67,17 +74,14 @@ export function useUpdateProfile() {
 
   return useMutation({
     mutationFn: async (input: UpdateProfileInput) => {
-      // 1. Campos públicos.
       const { error: upErr } = await supabase.from('profile').update(input.public).eq('id', userId);
       if (upErr) throw upErr;
 
-      // 2. Campos sensíveis (upsert na tabela privada).
       const { error: privErr } = await supabase
         .from('profile_private')
         .upsert({ id: userId, ...input.private }, { onConflict: 'id' });
       if (privErr) throw privErr;
 
-      // 3. Posições secundárias (substituição total).
       const { error: delErr } = await supabase
         .from('secondary_position')
         .delete()
@@ -99,6 +103,7 @@ export function useUpdateProfile() {
   });
 }
 
+/** Updates the current user's username. */
 export function useUpdateUsername() {
   const { user } = useAuth();
   const userId = user?.id as string;
@@ -115,13 +120,14 @@ export function useUpdateUsername() {
   });
 }
 
+/** Minimal profile fields used to identify a player. */
 export interface ProfileSummary {
   id: string;
   name: string;
   photo_url: string | null;
 }
 
-/** Lista resumida de todos os perfis — usada para escolher jogadores. */
+/** Summary list of all profiles, used for picking players. */
 export function useProfilesList() {
   return useQuery({
     queryKey: ['profiles_list'],
@@ -137,6 +143,7 @@ export function useProfilesList() {
   });
 }
 
+/** Public (non-sensitive) fields of any player's profile. */
 export interface PublicProfile {
   id: string;
   name: string;
@@ -147,7 +154,7 @@ export interface PublicProfile {
   main_position: { label: string; category: PositionCategory } | null;
 }
 
-/** Perfil público (campos não sensíveis) de um jogador qualquer. */
+/** Fetches the public profile of any player. */
 export function usePublicProfile(playerId: string | undefined) {
   return useQuery({
     queryKey: ['public_profile', playerId],
@@ -172,10 +179,11 @@ async function fetchPositions(): Promise<Position[]> {
   return data ?? [];
 }
 
+/** Fetches the full list of positions (stable lookup table). */
 export function usePositions() {
   return useQuery({
     queryKey: ['positions'],
     queryFn: fetchPositions,
-    staleTime: Infinity, // lookup estável
+    staleTime: Infinity,
   });
 }

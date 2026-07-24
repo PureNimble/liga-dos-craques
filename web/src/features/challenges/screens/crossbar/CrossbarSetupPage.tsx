@@ -19,7 +19,7 @@ import { useChallenges, useCreateAndStart } from '../../hooks/challengeHooks';
 import { CROSSBAR_VARIANT_LABEL, spotCount, type CrossbarVariant } from '../../lib/crossbar/crossbarSpots';
 import s from './CrossbarSessionPage.module.css';
 
-/** Setup client-side: escolhe jogadores e só então cria a sessão (já a decorrer). */
+/** Client-side Crossbar setup: pick players and rounds, then create the session already active. */
 export function CrossbarSetupPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();

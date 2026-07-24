@@ -8,20 +8,16 @@ interface PositionPickerProps {
   onToggle: (id: number) => void;
 }
 
-/** Meio-campo onde se escolhe a posição principal e as secundárias. */
+/** Pitch view for picking a player's main position and secondary positions. */
 export function PositionPicker({ positions, value, onToggle }: PositionPickerProps) {
   return (
     <div className={s.wrap}>
       <div className={s.pitch}>
-        {/* Decorativo: quem se lê são os botões. */}
         <svg className={s.lines} viewBox={`0 0 100 ${PITCH_H}`} aria-hidden focusable="false">
           <rect x="2" y="2" width="96" height={PITCH_H - 4} rx="2" />
-          {/* Grande e pequena área, à volta da baliza própria. */}
           <rect x="20" y="54" width="60" height="24" />
           <rect x="36" y="70" width="28" height="8" />
-          {/* Baliza. */}
           <rect x="44" y="77" width="12" height="2" />
-          {/* Arco do meio-campo. */}
           <path d="M 36.5 2 A 13.5 13.5 0 0 0 63.5 2" />
         </svg>
 

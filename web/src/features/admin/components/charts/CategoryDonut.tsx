@@ -5,11 +5,10 @@ import s from './chartEmpty.module.css';
 interface Props {
   data: Array<{ label: string; count: number }>;
   height?: number;
-  /** Mensagem quando não há dados — nunca deixar o cartão vazio. */
   empty?: string;
 }
 
-/** Donut de contagens por categoria. */
+/** Donut chart of per-category counts. */
 export function CategoryDonut({ data, height = 220, empty = 'Sem dados no período.' }: Props) {
   if (data.length === 0 || data.every((d) => d.count === 0)) {
     return <p className={s.empty}>{empty}</p>;

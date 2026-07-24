@@ -4,9 +4,7 @@ import { playAchievement } from '../../lib/iconic/spinnerSound';
 import type { IconicGoal } from '../../hooks/iconic/iconicGoalHooks';
 import s from './AchievementToast.module.css';
 
-/** Tempo em ecrã antes de começar a sair (ms). */
 const VISIBLE_MS = 4600;
-/** Duração da animação de saída (ms) — igual à do CSS. */
 const EXIT_MS = 400;
 
 interface Props {
@@ -14,16 +12,10 @@ interface Props {
   onDone: () => void;
 }
 
-/**
- * Conquista desbloqueada, à maneira das consolas: barra que sobe, fanfarra, e
- * o nome enigmático por cima do que foi mesmo replicado.
- */
+/** Console-style achievement toast: rising thumbnail card with fanfare and the unlocked goal's name. */
 export function AchievementToast({ goal, onDone }: Props) {
   const [leaving, setLeaving] = useState(false);
 
-  /* Numa ref para o efeito não depender da identidade do callback: com `onDone`
-     nas dependências, cada render do pai reiniciava os temporizadores e voltava
-     a tocar a fanfarra. */
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
 

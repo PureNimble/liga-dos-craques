@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react';
 
+/** Derived state of a game's running clock. */
 export interface MatchClock {
-  /** Segundos decorridos desde o início. */
   elapsedSec: number;
-  /** Minuto de jogo (1-based), para pré-preencher eventos. */
   minute: number;
-  /** "MM:SS" para mostrar no cabeçalho. */
   label: string;
   running: boolean;
 }
 
-/**
- * Cronómetro de jogo derivado de `started_at` (fonte única, partilhada por
- * todos via realtime). Atualiza a cada segundo enquanto `running`.
- */
+/** Computes a live match clock derived from `started_at`, ticking every second while running. */
 export function useMatchClock(startedAt: string | null | undefined, running: boolean): MatchClock {
   const [now, setNow] = useState(() => Date.now());
 

@@ -11,8 +11,9 @@ interface AvatarUploadProps {
   onUploaded: (publicUrl: string) => void;
 }
 
-const MAX_INPUT_BYTES = 8 * 1024 * 1024; // 8 MB antes de comprimir
+const MAX_INPUT_BYTES = 8 * 1024 * 1024;
 
+/** Avatar image picker: compresses and uploads the chosen photo, then reports the new URL. */
 export function AvatarUpload({ photoUrl, name, onUploaded }: AvatarUploadProps) {
   const { user } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +42,6 @@ export function AvatarUpload({ photoUrl, name, onUploaded }: AvatarUploadProps) 
       });
       if (upErr) throw upErr;
 
-      // URL público com cache-busting para refletir a nova imagem de imediato.
       const { data } = supabase.storage.from('avatars').getPublicUrl(path);
       onUploaded(`${data.publicUrl}?v=${Date.now()}`);
     } catch (e) {

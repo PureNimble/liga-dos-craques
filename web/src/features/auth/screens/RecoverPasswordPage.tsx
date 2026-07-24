@@ -9,6 +9,7 @@ import { AuthLayout } from '../components/AuthLayout';
 import { recoverSchema, type RecoverValues } from '../schemas/auth.schemas';
 import s from '../auth.module.css';
 
+/** Password recovery screen — sends a reset link to the given email. */
 export function RecoverPasswordPage() {
   const { t } = useT();
   const [sent, setSent] = useState(false);

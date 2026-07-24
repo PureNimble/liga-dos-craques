@@ -25,7 +25,6 @@
   color: var(--text-subtle);
 }
 
-/* Compacto: 2 colunas; 4 quando o contentor tem espaço */
 .compact {
   container-type: inline-size;
 }
@@ -40,7 +39,6 @@
   }
 }
 
-/* Completo */
 .full {
   container-type: inline-size;
   display: flex;

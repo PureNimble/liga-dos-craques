@@ -1,4 +1,3 @@
-/* Estado vazio partilhado pelos gráficos: ocupa o lugar do plot, sem o vazio. */
 .empty {
   display: flex;
   min-height: 8rem;

@@ -3,6 +3,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { GroupRole, GroupVisibility } from '@/types/database';
 
+/** A group the current player belongs to, with role and membership metadata. */
 export interface MyGroupRow {
   group_id: string;
   role: GroupRole;
@@ -41,13 +42,14 @@ async function fetchMyGroups(userId: string): Promise<MyGroupRow[]> {
   });
 }
 
+/** A public group the current player has not yet joined. */
 export interface PublicGroup {
   id: string;
   name: string;
   created_at: string;
 }
 
-/** Grupos públicos que o utilizador ainda não integra — para o descobrir/entrar. */
+/** Public groups the player hasn't joined yet, for discovery. */
 export function usePublicGroups() {
   const { data: myGroups } = useMyGroups();
   return useQuery({
@@ -66,7 +68,7 @@ export function usePublicGroups() {
   });
 }
 
-/** Grupos do utilizador autenticado. */
+/** Groups the authenticated player belongs to. */
 export function useMyGroups() {
   const { user } = useAuth();
   const userId = user?.id;
@@ -77,7 +79,7 @@ export function useMyGroups() {
   });
 }
 
-/** Variante Suspense: usar só em rotas protegidas (AppLayout), onde a sessão já está garantida. */
+/** Suspense variant of {@link useMyGroups}; only for protected routes where the session is guaranteed. */
 export function useMyGroupsSuspense() {
   const { user } = useAuth();
   return useSuspenseQuery({
@@ -86,6 +88,7 @@ export function useMyGroupsSuspense() {
   });
 }
 
+/** Summary of a group member, as used in player pickers. */
 export interface GroupMemberSummary {
   id: string;
   name: string;
@@ -93,7 +96,7 @@ export interface GroupMemberSummary {
   role: GroupRole;
 }
 
-/** Membros de um grupo — usado nos seletores de jogadores (jogos, desafios, gestão do grupo). */
+/** Members of a group, used in player pickers (games, challenges, group management). */
 export function useGroupMembers(groupId: string | undefined) {
   return useQuery({
     queryKey: ['group_members', groupId],
@@ -115,14 +118,13 @@ export function useGroupMembers(groupId: string | undefined) {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Mutations — grupo                                                          */
-/* -------------------------------------------------------------------------- */
+/** Input for creating a new group. */
 export interface CreateGroupInput {
   name: string;
   visibility: GroupVisibility;
 }
 
+/** Creates a new group with the current player as its admin. */
 export function useCreateGroup() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -142,6 +144,7 @@ export function useCreateGroup() {
   });
 }
 
+/** Joins a group using its invite code. */
 export function useJoinGroupByCode() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -158,7 +161,7 @@ export function useJoinGroupByCode() {
   });
 }
 
-/** Entra diretamente num grupo público (sem código). */
+/** Joins a public group directly, without an invite code. */
 export function useJoinPublicGroup() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -175,7 +178,7 @@ export function useJoinPublicGroup() {
   });
 }
 
-/** Alterna público/privado (só admins do grupo). */
+/** Toggles a group between public and private (admins only). */
 export function useSetGroupVisibility() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -194,7 +197,7 @@ export function useSetGroupVisibility() {
   });
 }
 
-/** Atualiza nome/foto do grupo (só admins do grupo). */
+/** Updates the group's name/photo (admins only). */
 export function useUpdateGroup() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -211,6 +214,7 @@ export function useUpdateGroup() {
   });
 }
 
+/** Regenerates the group's invite code, invalidating the previous one. */
 export function useRegenerateInviteCode() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -224,6 +228,7 @@ export function useRegenerateInviteCode() {
   });
 }
 
+/** Persists which group is the player's active group. */
 export function useSetActiveGroup() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -236,14 +241,14 @@ export function useSetActiveGroup() {
   });
 }
 
-/** A policy de DELETE bloqueia (0 linhas, sem erro) sair/remover o último admin de um grupo com outros membros. */
+/** Thrown when the DELETE policy silently blocks removing the last admin of a group with other members. */
 export class LastAdminError extends Error {
   constructor() {
     super('O grupo ficaria sem admin. Promove outro membro primeiro.');
   }
 }
 
-/** Sair do grupo (a própria linha) — a policy de DELETE cobre isto diretamente. */
+/** Leaves the group (removes the player's own membership row). */
 export function useLeaveGroup() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -265,7 +270,7 @@ export function useLeaveGroup() {
   });
 }
 
-/** Remover um membro (só admins do grupo — a policy de DELETE valida, incl. proteção do último admin). */
+/** Removes a member from the group (admins only; the last-admin protection is enforced server-side). */
 export function useRemoveGroupMember(groupId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -283,7 +288,7 @@ export function useRemoveGroupMember(groupId: string) {
   });
 }
 
-/** Promove um membro a admin (só admins do grupo). */
+/** Promotes a member to admin (admins only). */
 export function usePromoteGroupMember(groupId: string) {
   const queryClient = useQueryClient();
   return useMutation({

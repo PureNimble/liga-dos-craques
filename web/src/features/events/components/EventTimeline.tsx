@@ -5,7 +5,6 @@ import { EventIcon } from './EventIcon';
 import { eventTone } from '../lib/eventIcons';
 import s from './EventTimeline.module.css';
 
-/** Etiqueta da variante de golo guardada em meta (penálti/livre). */
 function goalVariantLabel(meta: unknown): string | null {
   const v = (meta as { variant?: string } | null)?.variant;
   if (v === 'penalty') return 'penálti';
@@ -18,6 +17,7 @@ interface EventTimelineProps {
   canManage: boolean;
 }
 
+/** Chronological list of a game's logged events (goals, saves, substitutions, etc). */
 export function EventTimeline({ gameId, canManage }: EventTimelineProps) {
   const { data: events, isLoading, isError } = useGameEvents(gameId);
   const removeEvent = useRemoveEvent(gameId);
@@ -29,7 +29,6 @@ export function EventTimeline({ gameId, canManage }: EventTimelineProps) {
     return <p className={s.msg}>Ainda não há eventos registados.</p>;
   }
 
-  // A assistência aparece na linha do golo (não como evento separado).
   const nameById = new Map(events.map((e) => [e.player_id, e.profile?.name ?? 'Jogador']));
   const shown = events.filter((e) => e.event_type?.code !== 'assist');
 

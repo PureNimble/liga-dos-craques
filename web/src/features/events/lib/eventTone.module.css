@@ -1,4 +1,3 @@
-/* Tom do "chip" de evento por polaridade (reutiliza os tons de etiqueta). */
 .green {
   background-color: var(--tone-green-bg);
   color: var(--tone-green-fg);

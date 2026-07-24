@@ -9,6 +9,7 @@ interface FieldProps {
   children: ReactNode;
 }
 
+/** Form field wrapper: label, control, and optional hint or error text. */
 export function Field({ label, htmlFor, error, hint, children }: FieldProps) {
   return (
     <label htmlFor={htmlFor} className={s.field}>

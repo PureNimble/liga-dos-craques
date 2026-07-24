@@ -1,7 +1,3 @@
-// Barril do kit de UI partilhado. Cada primitivo vive na sua pasta
-// (estrutura `.tsx` + estilos `.module.css` que referenciam os tokens).
-// ConfirmProvider / useConfirm vivem em './ConfirmDialog' (importar de lá
-// diretamente, para não misturar hooks com o barril — react-refresh).
 export { Modal } from './Modal';
 export { Button } from './Button/Button';
 export { Card } from './Card/Card';

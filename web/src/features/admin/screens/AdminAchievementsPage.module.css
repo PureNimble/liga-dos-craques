@@ -82,7 +82,6 @@
   grid-template-columns: 11rem 1fr;
   gap: var(--space-sm);
 }
-/* Seletor com o ícone escolhido à vista, ao lado da lista de nomes. */
 .iconPicker {
   display: flex;
   align-items: center;

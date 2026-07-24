@@ -40,7 +40,6 @@ import districtsData from '../lib/districts.json';
 import municipalitiesData from '../lib/municipalities.json';
 import s from './PlacesMapPage.module.css';
 
-/** Resolve o tema para claro/escuro efetivo, seguindo o sistema quando `theme === 'system'`. */
 function useIsLightTheme(): boolean {
   const { theme } = useTheme();
   const [systemLight, setSystemLight] = useState(
@@ -74,19 +73,13 @@ function isMunicipality(props: BoundaryProperties): props is MunicipalityPropert
 const districts = districtsData as FeatureCollection<Geometry, DistrictProperties>;
 const municipalities = municipalitiesData as FeatureCollection<Geometry, MunicipalityProperties>;
 
-// Centro fixo em Portugal continental — o bounding box de todos os distritos
-// (inclui Açores/Madeira, muito a oeste/sul) dava uma vista inicial mal enquadrada.
 const PORTUGAL_CENTER: [number, number] = [39.6, -8.0];
 const PORTUGAL_ZOOM = 7;
 const PLACE_ZOOM = 13;
 
-// Alturas dos 3 estados da bottom sheet (telemóvel) — têm de bater certo com
-// as usadas em .panel/.panelFull/.panelClosed no CSS.
 const SHEET_CLOSED_REM = 3;
 const SHEET_MID_REM = 24;
-/** Distância mínima (px) para contar como arrasto — abaixo disto é um toque normal. */
 const SHEET_DRAG_THRESHOLD = 10;
-/** Velocidade (px/ms) a partir da qual um "flick" avança/recua um estado, ignorando a posição. */
 const SHEET_FLICK_VELOCITY = 0.5;
 
 function remToPx(rem: number): number {
@@ -102,8 +95,6 @@ const baseStyle: PathOptions = {
 };
 const hoverStyle: PathOptions = { ...baseStyle, fillOpacity: 0.35 };
 
-// Pin de campo individual — mesmo desenho do PinIcon (shared/icons.tsx), a
-// cores da app; escrito à mão porque o L.divIcon corre fora da árvore do React.
 const PLACE_PIN_HTML = `
   <svg width="40" height="40" viewBox="0 0 24 24">
     <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" fill="var(--green-500)" stroke="var(--surface-page)" stroke-width="1.5"/>
@@ -121,18 +112,11 @@ function placeIcon(active: boolean) {
   });
 }
 
-/** Clicar no mapa fora de qualquer forma (mar, país vizinho) volta à vista de Portugal. */
 function BackgroundClickHandler({ onBackgroundClick }: { onBackgroundClick: () => void }) {
   useMapEvents({ click: onBackgroundClick });
   return null;
 }
 
-/**
- * Pins de campo agrupados por proximidade (`leaflet.markercluster`) — a zoom
- * afastado (país/distrito) os pins próximos juntam-se num círculo com a
- * contagem, em vez de se sobreporem. Imperativo (fora da árvore do React)
- * porque a biblioteca gere os próprios marcadores/clusters internamente.
- */
 function ClusterLayer({
   places,
   highlightedId,
@@ -148,8 +132,6 @@ function ClusterLayer({
   useEffect(() => {
     const group = L.markerClusterGroup({
       maxClusterRadius: 50,
-      // Ao nível de concelho os pins já não se sobrepõem tanto — mostra-os
-      // sempre individualmente a partir daqui, em vez de continuar a agrupar.
       disableClusteringAtZoom: PLACE_ZOOM,
       spiderfyOnMaxZoom: true,
       showCoverageOnHover: false,
@@ -188,7 +170,7 @@ function ClusterLayer({
   return null;
 }
 
-/** Mapa de Portugal com distritos clicáveis, painel de lista/pesquisa e sincronização lista↔mapa. */
+/** Interactive map of Portugal with clickable districts, a search/list panel, and list-map sync. */
 export function PlacesMapPage() {
   const { t } = useT();
   const isLight = useIsLightTheme();
@@ -201,9 +183,6 @@ export function PlacesMapPage() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  // No telemóvel o painel é uma "bottom sheet" sobre o mapa — este estado só
-  // tem efeito aí (a alça fica escondida no desktop, ver .handle no CSS).
-  // Sem arrasto, um toque na alça avança pelos 3 estados por ordem (fechada → meio → aberta → ...).
   const [sheetState, setSheetState] = useState<'closed' | 'mid' | 'full'>('mid');
   const nextSheetState: Record<typeof sheetState, typeof sheetState> = {
     closed: 'mid',
@@ -211,9 +190,6 @@ export function PlacesMapPage() {
     full: 'closed',
   };
 
-  // Arrasto da alça: segue o dedo em tempo real (altura em px) e só ao largar
-  // decide para que estado encaixar — toque simples (sem arrasto) continua a
-  // ciclar pelo onClick da alça, como antes.
   const sheetDragRef = useRef<{
     startY: number;
     startHeight: number;
@@ -251,7 +227,6 @@ export function PlacesMapPage() {
     if (!drag) return;
     const now = performance.now();
     const dt = now - drag.lastTime;
-    // Positivo = a arrastar para cima (a sheet cresce).
     if (dt > 0) drag.velocity = (drag.lastY - e.clientY) / dt;
     drag.lastY = e.clientY;
     drag.lastTime = now;
@@ -267,7 +242,6 @@ export function PlacesMapPage() {
     sheetDragRef.current = null;
     setSheetDragging(false);
     if (!drag || !drag.moved) {
-      // Toque simples — não mexe no estado aqui, o onClick da alça trata do ciclo.
       setSheetDragHeight(null);
       return;
     }
@@ -318,8 +292,6 @@ export function PlacesMapPage() {
     });
   }, [visiblePlaces, search, selectedConcelho]);
 
-  // Nº de campos por distrito (país inteiro) e por concelho (dentro do distrito
-  // escolhido) — mostrado como badge nos tooltips das formas do mapa.
   const districtCounts = useMemo(() => {
     const m = new Map<string, number>();
     for (const p of allPlaces ?? []) m.set(p.district, (m.get(p.district) ?? 0) + 1);
@@ -358,7 +330,6 @@ export function PlacesMapPage() {
     }
   }
 
-  /** Escolhe um concelho (select do painel ou clique no mapa) e enquadra os seus limites. */
   function selectConcelho(name: string) {
     setSelectedConcelho(name);
     const feature = municipalities.features.find(
@@ -372,8 +343,6 @@ export function PlacesMapPage() {
   function handleDistrictSelect(e: ChangeEvent<HTMLSelectElement>) {
     if (e.target.value) selectDistrict(e.target.value);
     else goBack();
-    // No telemóvel, escolher um filtro fecha a sheet para o mapa (já
-    // enquadrado no distrito/concelho) ficar à vista.
     setSheetState('closed');
   }
 
@@ -391,7 +360,6 @@ export function PlacesMapPage() {
     }
   }
 
-  /** Reenquadra o mapa (com animação) no concelho/distrito ativo, ou Portugal inteiro sem filtro. */
   function fitToActiveArea() {
     if (selectedConcelho) {
       const feature = municipalities.features.find(
@@ -419,7 +387,6 @@ export function PlacesMapPage() {
     mapRef.current?.flyTo(PORTUGAL_CENTER, PORTUGAL_ZOOM, { duration: 0.5 });
   }
 
-  /** Escolher um campo (cartão da lista ou pin do mapa) mostra o detalhe no painel. */
   function selectPlace(place: Place, source: 'list' | 'map') {
     setHighlightedId(place.id);
     setSelectedPlace(place);
@@ -427,12 +394,9 @@ export function PlacesMapPage() {
       const zoom = Math.max(mapRef.current?.getZoom() ?? PLACE_ZOOM, PLACE_ZOOM);
       mapRef.current?.flyTo([place.latitude, place.longitude], zoom, { duration: 0.5 });
     }
-    // No telemóvel, garante que a sheet está aberta o suficiente para mostrar
-    // o detalhe (se estava fechada, mostra só a alça).
     setSheetState((v) => (v === 'closed' ? 'mid' : v));
   }
 
-  /** Texto do tooltip (nome + nº de campos) — reutilizado ao vincular e ao atualizar depois. */
   const tooltipContentFor = useCallback(
     (props: BoundaryProperties): string => {
       const municipality = isMunicipality(props);
@@ -448,12 +412,9 @@ export function PlacesMapPage() {
   function handleEachFeature(feature: Feature<Geometry, BoundaryProperties>, layer: Layer) {
     const props = feature.properties;
     const municipality = isMunicipality(props);
-    // Nome fixo do GeoJSON versionado no repo (não é input do utilizador).
     layer.bindTooltip(tooltipContentFor(props), { sticky: true, className: s.tooltip });
     layer.on({
       click: (e: LeafletMouseEvent) => {
-        // Sem isto, o clique também chegaria ao 'click' do mapa (BackgroundClickHandler)
-        // e voltaria à vista de Portugal no mesmo gesto que acabou de escolher o distrito.
         L.DomEvent.stopPropagation(e);
         if (municipality) {
           selectConcelho(props.con_name);
@@ -470,10 +431,6 @@ export function PlacesMapPage() {
     });
   }
 
-  // districtCounts/concelhoCounts só ficam corretos depois de allPlaces/districtPlaces
-  // carregarem — o `onEachFeature` do <GeoJSON> vincula o tooltip uma única vez, à
-  // criação da layer, por isso não chega a ver essa atualização; refresca o texto
-  // já vinculado sempre que as contagens mudam (sem precisar de remontar a layer).
   useEffect(() => {
     const layer = geoJsonRef.current;
     if (!layer) return;
@@ -679,8 +636,6 @@ export function PlacesMapPage() {
             scrollWheelZoom
             zoomControl={false}
           >
-            {/* topright, não bottomleft — no telemóvel o canto inferior esquerdo
-                fica por baixo da bottom sheet (ver .panel no CSS). */}
             <ZoomControl position="topright" />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'

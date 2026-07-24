@@ -10,17 +10,15 @@ import {
   WhistleIcon,
 } from '@/shared/components/ui/icons';
 
+/** An admin dashboard section: nav entry, icon, and optional route once built. */
 export type AdminSection = {
   key: string;
-  /** Chave i18n (`admin.i18n.ts`) — usar com `t(labelKey)` / `t(descriptionKey)`. */
   labelKey: string;
   descriptionKey: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /** Rota relativa a /admin; ausente enquanto a secção não está construída. */
   to?: string;
 };
 
-/** Secções já disponíveis (com página própria). */
 export const adminSections: AdminSection[] = [
   {
     key: 'players',
@@ -80,5 +78,4 @@ export const adminSections: AdminSection[] = [
   },
 ];
 
-/** Secções planeadas — aparecem no dashboard como "brevemente". */
 export const upcomingSections: AdminSection[] = [];

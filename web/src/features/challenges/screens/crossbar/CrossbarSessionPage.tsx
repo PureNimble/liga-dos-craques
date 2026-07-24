@@ -28,6 +28,7 @@ import s from './CrossbarSessionPage.module.css';
 const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) =>
   a.turn_order - b.turn_order;
 
+/** Live Crossbar session screen: turn-order reveal, active gameplay, and the finished summary. */
 export function CrossbarSessionPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
@@ -38,8 +39,6 @@ export function CrossbarSessionPage() {
   );
   const [winnerName, setWinnerName] = useState<string | null>(null);
 
-  // Consome o "justStarted" uma vez: limpa-o do histórico para um reload não
-  // repetir a animação de sorteio.
   useEffect(() => {
     if ((location.state as { justStarted?: boolean } | null)?.justStarted) {
       navigate(location.pathname, { replace: true, state: null });
@@ -47,7 +46,6 @@ export function CrossbarSessionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // O jogo terminou nesta sessão do ecrã → a sessão já foi apagada na BD.
   if (winnerName) return <FinishedView winnerName={winnerName} />;
 
   if (isLoading) return <Loading />;
@@ -91,9 +89,6 @@ export function CrossbarSessionPage() {
   );
 }
 
-// -----------------------------------------------------------------------------
-// Animação de sorteio (mostra a ordem antes do jogo).
-// -----------------------------------------------------------------------------
 function OrderRevealGate({ session, onDone }: { session: ChallengeSession; onDone: () => void }) {
   const { data: players } = useSessionPlayers(session.id);
   const ordered = useMemo(() => [...(players ?? [])].sort(byOrder), [players]);
@@ -101,9 +96,6 @@ function OrderRevealGate({ session, onDone }: { session: ChallengeSession; onDon
   return <OrderReveal players={ordered} onDone={onDone} />;
 }
 
-// -----------------------------------------------------------------------------
-// ACTIVE — campo + prompt do remate + board.
-// -----------------------------------------------------------------------------
 function ActiveView({
   session,
   onFinished,
@@ -195,9 +187,6 @@ function ActiveView({
   );
 }
 
-// -----------------------------------------------------------------------------
-// Board com o estado de cada jogador (posição atual e progresso).
-// -----------------------------------------------------------------------------
 function PlayerBoard({
   players,
   spotCount,
@@ -241,9 +230,6 @@ function PlayerBoard({
   );
 }
 
-// -----------------------------------------------------------------------------
-// FINISHED — vencedor (a sessão já foi apagada; fica só o +1 no ranking).
-// -----------------------------------------------------------------------------
 function FinishedView({ winnerName }: { winnerName: string }) {
   const navigate = useNavigate();
   return (

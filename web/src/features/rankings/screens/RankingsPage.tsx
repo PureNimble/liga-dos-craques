@@ -46,6 +46,7 @@ const MONTH_KEYS = [
   'rankings.month.12',
 ];
 
+/** Rankings page with switchable scopes: overall, position, format, monthly, and annual. */
 export function RankingsPage() {
   const { t } = useT();
   const wdg = useCallback(
@@ -171,14 +172,12 @@ export function RankingsPage() {
     <Page>
       <PageTitle>{t('rankings.title')}</PageTitle>
 
-      {/* Seletor de âmbito */}
       <PillTabs<Scope>
         value={scope}
         onChange={setScope}
         items={SCOPES.map((key) => ({ value: key, label: t(SCOPE_KEY[key]) }))}
       />
 
-      {/* Filtros dependentes do âmbito */}
       {scope === 'posicao' && (
         <Select value={position} onChange={(e) => setPosition(e.target.value as PositionCategory)}>
           {(Object.keys(POSITION_KEY) as PositionCategory[]).map((c) => (

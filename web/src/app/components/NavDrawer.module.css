@@ -1,7 +1,6 @@
 .overlay {
   position: fixed;
   inset: 0;
-  /* Acima de widgets de terceiros (ex.: controlos do Leaflet a z-index: 1000). */
   z-index: 1200;
   display: flex;
   justify-content: flex-end;
@@ -69,7 +68,6 @@
   padding: var(--space-sm) var(--space-sm) 0;
 }
 @media (min-width: 640px) {
-  /* Já há coluna de grupos (GroupRail) neste breakpoint — não duplicar. */
   .groupsSection {
     display: none;
   }
@@ -179,7 +177,6 @@
   background-color: var(--accent-surface);
   color: var(--accent-strong);
 }
-/* Avisos por ler, ao fundo da linha. */
 .count {
   margin-left: auto;
   border-radius: var(--radius-full);

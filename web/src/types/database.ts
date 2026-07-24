@@ -1,9 +1,3 @@
-/**
- * Tipos da base de dados.
- *
- * Idealmente gerado por `npm run db:types` (requer `supabase start` local).
- * Enquanto não há BD local, é mantido à mão em sincronia com as migrações.
- */
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Gender = 'male' | 'female' | 'other' | 'prefer_not';
@@ -71,14 +65,12 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        // Escrita só por RPCs (create_group/regenerate_invite_code/update_group) — sem Insert/Update de cliente.
         Insert: never;
         Update: never;
         Relationships: [];
       };
       group_member: {
         Row: { group_id: string; player_id: string; role: GroupRole; joined_at: string };
-        // Escrita só por RPCs (create_group/join_group_by_code/join_public_group).
         Insert: never;
         Update: never;
         Relationships: [];
@@ -139,7 +131,6 @@ export interface Database {
           preferred_foot?: PreferredFoot | null;
           main_position_id?: number | null;
         };
-        // O cliente só pode atualizar estas colunas (GRANTs por coluna).
         Update: {
           name?: string;
           username?: string;

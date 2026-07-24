@@ -2,11 +2,10 @@ import type { ReactNode } from 'react';
 import { BallIcon } from '@/shared/components/ui/icons';
 import s from './AuthLayout.module.css';
 
-/** Moldura comum a todas as páginas de autenticação. */
+/** Shared frame for all authentication pages. */
 export function AuthLayout({ title, children }: { title: string; children: ReactNode }) {
   return (
     <main className={s.main}>
-      {/* Brilho decorativo de fundo */}
       <div aria-hidden className={s.glow} />
 
       <header className={s.header}>

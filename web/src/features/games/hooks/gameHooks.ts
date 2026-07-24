@@ -4,25 +4,24 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { Database, GameStatus, GamePlayerStatus } from '@/types/database';
 
+/** Row type for `game_format`. */
 export type GameFormat = Database['public']['Tables']['game_format']['Row'];
+/** Row type for `game`. */
 export type Game = Database['public']['Tables']['game']['Row'];
+/** Row type for `game_player`. */
 export type GamePlayer = Database['public']['Tables']['game_player']['Row'];
 
-/** Jogo com o formato embebido (join) para listagem/detalhe. */
+/** A game with its format joined in. */
 export interface GameWithFormat extends Game {
   game_format: Pick<GameFormat, 'code' | 'label' | 'players_per_side'> | null;
 }
 
-/** Jogador do jogo com dados do perfil embebidos. */
+/** A game player row with the player's profile joined in. */
 export interface GamePlayerWithProfile extends GamePlayer {
   profile: { id: string; name: string; photo_url: string | null } | null;
 }
 
-/**
- * Escolhe o formato que melhor serve o nº de inscritos: o mais próximo de
- * count/2 jogadores por lado; em empate, arredonda para cima (formato maior).
- * Ex.: 5 inscritos → 3v3; 10 → 5v5.
- */
+/** Picks the format whose players-per-side is closest to half the given player count. */
 export function pickFormatForCount(count: number, formats: GameFormat[]): GameFormat | null {
   if (formats.length === 0) return null;
   const target = count / 2;
@@ -42,14 +41,11 @@ export function pickFormatForCount(count: number, formats: GameFormat[]): GameFo
   return best;
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Formatos                                                                    */
-/* -------------------------------------------------------------------------- */
+/** Lists available game formats (2v2 and up). */
 export function useGameFormats() {
   return useQuery({
     queryKey: ['game_formats'],
     queryFn: async (): Promise<GameFormat[]> => {
-      // Formatos de jogo começam no 2v2 — o 1v1 vive na aba dos desafios.
       const { data, error } = await supabase
         .from('game_format')
         .select('*')
@@ -62,9 +58,7 @@ export function useGameFormats() {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Lista de jogos                                                              */
-/* -------------------------------------------------------------------------- */
+/** Lists games for the active group, most recent first. */
 export function useGames() {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -81,9 +75,7 @@ export function useGames() {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Detalhe de um jogo                                                          */
-/* -------------------------------------------------------------------------- */
+/** Fetches a single game by id. */
 export function useGame(gameId: string | undefined) {
   return useQuery({
     queryKey: ['game', gameId],
@@ -100,9 +92,7 @@ export function useGame(gameId: string | undefined) {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Jogadores de um jogo                                                        */
-/* -------------------------------------------------------------------------- */
+/** Lists a game's players with their profiles joined in. */
 export function useGamePlayers(gameId: string | undefined) {
   return useQuery({
     queryKey: ['game_players', gameId],
@@ -110,7 +100,6 @@ export function useGamePlayers(gameId: string | undefined) {
     queryFn: async (): Promise<GamePlayerWithProfile[]> => {
       const { data, error } = await supabase
         .from('game_player')
-        // Embed explícito por coluna (à prova de futuras FKs para profile).
         .select('*, profile:player_id(id, name, photo_url)')
         .eq('game_id', gameId as string)
         .order('added_at');
@@ -120,9 +109,7 @@ export function useGamePlayers(gameId: string | undefined) {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Mutations                                                                   */
-/* -------------------------------------------------------------------------- */
+/** Payload for creating or updating a game. */
 export interface CreateGameInput {
   scheduled_at: string;
   location: string | null;
@@ -132,13 +119,13 @@ export interface CreateGameInput {
   notes: string | null;
 }
 
+/** Creates a game in the active group, open for sign-ups. */
 export function useCreateGame() {
   const { user } = useAuth();
   const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: CreateGameInput): Promise<Game> => {
-      // Ao criar, as inscrições ficam logo abertas.
       const { data, error } = await supabase
         .from('game')
         .insert({ ...input, created_by: user!.id, group_id: groupId, status: 'open' })
@@ -151,6 +138,7 @@ export function useCreateGame() {
   });
 }
 
+/** Updates a game's editable fields. */
 export function useUpdateGame(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -165,6 +153,7 @@ export function useUpdateGame(gameId: string) {
   });
 }
 
+/** Updates a game's status and, when applicable, its score/start time. */
 export function useUpdateGameStatus(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -184,6 +173,7 @@ export function useUpdateGameStatus(gameId: string) {
   });
 }
 
+/** Adds a player to a game with the given status. */
 export function useAddGamePlayer(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -199,6 +189,7 @@ export function useAddGamePlayer(gameId: string) {
   });
 }
 
+/** Removes a player from a game. */
 export function useRemoveGamePlayer(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -210,6 +201,7 @@ export function useRemoveGamePlayer(gameId: string) {
   });
 }
 
+/** Updates a game player's status. */
 export function useSetGamePlayerStatus(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({

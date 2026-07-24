@@ -29,17 +29,14 @@ const CUSTOM = '__custom__';
 interface TeamsPanelProps {
   gameId: string;
   players: GamePlayerWithProfile[];
-  /** Decidir equipas (gerar, mover entre A/B, arrastar, formação) — só antes do arranque. */
   canManage: boolean;
-  /** Substituir titular↔suplente — só com o jogo a decorrer. */
   canSubstitute?: boolean;
   canGenerate: boolean;
-  /** Jogadores por lado do FORMATO — é o máximo; menos jogadores → lado menor. */
   playersPerSide: number;
-  /** Minuto atual (para o evento de substituição). */
   currentMinute?: number;
 }
 
+/** Team formation panel: generate/assign teams, pick formations, drag lineups on the pitch, and handle substitutions. */
 export function TeamsPanel({
   gameId,
   players,
@@ -70,16 +67,12 @@ export function TeamsPanel({
   const unassigned = players.filter((p) => !p.team);
   const hasTeams = teamA.length > 0 || teamB.length > 0;
 
-  // O formato é o MÁXIMO por lado; cada equipa usa a sua dimensão real (limitada
-  // ao formato). Ex.: num 3v3 com 5 jogadores → 3 vs 2, cada um com a sua tática.
   const sizeA = Math.min(teamA.length, playersPerSide) || 1;
   const sizeB = Math.min(teamB.length, playersPerSide) || 1;
   const sizeOf = (team: Team) => (team === 'A' ? sizeA : sizeB);
 
-  // Equipa em campo (o switch alterna entre A e B, estilo app de resultados).
   const [selectedTeam, setSelectedTeam] = useState<Team>('A');
 
-  // Formação escolhida por equipa (por nome; default se não escolhida / inválida).
   const [formNameA, setFormNameA] = useState<string | null>(null);
   const [formNameB, setFormNameB] = useState<string | null>(null);
   const [override, setOverride] = useState<Map<string, PitchPos>>(new Map());
@@ -89,11 +82,9 @@ export function TeamsPanel({
   const formA = resolveForm(formNameA, sizeA);
   const formB = resolveForm(formNameB, sizeB);
 
-  // Slots-alvo: da formação escolhida, ou a grelha completa 11v11 (tática livre).
   const slotsA = formNameA === CUSTOM ? unionSlots() : slotsFor(formA);
   const slotsB = formNameB === CUSTOM ? unionSlots() : slotsFor(formB);
 
-  // Layout dos titulares: formação base + posições guardadas + otimista da sessão.
   const layout = useMemo(() => {
     const m = new Map<string, PitchPos>();
     buildLayout(
@@ -139,7 +130,6 @@ export function TeamsPanel({
     if (payload.length) persist.mutate(payload);
   }
 
-  // Largar um jogador num slot da sua equipa. Ocupado → troca posições; vazio → move.
   function drop(id: string, x: number, y: number) {
     const dragged = players.find((p) => p.player_id === id);
     if (!dragged) return;
@@ -165,7 +155,6 @@ export function TeamsPanel({
 
   function pickFormation(team: Team, name: string) {
     if (name === CUSTOM) {
-      // Tática livre: mantém as posições atuais, só alarga os slots disponíveis.
       if (team === 'A') setFormNameA(CUSTOM);
       else setFormNameB(CUSTOM);
       return;
@@ -184,7 +173,6 @@ export function TeamsPanel({
     );
   }
 
-  // Define titulares (os melhores por equipa, até à dimensão) + suplentes + posições.
   function autoFill() {
     const rows: { playerId: string; on_field: boolean; x?: number; y?: number }[] = [];
     for (const team of ['A', 'B'] as Team[]) {
@@ -211,7 +199,6 @@ export function TeamsPanel({
     if (rows.length) assignLineup.mutate(rows);
   }
 
-  // Substituição: suplente (in) entra pelo titular (out).
   function doSubstitute(inId: string, outId: string) {
     setOverride(new Map());
     const outName = players.find((p) => p.player_id === outId)?.profile?.name ?? undefined;
@@ -219,7 +206,6 @@ export function TeamsPanel({
     substitute.mutate({ inId, outId, outName, team: team as Team | null, minute: currentMinute });
   }
 
-  // Ao formar equipas com suplentes, define o onze inicial uma única vez.
   const didInitLineup = useRef(false);
   useEffect(() => {
     if (!canManage || didInitLineup.current || !ratings) return;
@@ -260,7 +246,6 @@ export function TeamsPanel({
         </p>
       ) : (
         <div className={s.body}>
-          {/* Switch entre equipas (estilo app de resultados) */}
           <div className={s.switch}>
             {(['A', 'B'] as Team[]).map((team) => {
               const active = selectedTeam === team;
@@ -345,7 +330,6 @@ export function TeamsPanel({
         <p className={s.diff}>{t('teams.ratingDiff', { diff: Math.abs(sum(teamA) - sum(teamB)) })}</p>
       )}
 
-      {/* Jogadores por atribuir */}
       {unassigned.length > 0 && (
         <div className={s.unassigned}>
           <p className={s.unassignedTitle}>{t('teams.unassigned')}</p>

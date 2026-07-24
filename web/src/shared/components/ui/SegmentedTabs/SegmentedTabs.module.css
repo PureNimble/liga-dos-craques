@@ -1,6 +1,3 @@
-/* Telemóvel: a barra ocupa a linha toda e as abas repartem-na em partes iguais
-   (encontram-se ao meio). Desktop: encolhe ao conteúdo — esticada até à margem
-   deixava um vazio enorme à direita das abas. */
 .tabs {
   display: inline-flex;
   align-self: stretch;
@@ -11,9 +8,6 @@
   padding: var(--space-xs);
 }
 .tab {
-  /* base 0 (e não `auto`): sem isso cada aba ficava com o seu tamanho natural
-     mais uma fatia igual do resto, e a junta caía ao lado do meio — "Anteriores"
-     é mais comprida do que "Próximos". */
   flex: 1 1 0;
   display: flex;
   align-items: center;
@@ -29,14 +23,6 @@
     color var(--transition),
     background-color var(--transition);
 }
-/* Iguala o tamanho do `Button` md (2.75rem × 13rem, ver .actionButton em
-   Definições) — usar quando a barra fica ao lado de botões normais, não numa
-   faixa de navegação por abas. Sem padding: a aba ativa preenche a moldura
-   toda (só a borda de 1px de folga), para ficar do mesmo peso visual que um
-   botão em vez de uma pastilha pequena dentro de uma caixa maior. `.tab.tabMd`
-   (duas classes) tem mais especificidade do que a media query de baixo, que
-   só é pensada para o `sm` de barra de navegação — sem isso, as abas
-   perdiam o `flex: 1 1 0` no desktop e já não enchiam os 13rem por igual. */
 .tabsMd {
   height: 2.75rem;
   width: 13rem;

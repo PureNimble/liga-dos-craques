@@ -2,9 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import type { Database } from '@/types/database';
 
+/** Row shape of the `xp_rule` table. */
 export type XpRule = Database['public']['Tables']['xp_rule']['Row'];
 
-/** Regras de XP atualmente ativas. */
+/** Fetches the currently active XP rules. */
 export function useActiveXpRules() {
   return useQuery({
     queryKey: ['xp_rules_active'],
@@ -20,6 +21,7 @@ export function useActiveXpRules() {
   });
 }
 
+/** Updates the point value of an XP rule. */
 export function useSetXpRule() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -34,6 +36,7 @@ export function useSetXpRule() {
   });
 }
 
+/** Runs the progression backfill RPC (XP + achievements) for closed games. */
 export function useRunBackfill() {
   return useMutation({
     mutationFn: async () => {
@@ -44,12 +47,13 @@ export function useRunBackfill() {
   });
 }
 
+/** Player and game counts shown on the dashboard tiles. */
 export interface AdminMetrics {
   players: number;
   games: number;
 }
 
-/** Contagens para os cartões do dashboard (queries head+count, baratas). */
+/** Fetches cheap head+count totals for the dashboard tiles. */
 export function useAdminMetrics() {
   return useQuery({
     queryKey: ['admin_metrics'],
@@ -74,7 +78,7 @@ function invalidateGameStats(queryClient: ReturnType<typeof useQueryClient>) {
   queryClient.invalidateQueries({ queryKey: ['admin_trends'] });
 }
 
-/** Admin: cancela um jogo (status → cancelled; reversível). */
+/** Admin: cancels a game (status -> cancelled; reversible). */
 export function useAdminCancelGame() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -89,7 +93,7 @@ export function useAdminCancelGame() {
   });
 }
 
-/** Admin: devolve um jogo fechado à revisão (estorna a XP; reatribui ao fechar). */
+/** Admin: sends a closed game back to review (reverts XP; reassigned on closing again). */
 export function useAdminReopenGame() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -105,7 +109,7 @@ export function useAdminReopenGame() {
   });
 }
 
-/** Admin: apaga um jogo (cascata em eventos/plantel). Bloqueado para 'closed'. */
+/** Admin: deletes a game (cascades to events/squad). Blocked for 'closed' games. */
 export function useAdminDeleteGame() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -117,13 +121,13 @@ export function useAdminDeleteGame() {
   });
 }
 
+/** A single month's bucket: internal key, display label, and a count. */
 export interface MonthBucket {
   key: string;
   label: string;
   count: number;
 }
 
-/** Últimos `n` meses (mais antigo → atual) como baldes vazios. */
 function emptyMonths(n: number): MonthBucket[] {
   const out: MonthBucket[] = [];
   const now = new Date();
@@ -138,7 +142,6 @@ function emptyMonths(n: number): MonthBucket[] {
   return out;
 }
 
-/** Distribui timestamps ISO pelos baldes mensais (ignora o que cai fora da janela). */
 function bucketByMonth(dates: string[], months: number): MonthBucket[] {
   const buckets = emptyMonths(months);
   const index = new Map(buckets.map((b, i) => [b.key, i]));
@@ -150,12 +153,13 @@ function bucketByMonth(dates: string[], months: number): MonthBucket[] {
   return buckets;
 }
 
+/** Monthly player and game series for the dashboard charts. */
 export interface AdminTrends {
   players: MonthBucket[];
   games: MonthBucket[];
 }
 
-/** Séries mensais (últimos 6 meses) para os gráficos do dashboard. */
+/** Fetches monthly series (default: last 6 months) for the dashboard charts. */
 export function useAdminTrends(months = 6) {
   return useQuery({
     queryKey: ['admin_trends', months],
@@ -181,6 +185,7 @@ export function useAdminTrends(months = 6) {
   });
 }
 
+/** Player row for admin management, including role and position. */
 export interface AdminPlayer {
   id: string;
   name: string;
@@ -189,7 +194,7 @@ export interface AdminPlayer {
   main_position_id: number | null;
 }
 
-/** Lista completa de jogadores para gestão (inclui função e posição). */
+/** Fetches the full player list for admin management. */
 export function useAdminPlayers() {
   return useQuery({
     queryKey: ['admin_players'],
@@ -204,7 +209,7 @@ export function useAdminPlayers() {
   });
 }
 
-/** Admin promove/despromove um jogador (RPC security definer). */
+/** Admin promotes/demotes a player's role (security-definer RPC). */
 export function useAdminSetRole() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -219,7 +224,7 @@ export function useAdminSetRole() {
   });
 }
 
-/** Golos por mês (soma dos resultados dos jogos com placar). */
+/** Goals per month, summed from games with a final score. */
 export function useGoalsByMonth(months = 12) {
   return useQuery({
     queryKey: ['admin_goals_by_month', months],
@@ -243,12 +248,13 @@ export function useGoalsByMonth(months = 12) {
   });
 }
 
+/** A label with its count, for category charts. */
 export interface CategoryCount {
   label: string;
   count: number;
 }
 
-/** Jogos por formato (para donut). */
+/** Fetches game counts grouped by format, for the donut chart. */
 export function useGamesByFormat() {
   return useQuery({
     queryKey: ['admin_games_by_format'],
@@ -276,7 +282,7 @@ export function useGamesByFormat() {
   });
 }
 
-/** Jogos por dia da semana (2ª→dom). */
+/** Fetches game counts grouped by weekday (Mon-Sun). */
 export function useGamesByWeekday() {
   return useQuery({
     queryKey: ['admin_games_by_weekday'],
@@ -289,7 +295,6 @@ export function useGamesByWeekday() {
       const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
       const counts = new Array(7).fill(0);
       for (const g of data ?? []) {
-        // getDay(): 0=domingo → mapear para índice 2ª=0 … dom=6
         const day = (new Date(g.scheduled_at).getDay() + 6) % 7;
         counts[day] += 1;
       }
@@ -299,6 +304,7 @@ export function useGamesByWeekday() {
   });
 }
 
+/** Admin sets a player's password directly (no email flow required). */
 export function useAdminSetPassword() {
   return useMutation({
     mutationFn: async (input: { userId: string; password: string }) => {

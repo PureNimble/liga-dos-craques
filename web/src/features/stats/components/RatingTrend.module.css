@@ -6,7 +6,6 @@
   -webkit-user-select: none;
 }
 
-/* Elementos SVG — só cor via classe; geometria fica nos atributos. */
 .grid {
   stroke: var(--chart-grid);
 }
@@ -37,7 +36,6 @@
   fill: var(--chart-line);
 }
 
-/* Tooltip (HTML sobreposto) */
 .tooltip {
   pointer-events: none;
   position: absolute;

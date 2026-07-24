@@ -99,12 +99,10 @@
   color: var(--text-color);
 }
 
-/* Só existe em telemóvel — ver media query abaixo. */
 .navDropdown {
   display: none;
 }
 
-/* Telemóvel: a barra passa a topo; a lista vertical vira um dropdown de secção. */
 @media (max-width: 899px) {
   .sidebar {
     flex-direction: row;

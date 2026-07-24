@@ -3,10 +3,8 @@ import { createPortal } from 'react-dom';
 import { CloseIcon } from './icons';
 import s from './Modal.module.css';
 
-/** Acima disto (px) ou com velocidade suficiente, largar o grip fecha o sheet. */
 const CLOSE_DISTANCE_RATIO = 0.3;
 const CLOSE_VELOCITY = 0.6;
-/** Resistência ao arrastar para cima (não há mais alto para expandir, só feedback). */
 const RESIST_UP = 0.35;
 const SNAP_MS = 240;
 
@@ -17,10 +15,8 @@ interface ModalProps {
   description?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
-  /** No telemóvel, apresenta como "bottom sheet" (desliza de baixo). */
   variant?: 'center' | 'sheet';
   size?: 'sm' | 'md' | 'lg' | 'auto';
-  /** Impede fechar ao clicar fora / Esc (ex.: enquanto submete). */
   dismissible?: boolean;
 }
 
@@ -31,6 +27,7 @@ const sizeClass: Record<NonNullable<ModalProps['size']>, string> = {
   auto: s.auto,
 };
 
+/** Dialog overlay; renders as a centered panel or, in `sheet` variant, a draggable bottom sheet. */
 export function Modal({
   open,
   onClose,
@@ -49,16 +46,13 @@ export function Modal({
   const [dragY, setDragY] = useState(0);
   const [dragging, setDragging] = useState(false);
 
-  // Fecha com Esc + bloqueia scroll do body enquanto aberto.
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape' && dismissible) onClose();
     }
     document.addEventListener('keydown', onKey);
-    // Bloqueia o scroll da página (ver `html.modal-open` no index.css).
     document.documentElement.classList.add('modal-open');
-    // Foca o painel para leitores de ecrã / navegação por teclado.
     panelRef.current?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener('keydown', onKey);
@@ -66,7 +60,6 @@ export function Modal({
     };
   }, [open, onClose, dismissible]);
 
-  // Repõe a posição ao reabrir (evita reaparecer a meio caminho de um close anterior).
   useEffect(() => {
     if (open) setDragY(0);
   }, [open]);
@@ -117,10 +110,8 @@ export function Modal({
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop */}
       <div className={s.backdrop} onClick={() => dismissible && onClose()} />
 
-      {/* Painel */}
       <div
         ref={panelRef}
         tabIndex={-1}

@@ -2,6 +2,7 @@ import type { PositionCategory } from '@/types/database';
 import type { PlayerStats } from '@/features/stats/hooks/statsHooks';
 import { computeRating } from '@/features/teams/lib/playerRating';
 
+/** A single FIFA-style attribute shown on the player card. */
 export interface CardAttribute {
   key: string;
   label: string;
@@ -10,7 +11,7 @@ export interface CardAttribute {
 
 const clamp = (n: number) => Math.max(30, Math.min(99, Math.round(n)));
 
-/** Código curto da posição para o cartão (estilo FIFA). */
+/** Short position code for the card (FIFA-style). */
 export function positionShort(category: PositionCategory | null | undefined): string {
   switch (category) {
     case 'GK':
@@ -26,7 +27,7 @@ export function positionShort(category: PositionCategory | null | undefined): st
   }
 }
 
-/** Overall (0–99) a partir do rating existente (que ronda 50–100). */
+/** Overall (0-99) derived from the existing rating (which ranges roughly 50-100). */
 export function overallOf(stats: PlayerStats, category: PositionCategory | null): number {
   return clamp(
     computeRating({
@@ -42,10 +43,7 @@ export function overallOf(stats: PlayerStats, category: PositionCategory | null)
   );
 }
 
-/**
- * Seis atributos "à FIFA" derivados das estatísticas. Jogadores sem jogos
- * ficam num valor base neutro (não penaliza novatos).
- */
+/** Six FIFA-style attributes derived from player stats; newcomers get a neutral base value. */
 export function cardAttributes(stats: PlayerStats): CardAttribute[] {
   const g = Math.max(1, stats.games);
   const base = stats.games === 0 ? 55 : 40;

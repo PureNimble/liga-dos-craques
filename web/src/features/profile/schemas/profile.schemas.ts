@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-/** Converte string vazia (inputs HTML) em null. */
 const emptyToNull = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess((v) => (v === '' || v === undefined ? null : v), schema);
 
@@ -32,6 +31,7 @@ export const profileFormSchema = z.object({
   secondaryPositionIds: z.array(z.number().int().positive()).default([]),
 });
 
+/** Parsed values from the profile edit form. */
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export const GENDER_LABELS: Record<string, string> = {
@@ -47,7 +47,6 @@ export const FOOT_LABELS: Record<string, string> = {
   both: 'Ambidextro',
 };
 
-/** Chave i18n (`profile.i18n.ts`) do pé preferido — usada no chip do `PlayerHeader`. */
 export const FOOT_LABEL_KEY: Record<string, string> = {
   left: 'profile.foot.left',
   right: 'profile.foot.right',

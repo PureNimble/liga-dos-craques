@@ -146,7 +146,6 @@
   text-decoration: underline;
 }
 
-/* FormationSelect */
 .formation {
   flex: 1;
   font-size: var(--font-size-xs);
@@ -159,7 +158,6 @@
   gap: var(--space-xs);
 }
 
-/* TeamColumn */
 .column {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);

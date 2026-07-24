@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formationsFor, positionCode, slotsFor, unionSlots } from './pitchLayout';
 
-/** Os códigos da tabela `position`. */
 const CODIGOS = [
   'GK',
   'CB',
@@ -20,7 +19,6 @@ const CODIGOS = [
   'SS',
 ];
 
-/** d = 0 na própria baliza, 1 no ataque. */
 const Y_GOAL = 92;
 const Y_ATTACK = 6;
 const yAt = (d: number) => Y_GOAL + (Y_ATTACK - Y_GOAL) * d;
@@ -70,7 +68,7 @@ describe('positionCode', () => {
     let anterior = -1;
     for (let d = 0; d <= 1; d += 0.005) {
       const i = ordem.indexOf(codeAt(d, CENTRO));
-      expect(i).toBeGreaterThanOrEqual(anterior); // só avança
+      expect(i).toBeGreaterThanOrEqual(anterior);
       anterior = i;
     }
     expect(codeAt(1, CENTRO)).toBe('ST');
@@ -86,7 +84,6 @@ describe('catálogo de formações', () => {
   });
 
   it('os codes seguem as linhas, um por lugar', () => {
-    // O nome não tem de bater com as linhas: o 4-1-2-3 é um 4-3-3 inclinado.
     for (const f of formationsFor(11)) {
       expect(f.codes!.length, f.name).toBe(f.rows.reduce((a, b) => a + b, 0));
     }
@@ -167,7 +164,6 @@ describe('catálogo de formações', () => {
     expect(comTrinco.codes).toContain('DM');
     expect(comOfensivo.codes).toContain('AM');
 
-    // As três são a mesma família: defesa a 4, meio a 3, frente a 3.
     for (const f of [base, comTrinco, comOfensivo]) {
       expect(f.rows[0], f.name).toBe(4);
       expect(
@@ -182,7 +178,6 @@ describe('catálogo de formações', () => {
   });
 
   it('não inventa nomes de formações: nada de "(defensivo)"/"(ofensivo)"', () => {
-    // Rótulos dos jogos, não do futebol. "falso 9" fica: é termo tático a sério.
     for (const f of formationsFor(11)) {
       expect(f.name, f.name).not.toMatch(/defensiv|ofensiv|attack|defend|holding/i);
     }
@@ -202,16 +197,12 @@ describe('unionSlots (tática livre)', () => {
   });
 
   it('a posição de cada lugar é a do sítio onde ele está', () => {
-    // Sem formação não há posições declaradas. Herdá-las das formações punha
-    // "RW" num lugar que é RM, ou "CB" num que é LB.
     for (const s of unionSlots()) {
       expect(s.code, `x=${s.x} y=${s.y.toFixed(1)}`).toBe(positionCode(s.x, s.y));
     }
   });
 
   it('só há um lugar de cada lado em cada linha', () => {
-    // Dois LM colados não fazem sentido — não se joga com dois laterais
-    // esquerdos. Ao meio repetem-se (dois centrais, dois pontas).
     const laterais = new Set(['LB', 'RB', 'LWB', 'RWB', 'LM', 'RM', 'LW', 'RW']);
     const vistos = new Map<string, number>();
     for (const s of unionSlots()) {

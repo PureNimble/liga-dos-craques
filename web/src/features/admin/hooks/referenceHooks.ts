@@ -1,17 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
+/** Table names editable from the admin reference data screen. */
 export type ReferenceTable = 'game_format' | 'position' | 'event_type' | 'tag';
 
+/** One reference row, with editable label/order plus a read-only structural detail. */
 export interface RefRow {
   id: number;
   code: string;
   label: string;
   sort_order: number;
-  /** Contexto só-de-leitura dos campos estruturais (não editáveis aqui). */
   detail: string;
 }
 
+/** A reference table's rows, grouped under a title for display. */
 export interface RefGroup {
   table: ReferenceTable;
   title: string;
@@ -25,7 +27,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   FWD: 'Avançado',
 };
 
-/** As quatro tabelas de referência, prontas para renomear/reordenar. */
+/** Fetches the four reference tables, ready to rename/reorder. */
 export function useReferenceGroups() {
   return useQuery({
     queryKey: ['reference'],
@@ -91,7 +93,7 @@ export function useReferenceGroups() {
   });
 }
 
-/** Admin: renomeia/reordena uma linha de referência (RLS: is_admin()). */
+/** Admin: renames/reorders a reference row (RLS: is_admin()). */
 export function useUpdateReference() {
   const queryClient = useQueryClient();
   return useMutation({

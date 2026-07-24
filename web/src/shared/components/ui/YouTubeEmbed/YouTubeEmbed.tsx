@@ -3,13 +3,11 @@ import s from './YouTubeEmbed.module.css';
 interface YouTubeEmbedProps {
   videoId: string;
   title: string;
-  /** Segundo em que o vídeo arranca. */
   start?: number;
-  /** false = o dono bloqueia o embed; mostra miniatura + link em vez do leitor. */
   embeddable?: boolean;
 }
 
-/** Leitor de YouTube responsivo (16:9), sem cookies e sem dependências. */
+/** Responsive (16:9), cookie-free YouTube player with no external dependencies. */
 export function YouTubeEmbed({ videoId, title, start = 0, embeddable = true }: YouTubeEmbedProps) {
   const watchUrl = `https://www.youtube.com/watch?v=${videoId}${start > 0 ? `&t=${start}` : ''}`;
 

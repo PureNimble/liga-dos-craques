@@ -9,7 +9,6 @@ describe('computeRating', () => {
   });
 
   it('calcula o rating ponderado por desempenho por jogo', () => {
-    // base 50 + win(20*0.5) + goals(8*1) + assists(6*0.5) + mvp(10*0.2) + exp(5*1) = 78
     const r = computeRating({
       games: 10,
       wins: 5,
@@ -43,7 +42,6 @@ describe('computeRating', () => {
   it('sobe/desce com o desvio de força (bater equipas mais fortes vale mais)', () => {
     const base = { games: 10, wins: 5, goals: 0, assists: 0, saves: 0, mvps: 0, category: null };
     const neutral = computeRating(base);
-    // Peso 15 × strengthDelta.
     expect(computeRating({ ...base, strengthDelta: 0.4 })).toBeCloseTo(neutral + 6);
     expect(computeRating({ ...base, strengthDelta: -0.4 })).toBeCloseTo(neutral - 6);
   });

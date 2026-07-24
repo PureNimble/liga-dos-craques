@@ -2,7 +2,7 @@ import { supabase } from '@/shared/lib/supabase';
 
 const SESSION_KEY = 'peladinhas.tracking.session';
 
-/** UUIDs e ids numéricos saem do caminho — guarda-se a rota, não a entidade. */
+/** Strips UUIDs and numeric ids from a path — only the route is stored, never the entity. */
 export function normalizePath(pathname: string): string {
   return (
     pathname
@@ -13,7 +13,7 @@ export function normalizePath(pathname: string): string {
   );
 }
 
-/** Categoria do ecrã (só a largura, sem user-agent nem impressão digital). */
+/** Classifies device category by screen width only (no user-agent, no fingerprinting). */
 export function deviceOf(width: number): 'telemóvel' | 'tablet' | 'desktop' {
   if (width < 640) return 'telemóvel';
   if (width < 1024) return 'tablet';
@@ -25,7 +25,6 @@ interface Session {
   started: boolean;
 }
 
-/** Sessão = separador aberto; morre com o `sessionStorage`. */
 function currentSession(): Session {
   const stored = sessionStorage.getItem(SESSION_KEY);
   if (stored) return { id: stored, started: true };
@@ -45,7 +44,6 @@ interface QueuedEvent {
 let queue: QueuedEvent[] = [];
 let timer: ReturnType<typeof setTimeout> | null = null;
 
-/** Envia o que está em fila; falhas são silenciosas (tracking nunca parte a app). */
 async function flush() {
   timer = null;
   const batch = queue;
@@ -62,7 +60,7 @@ function enqueue(event: QueuedEvent) {
   }, 2000);
 }
 
-/** Regista uma visita de página (e o arranque da sessão, na primeira). */
+/** Logs a page view (and session start, on the first one). */
 export function trackPageView(userId: string, pathname: string) {
   const session = currentSession();
   const path = normalizePath(pathname);
@@ -82,12 +80,10 @@ export function trackPageView(userId: string, pathname: string) {
     path,
     props: {},
   });
-  // O arranque da sessão vai já: é o único evento sem segunda oportunidade se o
-  // separador fechar ou recarregar antes do envio em lote.
   if (!session.started) flushNow();
 }
 
-/** Descarrega a fila imediatamente (ao sair da página). */
+/** Flushes the queue immediately (e.g. when leaving the page). */
 export function flushNow() {
   if (timer) clearTimeout(timer);
   void flush().catch(() => {});

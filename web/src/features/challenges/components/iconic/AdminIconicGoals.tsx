@@ -12,12 +12,11 @@ import {
 import { buildGoalCode, iconicGoalSchema, type IconicGoalValues } from '../../schemas/iconic/iconicGoal.schemas';
 import s from './AdminIconicGoals.module.css';
 
-/** Próximo `sort_order` (fim da lista, com folga de 10). */
 function nextSortOrder(goals: IconicGoal[] | undefined): number {
   return (goals ?? []).reduce((max, g) => Math.max(max, g.sort_order), 0) + 10;
 }
 
-/** Card do dashboard de admin: listar, criar e editar golos icónicos. */
+/** Admin dashboard card: list, create and edit iconic goals. */
 export function AdminIconicGoals() {
   const { data: goals, isLoading } = useAllIconicGoals();
   const [editing, setEditing] = useState<IconicGoal | null>(null);

@@ -12,7 +12,7 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-/** Sheet para mudar a password estando já autenticado (Definições > Conta). */
+/** Sheet for changing the password while already authenticated (Settings > Account). */
 export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps) {
   const toast = useToast();
   const [error, setError] = useState<string | null>(null);

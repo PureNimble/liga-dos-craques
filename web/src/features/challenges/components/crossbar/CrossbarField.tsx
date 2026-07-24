@@ -15,14 +15,13 @@ const firstName = (name?: string | null) => (name ?? 'Jogador').trim().split(/\s
 const pctX = (x: number) => (x / CROSSBAR_PITCH_LEN) * 100;
 const pctY = (y: number) => (y / CROSSBAR_PITCH_H) * 100;
 
-/** Campo landscape: baliza à esquerda, posições a subir para a direita. */
+/** Renders the Crossbar pitch with the focused player's token at their current spot. */
 export function CrossbarField({
   spotCount,
   players,
   currentPlayerId,
   winnerId,
 }: CrossbarFieldProps) {
-  // Mostra só o jogador em foco (o da vez, ou o vencedor no fim).
   const focus = players.find(
     (p) =>
       (currentPlayerId && p.player_id === currentPlayerId) ||
@@ -40,20 +39,16 @@ export function CrossbarField({
         focusable="false"
       >
         <rect x="2" y="2" width="129.33" height="96" rx="2" />
-        {/* Meio-campo (vertical). */}
         <line x1="66.67" y1="2" x2="66.67" y2="98" />
         <circle cx="66.67" cy="50" r="13.5" />
-        {/* Baliza (esquerda) — grande área, pequena área e linha de golo. */}
         <rect x="2" y="20" width="20" height="60" />
         <rect x="2" y="36" width="10" height="28" />
         <rect x="1" y="44" width="2" height="12" />
-        {/* Área contrária (direita). */}
         <rect x="111.33" y="20" width="20" height="60" />
         <rect x="121.33" y="36" width="10" height="28" />
         <rect x="130.33" y="44" width="2" height="12" />
       </svg>
 
-      {/* Marcas das posições (numeradas). */}
       {Array.from({ length: spotCount }, (_, i) => {
         const pos = spotPos(spotCount, i);
         return (
@@ -67,7 +62,6 @@ export function CrossbarField({
         );
       })}
 
-      {/* Só o jogador em foco, no seu spot atual. */}
       {focus && (
         <div
           className={[s.token, winnerId ? s.tokenWinner : s.tokenCurrent].filter(Boolean).join(' ')}

@@ -48,7 +48,6 @@ describe('penaltyModes', () => {
   it('entryToMode: golos fácil/difícil e zonas', () => {
     expect(entryToMode('goals', 'facil')).toBe('pen_goals');
     expect(entryToMode('goals', 'dificil')).toBe('pen_target');
-    // A dificuldade é irrelevante na entrada de zonas.
     expect(entryToMode('zones', 'facil')).toBe('pen_zones');
     expect(entryToMode('zones', 'dificil')).toBe('pen_zones');
   });

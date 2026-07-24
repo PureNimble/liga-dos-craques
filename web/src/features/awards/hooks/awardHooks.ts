@@ -2,10 +2,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import type { Database } from '@/types/database';
 
+/** Row of the v_game_player_rating view: a player's rating for a given game. */
 export type GameRating = Database['public']['Views']['v_game_player_rating']['Row'];
+/** Row of the v_game_award view: a resolved MVP/Flop award for a given game. */
 export type GameAward = Database['public']['Views']['v_game_award']['Row'];
 
-/** Avaliações (0–10) calculadas pela app para cada jogador do jogo. */
+/** Ratings (0-10) computed by the app for each player in the game. */
 export function useGameRatings(gameId: string | undefined) {
   return useQuery({
     queryKey: ['game_ratings', gameId],
@@ -21,7 +23,7 @@ export function useGameRatings(gameId: string | undefined) {
   });
 }
 
-/** MVP/Flop apurado (melhor/pior rating; empate desfeito pela consistência). */
+/** Resolved MVP/Flop for the game (best/worst rating, ties broken by consistency). */
 export function useGameAwards(gameId: string | undefined) {
   return useQuery({
     queryKey: ['game_awards', gameId],
@@ -37,10 +39,7 @@ export function useGameAwards(gameId: string | undefined) {
   });
 }
 
-/**
- * Apura MVP/Flop (organizador) — apenas fecha o jogo; o apuramento é derivado
- * da vista v_game_award. Devolve o novo estado ('closed').
- */
+/** Closes the game (organizer only); MVP/Flop is derived from the v_game_award view. */
 export function useResolveAwards(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({

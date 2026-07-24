@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import s from './EmptyState.module.css';
 
+/** Placeholder shown when a list or section has no content. */
 export function EmptyState({
   icon,
   title,

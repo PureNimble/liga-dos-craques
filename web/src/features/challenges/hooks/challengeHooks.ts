@@ -4,15 +4,20 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { ChallengeResult, CrossbarTurnStatus, Database, PenaltyMode } from '@/types/database';
 
+/** Outcome of recording a turn: whether the session is still active or just finished. */
 export interface RecordTurnResult {
   status: CrossbarTurnStatus;
   winner_id: string | null;
 }
 
+/** A challenge definition row (Crossbar, Penalties, Iconic Goals, or a versus challenge). */
 export type Challenge = Database['public']['Tables']['challenge']['Row'];
+/** A row of the per-group challenge leaderboard view. */
 export type ChallengeLeaderboardRow = Database['public']['Views']['v_challenge_leaderboard']['Row'];
+/** A live challenge session row (Crossbar or Penalties). */
 export type ChallengeSession = Database['public']['Tables']['challenge_session']['Row'];
 
+/** A logged challenge attempt joined with the player's and opponent's names. */
 export interface ChallengeAttemptWithNames {
   id: string;
   player_id: string;
@@ -24,6 +29,7 @@ export interface ChallengeAttemptWithNames {
   opponent: { name: string } | null;
 }
 
+/** Lists active challenges, ordered for display. */
 export function useChallenges() {
   return useQuery({
     queryKey: ['challenges'],
@@ -40,6 +46,7 @@ export function useChallenges() {
   });
 }
 
+/** Leaderboard rows for a challenge, scoped to the active group. */
 export function useChallengeLeaderboard(challengeId: number | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -57,6 +64,7 @@ export function useChallengeLeaderboard(challengeId: number | undefined) {
   });
 }
 
+/** Most recent logged attempts for a challenge, scoped to the active group. */
 export function useChallengeAttempts(challengeId: number | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -78,6 +86,7 @@ export function useChallengeAttempts(challengeId: number | undefined) {
   });
 }
 
+/** Input for logging a challenge attempt. */
 export interface AddAttemptInput {
   challenge_id: number;
   player_id: string;
@@ -86,6 +95,7 @@ export interface AddAttemptInput {
   result: ChallengeResult;
 }
 
+/** Logs a challenge attempt and invalidates the leaderboard and history. */
 export function useAddChallengeAttempt() {
   const { user } = useAuth();
   const groupId = useActiveGroupId();
@@ -108,10 +118,7 @@ export function useAddChallengeAttempt() {
   });
 }
 
-// -----------------------------------------------------------------------------
-// Sessões ao vivo (Crossbar)
-// -----------------------------------------------------------------------------
-
+/** A session player row joined with their profile name and photo. */
 export interface SessionPlayerWithProfile {
   id: string;
   player_id: string;
@@ -126,6 +133,7 @@ export interface SessionPlayerWithProfile {
   profile: { name: string; photo_url: string | null } | null;
 }
 
+/** A recorded session turn joined with the shooting player's name. */
 export interface SessionTurnRow {
   id: string;
   player_id: string;
@@ -135,7 +143,7 @@ export interface SessionTurnRow {
   profile: { name: string } | null;
 }
 
-/** Sessão + jogadores, com refetch frequente para acompanhar o jogo ao vivo. */
+/** Fetches a live challenge session by id (Crossbar or Penalties). */
 export function useCrossbarSession(sessionId: string | undefined) {
   return useQuery({
     queryKey: ['crossbar_session', sessionId],
@@ -152,6 +160,7 @@ export function useCrossbarSession(sessionId: string | undefined) {
   });
 }
 
+/** Players of a live session, ordered by turn order, joined with their profiles. */
 export function useSessionPlayers(sessionId: string | undefined) {
   return useQuery({
     queryKey: ['crossbar_session_players', sessionId],
@@ -170,6 +179,7 @@ export function useSessionPlayers(sessionId: string | undefined) {
   });
 }
 
+/** Recorded turns of a live session, most recent first. */
 export function useSessionTurns(sessionId: string | undefined) {
   return useQuery({
     queryKey: ['crossbar_session_turns', sessionId],
@@ -186,11 +196,12 @@ export function useSessionTurns(sessionId: string | undefined) {
   });
 }
 
+/** A challenge session row with its player count. */
 export interface ChallengeSessionWithCount extends ChallengeSession {
   player_count: number;
 }
 
-/** Sessões a decorrer de um desafio (mais recentes primeiro), com nº de jogadores, no grupo ativo. */
+/** Ongoing sessions of a challenge in the active group, most recent first, with player counts. */
 export function useChallengeSessions(challengeId: number | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -216,6 +227,7 @@ export function useChallengeSessions(challengeId: number | undefined) {
   });
 }
 
+/** Deletes a live session and invalidates the ongoing-sessions list. */
 export function useDeleteSession(challengeId: number) {
   const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
@@ -230,7 +242,7 @@ export function useDeleteSession(challengeId: number) {
   });
 }
 
-/** Cria a sessão já a decorrer (setup é client-side) e devolve o id. */
+/** Creates a Crossbar session already active (setup is client-side) and returns its id. */
 export function useCreateAndStart() {
   const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
@@ -259,6 +271,7 @@ export function useCreateAndStart() {
   });
 }
 
+/** Records a Crossbar turn (hit/miss) and invalidates the session, players, turns and leaderboard. */
 export function useRecordTurn(session: ChallengeSession) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -287,11 +300,7 @@ export function useRecordTurn(session: ChallengeSession) {
   });
 }
 
-// -----------------------------------------------------------------------------
-// Sessões ao vivo (Penáltis) — mesmo esquema de sessão, RPCs próprias.
-// -----------------------------------------------------------------------------
-
-/** Cria a sessão de penáltis já a decorrer (setup é client-side) e devolve o id. */
+/** Creates a Penalties session already active (setup is client-side) and returns its id. */
 export function usePenaltyCreateAndStart() {
   const groupId = useActiveGroupId();
   const queryClient = useQueryClient();
@@ -320,6 +329,7 @@ export function usePenaltyCreateAndStart() {
   });
 }
 
+/** Records a Penalties turn (hit/miss, optional zone) and invalidates related queries. */
 export function usePenaltyRecordTurn(session: ChallengeSession) {
   const queryClient = useQueryClient();
   return useMutation({

@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da barra de nível/XP (`XpBar`). */
 export const xpTranslations = {
   'xp.level': { pt: 'Nível {level}', en: 'Level {level}' },
   'xp.total': { pt: '{value} XP', en: '{value} XP' },
@@ -8,4 +7,5 @@ export const xpTranslations = {
   'xp.toNext': { pt: '{amount} XP para o nível {level}', en: '{amount} XP to level {level}' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the xp feature. */
 export type XpTranslationKey = keyof typeof xpTranslations;

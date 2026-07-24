@@ -3,9 +3,6 @@
   flex-direction: column;
   gap: var(--space-lg);
   padding-block: var(--space-lg);
-  /* Sem efeito nas páginas normais (o pai não é flex); nas vistas de altura
-     fixa (`AppLayout` com `containerFill`) deixa a página preencher o `main`
-     em vez de crescer com o conteúdo. */
   min-height: 0;
   flex: 1;
 }

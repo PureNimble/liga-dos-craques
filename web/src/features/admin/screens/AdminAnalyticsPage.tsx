@@ -21,7 +21,6 @@ const RANGES: AnalyticsMonths[] = [3, 6, 12];
 const int = (n: number) => Math.round(n).toLocaleString('pt-PT');
 const dec = (n: number) => n.toLocaleString('pt-PT', { maximumFractionDigits: 1 });
 
-/** Variação face ao período homólogo anterior. */
 function Delta({ kpi, invert }: { kpi: Kpi; invert?: boolean }) {
   if (kpi.previous === 0) return <span className={s.deltaFlat}>sem histórico</span>;
   const change = ((kpi.value - kpi.previous) / kpi.previous) * 100;
@@ -60,6 +59,7 @@ function KpiTile({
   );
 }
 
+/** Admin analytics screen: usage KPIs, tracking, and bug report charts. */
 export function AdminAnalyticsPage() {
   const [months, setMonths] = useState<AnalyticsMonths>(6);
   const { data, isLoading } = useUsageAnalytics(months);
@@ -208,9 +208,6 @@ export function AdminAnalyticsPage() {
                   />
                 </article>
 
-                {/* Sem outro cartão do mesmo tipo nesta secção condicional para
-                    emparelhar (lista vs. donut tinham alturas muito diferentes) —
-                    fica cada um a ocupar a linha toda em vez de forçar o par. */}
                 <article className={`${s.card} ${s.wide}`}>
                   <div className={s.cardHead}>
                     <h2 className={s.title}>Por onde entram</h2>
@@ -270,8 +267,6 @@ export function AdminAnalyticsPage() {
               <StackedBars data={data.monthlyActions} series={areaSeries} />
             </article>
 
-            {/* Par: dois donuts, mesma altura por omissão — alinham sem sobrar
-                espaço morto num dos dois. */}
             <article className={s.card}>
               <div className={s.cardHead}>
                 <h2 className={s.title}>Peso de cada área</h2>
@@ -296,8 +291,6 @@ export function AdminAnalyticsPage() {
               <UsageHeatmap rows={data.heatmap} unit="ações" />
             </article>
 
-            {/* Par: os dois gráficos vêm com a mesma altura (200px) e sem
-                legenda — encaixam sem esticar. */}
             <article className={s.card}>
               <div className={s.cardHead}>
                 <h2 className={s.title}>Retenção mensal</h2>
@@ -321,8 +314,6 @@ export function AdminAnalyticsPage() {
               <CategoryBar data={bugs?.byMonth ?? []} color={SERIES.challenges} height={200} />
             </article>
 
-            {/* Par: duas listas de magnitude semelhante (6 áreas vs. até 8
-                utilizadores) — número de linhas comparável, sem gaveta vazia. */}
             <article className={s.card}>
               <div className={s.cardHead}>
                 <h2 className={s.title}>Alcance das funcionalidades</h2>

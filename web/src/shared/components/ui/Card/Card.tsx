@@ -6,6 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padded?: boolean;
 }
 
+/** Panel container with card styling; supports interactive hover state. */
 export function Card({
   interactive = false,
   padded = true,

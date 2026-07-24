@@ -4,7 +4,6 @@ import s from './SegmentedTabs.module.css';
 interface TabItem<T extends string> {
   value: T;
   label: ReactNode;
-  /** Necessário quando `label` não é texto (ex.: um ícone). */
   ariaLabel?: string;
 }
 
@@ -13,10 +12,10 @@ interface SegmentedTabsProps<T extends string> {
   onChange: (value: T) => void;
   items: TabItem<T>[];
   className?: string;
-  /** `sm` (por omissão) é o padrão de barra de navegação; `md` iguala o tamanho de `Button`. */
   size?: 'sm' | 'md';
 }
 
+/** Segmented control (tab-style toggle) between mutually exclusive options. */
 export function SegmentedTabs<T extends string>({
   value,
   onChange,

@@ -10,6 +10,7 @@ import { useAdminCancelGame, useAdminDeleteGame, useAdminReopenGame } from '../h
 import cards from '../adminCards.module.css';
 import s from './AdminGamesPage.module.css';
 
+/** Admin screen listing all games, with cancel/reopen/delete actions. */
 export function AdminGamesPage() {
   const { data: games, isLoading } = useGames();
 

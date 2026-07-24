@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## O que é
 
-**Peladinhas** (repo: `liga-dos-craques`) — plataforma web para gerir jogos de futebol entre amigos: jogos, estatísticas, rankings, desafios, XP e conquistas. App entre amigos, manutenção por 1 pessoa, custo 0 € (só planos gratuitos). Documentação em português; escreve código, comentários e mensagens de commit em português.
+**Peladinhas** (repo: `liga-dos-craques`) — plataforma web para gerir jogos de futebol entre amigos: jogos, estatísticas, rankings, desafios, XP e conquistas. App entre amigos, manutenção por 1 pessoa, custo 0 € (só planos gratuitos). Documentação e mensagens de commit em português; código em português, comentários/JSDoc em inglês (língua universal).
 
 ## Comandos
 
@@ -91,7 +91,7 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 
 ## Regras de ouro
 
-- **Comentários: só JSDoc simples.** Uma linha (ou duas) a dizer o que a coisa é. Nada de comentários a narrar a história da mudança ("antes fazia X", "isto estava mal porque…"), a justificar a alteração, a repetir o que o código já diz, ou a explicar o óbvio. Se um porquê é mesmo preciso, é uma frase curta — não um parágrafo. O contexto da mudança vai na mensagem de commit e no PR, não no ficheiro.
+- **Comentários: só JSDoc simples, em inglês.** Só em exports públicos (funções, componentes, hooks, tipos, interfaces) — uma linha (ou duas) a dizer o que a coisa é, nunca mais que isso. Nada de comentários a narrar a história da mudança ("used to do X", "this was broken because…"), a justificar a alteração, a repetir o que o código já diz, ou a explicar o óbvio. Se um porquê é mesmo preciso, é uma frase curta — não um parágrafo. O contexto da mudança vai na mensagem de commit e no PR, não no ficheiro. Ficheiros `*.module.css` não levam comentários nenhuns.
 - **RLS em TODAS as tabelas.** A chave anon é pública; a segurança está na BD. Padrão: RLS + GRANTs por coluna para impedir editar campos sensíveis (`role`, `created_by`) — o próprio nunca escala privilégios. Helpers SQL `is_admin()` e `is_game_organizer()` são `security definer`.
 - **Segredos** (`service_role`, DB password, access token) **só** em GitHub Secrets / Edge Functions — nunca no bundle nem no repo.
 - **Schema só via `migrations/`.**

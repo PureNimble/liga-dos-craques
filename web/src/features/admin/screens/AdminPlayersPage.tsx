@@ -13,6 +13,7 @@ import {
 import cards from '../adminCards.module.css';
 import s from './AdminPlayersPage.module.css';
 
+/** Admin screen for managing player roles and resetting passwords. */
 export function AdminPlayersPage() {
   return (
     <>

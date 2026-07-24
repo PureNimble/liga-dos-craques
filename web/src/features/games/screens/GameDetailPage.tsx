@@ -32,16 +32,13 @@ import s from './GameDetailPage.module.css';
 
 const TEAMS_GENERATABLE: GameStatus[] = ['scheduled', 'open', 'teams_generated'];
 
-// O plantel fecha quando o jogo arranca — depois não se convida nem remove ninguém.
 const ROSTER_EDITABLE: GameStatus[] = ['draft', 'scheduled', 'open', 'teams_generated'];
-// A composição das equipas (gerar / mover entre A e B) só é possível ANTES do arranque.
 const TEAMS_EDITABLE: GameStatus[] = ['draft', 'scheduled', 'open', 'teams_generated'];
-// Detalhes do jogo (data, local, formato, notas) só editáveis ANTES do arranque.
 const DETAILS_EDITABLE: GameStatus[] = ['draft', 'scheduled', 'open', 'teams_generated'];
-// Estados em que já faz sentido ter eventos (jogo começou).
 const EVENTS_VISIBLE: GameStatus[] = ['in_progress', 'finished', 'voting_open', 'closed'];
 const EVENTS_EDITABLE: GameStatus[] = ['in_progress', 'finished'];
 
+/** Screen for a single game: header/score, teams, events, roster, and organizer actions. */
 export function GameDetailPage() {
   const { t } = useT();
   const { id } = useParams<{ id: string }>();
@@ -78,10 +75,8 @@ export function GameDetailPage() {
 
   const isOrganizer = game.created_by === user?.id || profile?.role === 'admin';
   const rosterEditable = ROSTER_EDITABLE.includes(game.status);
-  // Decidir equipas (gerar/mover) só antes do arranque; substituir só com o jogo a decorrer.
   const teamsEditable = isOrganizer && TEAMS_EDITABLE.includes(game.status);
   const canSubstitute = isOrganizer && game.status === 'in_progress';
-  // Eventos editáveis ao vivo e na revisão (finished); depois do apuramento ficam fechados.
   const eventsEditable = isOrganizer && EVENTS_EDITABLE.includes(game.status);
   const transitions = ALLOWED_TRANSITIONS[game.status];
   const roster = players ?? [];
@@ -109,7 +104,6 @@ export function GameDetailPage() {
       }))
     )
       return;
-    // Ao arrancar o jogo, marca o início do cronómetro (uma única vez).
     const startedAt =
       status === 'in_progress' && !game?.started_at ? { started_at: new Date().toISOString() } : {};
     await updateStatus.mutateAsync({ status, ...startedAt });
@@ -117,26 +111,19 @@ export function GameDetailPage() {
   }
 
   async function finishGame() {
-    // O placar já reflete os eventos; terminar apenas fixa o resultado.
     await updateStatus.mutateAsync({ status: 'finished' });
     setManageOpen(false);
   }
 
-  // Apura MVP/Flop pelo rating: fecha o jogo se forem automáticos, ou abre a
-  // votação de desempate quando há empate no topo/fundo.
   async function resolveGameAwards() {
     await resolveAwards.mutateAsync();
     setManageOpen(false);
   }
 
-  // Encerra inscrições e forma equipas. O formato escolhido é o MÁXIMO por lado
-  // (a capacidade do campo): com MENOS inscritos, desce para um formato inferior;
-  // com MAIS, mantém-se e os excedentes ficam suplentes.
   async function closeRegistrations() {
     if (!formats || !game) return;
     const count = roster.length;
     const maxPerSide = game.game_format?.players_per_side ?? Math.ceil(game.max_players / 2);
-    // Só formatos até ao teto escolhido — nunca sobe acima do formato do campo.
     const eligible = formats.filter((f) => f.players_per_side <= maxPerSide);
     const fmt = pickFormatForCount(count, eligible);
     if (!fmt) return;
@@ -173,8 +160,6 @@ export function GameDetailPage() {
   const noManageActions =
     transitions.length === 0 && game.status !== 'in_progress' && game.status !== 'finished';
 
-  // Coluna das equipas/campo (esquerda no desktop) e coluna de informação
-  // (eventos, MVP/Flop, plantel — direita no desktop). No telemóvel empilham.
   const teamsSection = showTeams && (
     <TeamsPanel
       gameId={game.id}
@@ -189,7 +174,6 @@ export function GameDetailPage() {
 
   const infoSection = (
     <>
-      {/* Eventos (golos, assistências, defesas, …) */}
       {EVENTS_VISIBLE.includes(game.status) && (
         <Card>
           <h2 className={s.sectionHead}>{t('games.detail.events')}</h2>
@@ -210,12 +194,10 @@ export function GameDetailPage() {
         </Card>
       )}
 
-      {/* MVP / Flop — só depois de apurar (fechado); nunca durante a revisão */}
       {(game.status === 'voting_open' || game.status === 'closed') && (
         <AwardsPanel gameId={game.id} players={players ?? []} />
       )}
 
-      {/* Plantel */}
       <PlayerRoster
         gameId={game.id}
         groupId={game.group_id}
@@ -234,7 +216,6 @@ export function GameDetailPage() {
         <ChevronLeftIcon width={16} height={16} /> {t('games.detail.back')}
       </Link>
 
-      {/* Cabeçalho / placar em destaque (estilo transmissão) */}
       <MatchHeader game={game} clock={clock} />
 
       {game.notes && <Card className={s.notes}>{game.notes}</Card>}
@@ -245,12 +226,8 @@ export function GameDetailPage() {
         </Button>
       )}
 
-      {/* Equipas à esquerda e informação à direita no desktop; empilham no telemóvel */}
       {showTeams ? (
         <div className={s.grid}>
-          {/* .col tem min-width:0 — sem isso os filhos da grelha assumem
-              min-width:auto e recusam encolher (ex.: o <select> de convidar
-              pelo nome mais longo), empurrando a coluna para lá do ecrã. */}
           <div className={s.col}>{teamsSection}</div>
           <div className={s.col}>{infoSection}</div>
         </div>
@@ -258,7 +235,6 @@ export function GameDetailPage() {
         infoSection
       )}
 
-      {/* Painel de gestão (organizador) — em modal / bottom sheet */}
       <Modal
         open={manageOpen}
         onClose={() => setManageOpen(false)}
@@ -294,7 +270,6 @@ export function GameDetailPage() {
             </Button>
           )}
 
-          {/* Terminar (o placar segue os eventos registados) */}
           {game.status === 'in_progress' && (
             <div className={s.resultBox}>
               <p className={s.resultLabel}>{t('games.detail.currentResult')}</p>
@@ -308,14 +283,12 @@ export function GameDetailPage() {
             </div>
           )}
 
-          {/* Apurar MVP/Flop (após terminar) — automático ou abre desempate */}
           {game.status === 'finished' && (
             <Button block onClick={resolveGameAwards} loading={resolveAwards.isPending}>
               {t('games.detail.resolveAwards')}
             </Button>
           )}
 
-          {/* Outras transições */}
           {transitions.filter((tr) => tr !== 'finished').length > 0 && (
             <div className={s.btnGroup}>
               {transitions
@@ -340,7 +313,6 @@ export function GameDetailPage() {
         </div>
       </Modal>
 
-      {/* Editar detalhes do jogo */}
       <Modal
         open={editOpen}
         onClose={() => setEditOpen(false)}

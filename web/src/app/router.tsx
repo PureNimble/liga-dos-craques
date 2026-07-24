@@ -7,7 +7,6 @@ import { RecoverPasswordPage } from '@/features/auth/screens/RecoverPasswordPage
 import { UpdatePasswordPage } from '@/features/auth/screens/UpdatePasswordPage';
 import { AppLayout } from './components/AppLayout';
 
-// Páginas autenticadas carregadas sob procura (code-splitting) → arranque leve.
 const HomePage = lazyWithReload(() =>
   import('./screens/HomePage').then((m) => ({ default: m.HomePage })),
 );
@@ -96,14 +95,13 @@ const NotificationsPage = lazyWithReload(() =>
   })),
 );
 
+/** App router: public auth routes plus protected routes nested under `AppLayout`. */
 export const router = createBrowserRouter([
-  // Rotas públicas
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
   { path: '/recover', element: <RecoverPasswordPage /> },
   { path: '/update-password', element: <UpdatePasswordPage /> },
 
-  // Rotas protegidas (exigem sessão) dentro do layout com navegação
   {
     element: <ProtectedRoute />,
     children: [
@@ -145,6 +143,5 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Qualquer outra rota → início
   { path: '*', element: <Navigate to="/" replace /> },
 ]);

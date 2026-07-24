@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-/** Extrai o ID de 11 caracteres de um URL do YouTube (ou devolve o próprio ID). */
+/** Extracts the 11-character ID from a YouTube URL (or returns the ID itself). */
 export function extractYouTubeId(input: string): string | null {
   const raw = input.trim();
   if (/^[\w-]{11}$/.test(raw)) return raw;
   const patterns = [
-    /[?&]v=([\w-]{11})/, // watch?v=ID
-    /youtu\.be\/([\w-]{11})/, // youtu.be/ID
-    /\/(?:embed|shorts)\/([\w-]{11})/, // /embed/ID · /shorts/ID
+    /[?&]v=([\w-]{11})/,
+    /youtu\.be\/([\w-]{11})/,
+    /\/(?:embed|shorts)\/([\w-]{11})/,
   ];
   for (const re of patterns) {
     const m = raw.match(re);
@@ -16,18 +16,17 @@ export function extractYouTubeId(input: string): string | null {
   return null;
 }
 
-/** Slug ASCII simples para compor o `code` a partir do jogador/título. */
 function slug(value: string): string {
   return value
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // tira acentos (combining marks)
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '')
     .slice(0, 40);
 }
 
-/** `code` único para golos criados pela app (os de migração usam `ig_<nome>`). */
+/** Builds a unique `code` for goals created via the app. */
 export function buildGoalCode(scorer: string, title: string): string {
   const base = [slug(scorer), slug(title)].filter(Boolean).join('_') || 'golo';
   return `ig_${base}_${Math.random().toString(36).slice(2, 7)}`;
@@ -70,4 +69,5 @@ export const iconicGoalSchema = z.object({
   embeddable: z.boolean().default(true),
 });
 
+/** Validated form values for creating/editing an iconic goal. */
 export type IconicGoalValues = z.infer<typeof iconicGoalSchema>;

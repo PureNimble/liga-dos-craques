@@ -1,9 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/**
- * Textos do cromo da lista de jogos. `CreateGameForm`, `GameDetailPage` e o
- * resto da feature `games/` ainda não estão cobertos — ver nota de âmbito.
- */
 export const gamesTranslations = {
   'games.title': { pt: 'Jogos', en: 'Games' },
   'games.create': { pt: 'Criar jogo', en: 'Create game' },
@@ -30,7 +26,6 @@ export const gamesTranslations = {
     en: 'Set the date and format, and call up the group.',
   },
 
-  // Estados do jogo (badges/botões de transição) — ver gameStatus.ts.
   'games.status.draft': { pt: 'Rascunho', en: 'Draft' },
   'games.status.scheduled': { pt: 'Agendado', en: 'Scheduled' },
   'games.status.open': { pt: 'Inscrições abertas', en: 'Registrations open' },
@@ -48,7 +43,6 @@ export const gamesTranslations = {
   'games.transition.closed': { pt: 'Fechar (sem votação)', en: 'Close (no voting)' },
   'games.transition.cancelled': { pt: 'Cancelar jogo', en: 'Cancel game' },
 
-  // GameDetailPage
   'games.detail.live': { pt: 'Ao vivo', en: 'Live' },
   'games.detail.notFound': { pt: 'Jogo não encontrado.', en: 'Game not found.' },
   'games.detail.backToGames': { pt: '← Voltar aos jogos', en: '← Back to games' },
@@ -114,7 +108,6 @@ export const gamesTranslations = {
     en: "Couldn't update the status.",
   },
 
-  // PlayerRoster
   'games.roster.title': { pt: 'Jogadores', en: 'Players' },
   'games.roster.count': { pt: '{count} inscritos · {confirmed} conf.', en: '{count} joined · {confirmed} conf.' },
   'games.roster.subs': { pt: '{count} supl.', en: '{count} subs' },
@@ -141,4 +134,5 @@ export const gamesTranslations = {
   'games.roster.joinMe': { pt: 'Inscrever-me', en: 'Join' },
 } satisfies TranslationDict;
 
+/** Union of all translation keys defined for the `games` feature. */
 export type GamesTranslationKey = keyof typeof gamesTranslations;

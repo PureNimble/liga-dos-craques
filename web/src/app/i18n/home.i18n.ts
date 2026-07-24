@@ -1,6 +1,6 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da Home. */
+/** Translation strings for the Home screen. */
 export const homeTranslations = {
   'home.welcome': { pt: 'Bem-vindo de volta', en: 'Welcome back' },
   'home.fallbackName': { pt: 'jogador', en: 'player' },
@@ -28,4 +28,5 @@ export const homeTranslations = {
   'home.action.rankings.hint': { pt: 'Classificações da malta', en: "The group's standings" },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the Home screen. */
 export type HomeTranslationKey = keyof typeof homeTranslations;

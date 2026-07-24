@@ -1,7 +1,6 @@
 .overlay {
   position: fixed;
   inset: 0;
-  /* Acima de qualquer widget de terceiros (ex.: os controlos do Leaflet usam z-index: 1000). */
   z-index: 1200;
   display: flex;
   justify-content: center;
@@ -69,8 +68,6 @@
   }
 }
 
-/* Ao contrário de sm/md/lg (largura fixa), adapta-se à largura do conteúdo —
-   útil para dialogs cujo conteúdo (ex.: imagem + texto) já define o tamanho certo. */
 .auto {
   width: fit-content;
   max-width: min(92vw, 34rem);
@@ -92,7 +89,6 @@
 .gripDraggable:active {
   cursor: grabbing;
 }
-/* Alarga a área de toque sem alargar o traço visível nem invadir o header. */
 .gripDraggable::before {
   content: '';
   position: absolute;

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreateGameForm } from '../components/CreateGameForm';
 import s from './CreateGamePage.module.css';
 
+/** Screen for creating a new game. */
 export function CreateGamePage() {
   const navigate = useNavigate();
   return (

@@ -10,17 +10,14 @@
 .grid2 {
   display: grid;
   gap: var(--space-lg);
-  /* Emparelha pela largura do grid, não do viewport. 11rem = mínimo de um date. */
   grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
 }
-/* Sem a moldura do browser; fieldset/legend fica pela semântica do grupo. */
 .positions {
   margin: 0;
   border: 0;
   padding: 0;
-  min-width: 0; /* o fieldset é min-content por omissão e recusa encolher */
+  min-width: 0;
 }
-/* Mesmos valores do `.label` do Field. */
 .legend {
   padding: 0;
   margin-bottom: var(--space-xs);

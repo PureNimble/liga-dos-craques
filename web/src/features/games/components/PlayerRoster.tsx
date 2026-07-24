@@ -16,9 +16,9 @@ interface PlayerRosterProps {
   groupId: string;
   players: GamePlayerWithProfile[];
   maxPlayers: number;
-  canManage: boolean; // organizador/admin
+  canManage: boolean;
   currentUserId: string;
-  editable: boolean; // estado do jogo permite alterar plantel
+  editable: boolean;
 }
 
 const STATUS_KEY: Record<GamePlayerStatus, string> = {
@@ -35,6 +35,7 @@ const STATUS_TONE: Record<GamePlayerStatus, BadgeTone> = {
   no_show: 'red',
 };
 
+/** Manages a game's player list: invites, status changes, and self-registration. */
 export function PlayerRoster({
   gameId,
   groupId,
@@ -56,8 +57,6 @@ export function PlayerRoster({
   const confirmedCount = players.filter(
     (p) => p.status === 'confirmed' || p.status === 'played',
   ).length;
-  // maxPlayers = jogadores em campo (formato). Inscrições não têm limite:
-  // quem passar disso fica suplente.
   const subs = Math.max(0, players.length - maxPlayers);
 
   const availableProfiles = useMemo(() => {
@@ -122,7 +121,6 @@ export function PlayerRoster({
                 </div>
 
                 <div className={s.actions}>
-                  {/* Confirmar/recusar a própria presença */}
                   {editable && isSelf && gp.status !== 'confirmed' && (
                     <button
                       onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'confirmed' })}

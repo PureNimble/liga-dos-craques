@@ -13,11 +13,8 @@ import s from './AddPlaceModal.module.css';
 
 interface AddPlaceModalProps {
   onClose: () => void;
-  /** Distrito pré-selecionado (ex.: quando aberto a partir de um distrito já escolhido no mapa). */
   defaultDistrict?: string;
-  /** Nome pré-preenchido (ex.: o texto já escrito noutro formulário ao abrir este modal). */
   defaultName?: string;
-  /** Chamado com o campo criado, antes de fechar (ex.: para o auto-selecionar noutro formulário). */
   onCreated?: (place: Place) => void;
 }
 
@@ -35,11 +32,6 @@ interface NominatimResult {
   };
 }
 
-/**
- * O Nominatim não tem um campo fixo para "concelho" — consoante o tipo/escala
- * do local, o nome aparece em city/town/municipality/village. Tenta cada um,
- * por ordem, e aceita o primeiro que corresponda a um concelho real do distrito.
- */
 function matchConcelho(district: string, address: NominatimResult['address']): string | undefined {
   if (!address) return undefined;
   const validConcelhos = CONCELHOS_BY_DISTRICT[district] ?? [];
@@ -47,6 +39,7 @@ function matchConcelho(district: string, address: NominatimResult['address']): s
   return candidates.find((c): c is string => c !== undefined && validConcelhos.includes(c));
 }
 
+/** Modal to create a place, with optional address search via Nominatim. */
 export function AddPlaceModal({
   onClose,
   defaultDistrict,
@@ -73,8 +66,6 @@ export function AddPlaceModal({
   const selectedDistrict = form.watch('district');
   const concelhoOptions = CONCELHOS_BY_DISTRICT[selectedDistrict] ?? [];
 
-  // Sempre que o distrito muda, o concelho anterior pode já não pertencer a
-  // este — repõe para o primeiro concelho válido da nova lista.
   useEffect(() => {
     const current = form.getValues('concelho');
     if (!concelhoOptions.includes(current)) {

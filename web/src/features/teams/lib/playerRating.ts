@@ -1,10 +1,6 @@
 import type { PositionCategory } from '@/types/database';
 
-/**
- * Cálculo de rating de um jogador — módulo puro e extensível.
- * Os pesos estão centralizados para poderem ser afinados no futuro (ou até,
- * mais tarde, lidos de uma tabela de configuração) sem tocar no algoritmo.
- */
+/** Inputs used to compute a player's rating. */
 export interface RatingInput {
   games: number;
   wins: number;
@@ -13,13 +9,10 @@ export interface RatingInput {
   saves: number;
   mvps: number;
   category: PositionCategory | null;
-  /**
-   * Desvio médio de resultado face à força do adversário (Elo, ~[-0.5, 0.5]):
-   * bater equipas mais fortes sobe, perder para mais fracas desce. Ver v_player_stats.
-   */
   strengthDelta?: number | null;
 }
 
+/** Weights applied to each factor when computing a rating. */
 export interface RatingWeights {
   base: number;
   winRate: number;
@@ -44,10 +37,7 @@ export const DEFAULT_RATING_WEIGHTS: RatingWeights = {
   strengthDelta: 15,
 };
 
-/**
- * Rating baseado em desempenho por jogo (não recompensa só quem joga muito).
- * Jogadores sem jogos ficam no valor base (neutro), para não penalizar novatos.
- */
+/** Computes a player's rating from per-game performance; players with no games get the neutral base value. */
 export function computeRating(
   input: RatingInput,
   w: RatingWeights = DEFAULT_RATING_WEIGHTS,

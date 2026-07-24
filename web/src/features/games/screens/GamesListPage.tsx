@@ -28,6 +28,7 @@ import s from './GamesListPage.module.css';
 
 type Tab = 'upcoming' | 'past';
 
+/** Lists upcoming and past games, with quick game creation. */
 export function GamesListPage() {
   const { t } = useT();
   const { data: games, isLoading, isError } = useGames();

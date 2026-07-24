@@ -34,8 +34,6 @@ describe('Select', () => {
     fireEvent.click(screen.getByRole('combobox'));
     fireEvent.click(screen.getByRole('option', { name: 'Defesa' }));
 
-    // O valor lido dentro do próprio handler (como faz qualquer chamador real) —
-    // sem re-render do pai a atualizar a prop `value`, o React repõe o DOM depois.
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(received).toBe('def');
   });

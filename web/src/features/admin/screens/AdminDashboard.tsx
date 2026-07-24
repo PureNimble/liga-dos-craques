@@ -17,6 +17,7 @@ import { CategoryBar } from '../components/charts/CategoryBar';
 import { SERIES } from '../lib/chartTheme';
 import s from './AdminDashboard.module.css';
 
+/** Admin dashboard index: hero metrics, activity trend, and games breakdown. */
 export function AdminDashboard() {
   const { t } = useT();
   const { data: metrics, isLoading } = useAdminMetrics();

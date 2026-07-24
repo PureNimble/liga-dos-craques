@@ -8,6 +8,7 @@ interface PillTabsProps<T extends string | number> {
   className?: string;
 }
 
+/** Horizontal scrollable row of pill-shaped tabs. */
 export function PillTabs<T extends string | number>({
   value,
   onChange,

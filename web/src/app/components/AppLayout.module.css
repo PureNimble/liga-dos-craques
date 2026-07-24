@@ -1,6 +1,3 @@
-/* Moldura da app presa ao viewport: fora do fluxo, o documento nunca ganha
-   barra própria — o scroll vive sempre num contentor interior (`main` ou, no
-   admin, a coluna de conteúdo). */
 .app {
   position: fixed;
   inset: 0;
@@ -21,8 +18,6 @@
   flex-direction: column;
   min-height: 0;
 }
-/* Contentor de scroll a toda a largura. A barra é escondida (desliza na mesma);
-   sem barra visível não há goteira a reservar nem salto ao abrir um modal. */
 .main {
   flex: 1;
   min-height: 0;
@@ -33,8 +28,6 @@
 .main::-webkit-scrollbar {
   display: none;
 }
-/* Conteúdo a toda a largura da coluna (a rail de grupos já limita a largura
-   à esquerda) — só o gutter cresce no desktop, sem cap central. */
 .container {
   padding-inline: var(--space-lg);
   padding-bottom: var(--space-2xl);
@@ -49,9 +42,6 @@
     padding-inline: var(--space-2xl);
   }
 }
-/* Vistas de altura fixa (admin): o container preenche o `main` e vira coluna
-   flex, para o conteúdo lá dentro ter a sua própria zona de scroll — o ecrã
-   nunca desliza, só a coluna de conteúdo (daí o `main` não fazer scroll). */
 .mainFill {
   overflow: hidden;
 }
@@ -67,7 +57,6 @@
     padding-bottom: var(--space-xl);
   }
 }
-/* Modal aberto: trava o scroll do conteúdo (o scroll vive aqui, não no body). */
 :global(html.modal-open) .main {
   overflow: hidden;
 }

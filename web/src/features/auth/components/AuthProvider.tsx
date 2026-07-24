@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState, type ReactNode } from 'rea
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabase';
 
+/** Shape of the authentication context value. */
 export interface AuthContextValue {
   session: Session | null;
   user: User | null;
@@ -9,21 +10,21 @@ export interface AuthContextValue {
   signOut: () => Promise<void>;
 }
 
+/** React context carrying the current auth session. */
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+/** Provides the Supabase auth session and sign-out to the app. */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Sessão inicial (a partir do storage local).
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoading(false);
     });
 
-    // Reage a login/logout/refresh/recuperação.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, newSession) => {

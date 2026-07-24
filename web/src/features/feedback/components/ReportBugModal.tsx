@@ -5,7 +5,7 @@ import { useToast } from '@/shared/components/toast/useToast';
 import { useSubmitBugReport } from '../hooks/feedbackHooks';
 import s from './ReportBugModal.module.css';
 
-/** Modal para qualquer jogador reportar um problema. */
+/** Modal for any player to report a bug or issue. */
 export function ReportBugModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const submit = useSubmitBugReport();
   const toast = useToast();

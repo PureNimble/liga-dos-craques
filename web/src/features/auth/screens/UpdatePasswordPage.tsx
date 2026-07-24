@@ -9,11 +9,7 @@ import { AuthLayout } from '../components/AuthLayout';
 import { updatePasswordSchema, type UpdatePasswordValues } from '../schemas/auth.schemas';
 import s from '../auth.module.css';
 
-/**
- * Define uma nova password. Serve dois casos:
- *   - fluxo de recuperação (link do email cria uma sessão de recovery);
- *   - alteração de password por um utilizador já autenticado.
- */
+/** Sets a new password, for both the recovery flow and an already-authenticated user. */
 export function UpdatePasswordPage() {
   const navigate = useNavigate();
   const { t } = useT();

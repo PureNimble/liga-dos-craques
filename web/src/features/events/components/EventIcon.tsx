@@ -22,6 +22,7 @@ const ICONS: Record<string, IconCmp> = {
   substitution: SwapIcon,
 };
 
+/** Renders the icon for a given event type code, falling back to a shield icon. */
 export function EventIcon({
   code,
   width = 16,

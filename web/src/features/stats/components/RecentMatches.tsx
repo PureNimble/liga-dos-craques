@@ -14,15 +14,14 @@ const RESULT_CLASS: Record<MatchResult, string> = {
   D: s.resultLoss,
 };
 
-/** Lista dos últimos jogos com resultado e avaliação (estilo SofaScore). */
+/** List of a player's most recent games with result and rating (SofaScore-style). */
 export function RecentMatches({ playerId, games }: { playerId: string; games: number }) {
   const { data } = useRecentGames(playerId, 5);
-  // Bloqueado (<5 jogos) → o estado bloqueado com mock vive em PlayerCharts.
   if (games < MIN_GAMES_FOR_STATS || !data || data.length === 0) return null;
   return <RecentMatchesCard data={data} />;
 }
 
-/** Cartão apresentacional — reutilizado pelo estado bloqueado (dados de mentira). */
+/** Presentational card for a list of recent games; also reused by the locked (mock data) state. */
 export function RecentMatchesCard({ data }: { data: RecentGame[] }) {
   return (
     <Card>

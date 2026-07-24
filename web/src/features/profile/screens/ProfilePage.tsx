@@ -21,6 +21,7 @@ import {
 import { useT } from '@/shared/i18n/useT';
 import s from './profileLayout.module.css';
 
+/** The current user's own profile page: card, stats, XP, achievements and edit action. */
 export function ProfilePage() {
   const { t } = useT();
   const { data: profile, isLoading, isError } = useProfile();
@@ -53,7 +54,6 @@ export function ProfilePage() {
 
   return (
     <div className={s.page}>
-      {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
       <div className={s.hero}>
         {stats && (
           <div className={s.cardCol}>

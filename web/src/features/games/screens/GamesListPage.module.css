@@ -9,16 +9,11 @@
   gap: var(--space-md);
 }
 
-/* `grid-auto-rows: 1fr` iguala TODAS as linhas à mais alta, sem min-height à
-   mão: os jogos sem resultado (cancelados) não têm a linha do `.score` e ficavam
-   um bocado mais baixos do que os outros. */
 .list {
   display: grid;
   grid-auto-rows: 1fr;
   gap: var(--space-md);
 }
-/* A linha do grid é o <li>: o link e o cartão têm de a preencher, senão o cartão
-   mantinha a altura do conteúdo e a linha é que crescia. */
 .item {
   display: flex;
 }
@@ -86,9 +81,6 @@
 .scoreDash {
   color: var(--text-faint);
 }
-/* Estica à altura do cartão e afasta os extremos: o badge encostava ao chevron
-   (só 0.5rem entre eles). Como agora os cartões têm todos a mesma altura, isto
-   também alinha os badges entre si e os chevrons entre si, de cartão para cartão. */
 .side {
   display: flex;
   flex-shrink: 0;

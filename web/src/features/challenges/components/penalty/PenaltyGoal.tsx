@@ -3,15 +3,10 @@ import { ALL_ZONES, ZONE_COUNT, ZONE_LABELS, zoneFilled } from '../../lib/penalt
 import s from './PenaltyGoal.module.css';
 
 interface PenaltyGoalProps {
-  /** Zonas já preenchidas (bitmask 0..63) do jogador em foco. */
   filled: number;
-  /** Zona-alvo destacada (pen_target). */
   target?: number | null;
-  /** Zona escolhida pelo organizador (pen_zones). */
   selected?: number | null;
-  /** Se definido, as zonas vazias ficam selecionáveis (pen_zones). */
   onSelect?: (zone: number) => void;
-  /** Se definido, mostra um botão de saltar animação no canto da relva (pen_target). */
   onSkip?: () => void;
 }
 
@@ -19,7 +14,6 @@ const FAN_ROWS = 12;
 const FANS_PER_ROW = 80;
 const FAN_TONES = [s.fanA, s.fanB, s.fanC, s.fanD];
 
-/** Bancadas com adeptos que oscilam (movimento escalonado, como uma multidão). */
 function Stands() {
   return (
     <div className={s.stands} aria-hidden>
@@ -38,7 +32,7 @@ function Stands() {
   );
 }
 
-/** Baliza numa cena de estádio: bancadas, painéis publicitários, rede e relva. */
+/** Goal scene inside a stadium: stands, billboards, net and grass, with zone markers. */
 export function PenaltyGoal({ filled, target, selected, onSelect, onSkip }: PenaltyGoalProps) {
   return (
     <div className={s.scene}>

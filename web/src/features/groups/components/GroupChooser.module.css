@@ -2,17 +2,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  /* O Modal onde isto entra tem padding-top:0 no corpo (overflow-y:auto) — sem
-     esta folga, o translateY(-1px) do hover nos tiles fica cortado no topo e a
-     borda verde "desaparece". */
   padding-top: var(--space-2xs);
   gap: var(--space-lg);
   animation: fadeUp 320ms ease both;
 }
 
-/* ---------------------------------------------------------------- */
-/* Escolha: criar ou entrar num grupo.                               */
-/* ---------------------------------------------------------------- */
 .choices {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -70,25 +64,18 @@
   color: var(--text-subtle);
 }
 
-/* A 3ª opção (grupos públicos) ocupa a largura toda, ícone e texto lado a lado. */
 .tileWide {
   grid-column: 1 / -1;
   flex-direction: row;
   align-items: center;
 }
 
-/* ---------------------------------------------------------------- */
-/* Visibilidade ao criar (Privado/Público).                          */
-/* ---------------------------------------------------------------- */
 .visibilityHint {
   margin-top: var(--space-2xs);
   font-size: var(--font-size-xs);
   color: var(--text-faint);
 }
 
-/* ---------------------------------------------------------------- */
-/* Grupos públicos — lista para descobrir e entrar.                  */
-/* ---------------------------------------------------------------- */
 .publicList {
   display: flex;
   flex-direction: column;
@@ -118,9 +105,6 @@
   color: var(--text-faint);
 }
 
-/* ---------------------------------------------------------------- */
-/* Formulários (criar / entrar) — mesma moldura das páginas de auth. */
-/* ---------------------------------------------------------------- */
 .formCard {
   display: flex;
   flex-direction: column;

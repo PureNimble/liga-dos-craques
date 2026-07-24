@@ -1,6 +1,3 @@
-/* Desktop: rótulo à esquerda, ação à direita, linha a toda a largura.
-   Mobile (≤640px): vira uma linha de lista compacta — o botão desaparece e
-   a linha toda fica clicável, com seta à direita (padrão nativo). */
 .row {
   position: relative;
   display: grid;
@@ -45,15 +42,11 @@
     display: none;
   }
 }
-/* Controlo do desktop (ex.: SegmentedTabs) que dá lugar, no mobile, a um
-   resumo + seta que abre um subecrã — ver .mobileTap/.mobileValue. */
 @media (max-width: 640px) {
   .controlDesktopOnly {
     display: none;
   }
 }
-/* Todos os botões de ação com a mesma largura e altura fixas, seja qual for
-   o texto. */
 .actionButton {
   width: 13rem;
   height: 2.75rem;
@@ -62,8 +55,6 @@
   text-overflow: ellipsis;
 }
 
-/* Botão transparente esticado sobre a linha toda — só visível no mobile,
-   onde substitui o botão do desktop por uma linha de lista tocável. */
 .mobileTap {
   display: none;
 }
@@ -77,8 +68,6 @@
     gap: var(--space-sm);
   }
 }
-/* Força a mesma linha clicável com seta também acima dos 640px (ver prop
-   `arrowStyle`), substituindo o botão do desktop. */
 .alwaysTap {
   display: flex;
   position: absolute;

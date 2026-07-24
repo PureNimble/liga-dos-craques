@@ -33,6 +33,7 @@ const byOrder = (a: SessionPlayerWithProfile, b: SessionPlayerWithProfile) =>
 const penaltyMode = (session: ChallengeSession): PenaltyMode =>
   session.mode === 'crossbar' ? 'pen_goals' : session.mode;
 
+/** Live Penalties session screen: turn-order reveal, active gameplay, and the finished summary. */
 export function PenaltySessionPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
@@ -101,9 +102,6 @@ function OrderRevealGate({ session, onDone }: { session: ChallengeSession; onDon
   return <OrderReveal players={ordered} onDone={onDone} />;
 }
 
-// -----------------------------------------------------------------------------
-// ACTIVE — baliza (exceto pen_goals) + prompt + board.
-// -----------------------------------------------------------------------------
 function ActiveView({
   session,
   onFinished,
@@ -126,15 +124,12 @@ function ActiveView({
     : (ordered.find((p) => p.turn_order === session.current_turn_index) ?? ordered[0]);
 
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
-  // Zera a escolha quando muda o rematador.
   useEffect(() => setSelectedZone(null), [current?.player_id]);
 
   const showGoal = info.usesGoal && !isSuddenDeath;
   const targetZone = mode === 'pen_target' ? (current?.target ?? null) : null;
   const needsZone = info.picksZone && !isSuddenDeath;
 
-  // Animação do sorteio da zona (pen_target): joga uma vez por vez de cada jogador.
-  // A mesma PenaltyGoal fica montada — só muda a prop `target` — para não "piscar".
   const revealKey = current ? `${current.player_id}:${session.round}` : '';
   const { displayZone, spinning, skip } = useZoneSpin(
     revealKey,
@@ -238,9 +233,6 @@ function ActiveView({
   );
 }
 
-// -----------------------------------------------------------------------------
-// Board com o estado de cada jogador (golos ou zonas preenchidas).
-// -----------------------------------------------------------------------------
 function PlayerBoard({
   players,
   mode,

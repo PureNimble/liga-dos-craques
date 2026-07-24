@@ -5,7 +5,6 @@ import { I18nProvider } from '@/shared/i18n/I18nProvider';
 import { i18nRegistry } from '@/app/lib/i18nRegistry';
 import { HomePage } from './HomePage';
 
-// Isola a Home das suas dependências de dados/rede.
 vi.mock('@/features/auth/hooks/useAuth', () => ({
   useAuth: () => ({ user: { email: 'vasco@example.com' }, session: {}, loading: false }),
 }));

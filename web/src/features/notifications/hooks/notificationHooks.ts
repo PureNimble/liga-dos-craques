@@ -2,9 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import type { Database } from '@/types/database';
 
+/** Row type for `notification`. */
 export type Notification = Database['public']['Tables']['notification']['Row'];
 
-/** Avisos do próprio jogador, do mais recente para o mais antigo. */
+/** Lists the current player's notifications, newest first. */
 export function useNotifications(userId: string | undefined) {
   return useQuery({
     queryKey: ['notifications', userId],
@@ -21,7 +22,7 @@ export function useNotifications(userId: string | undefined) {
   });
 }
 
-/** Contador de avisos por ler (para o indicador no menu). */
+/** Counts unread notifications, for the nav drawer indicator. */
 export function useUnreadNotificationCount(userId: string | undefined) {
   return useQuery({
     queryKey: ['notifications_unread', userId],
@@ -38,7 +39,7 @@ export function useUnreadNotificationCount(userId: string | undefined) {
   });
 }
 
-/** Marca avisos como lidos (todos, ou só os indicados). */
+/** Marks notifications as read — all of them, or only the given ids. */
 export function useMarkNotificationsRead() {
   const queryClient = useQueryClient();
   return useMutation({

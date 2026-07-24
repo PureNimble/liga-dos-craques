@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import s from './Badge.module.css';
 
+/** Color tone for a `Badge`. */
 export type BadgeTone = 'gray' | 'sky' | 'green' | 'indigo' | 'amber' | 'purple' | 'red';
 
 const toneClass: Record<BadgeTone, string> = {
@@ -13,6 +14,7 @@ const toneClass: Record<BadgeTone, string> = {
   red: s.red,
 };
 
+/** Small pill-shaped label, optionally tinted with a `BadgeTone`. */
 export function Badge({
   children,
   tone,

@@ -11,6 +11,7 @@ import {
 import { AXIS_TICK, GRID_STROKE, LEGEND_STYLE, TOOLTIP_LABEL_STYLE, TOOLTIP_STYLE } from '../../lib/chartTheme';
 import emptyStyles from './chartEmpty.module.css';
 
+/** One series (key/name/color) rendered as a smoothed area line. */
 export interface TrendSeries {
   key: string;
   name: string;
@@ -21,13 +22,11 @@ interface Props {
   data: Array<Record<string, number | string>>;
   series: TrendSeries[];
   height?: number;
-  /** Uma série só dispensa legenda — o título já a nomeia. */
   legend?: boolean;
-  /** Mensagem quando não há dados — nunca deixar o cartão vazio. */
   empty?: string;
 }
 
-/** Área empilhada suave para séries mensais (dataviz: multi-série categórica). */
+/** Smoothed multi-series area chart for monthly trend data. */
 export function TrendAreaChart({
   data,
   series,

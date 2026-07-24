@@ -2,7 +2,6 @@
   margin-inline: auto;
   display: flex;
   width: 100%;
-  /* `max-width` vem de inline style (Pitch.tsx) — escala com o nº de titulares. */
   flex-direction: column;
   gap: var(--space-sm);
   transition: max-width var(--transition);
@@ -22,7 +21,6 @@
   background-image: linear-gradient(to bottom, var(--accent-deep-surface), var(--gray-850));
 }
 
-/* Marcações do campo inteiro, no mesmo traço fino da escolha de posições. */
 .lines {
   pointer-events: none;
   position: absolute;

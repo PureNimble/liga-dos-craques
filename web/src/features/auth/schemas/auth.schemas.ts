@@ -10,6 +10,7 @@ export const loginSchema = z.object({
   identifier: z.string().trim().min(1, 'Introduz o email ou nome de utilizador'),
   password: z.string().min(1, 'Introduz a password'),
 });
+/** Validated values for the login form. */
 export type LoginValues = z.infer<typeof loginSchema>;
 
 export const signupSchema = z.object({
@@ -22,11 +23,13 @@ export const signupSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+/** Validated values for the signup form. */
 export type SignupValues = z.infer<typeof signupSchema>;
 
 export const recoverSchema = z.object({
   email: emailSchema,
 });
+/** Validated values for the password-recovery form. */
 export type RecoverValues = z.infer<typeof recoverSchema>;
 
 export const updatePasswordSchema = z
@@ -38,4 +41,5 @@ export const updatePasswordSchema = z
     message: 'As passwords não coincidem',
     path: ['confirm'],
   });
+/** Validated values for the update-password form. */
 export type UpdatePasswordValues = z.infer<typeof updatePasswordSchema>;

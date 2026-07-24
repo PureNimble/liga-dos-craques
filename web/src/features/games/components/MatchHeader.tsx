@@ -11,12 +11,12 @@ interface MatchHeaderProps {
   clock: MatchClock;
 }
 
-/** "Crest" de cada equipa (A verde, B azul) — o nome vem de `teams.team`. */
 const TEAMS = [
   { key: 'A' as const, team: s.teamA, crest: s.crestA },
   { key: 'B' as const, team: s.teamB, crest: s.crestB },
 ];
 
+/** Header for a game's detail screen: status, live score, and meta info. */
 export function MatchHeader({ game, clock }: MatchHeaderProps) {
   const { t } = useT();
   const isLive = game.status === 'in_progress';
@@ -27,7 +27,6 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
 
   return (
     <div className={s.header}>
-      {/* brilho de relvado */}
       <div aria-hidden className={s.glow} />
 
       <div className={s.top}>
@@ -42,7 +41,6 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
         {isLive && <span className={s.clock}>{clock.label}</span>}
       </div>
 
-      {/* Placar */}
       {showScore ? (
         <div className={s.scoreboard}>
           {TEAMS.map((team) => (
@@ -63,7 +61,6 @@ export function MatchHeader({ game, clock }: MatchHeaderProps) {
         </div>
       )}
 
-      {/* Meta */}
       <div className={s.meta}>
         <span className={s.metaItem}>
           <CalendarIcon width={14} height={14} />

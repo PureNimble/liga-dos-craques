@@ -5,15 +5,13 @@ import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { PositionCategory, Team } from '@/types/database';
 import { computeRating } from '../lib/playerRating';
 
+/** A player's computed rating and position category. */
 export interface PlayerRating {
   rating: number;
   category: PositionCategory | null;
 }
 
-/**
- * Ratings dos jogadores indicados, derivados das estatísticas + posição.
- * Devolvido como Map id → { rating, category }.
- */
+/** Ratings for the given players, derived from their stats and position, as a Map of id to `{ rating, category }`. */
 export function usePlayerRatings(playerIds: string[]) {
   const groupId = useActiveGroupId();
   const key = [...playerIds].sort().join(',');
@@ -63,7 +61,7 @@ export function usePlayerRatings(playerIds: string[]) {
   });
 }
 
-/** Persiste a atribuição de equipas A/B e passa o jogo a "teams_generated". */
+/** Persists the A/B team assignment and moves the game to "teams_generated". */
 export function useAssignTeams(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -98,7 +96,7 @@ export function useAssignTeams(gameId: string) {
   });
 }
 
-/** Persiste a posição de um jogador no campo (pos_x/pos_y em %). */
+/** Persists a player's pitch position (`pos_x`/`pos_y` as percentages). */
 export function useSetPlayerPosition(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -114,7 +112,7 @@ export function useSetPlayerPosition(gameId: string) {
   });
 }
 
-/** Auto-preenche as posições no campo (uma escrita por jogador). */
+/** Auto-fills pitch positions (one write per player). */
 export function useAutoFillPositions(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -136,10 +134,7 @@ export function useAutoFillPositions(gameId: string) {
   });
 }
 
-/**
- * Define o "onze" inicial: titulares (on_field=true, com posição) e suplentes
- * (on_field=false). Uma escrita por jogador.
- */
+/** Sets the starting lineup: starters (`on_field=true`, with position) and bench (`on_field=false`), one write per player. */
 export function useAssignLineup(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -168,10 +163,7 @@ export function useAssignLineup(gameId: string) {
   });
 }
 
-/**
- * Substituição: o suplente (in) entra na posição do titular (out); o titular
- * vai para o banco. Regista o evento de substituição.
- */
+/** Substitution: the bench player (in) takes the starter's (out) position and pitch spot, and logs the substitution event. */
 export function useSubstitute(gameId: string) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -205,7 +197,6 @@ export function useSubstitute(gameId: string) {
         .eq('player_id', input.outId);
       if (benchErr) throw benchErr;
 
-      // Evento de substituição (player_id = quem entra; meta.out = quem sai).
       const { data: type } = await supabase
         .from('event_type')
         .select('id')
@@ -231,7 +222,7 @@ export function useSubstitute(gameId: string) {
   });
 }
 
-/** Move manualmente um jogador para uma equipa (ou desafeta com null). */
+/** Manually moves a player to a team (or unassigns with null). */
 export function useSetPlayerTeam(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({

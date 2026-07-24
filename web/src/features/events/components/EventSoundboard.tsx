@@ -24,6 +24,7 @@ const opponent = (t: Team | null): Team | null => (t === 'A' ? 'B' : t === 'B' ?
 
 type Sheet = { kind: 'goal' } | { kind: 'simple'; type: EventType } | null;
 
+/** Quick-action panel to log goals, saves, and missed penalties during a live game. */
 export function EventSoundboard({ gameId, players, currentMinute }: EventSoundboardProps) {
   const { data: eventTypes } = useEventTypes();
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -103,9 +104,6 @@ export function EventSoundboard({ gameId, players, currentMinute }: EventSoundbo
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Grelha de jogadores (agrupada por equipa)                                   */
-/* -------------------------------------------------------------------------- */
 function PlayerGrid({
   players,
   selectedId,
@@ -165,9 +163,6 @@ function PlayerGrid({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Modal de golo: variante + marcador + assistência opcional                   */
-/* -------------------------------------------------------------------------- */
 const VARIANTS: { value: GoalVariant; label: string }[] = [
   { value: 'normal', label: 'Golo' },
   { value: 'penalty', label: 'Penálti' },
@@ -198,9 +193,7 @@ function GoalModal({
   const [error, setError] = useState<string | null>(null);
 
   const isOwn = variant === 'own_goal';
-  // Assistência só existe em golo normal (não em penálti, livre ou autogolo).
   const allowsAssist = variant === 'normal';
-  // Tags de técnica só fazem sentido em golo de bola corrida (normal ou livre).
   const allowsTags = variant === 'normal' || variant === 'freekick';
 
   function toggleTag(id: number) {
@@ -330,9 +323,6 @@ function GoalModal({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Modal simples: defesa / penálti falhado — só escolher quem (+ tags)         */
-/* -------------------------------------------------------------------------- */
 function SimpleEventModal({
   gameId,
   players,

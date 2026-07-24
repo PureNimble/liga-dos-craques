@@ -1,11 +1,11 @@
 import { SERIES } from '../lib/chartTheme';
 import s from './RankedBars.module.css';
 
+/** A single ranked row: label, count, and an optional custom right-side caption. */
 export interface RankedItem {
   id: string;
   label: string;
   count: number;
-  /** Texto à direita em vez da quota calculada (ex.: '% da base'). */
   caption?: string;
 }
 
@@ -13,11 +13,10 @@ interface Props {
   items: RankedItem[];
   empty: string;
   color?: string;
-  /** Mostra a quota de cada linha no total da lista. */
   showShare?: boolean;
 }
 
-/** Barras horizontais ordenadas (magnitude por categoria), feitas à mão em CSS. */
+/** Hand-built CSS horizontal bar list, ordered by magnitude per category. */
 export function RankedBars({ items, empty, color = SERIES.goals, showShare = true }: Props) {
   const max = items.reduce((m, i) => Math.max(m, i.count), 0) || 1;
   const total = items.reduce((sum, i) => sum + i.count, 0);

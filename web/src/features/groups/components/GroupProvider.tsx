@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState, type ReactNode } from 'rea
 import type { FullProfile } from '@/features/profile/hooks/profileHooks';
 import { useSetActiveGroup, type MyGroupRow } from '../hooks/groupHooks';
 
+/** Shape of the active-group context value. */
 export interface GroupContextValue {
   groupId: string;
   activeGroup: MyGroupRow;
@@ -10,13 +11,11 @@ export interface GroupContextValue {
   switching: boolean;
 }
 
+/** React context carrying the active group and the player's group list. */
 // eslint-disable-next-line react-refresh/only-export-components
 export const GroupContext = createContext<GroupContextValue | undefined>(undefined);
 
-/**
- * Só é montado com `myGroups` não vazio (AppLayout mostra o onboarding
- * enquanto for []) — por isso o contexto expõe sempre um `groupId` garantido.
- */
+/** Provides the active group; only mounted once `myGroups` is non-empty. */
 export function GroupProvider({
   profile,
   myGroups,
@@ -32,8 +31,6 @@ export function GroupProvider({
   const setActiveGroup = useSetActiveGroup();
   const { mutate: persistActiveGroup } = setActiveGroup;
 
-  // Se o grupo guardado deixou de ser válido (saiu do grupo / foi removido),
-  // cai para o primeiro disponível e corrige o valor persistido.
   useEffect(() => {
     if (myGroups.length > 0 && !myGroups.some((g) => g.group_id === localGroupId)) {
       const fallback = myGroups[0].group_id;
@@ -58,8 +55,6 @@ export function GroupProvider({
     };
   }, [activeGroup, myGroups, persistActiveGroup, setActiveGroup.isPending]);
 
-  // Só acontece por uma fração de segundo, entre myGroups passar a [] (saiu do
-  // último grupo) e o AppLayout voltar a suspender para mostrar o onboarding.
   if (!value) return null;
 
   return <GroupContext.Provider value={value}>{children}</GroupContext.Provider>;

@@ -5,7 +5,7 @@ import { useProfile } from '@/features/profile/hooks/profileHooks';
 import { AdminSidebar } from '../components/AdminSidebar';
 import s from './AdminLayout.module.css';
 
-/** Dashboard de admin: gate por função + barra lateral persistente + conteúdo. */
+/** Admin dashboard shell: role gate + persistent sidebar + routed content. */
 export function AdminLayout() {
   const { data: profile, isLoading } = useProfile();
 

@@ -17,7 +17,6 @@ describe('balanceTeams', () => {
   it('minimiza a diferença de rating entre equipas', () => {
     const players = [p('1', 100), p('2', 90), p('3', 80), p('4', 70)];
     const { ratingA, ratingB } = balanceTeams(players);
-    // Melhor divisão: {100,70} vs {90,80} → diferença 0.
     expect(Math.abs(ratingA - ratingB)).toBeLessThanOrEqual(10);
   });
 

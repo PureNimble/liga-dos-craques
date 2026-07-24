@@ -9,7 +9,6 @@ interface ConfirmOptions {
   message?: ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
-  /** Realça a acção de confirmar como destrutiva (vermelho). */
   danger?: boolean;
 }
 
@@ -17,11 +16,7 @@ type ConfirmFn = (opts: ConfirmOptions) => Promise<boolean>;
 
 const ConfirmContext = createContext<ConfirmFn | null>(null);
 
-/**
- * Hook para pedir confirmação com um modal (substitui window.confirm):
- *   const confirm = useConfirm();
- *   if (await confirm({ title: '…', danger: true })) { … }
- */
+/** Requests confirmation via a modal dialog; resolves to true/false. Replaces `window.confirm`. */
 // eslint-disable-next-line react-refresh/only-export-components
 export function useConfirm(): ConfirmFn {
   const ctx = useContext(ConfirmContext);
@@ -33,6 +28,7 @@ interface State extends ConfirmOptions {
   open: boolean;
 }
 
+/** Provides `useConfirm` app-wide and renders the shared confirmation modal. */
 export function ConfirmProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>({ open: false, title: '' });
   const resolver = useRef<(v: boolean) => void>();

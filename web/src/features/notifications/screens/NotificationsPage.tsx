@@ -15,7 +15,6 @@ const KIND_ICON: Record<string, string> = {
   game_rsvp: '✅',
 };
 
-/** O jogo referido no aviso, quando existe — o aviso leva lá. */
 function gameIdOf(item: Notification): string | null {
   const data = item.data as { game_id?: unknown } | null;
   return typeof data?.game_id === 'string' ? data.game_id : null;
@@ -50,7 +49,7 @@ function NotificationRow({ item }: { item: Notification }) {
   );
 }
 
-/** Caixa de avisos do jogador (conquistas removidas, jogos corrigidos, …). */
+/** Player's notification inbox. */
 export function NotificationsPage() {
   const { data: profile } = useProfile();
   const { data: notifications, isLoading } = useNotifications(profile?.id);
@@ -59,7 +58,6 @@ export function NotificationsPage() {
 
   const unread = (notifications ?? []).filter((n) => !n.read_at).length;
 
-  // Ao abrir a caixa dão-se por lidos — o que interessa guardar é o aviso, não o badge.
   useEffect(() => {
     if (unread > 0 && !markRead.isPending) markRead.mutate(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -16,11 +16,9 @@ import { Loading } from '@/shared/components/ui';
 import s from './AppLayout.module.css';
 
 function AppShell() {
-  // Fetch único do perfil, partilhado por Navbar e páginas via outlet context.
   const { data: profile } = useProfileSuspense();
   const { data: myGroups } = useMyGroupsSuspense();
 
-  // Sem grupo → nada no resto da app faz sentido; toma conta do ecrã inteiro.
   if (myGroups.length === 0) {
     return <GroupOnboardingPage />;
   }
@@ -36,16 +34,12 @@ function AppShellContent({ profile }: { profile: FullProfile }) {
   const { groupId } = useActiveGroup();
   const { data: consent } = useAnalyticsConsent(profile.id);
   usePageTracking(profile.id, consent === 'granted');
-  // Vistas de altura fixa (admin, mapa de campos): barra lateral/painel imóvel
-  // + conteúdo com scroll próprio — o container preenche o `main` em vez de
-  // crescer com o conteúdo.
   const pathname = useLocation().pathname;
   const isFixedHeight = pathname.startsWith('/admin') || pathname.startsWith('/places');
 
   return (
     <OnlinePresenceProvider userId={profile.id}>
       <div className={s.shell}>
-        {/* Coluna de grupos (tablet/desktop) — no telemóvel fica escondida, ver GroupRail.module.css. */}
         <GroupRail />
 
         <div className={s.column}>
@@ -54,8 +48,6 @@ function AppShellContent({ profile }: { profile: FullProfile }) {
           <main className={`${s.main}${isFixedHeight ? ` ${s.mainFill}` : ''}`}>
             <div className={`${s.container}${isFixedHeight ? ` ${s.containerFill}` : ''}`}>
               <Suspense fallback={<Loading />}>
-                {/* key={groupId}: ao trocar de grupo, remonta a página a partir do zero
-                    (evita estado local "à mistura" de dados do grupo anterior). */}
                 <Outlet key={groupId} context={{ profile }} />
               </Suspense>
             </div>
@@ -68,6 +60,7 @@ function AppShellContent({ profile }: { profile: FullProfile }) {
   );
 }
 
+/** Authenticated app shell: group rail, navbar, routed content and consent banner. */
 export function AppLayout() {
   return (
     <div className={s.app}>

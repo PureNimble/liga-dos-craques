@@ -26,7 +26,7 @@ import {
 } from '../../lib/penalty/penaltyModes';
 import cb from '../crossbar/CrossbarSessionPage.module.css';
 
-/** Setup client-side: escolhe o modo (e a dificuldade), os jogadores e as rondas. */
+/** Client-side Penalties setup: pick the mode (and difficulty), players and rounds. */
 export function PenaltySetupPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();

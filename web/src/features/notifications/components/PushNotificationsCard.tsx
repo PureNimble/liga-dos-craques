@@ -14,7 +14,7 @@ const isStandalone =
 
 const isIos = typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-/** Ativa/desativa notificações push neste dispositivo (Web Push, sempre reversível). */
+/** Toggles Web Push notifications for the current device. */
 export function PushNotificationsCard({ userId }: Props) {
   const { data: enabled, isError } = usePushSubscriptionStatus();
   const enablePush = useEnablePush(userId);

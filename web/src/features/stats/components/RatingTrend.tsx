@@ -2,12 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import type { RatingPoint } from '../hooks/statsHooks';
 import s from './RatingTrend.module.css';
 
-/**
- * Evolução das avaliações (0–10) por jogo — série única (change-over-time):
- * área + linha 2px, linha de referência aos 6.0, pontos, rótulo do último e
- * tooltip no hover. Largura medida para render nítido (sem distorção de escala).
- * As cores vivem em RatingTrend.module.css (tokens `--chart-*`).
- */
+/** Rating (0-10) trend chart across games: area + line, 6.0 reference line, points, last-value label, and hover tooltip. */
 export function RatingTrend({ points }: { points: RatingPoint[] }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(0);
@@ -50,14 +45,9 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
 
   const showRef = lo <= 6 && hi >= 6;
   const gridVals = [lo, (lo + hi) / 2, hi];
-  // O meio pode ser fraccionário (ex.: 7.5) — arredondá-lo no rótulo punha um
-  // "8" numa linha desenhada aos 7.5. Só mostra decimal quando existe.
   const fmtGrid = (v: number) => (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(1));
 
-  // Rótulos do eixo x: quantos CABEM na largura medida (não quantos pontos há).
-  // Dois jogos no mesmo dia repetem a data — de propósito: cada rótulo pertence
-  // a um ponto, e escondê-lo faria parecer que faltavam dados.
-  const X_LABEL_W = 34; // "23/07" a 9px + folga
+  const X_LABEL_W = 34;
   const xLabels: number[] = [];
   if (n > 0 && innerW > 0) {
     const maxLabels = Math.max(2, Math.floor(innerW / X_LABEL_W));
@@ -102,7 +92,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             </linearGradient>
           </defs>
 
-          {/* Grelha recessiva */}
           {gridVals.map((v, i) => (
             <g key={i}>
               <line
@@ -119,7 +108,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             </g>
           ))}
 
-          {/* Referência 6.0 */}
           {showRef && (
             <line
               className={s.ref}
@@ -143,7 +131,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             />
           )}
 
-          {/* Crosshair */}
           {active && (
             <line
               className={s.crosshair}
@@ -155,7 +142,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             />
           )}
 
-          {/* Pontos */}
           {points.map((p, i) => {
             const isLast = i === n - 1;
             const isHover = hover === i;
@@ -172,7 +158,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             );
           })}
 
-          {/* Rótulo do último valor */}
           {n > 0 && hover == null && (
             <text
               className={s.lastLabel}
@@ -186,7 +171,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
             </text>
           )}
 
-          {/* Datas no eixo x (só as que cabem; extremos ancorados para não cortar) */}
           {xLabels.map((i) => (
             <text
               className={s.axis}
@@ -202,7 +186,6 @@ export function RatingTrend({ points }: { points: RatingPoint[] }) {
         </svg>
       )}
 
-      {/* Tooltip */}
       {active && (
         <div className={s.tooltip} style={{ left: xOf(hover!), top: 0 }}>
           <p className={s.tooltipValue}>{active.rating.toFixed(1)}</p>

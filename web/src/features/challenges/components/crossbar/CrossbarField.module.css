@@ -1,7 +1,6 @@
 .field {
   position: relative;
   container-type: inline-size;
-  /* Bate certo com o viewBox 133.33×100 (4:3) → linhas do SVG alinham com os pontos. */
   aspect-ratio: 4 / 3;
   width: 100%;
   overflow: hidden;
@@ -9,7 +8,6 @@
   border: 1px solid var(--accent-border);
   box-shadow: var(--shadow-elevated);
   background-image: linear-gradient(to right, var(--accent-deep-surface), var(--gray-850));
-  /* Tamanho partilhado por spots e avatar — escala com o campo (como o lineup). */
   --cb-token: clamp(1.6rem, 11cqw, 2.75rem);
 }
 
@@ -24,7 +22,6 @@
   stroke-width: 0.6;
 }
 
-/* Marca de uma posição (numerada), centrada no eixo do campo. */
 .spot {
   position: absolute;
   z-index: 1;
@@ -38,11 +35,10 @@
   background-color: var(--accent-surface-faint);
   font-size: clamp(0.75rem, 4cqw, 1.25rem);
   font-weight: var(--font-weight-bold);
-  color: var(--gray-400); /* fixo — campo sempre escuro, não segue o tema */
+  color: var(--gray-400);
   pointer-events: none;
 }
 
-/* Token do jogador em foco — o avatar assenta no spot atual, nome por cima. */
 .token {
   position: absolute;
   z-index: 10;
@@ -62,11 +58,10 @@
   gap: 2px;
   font-size: clamp(0.5rem, 2.4cqw, 0.6875rem);
   font-weight: var(--font-weight-bold);
-  color: var(--gray-100); /* fixo — campo sempre escuro, não segue o tema */
+  color: var(--gray-100);
   white-space: nowrap;
   text-shadow: 0 1px 2px var(--gray-950);
 }
-/* Avatar do jogador — mesmo tamanho que os spots. */
 .token .tokenAvatar {
   width: var(--cb-token);
   height: var(--cb-token);

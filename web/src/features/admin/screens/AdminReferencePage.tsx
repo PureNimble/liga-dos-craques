@@ -16,6 +16,7 @@ interface EditTarget {
   row: RefRow;
 }
 
+/** Admin screen for renaming and reordering reference data tables. */
 export function AdminReferencePage() {
   const { data: groups, isLoading } = useReferenceGroups();
   const [editing, setEditing] = useState<EditTarget | null>(null);

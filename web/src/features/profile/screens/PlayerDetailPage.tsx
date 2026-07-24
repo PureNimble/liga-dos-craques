@@ -17,6 +17,7 @@ import { cardAttributes, overallOf, positionShort } from '../lib/cardStats';
 import { FOOT_LABEL_KEY } from '../schemas/profile.schemas';
 import s from './profileLayout.module.css';
 
+/** Public profile page for any player: card, stats, XP, achievements and recent matches. */
 export function PlayerDetailPage() {
   const { t } = useT();
   const { id } = useParams<{ id: string }>();
@@ -24,7 +25,6 @@ export function PlayerDetailPage() {
   const location = useLocation();
   const { data: profile, isLoading, isError } = usePublicProfile(id);
 
-  // Volta ao ecrã que abriu o perfil; se foi acesso direto (sem histórico), aos rankings.
   const goBack = () => (location.key === 'default' ? navigate('/rankings') : navigate(-1));
   const { data: xp } = usePlayerXp(id);
   const { data: stats } = usePlayerStats(id);
@@ -49,7 +49,6 @@ export function PlayerDetailPage() {
         <ChevronLeftIcon width={16} height={16} /> {t('profile.detail.back')}
       </button>
 
-      {/* Cartão do jogador + nota média, lado a lado (mesmo tamanho) */}
       <div className={s.hero}>
         {stats && (
           <div className={s.cardCol}>

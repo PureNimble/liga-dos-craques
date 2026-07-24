@@ -18,6 +18,7 @@ import { SoundOffIcon, SoundOnIcon } from '@/shared/components/ui/icons';
 import { DifficultyPips, IconicSpinner } from './IconicSpinner';
 import s from './IconicGoalsEntry.module.css';
 
+/** Iconic Goals challenge card: spin, watch and self-declare replicated goals. */
 export function IconicGoalsEntry() {
   const toast = useToast();
   const confirm = useConfirm();
@@ -49,7 +50,6 @@ export function IconicGoalsEntry() {
   const allDone = unlockedCount === goals.length;
 
   async function onSpin() {
-    // Tem de correr dentro do gesto do clique — fora dele o browser bloqueia o áudio.
     primeTickAudio();
     try {
       const id = await spin.mutateAsync();
@@ -66,7 +66,6 @@ export function IconicGoalsEntry() {
   }
 
   async function onReplicate() {
-    // Dentro do gesto do clique: o som toca só depois da resposta, já fora dele.
     primeAchievementAudio();
     try {
       const id = await replicate.mutateAsync();
@@ -90,7 +89,6 @@ export function IconicGoalsEntry() {
 
   return (
     <div className={s.body}>
-      {/* Filtro "ilustração" (posteriza a miniatura para parecer desenhada). */}
       <svg width="0" height="0" aria-hidden className={s.filterDef}>
         <filter id="iconic-ink" colorInterpolationFilters="sRGB">
           <feColorMatrix type="saturate" values="1.35" />

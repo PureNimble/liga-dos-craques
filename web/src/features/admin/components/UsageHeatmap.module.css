@@ -32,7 +32,6 @@
   text-align: right;
   white-space: nowrap;
 }
-/* Rampa sequencial: uma só hue, opacidade a marcar a magnitude. */
 .cell {
   height: 2.25rem;
   border-radius: var(--radius-sm);

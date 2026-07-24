@@ -1,6 +1,4 @@
-/** Completude do perfil: que campos faltam preencher. */
-
-/** Só o que é preciso para decidir. */
+/** Minimal profile fields needed to determine completion status. */
 export interface CompletableProfile {
   main_position_id: number | null;
   preferred_foot: string | null;
@@ -8,13 +6,13 @@ export interface CompletableProfile {
   height_cm: number | null;
 }
 
-/** Chave do campo em falta — a etiqueta traduzida fica a cargo de quem mostra. */
+/** Key of a missing field; the translated label is up to the caller. */
 export type MissingField = 'position' | 'foot' | 'physical';
 
+/** Result of checking which profile fields are missing. */
 export interface ProfileCompletion {
   missing: MissingField[];
   isComplete: boolean;
-  /** A posição principal é a única que o `teamBalancer` usa. */
   positionMissing: boolean;
   done: number;
   total: number;
@@ -26,6 +24,7 @@ const FIELDS: { key: MissingField; filled: (p: CompletableProfile) => boolean }[
   { key: 'physical', filled: (p) => p.weight_kg != null && p.height_cm != null },
 ];
 
+/** Determines which profile fields are still missing and whether the profile is complete. */
 export function profileCompletion(profile: CompletableProfile): ProfileCompletion {
   const missing = FIELDS.filter((f) => !f.filled(profile)).map((f) => f.key);
   return {
@@ -37,7 +36,7 @@ export function profileCompletion(profile: CompletableProfile): ProfileCompletio
   };
 }
 
-/** "a, b e c" / "a, b and c" — enumeração com `conjunction` antes do último item. */
+/** Joins items into a list with `conjunction` before the last one (e.g. "a, b and c"). */
 export function listMissing(missing: string[], conjunction: string): string {
   if (missing.length === 0) return '';
   if (missing.length === 1) return missing[0];

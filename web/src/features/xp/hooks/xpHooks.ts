@@ -3,6 +3,7 @@ import { supabase } from '@/shared/lib/supabase';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { Database } from '@/types/database';
 
+/** Row of the v_player_xp view: total XP, level and progress for a player. */
 export type PlayerXp = Database['public']['Views']['v_player_xp']['Row'];
 
 async function fetchPlayerXp(playerId: string, groupId: string): Promise<PlayerXp> {
@@ -25,7 +26,7 @@ async function fetchPlayerXp(playerId: string, groupId: string): Promise<PlayerX
   );
 }
 
-/** XP total, nível e progresso de um jogador no grupo ativo (vista v_player_xp). */
+/** Total XP, level and progress for a player in the active group. */
 export function usePlayerXp(playerId: string | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -35,7 +36,7 @@ export function usePlayerXp(playerId: string | undefined) {
   });
 }
 
-/** Variante Suspense: usar apenas quando o playerId já está garantidamente disponível. */
+/** Suspense variant of usePlayerXp; use only once playerId is guaranteed available. */
 export function usePlayerXpSuspense(playerId: string) {
   const groupId = useActiveGroupId();
   return useSuspenseQuery({

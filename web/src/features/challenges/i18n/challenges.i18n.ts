@@ -1,10 +1,6 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/**
- * Textos da página `/challenges` (landing dos desafios: Crossbar, Penáltis,
- * genérico "versus"/"tentativas"). As sub-páginas de sessão ao vivo
- * (`challenges/crossbar/`, `challenges/penalty/`) ainda não estão cobertas.
- */
+/** Text for the `/challenges` landing page (Crossbar, Penalties, generic versus/attempts). */
 export const challengesTranslations = {
   'challenges.title': { pt: 'Desafios', en: 'Challenges' },
   'challenges.note': {
@@ -91,4 +87,5 @@ export const challengesTranslations = {
   },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the challenges feature. */
 export type ChallengesTranslationKey = keyof typeof challengesTranslations;

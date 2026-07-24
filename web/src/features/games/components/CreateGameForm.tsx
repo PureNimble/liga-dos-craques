@@ -12,13 +12,12 @@ import s from './CreateGameForm.module.css';
 interface CreateGameFormProps {
   onSuccess: (gameId: string) => void;
   onCancel: () => void;
-  /** Se fornecido, o formulário edita este jogo em vez de criar. */
   game?: GameWithFormat;
 }
 
-/** Espera-se que o utilizador pare de escrever antes de pesquisar — evita um pedido por tecla. */
 const SEARCH_DEBOUNCE_MS = 300;
 
+/** Form for creating or editing a game. */
 export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProps) {
   const isEdit = Boolean(game);
   const { data: formats } = useGameFormats();
@@ -49,14 +48,10 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
     return () => clearTimeout(handle);
   }, [locationText]);
 
-  // useQuery já trata em cache/memoiza por queryKey (["places","search",debouncedQuery]) —
-  // reescrever a mesma pesquisa não dispara outro pedido à BD.
   const { data: suggestions } = useSearchPlaces(debouncedQuery);
 
   function handleLocationChange(e: ChangeEvent<HTMLInputElement>) {
     locationField.onChange(e);
-    // Escrever à mão desliga a ligação a um place anterior — só volta a
-    // ligar se escolher explicitamente uma sugestão da lista.
     form.setValue('place_id', null);
     setSuggestionsOpen(true);
   }
@@ -72,7 +67,6 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
   }
 
   async function onSubmit(values: CreateGameValues) {
-    // O nº que joga vem do formato (tamanho do campo). Inscrições sem limite.
     const fmt = formats?.find((f) => f.id === Number(values.format_id));
     const payload = {
       scheduled_at: localInputToISO(values.scheduled_at),

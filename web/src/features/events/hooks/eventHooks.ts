@@ -3,20 +3,21 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { Database, Team } from '@/types/database';
 
+/** Row type for a configured event type (goal, save, substitution, etc). */
 export type EventType = Database['public']['Tables']['event_type']['Row'];
+/** Row type for a technique tag attachable to an event. */
 export type Tag = Database['public']['Tables']['tag']['Row'];
+/** Row type for a logged game event. */
 export type GameEvent = Database['public']['Tables']['event']['Row'];
 
-/** Evento com tipo, perfil do jogador e tags embebidos. */
+/** Event row with its type, player profile, and tags embedded. */
 export interface EventWithDetails extends GameEvent {
   event_type: Pick<EventType, 'code' | 'label' | 'supports_tags' | 'affects_score'> | null;
   profile: { id: string; name: string } | null;
   event_tag: { tag: Pick<Tag, 'code' | 'label'> | null }[];
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Lookups                                                                     */
-/* -------------------------------------------------------------------------- */
+/** Fetches the active, orderable list of event types. */
 export function useEventTypes() {
   return useQuery({
     queryKey: ['event_types'],
@@ -33,6 +34,7 @@ export function useEventTypes() {
   });
 }
 
+/** Fetches the list of technique tags. */
 export function useTags() {
   return useQuery({
     queryKey: ['tags'],
@@ -45,9 +47,7 @@ export function useTags() {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Eventos de um jogo                                                          */
-/* -------------------------------------------------------------------------- */
+/** Fetches all events for a game, with type, profile, and tags embedded. */
 export function useGameEvents(gameId: string | undefined) {
   return useQuery({
     queryKey: ['events', gameId],
@@ -56,8 +56,6 @@ export function useGameEvents(gameId: string | undefined) {
       const { data, error } = await supabase
         .from('event')
         .select(
-          // `profile:player_id` desambigua: event tem 2 FKs para profile
-          // (player_id e created_by), senão o embed é ambíguo e a query falha.
           '*, event_type(code, label, supports_tags, affects_score), profile:player_id(id, name), event_tag(tag(code, label))',
         )
         .eq('game_id', gameId as string)
@@ -69,15 +67,6 @@ export function useGameEvents(gameId: string | undefined) {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Placar derivado dos eventos                                                 */
-/* -------------------------------------------------------------------------- */
-/**
- * Recalcula o placar a partir dos eventos que contam para o resultado
- * (event_type.affects_score = golo, autogolo, penálti convertido) e grava-o
- * no jogo. O `team` do evento já aponta a equipa que beneficia (o autogolo é
- * registado para a equipa adversária), por isso basta contar por equipa.
- */
 async function recomputeGameScore(gameId: string) {
   const { data, error } = await supabase
     .from('event')
@@ -97,9 +86,7 @@ async function recomputeGameScore(gameId: string) {
   if (upErr) throw upErr;
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Registar / remover                                                          */
-/* -------------------------------------------------------------------------- */
+/** Input for logging a simple event (save, missed penalty, etc). */
 export interface AddEventInput {
   player_id: string;
   event_type_id: number;
@@ -108,20 +95,20 @@ export interface AddEventInput {
   tagIds: number[];
 }
 
+/** Kind of goal being logged. */
 export type GoalVariant = 'normal' | 'penalty' | 'freekick' | 'own_goal';
 
+/** Input for logging a goal, with optional assist and technique tags. */
 export interface LogGoalInput {
   scorerId: string;
-  /** Assistência opcional (jogador diferente do marcador; nunca no autogolo). */
   assistId: string | null;
   variant: GoalVariant;
-  /** Equipa creditada: a do marcador (no autogolo, a adversária). */
   team: Team | null;
   minute: number | null;
-  /** Tags de técnica do golo (bicicleta, cabeceamento, …). */
   tagIds: number[];
 }
 
+/** Logs a simple event and its tags, then recomputes the game score. */
 export function useAddEvent(gameId: string) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -147,7 +134,6 @@ export function useAddEvent(gameId: string) {
         if (tagErr) throw tagErr;
       }
 
-      // O placar segue os eventos.
       await recomputeGameScore(gameId);
     },
     onSuccess: () => {
@@ -158,12 +144,7 @@ export function useAddEvent(gameId: string) {
   });
 }
 
-/**
- * Regista um golo (normal / penálti / livre / autogolo) e, opcionalmente, a
- * assistência associada — porque uma assistência só existe a partir de um golo.
- * Penálti e livre são golos (contam como golo); o autogolo usa o tipo próprio
- * (não conta como golo do jogador e credita a equipa adversária).
- */
+/** Logs a goal (with variant and optional assist/tags) and recomputes the game score. */
 export function useLogGoal(gameId: string) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -177,7 +158,6 @@ export function useLogGoal(gameId: string) {
       const goalTypeId = idByCode.get(goalCode);
       if (!goalTypeId) throw new Error(`Tipo de evento em falta: ${goalCode}`);
 
-      // Insere a linha do golo primeiro (com id) para lhe poder ligar as tags.
       const { data: goalEvent, error: goalErr } = await supabase
         .from('event')
         .insert({
@@ -186,7 +166,6 @@ export function useLogGoal(gameId: string) {
           event_type_id: goalTypeId,
           minute: input.minute,
           team: input.team,
-          // A assistência fica associada à linha do golo (assist_by).
           meta:
             input.variant === 'normal' && input.assistId
               ? { variant: input.variant, assist_by: input.assistId }
@@ -197,15 +176,12 @@ export function useLogGoal(gameId: string) {
         .single();
       if (goalErr) throw goalErr;
 
-      // Tags de técnica (só nas variantes que as suportam — normal e livre).
       if (input.tagIds.length > 0) {
         const tagRows = input.tagIds.map((tag_id) => ({ event_id: goalEvent.id, tag_id }));
         const { error: tagErr } = await supabase.from('event_tag').insert(tagRows);
         if (tagErr) throw tagErr;
       }
 
-      // Assistência: só em golo normal, e no evento próprio (conta nas stats do
-      // assistente). A mesma-equipa é garantida na UI.
       const assistTypeId = idByCode.get('assist');
       if (input.assistId && input.variant === 'normal' && assistTypeId) {
         const { error: assistErr } = await supabase.from('event').insert({
@@ -230,6 +206,7 @@ export function useLogGoal(gameId: string) {
   });
 }
 
+/** Removes an event and recomputes the game score. */
 export function useRemoveEvent(gameId: string) {
   const queryClient = useQueryClient();
   return useMutation({

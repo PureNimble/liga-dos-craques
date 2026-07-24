@@ -25,7 +25,6 @@
   color: var(--accent-strong);
 }
 
-/* Miniatura clicável (vídeo não embutível) */
 .facade {
   position: relative;
   display: block;

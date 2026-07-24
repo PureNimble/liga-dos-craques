@@ -5,12 +5,12 @@ import s from './AchievementsGrid.module.css';
 
 interface AchievementsGridProps {
   playerId: string;
-  /** Perfil próprio: permite escolher a conquista destacada. */
   editable?: boolean;
   featuredId?: number | null;
   onSelect?: (id: number | null) => void;
 }
 
+/** Grid of achievements: unlocked ones are highlighted, and editable mode lets the owner pick a featured one. */
 export function AchievementsGrid({
   playerId,
   editable,

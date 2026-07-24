@@ -4,7 +4,6 @@ import type { SessionPlayerWithProfile } from '../../hooks/challengeHooks';
 import s from './OrderReveal.module.css';
 
 interface OrderRevealProps {
-  /** Jogadores já ordenados pelo sorteio (turn_order). */
   players: SessionPlayerWithProfile[];
   onDone: () => void;
 }
@@ -12,12 +11,11 @@ interface OrderRevealProps {
 const SHUFFLE_MS = 1400;
 const STEP_MS = 240;
 
-/** Animação do sorteio: baralha e revela a ordem, um a um. */
+/** Animates the turn-order draw: shuffles through players, then reveals the order one by one. */
 export function OrderReveal({ players, onDone }: OrderRevealProps) {
   const [phase, setPhase] = useState<'shuffle' | 'reveal'>('shuffle');
   const [highlight, setHighlight] = useState(0);
 
-  // Fase baralhar: pisca aleatoriamente entre os jogadores.
   useEffect(() => {
     if (phase !== 'shuffle') return;
     const tick = setInterval(() => setHighlight((h) => (h + 1) % Math.max(players.length, 1)), 90);
@@ -59,7 +57,6 @@ export function OrderReveal({ players, onDone }: OrderRevealProps) {
   );
 }
 
-/** Botão que surge quando a revelação termina. */
 function RevealAction({ delay, onDone }: { delay: number; onDone: () => void }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {

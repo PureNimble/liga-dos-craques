@@ -1,14 +1,11 @@
 import type { PenaltyMode } from '@/types/database';
 
-/** Metadados de cada modo de Penáltis (só display + regras de setup/UI). */
+/** Metadata for a Penalties mode: display info plus setup/UI rules. */
 export interface PenaltyModeInfo {
   code: PenaltyMode;
   label: string;
-  /** Mostra a baliza de 6 zonas (pen_zones/pen_target). */
   usesGoal: boolean;
-  /** Pede o nº de rondas no setup (modos por golos). */
   usesRounds: boolean;
-  /** O jogador escolhe a zona vazia antes de rematar (pen_zones). */
   picksZone: boolean;
   hint: string;
 }
@@ -40,19 +37,16 @@ export const PENALTY_MODES: Record<PenaltyMode, PenaltyModeInfo> = {
   },
 };
 
-/**
- * Entradas do setup (o que aparece nos cartões). "Mais golos" é uma só entrada:
- * a dificuldade (fácil/difícil) escolhe o modo DB — fácil remata para onde quer
- * (pen_goals), difícil tem de acertar na zona sorteada (pen_target).
- */
+/** Setup entry shown as a card; "Mais golos" picks pen_goals/pen_target via difficulty. */
 export type PenaltyEntry = 'goals' | 'zones';
+/** Difficulty level for the "goals" setup entry. */
 export type PenaltyDifficulty = 'facil' | 'dificil';
 
+/** Display info for a setup entry card. */
 export interface PenaltyEntryInfo {
   key: PenaltyEntry;
   label: string;
   hint: string;
-  /** A entrada tem escolha de dificuldade fácil/difícil (só a de golos). */
   hasDifficulty: boolean;
 }
 
@@ -76,21 +70,20 @@ export const PENALTY_DIFFICULTY_LABEL: Record<PenaltyDifficulty, string> = {
   dificil: 'Difícil',
 };
 
-/** Modo DB a partir da entrada + dificuldade escolhidas no setup. */
+/** DB mode from the chosen setup entry and difficulty. */
 export function entryToMode(entry: PenaltyEntry, difficulty: PenaltyDifficulty): PenaltyMode {
   if (entry === 'zones') return 'pen_zones';
   return difficulty === 'dificil' ? 'pen_target' : 'pen_goals';
 }
 
+/** Validates a query-string value as a setup entry, or `null`. */
 export function parsePenaltyEntry(value: string | null): PenaltyEntry | null {
   return value === 'goals' || value === 'zones' ? value : null;
 }
 
-/** Nº total de zonas da baliza (grelha 2×3) e bitmask com todas preenchidas. */
 export const ZONE_COUNT = 6;
-export const ALL_ZONES = (1 << ZONE_COUNT) - 1; // 63
+export const ALL_ZONES = (1 << ZONE_COUNT) - 1;
 
-/** Nomes das 6 zonas, por índice (0..5): linha de cima 0-2, linha de baixo 3-5. */
 export const ZONE_LABELS = [
   'Canto superior esquerdo',
   'Meio alto',
@@ -100,29 +93,29 @@ export const ZONE_LABELS = [
   'Canto inferior direito',
 ] as const;
 
-/** Posição de uma zona na grelha 2×3 (row 0 = topo). */
+/** Position of a zone in the 2x3 grid (row 0 = top). */
 export function zoneCell(index: number): { row: number; col: number } {
   return { row: Math.floor(index / 3), col: index % 3 };
 }
 
-/** A zona `i` está preenchida no bitmask? */
+/** Whether zone `i` is filled in the bitmask. */
 export function zoneFilled(zones: number, i: number): boolean {
   return (zones & (1 << i)) !== 0;
 }
 
-/** Quantas zonas já estão preenchidas. */
+/** Number of zones already filled. */
 export function filledCount(zones: number): number {
   let n = 0;
   for (let i = 0; i < ZONE_COUNT; i++) if (zoneFilled(zones, i)) n++;
   return n;
 }
 
-/** Todas as 6 zonas preenchidas? */
+/** Whether all 6 zones are filled. */
 export function allFilled(zones: number): boolean {
   return (zones & ALL_ZONES) === ALL_ZONES;
 }
 
-/** Valida um valor de query string como modo de Penáltis (ou `null`). */
+/** Validates a query-string value as a Penalties mode, or `null`. */
 export function parsePenaltyMode(value: string | null): PenaltyMode | null {
   return value && value in PENALTY_MODES ? (value as PenaltyMode) : null;
 }

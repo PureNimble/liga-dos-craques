@@ -2,7 +2,6 @@ import { z } from 'zod';
 import type { District } from '@/types/database';
 import municipalitiesData from '../lib/municipalities.json';
 
-/** Converte string vazia (inputs HTML) em null. */
 const emptyToNull = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess((v) => (v === '' || v === undefined ? null : v), schema);
 
@@ -34,7 +33,6 @@ interface MunicipalityFeature {
 }
 const municipalities = municipalitiesData as { features: MunicipalityFeature[] };
 
-/** Concelhos por distrito (derivado do GeoJSON dos concelhos), para o Select em cascata. */
 export const CONCELHOS_BY_DISTRICT: Record<string, string[]> = {};
 for (const feature of municipalities.features) {
   const { dis_name, con_name } = feature.properties;
@@ -67,4 +65,5 @@ export const createPlaceSchema = z
     path: ['concelho'],
   });
 
+/** Validated form values for creating a place. */
 export type CreatePlaceValues = z.infer<typeof createPlaceSchema>;

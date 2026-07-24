@@ -8,7 +8,6 @@ import {
   type PositionSelection,
 } from './positionPitch';
 
-/** Os códigos da tabela `position`. */
 const CODIGOS = [
   'GK',
   'CB',
@@ -165,7 +164,7 @@ describe('togglePosition', () => {
     for (const id of [1, 2, 3, 2, 1, 3]) {
       sel = togglePosition(sel, id);
       if (sel.mainId != null) expect(sel.secondaryIds).not.toContain(sel.mainId);
-      expect(new Set(sel.secondaryIds).size).toBe(sel.secondaryIds.length); // sem repetidos
+      expect(new Set(sel.secondaryIds).size).toBe(sel.secondaryIds.length);
     }
   });
 

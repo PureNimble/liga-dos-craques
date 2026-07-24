@@ -7,7 +7,6 @@
 .pitch {
   position: relative;
   width: 100%;
-  /* Tem de bater certo com o viewBox do SVG (100 × PITCH_H). */
   aspect-ratio: 100 / 80;
   border-radius: var(--radius-md);
   background-image: linear-gradient(to bottom, var(--accent-deep-surface), var(--surface-panel));
@@ -23,7 +22,6 @@
   stroke-width: 0.6;
 }
 
-/* left/top são o centro do lugar, daí o translate. */
 .spot {
   position: absolute;
   transform: translate(-50%, -50%);

@@ -15,7 +15,6 @@ import { RatingTrend } from './RatingTrend';
 import { RecentMatchesCard } from './RecentMatches';
 import s from './PlayerCharts.module.css';
 
-// Dados de mentira: só para o efeito desfocado do estado bloqueado.
 const MOCK_TREND: RatingPoint[] = [6.2, 7.1, 5.8, 7.6, 6.9, 8.0].map((rating, i) => ({
   gameId: String(i),
   date: '',
@@ -88,7 +87,7 @@ const MOCK_RECENT: RecentGame[] = [
   },
 ];
 
-/** Cartões de gráficos do jogador — devolvidos como fragmento para caber num grid. */
+/** Player chart cards (form trend, goals/assists, XP by source), returned as a fragment to fit into a grid. */
 export function PlayerCharts({
   playerId,
   games,
@@ -105,8 +104,6 @@ export function PlayerCharts({
 
   const hasContrib = (contrib ?? []).some((c) => c.goals > 0 || c.assists > 0);
 
-  // Bloqueado até jogar o mínimo de jogos: cartões reais com dados de mentira,
-  // sob uma única sobreposição bem desfocada.
   if (games < MIN_GAMES_FOR_STATS) {
     return (
       <LockOverlay locked className={s.lockedWrap} message={statsLockMessage(t, own)}>
@@ -195,43 +192,16 @@ function ChartHead({ title, hint }: { title: string; hint: string }) {
   );
 }
 
-/**
- * Pictograma por jogo: uma barra única — bolas (golos) em baixo, botas (assists)
- * por cima.
- *
- * Princípio ISOTYPE: o tamanho do ícone é CONSTANTE, só o número varia. Encolher
- * o ícone até caber (o que se fazia antes, até 6px) tornava-o ilegível e, como o
- * tamanho saía do jogo com mais contribuições, mudava de perfil para perfil — dois
- * pictogramas deixavam de ser comparáveis, que é o objetivo do gráfico.
- *
- * Com o ícone fixo é preciso um limite: a coluna tem BUDGET lugares, repartidos
- * entre golos e assists. Quem não couber nos seus lugares põe o último a valer os
- * que sobram (contador com o número dentro). O número é exato — ao contrário de
- * uma escala (1 ícone = 2), não obriga a fazer contas nem esconde nada.
- */
 const ICON = 16;
 const STACK_GAP = 2;
-/** Lugares por coluna. A coluna nunca passa disto — é o limite que faltava. */
 const BUDGET = 5;
-/** Altura da caixa de ícones (px), aplicada inline em `.stack`. */
 const STACK_BOX = BUDGET * ICON + (BUDGET - 1) * STACK_GAP;
 
-/**
- * Reparte os lugares: os GOLOS têm prioridade — servem-se primeiro e só o que
- * sobra vai para as assists (guardando 1 lugar para elas, se existirem, para não
- * desaparecerem). Repartir pelo maior fazia com que 2 golos + 5 assists mostrasse
- * ZERO bolas (os 2 golos colapsavam num contador) — logo o que mais interessa.
- */
 function allocate(goals: number, assists: number) {
   const gs = Math.min(goals, BUDGET - (assists > 0 ? 1 : 0));
   return { gs, as: Math.min(assists, BUDGET - gs) };
 }
 
-/**
- * Como se desenha uma fila em `slots` lugares: se o valor cabe, são todos ícones
- * simples (1 = 1). Se não cabe, o último é um contador que vale os que sobram —
- * incluindo-se a si próprio, por isso `plain + count` dá sempre o valor exato.
- */
 function run(v: number, slots: number) {
   if (v <= slots) return { plain: v, count: 0 };
   return { plain: slots - 1, count: v - (slots - 1) };
@@ -275,15 +245,6 @@ function ContributionBars({
   );
 }
 
-/**
- * Contador: ocupa um lugar de ícone e diz quantos vale. Fica o aro da bola (mesmo
- * círculo, mesma cor) e o número ocupa o miolo todo.
- *
- * Os raios da `BallIcon` saem de propósito: a 16px não cabem aro + 5 raios + um
- * número — sobravam ~4px para o algarismo e o conjunto virava borrão. Os raios
- * são decoração, o número é a razão de ser do contador; a silhueta redonda (e as
- * bolas normais logo por baixo) chegam para se ler como bola.
- */
 function CountIcon({ n, className }: { n: number; className?: string }) {
   return (
     <svg
@@ -297,11 +258,6 @@ function CountIcon({ n, className }: { n: number; className?: string }) {
       aria-hidden
     >
       <circle cx="12" cy="12" r="9" />
-      {/* O que aperta o número dentro de um círculo não é a largura, são os
-          CANTOS: a meia-diagonal da caixa do texto ≈ 0.45·fontSize com 1
-          algarismo, 0.66 com 2 e 0.90 com 3. O raio útil é 8.25 (9 menos meio
-          traço) — com 11 os "17" iam aos 7.2 e encostavam ao aro. Estes tamanhos
-          mantêm a diagonal em ~6, que é a folga que faltava. */}
       <text
         x="12"
         y="12"
@@ -317,7 +273,6 @@ function CountIcon({ n, className }: { n: number; className?: string }) {
   );
 }
 
-/** Barras horizontais de magnitude (uma cor, rótulo à esquerda, valor à direita). */
 function HBars({
   items,
   suffix = '',

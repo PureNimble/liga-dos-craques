@@ -1,7 +1,3 @@
-/**
- * Tom (cor do "chip") por polaridade do evento — positivo / neutro / negativo.
- * O ícone SVG em si vive em `EventIcon.tsx`.
- */
 import t from './eventTone.module.css';
 
 const TONES: Record<string, string> = {
@@ -15,6 +11,7 @@ const TONES: Record<string, string> = {
   substitution: t.neutral,
 };
 
+/** Maps an event type code to its tone class (positive/neutral/negative). */
 export function eventTone(code: string): string {
   return TONES[code] ?? t.neutral;
 }

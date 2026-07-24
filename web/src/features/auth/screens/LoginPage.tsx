@@ -9,6 +9,7 @@ import { AuthLayout } from '../components/AuthLayout';
 import { loginSchema, type LoginValues } from '../schemas/auth.schemas';
 import s from '../auth.module.css';
 
+/** Login screen — signs in with email/username and password. */
 export function LoginPage() {
   const navigate = useNavigate();
   const { t } = useT();

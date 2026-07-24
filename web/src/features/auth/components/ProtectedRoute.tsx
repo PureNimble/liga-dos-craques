@@ -2,10 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Loading } from '@/shared/components/ui';
 import { useAuth } from '../hooks/useAuth';
 
-/**
- * Envolve rotas que exigem sessão. Enquanto carrega a sessão mostra um estado
- * neutro; sem sessão redireciona para /login guardando o destino.
- */
+/** Wraps routes that require a session; redirects to /login (keeping the destination) when unauthenticated. */
 export function ProtectedRoute() {
   const { session, loading } = useAuth();
   const location = useLocation();

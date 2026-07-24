@@ -1,6 +1,3 @@
-/* O shell preenche o container (flex) e reparte a altura: a barra fica imóvel e
-   só a coluna de conteúdo desliza. Sem cálculos de altura — é o flexbox/grid a
-   repartir o espaço, por isso o ecrã nunca faz scroll. */
 .shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -17,7 +14,6 @@
   flex-direction: column;
   gap: var(--space-lg);
   overflow-y: auto;
-  /* Desliza sem barra à vista. */
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-bottom: var(--space-lg);
@@ -25,8 +21,6 @@
 .content::-webkit-scrollbar {
   display: none;
 }
-/* As secções nunca encolhem: quando o conteúdo não cabe, a coluna faz scroll
-   (senão os cartões com gráfico de altura fixa ficam cortados). */
 .content > * {
   flex-shrink: 0;
 }

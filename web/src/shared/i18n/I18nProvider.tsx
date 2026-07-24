@@ -3,10 +3,10 @@ import type { LangCode, TranslationDict } from './translations';
 
 const STORAGE_KEY = 'peladinhas-lang';
 
+/** Current language, setter, and translate function — missing keys resolve to the key itself. */
 export interface I18nContextValue {
   lang: LangCode;
   setLang: (lang: LangCode) => void;
-  /** Chave em falta no dicionário: devolve a própria chave (visível, não rebenta). */
   t: (key: string, vars?: Record<string, string | number>) => string;
 }
 
@@ -23,9 +23,8 @@ function readStoredLang(): LangCode {
 }
 
 /**
- * Motor de i18n (PT/EN), agnóstico do conteúdo — o dicionário vem de fora
- * (`app/i18nRegistry.ts` junta o de cada feature) para `shared/` nunca
- * depender de `features/`. Cobre só o cromo sempre-visível, não a app toda.
+ * Content-agnostic i18n (PT/EN) engine — the dictionary is supplied from outside
+ * so `shared/` never depends on `features/`.
  */
 export function I18nProvider({
   dictionary,
@@ -45,7 +44,7 @@ export function I18nProvider({
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      /* localStorage indisponível (modo privado) — o idioma fica só nesta sessão. */
+      // localStorage unavailable — language stays for this session only.
     }
   }, []);
 

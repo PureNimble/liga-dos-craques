@@ -1,5 +1,3 @@
-/* Select customizado: <select> real e invisível (mantém register()/value/onChange do
-   react-hook-form) + botão + popup (portal) para o visual e o popup estilizável. */
 .wrapper {
   position: relative;
   display: block;
@@ -58,9 +56,6 @@
 
 .popup {
   position: fixed;
-  /* Tem de ficar acima do Modal (z-index: 1200) — um Select é frequentemente
-     usado dentro de modais (ex.: AddPlaceModal) e o popup portal-se para o
-     document.body tal como o próprio Modal, por isso compete pelo mesmo z-index. */
   z-index: 1300;
   margin: 0;
   padding: var(--space-xs);

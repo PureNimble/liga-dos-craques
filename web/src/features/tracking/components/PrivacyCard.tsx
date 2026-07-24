@@ -7,7 +7,7 @@ interface Props {
   userId: string;
 }
 
-/** Estado do consentimento de tracking, com a decisão sempre reversível. */
+/** Tracking consent status, with the decision always reversible. */
 export function PrivacyCard({ userId }: Props) {
   const { data: consent, isError } = useAnalyticsConsent(userId);
   const setConsent = useSetAnalyticsConsent();

@@ -8,7 +8,6 @@
   font-weight: var(--font-weight-semibold);
 }
 
-/* Tons de etiqueta (estado/categoria) */
 .gray {
   background-color: var(--tone-gray-bg);
   color: var(--tone-gray-fg);

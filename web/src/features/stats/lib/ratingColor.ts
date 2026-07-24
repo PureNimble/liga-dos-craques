@@ -1,6 +1,6 @@
 import r from './rating.module.css';
 
-/** Classe da "pílula" sólida de rating (0–10), estilo SofaScore. */
+/** Class for the solid rating "pill" (0-10), SofaScore-style. */
 export function ratingPill(v: number | null | undefined): string {
   if (v == null) return r.pillNone;
   if (v >= 7.5) return r.pillTop;
@@ -9,7 +9,7 @@ export function ratingPill(v: number | null | undefined): string {
   return r.pillLow;
 }
 
-/** Classe da cor do texto do rating (para números grandes). */
+/** Class for the rating text color (for large numbers). */
 export function ratingText(v: number | null | undefined): string {
   if (v == null) return r.textNone;
   if (v >= 7.5) return r.textTop;

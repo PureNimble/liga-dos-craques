@@ -1,10 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/**
- * Textos da página de Notificações. Nota: o título/corpo de cada aviso vêm da
- * BD (gerados por RPCs/triggers em português) — continuam PT em ambos os
- * idiomas; só o cromo da página (título, botão, estado vazio) traduz-se.
- */
 export const notificationsTranslations = {
   'notifications.title': { pt: 'Notificações', en: 'Notifications' },
   'notifications.subtitle': {
@@ -35,4 +30,5 @@ export const notificationsTranslations = {
   },
 } satisfies TranslationDict;
 
+/** Union of all translation keys defined for the `notifications` feature. */
 export type NotificationsTranslationKey = keyof typeof notificationsTranslations;

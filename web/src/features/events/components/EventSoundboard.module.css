@@ -44,7 +44,6 @@
   color: var(--text-color);
 }
 
-/* Grelha de jogadores (adapta ao contentor) */
 .grid {
   container-type: inline-size;
   display: flex;
@@ -120,7 +119,6 @@
   color: var(--text-color);
 }
 
-/* Modais */
 .titleRow {
   display: inline-flex;
   align-items: center;

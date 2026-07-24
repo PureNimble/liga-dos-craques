@@ -5,10 +5,9 @@ import type { Database } from '@/types/database';
 
 export type PlayerStats = Database['public']['Views']['v_player_stats']['Row'];
 
-/** Nº mínimo de jogos para desbloquear a nota média e os gráficos. */
 export const MIN_GAMES_FOR_STATS = 5;
 
-/** Mensagem do estado bloqueado — no próprio perfil convida a jogar; nos outros, informa. */
+/** Message for the locked state: invites the player to play on their own profile, informs on others'. */
 export function statsLockMessage(t: (key: string, vars?: Record<string, string | number>) => string, own: boolean): string {
   return t(own ? 'stats.lock.own' : 'stats.lock.other', { count: MIN_GAMES_FOR_STATS });
 }
@@ -35,11 +34,10 @@ async function fetchPlayerStats(playerId: string, groupId: string): Promise<Play
     .eq('group_id', groupId)
     .maybeSingle();
   if (error) throw error;
-  // Se ainda não houver linha (jogador sem jogos neste grupo), devolve zeros.
   return data ?? { player_id: playerId, group_id: groupId, name: '', ...EMPTY };
 }
 
-/** Estatísticas de um jogador no grupo ativo (derivadas da vista v_player_stats). */
+/** A player's stats in the active group, derived from the `v_player_stats` view. */
 export function usePlayerStats(playerId: string | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -49,7 +47,7 @@ export function usePlayerStats(playerId: string | undefined) {
   });
 }
 
-/** Variante Suspense: usar apenas quando o playerId já está garantidamente disponível. */
+/** Suspense variant; use only when `playerId` is guaranteed to be available. */
 export function usePlayerStatsSuspense(playerId: string) {
   const groupId = useActiveGroupId();
   return useSuspenseQuery({
@@ -58,6 +56,7 @@ export function usePlayerStatsSuspense(playerId: string) {
   });
 }
 
+/** A player's goals and assists in a single game, for chart display. */
 export interface GameContribution {
   gameId: string;
   label: string;
@@ -68,13 +67,9 @@ export interface GameContribution {
 const GOAL_CODES = new Set(['goal', 'penalty_scored', 'freekick_scored']);
 const DONE = ['finished', 'voting_open', 'closed'];
 
-/**
- * Quantos jogos entram nos gráficos. Único para TODOS os gráficos — com mais do
- * que isto os eixos amontoam-se em cartões estreitos (o perfil põe-nos a par).
- */
 export const CHART_GAMES = 5;
 
-/** Golos e assistências por jogo (últimos `limit` jogos concluídos) no grupo ativo. */
+/** Goals and assists per game (last `limit` completed games) in the active group. */
 export function useContributions(playerId: string | undefined, limit = CHART_GAMES) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -125,6 +120,7 @@ export function useContributions(playerId: string | undefined, limit = CHART_GAM
   });
 }
 
+/** A single point in a player's rating trend chart. */
 export interface RatingPoint {
   gameId: string;
   date: string;
@@ -132,10 +128,7 @@ export interface RatingPoint {
   label: string;
 }
 
-/**
- * Avaliações dos últimos `limit` jogos do jogador no grupo ativo, por ordem
- * cronológica. Junta a data (tabela game) às avaliações (vista v_game_player_rating).
- */
+/** Ratings for the player's last `limit` games in the active group, in chronological order. */
 export function useRatingTrend(playerId: string | undefined, limit = CHART_GAMES) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -177,8 +170,10 @@ export function useRatingTrend(playerId: string | undefined, limit = CHART_GAMES
   });
 }
 
+/** Match result from the player's perspective: win, draw, or loss. */
 export type MatchResult = 'V' | 'E' | 'D';
 
+/** A player's recent game summary: date, format, score, result, and rating. */
 export interface RecentGame {
   gameId: string;
   date: string;
@@ -200,7 +195,7 @@ interface EmbeddedGame {
   game_format: { label: string } | null;
 }
 
-/** Últimos `limit` jogos do jogador no grupo ativo: data, formato, resultado e avaliação. */
+/** Player's last `limit` games in the active group: date, format, result, and rating. */
 export function useRecentGames(playerId: string | undefined, limit = 6) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -254,6 +249,7 @@ export function useRecentGames(playerId: string | undefined, limit = 6) {
   });
 }
 
+/** A single XP source with its accumulated points. */
 export interface XpSource {
   code: string;
   label: string;
@@ -268,7 +264,7 @@ const XP_LABELS: Record<string, string> = {
   mvp: 'MVP',
 };
 
-/** Repartição do XP total do jogador no grupo ativo por fonte (participação, vitória, golo, …). */
+/** Breakdown of the player's total XP in the active group by source (participation, win, goal, …). */
 export function useXpBreakdown(playerId: string | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({

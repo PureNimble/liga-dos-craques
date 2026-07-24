@@ -19,6 +19,7 @@ const variantClass: Record<ButtonVariant, string> = {
 };
 const sizeClass: Record<ButtonSize, string> = { sm: s.sm, md: s.md, lg: s.lg };
 
+/** Standard button with variant/size styling and an optional loading state. */
 export function Button({
   variant = 'primary',
   size = 'md',

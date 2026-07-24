@@ -11,13 +11,13 @@ interface PlayerCardProps {
   subtitle?: string | null;
 }
 
-/** Classe do escalão do cartão por overall (cor de destaque tipo FIFA). */
 function tierClass(overall: number) {
   if (overall >= 85) return s.gold;
   if (overall >= 70) return s.silver;
   return s.bronze;
 }
 
+/** FIFA-style player card showing overall rating, position, avatar and attributes. */
 export function PlayerCard({
   name,
   photoUrl,
@@ -28,7 +28,6 @@ export function PlayerCard({
 }: PlayerCardProps) {
   return (
     <div className={`${s.card} ${tierClass(overall)}`}>
-      {/* brilho de topo */}
       <div aria-hidden className={s.topGlow} />
 
       <div className={s.head}>

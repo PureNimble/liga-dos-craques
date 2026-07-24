@@ -1,9 +1,11 @@
 import { createContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+/** User-facing theme selection: an explicit light/dark choice, or follow the system. */
 export type ThemeChoice = 'light' | 'dark' | 'system';
 
 const STORAGE_KEY = 'peladinhas-theme';
 
+/** Current theme choice and its setter. */
 export interface ThemeContextValue {
   theme: ThemeChoice;
   setTheme: (theme: ThemeChoice) => void;
@@ -21,8 +23,10 @@ function readStoredTheme(): ThemeChoice {
   }
 }
 
-/** Tema da app (claro/escuro/sistema). O `<script>` em index.html já aplica o
- * `data-theme` guardado antes do primeiro paint — isto só assume a partir daí. */
+/**
+ * App theme provider (light/dark/system). The `<script>` in index.html already
+ * applies the stored `data-theme` before first paint — this just takes over from there.
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeChoice>(readStoredTheme);
 
@@ -52,7 +56,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(STORAGE_KEY, next);
       }
     } catch {
-      /* localStorage indisponível (modo privado) — o tema fica só nesta sessão. */
+      // localStorage unavailable — theme stays for this session only.
     }
   };
 

@@ -1,17 +1,12 @@
 import type { IconicGoal } from '../../hooks/iconic/iconicGoalHooks';
 
+/** The card sequence to scroll through and the index where the reel settles. */
 export interface ReelBuild {
-  /** Sequência de cartas a rolar (vários passes + o alvo + cauda para espreitar). */
   items: IconicGoal[];
-  /** Índice da carta-alvo em `items` (onde o carrossel assenta). */
   targetIndex: number;
 }
 
-/**
- * Constrói o carrossel vertical estilo Forza: repete a lista `loops` vezes (o
- * "a rolar"), coloca o golo-alvo a seguir e acrescenta cauda para as cartas de
- * baixo espreitarem. O carrossel desliza até centrar `targetIndex`.
- */
+/** Builds a Forza-style vertical reel: repeats `goals` `loops` times, then the target, plus a peek tail. */
 export function buildReel(goals: IconicGoal[], targetId: number, loops = 6): ReelBuild {
   if (goals.length === 0) return { items: [], targetIndex: 0 };
   const target = goals.find((g) => g.id === targetId) ?? goals[0];

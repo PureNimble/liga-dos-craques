@@ -1,5 +1,3 @@
-/* Cabeçalho estilo nativo: seta de voltar (círculo) à esquerda, título ao
-   centro — só faz sentido no mobile (é lá que este subecrã é alcançável). */
 .header {
   position: relative;
   display: flex;

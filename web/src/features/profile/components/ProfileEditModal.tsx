@@ -20,6 +20,7 @@ interface ProfileEditModalProps {
   onClose: () => void;
 }
 
+/** Modal form for editing the current user's full profile (public and private fields). */
 export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
   const { data: positions } = usePositions();
   const updateProfile = useUpdateProfile();
@@ -51,7 +52,6 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     ? 'Esse nome de utilizador já está a ser usado.'
     : undefined;
 
-  /** Um clique no campo mexe na principal e nas secundárias. */
   function togglePosition(id: number) {
     const next = toggle(
       { mainId: mainPositionId, secondaryIds: form.getValues('secondaryPositionIds') },

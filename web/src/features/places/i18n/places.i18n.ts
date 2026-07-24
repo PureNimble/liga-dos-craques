@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da página `/places` (mapa de campos + painel de lista/pesquisa). */
 export const placesTranslations = {
   'places.title': { pt: 'Mapa de campos', en: 'Field map' },
   'places.addField': { pt: 'Adicionar campo', en: 'Add field' },
@@ -42,4 +41,5 @@ export const placesTranslations = {
   'places.viewLink': { pt: 'Ver ligação', en: 'View link' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the places feature. */
 export type PlacesTranslationKey = keyof typeof placesTranslations;

@@ -13,5 +13,7 @@ export const joinGroupSchema = z.object({
     .transform((v) => v.toUpperCase()),
 });
 
+/** Validated values for creating a group. */
 export type CreateGroupValues = z.infer<typeof createGroupSchema>;
+/** Validated values for joining a group by invite code. */
 export type JoinGroupValues = z.infer<typeof joinGroupSchema>;

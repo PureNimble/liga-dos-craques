@@ -1,4 +1,3 @@
-/* Faixa fixa no fundo, acima de tudo menos dos modais. */
 .banner {
   position: fixed;
   z-index: 40;

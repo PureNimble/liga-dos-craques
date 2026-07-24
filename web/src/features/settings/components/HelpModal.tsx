@@ -4,7 +4,7 @@ import s from './HelpModal.module.css';
 
 const FAQ_KEYS = ['xp', 'groups', 'challenges', 'reopenGame', 'stillStuck'] as const;
 
-/** Perguntas frequentes sobre a app — não substitui o "Reportar problema". */
+/** FAQ modal about the app — does not replace the "Report a problem" flow. */
 export function HelpModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useT();
 

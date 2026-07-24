@@ -19,6 +19,7 @@ import {
 } from '../../lib/chartTheme';
 import s from './chartEmpty.module.css';
 
+/** One series (key/name/color) rendered as a stacked bar segment. */
 export interface StackSeries {
   key: string;
   name: string;
@@ -29,11 +30,10 @@ interface Props {
   data: Array<Record<string, number | string>>;
   series: StackSeries[];
   height?: number;
-  /** Mensagem quando não há dados — nunca deixar o cartão vazio. */
   empty?: string;
 }
 
-/** Barras empilhadas: composição de um total ao longo do tempo. */
+/** Stacked bar chart: composition of a total over time. */
 export function StackedBars({
   data,
   series,
@@ -67,7 +67,6 @@ export function StackedBars({
             name={se.name}
             stackId="total"
             fill={se.color}
-            /* Fio da cor da superfície a separar os segmentos empilhados. */
             stroke={SURFACE}
             strokeWidth={1.5}
             maxBarSize={48}

@@ -3,9 +3,12 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { Database, District } from '@/types/database';
 
+/** Row type for a place (game field). */
 export type Place = Database['public']['Tables']['place']['Row'];
+/** Input to create a place; `created_by` is set server-side. */
 export type CreatePlaceInput = Omit<Database['public']['Tables']['place']['Insert'], 'created_by'>;
 
+/** Fetches all places, ordered by name. */
 export function usePlaces() {
   return useQuery({
     queryKey: ['places'],
@@ -17,7 +20,7 @@ export function usePlaces() {
   });
 }
 
-/** Pesquisa campos pelo nome — usado no autocomplete de localização ao criar um jogo. */
+/** Searches places by name, used for location autocomplete when creating a game. */
 export function useSearchPlaces(query: string) {
   const trimmed = query.trim();
   return useQuery({
@@ -36,7 +39,7 @@ export function useSearchPlaces(query: string) {
   });
 }
 
-/** Campos de um distrito — mostrados como pins individuais no mapa. */
+/** Fetches places within a district, shown as individual pins on the map. */
 export function usePlacesInDistrict(district: string | null) {
   return useQuery({
     queryKey: ['places', 'in-district', district],
@@ -53,6 +56,7 @@ export function usePlacesInDistrict(district: string | null) {
   });
 }
 
+/** Creates a place owned by the current user. */
 export function useCreatePlace() {
   const { user } = useAuth();
   const queryClient = useQueryClient();

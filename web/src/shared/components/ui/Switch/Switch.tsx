@@ -7,7 +7,7 @@ interface SwitchProps {
   'aria-label'?: string;
 }
 
-/** Interruptor on/off (ex.: consentimento de tracking). */
+/** On/off toggle switch (e.g. tracking consent). */
 export function Switch({ checked, onChange, disabled = false, ...props }: SwitchProps) {
   return (
     <button

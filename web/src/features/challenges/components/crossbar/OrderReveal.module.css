@@ -13,7 +13,6 @@
   color: var(--text-subtle);
 }
 
-/* Fase baralhar */
 .shuffleCard {
   display: flex;
   flex-direction: column;
@@ -40,7 +39,6 @@
   }
 }
 
-/* Fase revelar */
 .list {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,3 @@
-/* Cena de estádio: céu, bancadas com adeptos, painel publicitário, baliza e relva. */
 .scene {
   position: relative;
   container-type: inline-size;
@@ -17,7 +16,6 @@
   background-image: linear-gradient(to bottom, var(--pen-sky-top), var(--pen-sky-bottom));
 }
 
-/* Focos de luz do estádio (cantos de cima). */
 .light {
   position: absolute;
   top: -12%;
@@ -36,7 +34,6 @@
   animation-delay: 3s;
 }
 
-/* ---- Bancadas + adeptos ---------------------------------------------------- */
 .stands {
   position: absolute;
   top: 0;
@@ -51,8 +48,6 @@
   overflow: hidden;
   background-image: linear-gradient(to bottom, var(--pen-stand) 78%, transparent);
 }
-/* Espaçamento fixo entre adeptos: centra e corta os que sobram (mantém a mesma
-   folga em qualquer largura — em ecrãs pequenos mostra menos, não amontoa). */
 .fanRow {
   display: flex;
   justify-content: center;
@@ -83,8 +78,6 @@
   background-color: var(--pen-crowd-4);
 }
 
-/* ---- Painel publicitário --------------------------------------------------- */
-/* Painel publicitário atrás da baliza (visível através da rede e nas laterais). */
 .billboard {
   position: absolute;
   top: 46%;
@@ -117,9 +110,7 @@
   animation: billboardShine 4s ease-in-out infinite;
 }
 
-/* ---- Baliza (rede + postes + zonas) ---------------------------------------- */
 .goal {
-  /* Espessura dos postes proporcional à baliza (cqw; teto alto p/ não achatar no desktop). */
   --post: clamp(4px, 2.2cqw, 20px);
   position: absolute;
   top: 14%;
@@ -151,8 +142,6 @@
   pointer-events: none;
 }
 
-/* As zonas cobrem toda a rede: encostam ao interior dos postes (topo/laterais),
-   descem até ao fundo aberto e não deixam espaços entre si. */
 .grid {
   position: absolute;
   top: var(--post);
@@ -171,7 +160,7 @@
   place-items: center;
   border: 1px solid var(--accent-ring);
   background-color: var(--pen-zone-bg);
-  color: var(--gray-300); /* fixo — cena de estádio sempre escura, não segue o tema */
+  color: var(--gray-300);
   font-weight: var(--font-weight-extrabold);
   font-size: clamp(0.9rem, 6cqw, 1.6rem);
   backdrop-filter: blur(2px);
@@ -210,7 +199,6 @@
   text-shadow: 0 1px 4px var(--gray-950);
 }
 
-/* ---- Relva + marca de penálti ---------------------------------------------- */
 .grass {
   position: absolute;
   bottom: 0;
@@ -234,7 +222,6 @@
   background-color: var(--pen-post);
 }
 
-/* Saltar animação — canto inferior direito da relva. */
 .skip {
   position: absolute;
   right: 3%;
@@ -274,7 +261,6 @@
   text-shadow: 0 1px 3px var(--gray-950);
 }
 
-/* ---- Animações ------------------------------------------------------------- */
 @keyframes fanBob {
   0%,
   100% {

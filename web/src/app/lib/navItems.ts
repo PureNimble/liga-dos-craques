@@ -12,9 +12,9 @@ import {
 import type { NavTranslationKey } from '../i18n/nav.i18n';
 import type { ComponentType, SVGProps } from 'react';
 
+/** A navigation entry: route, translation key and icon. */
 export type NavItem = {
   to: string;
-  /** Chave de tradução (ver nav.i18n.ts) — não o texto em si. */
   label: NavTranslationKey;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   end?: boolean;
@@ -31,7 +31,6 @@ export const navItems: NavItem[] = [
 
 export const adminNavItem: NavItem = { to: '/admin', label: 'nav.admin', icon: ShieldIcon };
 
-/** Ficam fora da navegação principal — vivem na gaveta, junto às ações da conta. */
 export const notificationsNavItem: NavItem = {
   to: '/notifications',
   label: 'nav.notifications',

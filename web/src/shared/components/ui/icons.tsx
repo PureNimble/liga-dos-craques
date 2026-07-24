@@ -1,9 +1,5 @@
 import type { ComponentType, SVGProps } from 'react';
 
-/**
- * Conjunto de ícones inline (stroke) — sem dependências externas.
- * Herdam a cor via `currentColor` e o tamanho via `width/height` (default 20).
- */
 type IconProps = SVGProps<SVGSVGElement>;
 
 function base(props: IconProps) {
@@ -20,6 +16,7 @@ function base(props: IconProps) {
   };
 }
 
+/** Home icon. */
 export function HomeIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -30,6 +27,7 @@ export function HomeIcon(props: IconProps) {
   );
 }
 
+/** Bar chart icon. */
 export function ChartIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -41,6 +39,7 @@ export function ChartIcon(props: IconProps) {
   );
 }
 
+/** Hamburger menu icon. */
 export function MenuIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -51,6 +50,7 @@ export function MenuIcon(props: IconProps) {
   );
 }
 
+/** Padlock icon. */
 export function LockIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -61,6 +61,7 @@ export function LockIcon(props: IconProps) {
   );
 }
 
+/** Football icon. */
 export function BallIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -71,6 +72,7 @@ export function BallIcon(props: IconProps) {
   );
 }
 
+/** Trophy icon. */
 export function TrophyIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -81,6 +83,7 @@ export function TrophyIcon(props: IconProps) {
   );
 }
 
+/** Target/bullseye icon. */
 export function TargetIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -91,6 +94,7 @@ export function TargetIcon(props: IconProps) {
   );
 }
 
+/** Single user icon. */
 export function UserIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -100,6 +104,7 @@ export function UserIcon(props: IconProps) {
   );
 }
 
+/** Shield icon. */
 export function ShieldIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -108,6 +113,7 @@ export function ShieldIcon(props: IconProps) {
   );
 }
 
+/** Notification bell icon. */
 export function BellIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -117,6 +123,7 @@ export function BellIcon(props: IconProps) {
   );
 }
 
+/** Settings gear icon. */
 export function SettingsIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -126,6 +133,7 @@ export function SettingsIcon(props: IconProps) {
   );
 }
 
+/** Plus icon. */
 export function PlusIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -134,6 +142,7 @@ export function PlusIcon(props: IconProps) {
   );
 }
 
+/** Close (X) icon. */
 export function CloseIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -142,6 +151,7 @@ export function CloseIcon(props: IconProps) {
   );
 }
 
+/** Right-pointing chevron icon. */
 export function ChevronRightIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -150,6 +160,7 @@ export function ChevronRightIcon(props: IconProps) {
   );
 }
 
+/** Left-pointing chevron icon. */
 export function ChevronLeftIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -158,6 +169,7 @@ export function ChevronLeftIcon(props: IconProps) {
   );
 }
 
+/** Downward-pointing chevron icon. */
 export function ChevronDownIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -166,6 +178,7 @@ export function ChevronDownIcon(props: IconProps) {
   );
 }
 
+/** Checkmark icon. */
 export function CheckIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -174,6 +187,7 @@ export function CheckIcon(props: IconProps) {
   );
 }
 
+/** Calendar icon. */
 export function CalendarIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -183,6 +197,7 @@ export function CalendarIcon(props: IconProps) {
   );
 }
 
+/** Map pin icon. */
 export function PinIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -192,6 +207,7 @@ export function PinIcon(props: IconProps) {
   );
 }
 
+/** Image placeholder icon. */
 export function ImageIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -202,6 +218,7 @@ export function ImageIcon(props: IconProps) {
   );
 }
 
+/** Phone handset icon. */
 export function PhoneIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -210,6 +227,7 @@ export function PhoneIcon(props: IconProps) {
   );
 }
 
+/** Multiple users icon. */
 export function UsersIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -220,6 +238,7 @@ export function UsersIcon(props: IconProps) {
   );
 }
 
+/** Referee whistle icon. */
 export function WhistleIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -230,6 +249,7 @@ export function WhistleIcon(props: IconProps) {
   );
 }
 
+/** Star icon. */
 export function StarIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -238,6 +258,7 @@ export function StarIcon(props: IconProps) {
   );
 }
 
+/** Sparkle icon. */
 export function SparkIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -246,6 +267,7 @@ export function SparkIcon(props: IconProps) {
   );
 }
 
+/** Logout icon. */
 export function LogoutIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -255,6 +277,7 @@ export function LogoutIcon(props: IconProps) {
   );
 }
 
+/** Warning/alert triangle icon. */
 export function AlertIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -264,6 +287,7 @@ export function AlertIcon(props: IconProps) {
   );
 }
 
+/** Dice icon. */
 export function DiceIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -277,6 +301,7 @@ export function DiceIcon(props: IconProps) {
   );
 }
 
+/** Medal icon. */
 export function MedalIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -287,6 +312,7 @@ export function MedalIcon(props: IconProps) {
   );
 }
 
+/** Goal net icon. */
 export function NetIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -296,6 +322,7 @@ export function NetIcon(props: IconProps) {
   );
 }
 
+/** Top hat icon (hat-trick). */
 export function HatIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -306,6 +333,7 @@ export function HatIcon(props: IconProps) {
   );
 }
 
+/** Flame icon (streak/hot form). */
 export function FlameIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -315,8 +343,7 @@ export function FlameIcon(props: IconProps) {
   );
 }
 
-/* -------------------------------- Eventos --------------------------------- */
-
+/** Goalkeeper glove icon. */
 export function GloveIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -326,6 +353,7 @@ export function GloveIcon(props: IconProps) {
   );
 }
 
+/** Substitution swap icon. */
 export function SwapIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -334,6 +362,7 @@ export function SwapIcon(props: IconProps) {
   );
 }
 
+/** Circled X icon. */
 export function XCircleIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -343,6 +372,7 @@ export function XCircleIcon(props: IconProps) {
   );
 }
 
+/** Assist icon. */
 export function AssistIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -353,6 +383,7 @@ export function AssistIcon(props: IconProps) {
   );
 }
 
+/** Football boot icon. */
 export function BootIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -362,9 +393,7 @@ export function BootIcon(props: IconProps) {
   );
 }
 
-/* ---------------- Ícones de golos icónicos (a jogada de cada golo) --------- */
-
-/** Livre com efeito (banana) — bola + trajetória curva para o canto. */
+/** Curling free kick — ball with a curved trajectory into the corner. */
 export function GoalCurveIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -375,6 +404,7 @@ export function GoalCurveIcon(props: IconProps) {
   );
 }
 
+/** Magnifying glass search icon. */
 export function SearchIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -384,7 +414,7 @@ export function SearchIcon(props: IconProps) {
   );
 }
 
-/** Voleio — bola no ar + remate em arco. */
+/** Volley — ball in the air with an arced strike. */
 export function GoalVolleyIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -395,7 +425,7 @@ export function GoalVolleyIcon(props: IconProps) {
   );
 }
 
-/** Pontapé de bicicleta — bola a passar por cima (arco invertido). */
+/** Bicycle kick — ball passing overhead (inverted arc). */
 export function GoalBicycleIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -406,7 +436,7 @@ export function GoalBicycleIcon(props: IconProps) {
   );
 }
 
-/** Pontapé de escorpião — calcanhar para trás. */
+/** Scorpion kick — heel strike sending the ball backward. */
 export function GoalScorpionIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -417,7 +447,7 @@ export function GoalScorpionIcon(props: IconProps) {
   );
 }
 
-/** Pirueta — setas de rotação à volta da bola. */
+/** Spin move — rotation arrows around the ball. */
 export function GoalSpinIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -430,7 +460,7 @@ export function GoalSpinIcon(props: IconProps) {
   );
 }
 
-/** Corrida em slalom — trajeto a driblar defesas. */
+/** Slalom run — path dribbling past defenders. */
 export function GoalDribbleIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -442,7 +472,7 @@ export function GoalDribbleIcon(props: IconProps) {
   );
 }
 
-/** Chapéu/balão por cima do guarda-redes — arco alto. */
+/** Lob over the goalkeeper — high arc. */
 export function GoalLobIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -453,7 +483,7 @@ export function GoalLobIcon(props: IconProps) {
   );
 }
 
-/** Corrida de campo inteiro — seta a atravessar o campo. */
+/** Full-field run — arrow crossing the pitch. */
 export function GoalRunIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -465,7 +495,7 @@ export function GoalRunIcon(props: IconProps) {
   );
 }
 
-/** Remate potente — bola + linhas de velocidade. */
+/** Powerful strike — ball with speed lines. */
 export function GoalPowerIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -475,7 +505,7 @@ export function GoalPowerIcon(props: IconProps) {
   );
 }
 
-/** Livre por cima da barreira — bola + barreira + arco. */
+/** Free kick over the wall — ball, wall, and arc. */
 export function GoalWallIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -486,7 +516,7 @@ export function GoalWallIcon(props: IconProps) {
   );
 }
 
-/** Jogada coletiva — teia de passes entre jogadores. */
+/** Team play — web of passes between players. */
 export function GoalWebIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -499,7 +529,7 @@ export function GoalWebIcon(props: IconProps) {
   );
 }
 
-/** Som ligado — altifalante com ondas. */
+/** Sound on — speaker with sound waves. */
 export function SoundOnIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -510,7 +540,7 @@ export function SoundOnIcon(props: IconProps) {
   );
 }
 
-/** Som desligado — altifalante cortado. */
+/** Sound off — muted speaker. */
 export function SoundOffIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -520,6 +550,7 @@ export function SoundOffIcon(props: IconProps) {
   );
 }
 
+/** Sun icon (light theme). */
 export function SunIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -529,6 +560,7 @@ export function SunIcon(props: IconProps) {
   );
 }
 
+/** Moon icon (dark theme). */
 export function MoonIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -537,6 +569,7 @@ export function MoonIcon(props: IconProps) {
   );
 }
 
+/** Computer icon (system theme). */
 export function ComputerIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -546,6 +579,7 @@ export function ComputerIcon(props: IconProps) {
   );
 }
 
+/** More (ellipsis) icon. */
 export function MoreIcon(props: IconProps) {
   return (
     <svg {...base(props)}>
@@ -556,11 +590,6 @@ export function MoreIcon(props: IconProps) {
   );
 }
 
-/* --------------------------- Ícones por nome ------------------------------ */
-/**
- * Mapeia uma chave semântica (guardada na BD ou em metadados) para o SVG.
- * Substitui os emojis: os desafios e as conquistas guardam a chave, não o glifo.
- */
 const ICON_BY_NAME: Record<string, ComponentType<IconProps>> = {
   ball: BallIcon,
   target: TargetIcon,
@@ -587,10 +616,10 @@ const ICON_BY_NAME: Record<string, ComponentType<IconProps>> = {
   g_web: GoalWebIcon,
 };
 
-/** Nomes disponíveis para `NamedIcon` (ex.: escolher o ícone de uma conquista). */
+/** Names available for `NamedIcon` (e.g. picking an achievement's icon). */
 export const ICON_NAMES = Object.keys(ICON_BY_NAME);
 
-/** Ícone escolhido por nome; cai no medalha por omissão (chave desconhecida). */
+/** Icon chosen by name; falls back to the medal icon for an unknown key. */
 export function NamedIcon({ name, ...props }: IconProps & { name: string }) {
   const Icon = ICON_BY_NAME[name] ?? MedalIcon;
   return <Icon {...props} />;

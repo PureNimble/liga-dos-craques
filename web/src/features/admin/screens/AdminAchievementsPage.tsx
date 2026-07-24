@@ -20,6 +20,7 @@ import {
 import cards from '../adminCards.module.css';
 import s from './AdminAchievementsPage.module.css';
 
+/** Admin screen for creating, editing and toggling achievements. */
 export function AdminAchievementsPage() {
   const { data: achievements, isLoading } = useAllAchievements();
   const [editing, setEditing] = useState<Achievement | null>(null);

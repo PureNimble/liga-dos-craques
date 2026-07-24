@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos do consentimento de analytics (banner + cartão em Definições). */
 export const trackingTranslations = {
   'settings.privacy.title': { pt: 'Registo de atividade', en: 'Activity tracking' },
   'settings.privacy.legalNote': {
@@ -32,4 +31,5 @@ export const trackingTranslations = {
   'consent.error': { pt: 'Não foi possível guardar: {message}', en: "Couldn't save: {message}" },
 } satisfies TranslationDict;
 
+/** Valid translation keys for the tracking feature. */
 export type TrackingTranslationKey = keyof typeof trackingTranslations;

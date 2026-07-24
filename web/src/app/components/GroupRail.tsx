@@ -18,19 +18,14 @@ interface HoverTarget {
 }
 
 /**
- * Coluna de grupos (tablet/desktop) — tocar num círculo troca logo de grupo;
- * clique direito ou duplo clique abre as definições DESSE grupo (código,
- * membros, sair — e administração se fores admin dele), sem ter de o tornar
- * ativo primeiro. "+" é só para ADICIONAR um grupo (criar/entrar). No
- * telemóvel não há espaço para a coluna — a troca continua a ser pelo botão
- * no Navbar.
+ * Group column (tablet/desktop): tapping a circle switches the active group;
+ * right-click or double-click opens that group's settings without activating it.
+ * The "+" button only adds a group (create/join). Hidden on mobile.
  */
 export function GroupRail() {
   const { groupId, myGroups, switchGroup } = useActiveGroup();
   const [manageGroupId, setManageGroupId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
-  // Um só nó de tooltip, posicionado por JS e desenhado fora da coluna (portal) —
-  // assim não é cortado pelo overflow-y:auto da lista quando há muitos grupos.
   const [hover, setHover] = useState<HoverTarget | null>(null);
 
   function openManage(e: MouseEvent, clickedGroupId: string) {

@@ -1,6 +1,6 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** Textos da navegação (Navbar, NavDrawer, GroupRail) — cromo sempre visível. */
+/** Translation strings for navigation chrome (Navbar, NavDrawer, GroupRail) — always visible. */
 export const navTranslations = {
   'nav.home': { pt: 'Início', en: 'Home' },
   'nav.games': { pt: 'Jogos', en: 'Games' },
@@ -25,4 +25,5 @@ export const navTranslations = {
   'navbar.openMenuUnread': { pt: 'Abrir menu ({count} por ler)', en: 'Open menu ({count} unread)' },
 } satisfies TranslationDict;
 
+/** Valid translation keys for navigation chrome. */
 export type NavTranslationKey = keyof typeof navTranslations;

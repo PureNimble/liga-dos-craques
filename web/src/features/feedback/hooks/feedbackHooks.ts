@@ -3,13 +3,15 @@ import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { Database } from '@/types/database';
 
+/** Row of the bug_report table. */
 export type BugReport = Database['public']['Tables']['bug_report']['Row'];
 
+/** A bug report joined with its reporter's basic profile info. */
 export interface BugReportWithReporter extends BugReport {
   reporter: { name: string; photo_url: string | null } | null;
 }
 
-/** Cria um reporte em nome do próprio utilizador. */
+/** Creates a bug report on behalf of the current user. */
 export function useSubmitBugReport() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -27,7 +29,7 @@ export function useSubmitBugReport() {
   });
 }
 
-/** Admin: todos os reportes (por resolver primeiro). */
+/** Admin: all bug reports, unresolved first. */
 export function useBugReports() {
   return useQuery({
     queryKey: ['bug_reports'],
@@ -43,7 +45,7 @@ export function useBugReports() {
   });
 }
 
-/** Nº de reportes por resolver (para o dashboard). */
+/** Count of unresolved bug reports, for the dashboard. */
 export function useOpenBugReportCount() {
   return useQuery({
     queryKey: ['bug_reports_open_count'],
@@ -59,7 +61,7 @@ export function useOpenBugReportCount() {
   });
 }
 
-/** Admin: alterna o estado de um reporte (resolvido / por resolver). */
+/** Admin: toggles a bug report's status (resolved / unresolved). */
 export function useResolveBugReport() {
   const queryClient = useQueryClient();
   return useMutation({

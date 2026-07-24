@@ -4,14 +4,10 @@ import s from './UsageHeatmap.module.css';
 
 interface Props {
   rows: HeatRow[];
-  /** Nome do que está a ser contado (ex.: 'ações'). */
   unit: string;
 }
 
-/**
- * Mapa de calor dia da semana × faixa horária (magnitude numa só hue).
- * Feito à mão em CSS — sem biblioteca de gráficos.
- */
+/** Weekday x time-band heatmap (single-hue magnitude), hand-built in CSS. */
 export function UsageHeatmap({ rows, unit }: Props) {
   const max = rows.reduce((m, r) => Math.max(m, ...r.cells.map((c) => c.count)), 0);
   const weekdays = rows[0]?.cells.map((c) => c.label) ?? [];

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { GroupContext, type GroupContextValue } from '../components/GroupProvider';
 
+/** Reads the active-group context; throws outside a `GroupProvider`. */
 export function useActiveGroup(): GroupContextValue {
   const ctx = useContext(GroupContext);
   if (!ctx) {
@@ -9,7 +10,7 @@ export function useActiveGroup(): GroupContextValue {
   return ctx;
 }
 
-/** Atalho para o id do grupo ativo — é o que a maioria dos hooks precisa. */
+/** Shortcut for the active group's id, which most hooks need. */
 export function useActiveGroupId(): string {
   return useActiveGroup().groupId;
 }

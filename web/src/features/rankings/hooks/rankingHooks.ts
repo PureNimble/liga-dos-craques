@@ -3,12 +3,16 @@ import { supabase } from '@/shared/lib/supabase';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
 import type { Database } from '@/types/database';
 
+/** Row type for the overall ranking view. */
 export type RankingOverall = Database['public']['Views']['v_ranking_overall']['Row'];
+/** Row type for the by-format ranking view. */
 export type RankingByFormat = Database['public']['Views']['v_ranking_by_format']['Row'];
+/** Row type for the by-period (monthly) ranking view. */
 export type RankingByPeriod = Database['public']['Views']['v_ranking_by_period']['Row'];
+/** Row type for the annual ranking view. */
 export type RankingAnnual = Database['public']['Views']['v_ranking_annual']['Row'];
 
-/** Ranking geral (e base para "por posição", filtrado no cliente) do grupo ativo. */
+/** Fetches the overall ranking (also the base for the by-position view) for the active group. */
 export function useRankingOverall() {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -26,7 +30,7 @@ export function useRankingOverall() {
   });
 }
 
-/** Ranking por formato (5v5, 7v7, …) do grupo ativo. */
+/** Fetches the ranking by game format (5v5, 7v7, ...) for the active group. */
 export function useRankingByFormat(formatCode: string | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -45,7 +49,7 @@ export function useRankingByFormat(formatCode: string | undefined) {
   });
 }
 
-/** Ranking mensal (ano + mês) do grupo ativo. */
+/** Fetches the monthly ranking (year + month) for the active group. */
 export function useRankingByPeriod(year: number, month: number | undefined) {
   const groupId = useActiveGroupId();
   return useQuery({
@@ -64,7 +68,7 @@ export function useRankingByPeriod(year: number, month: number | undefined) {
   });
 }
 
-/** Ranking anual (agregado por ano) do grupo ativo. */
+/** Fetches the annual ranking (aggregated by year) for the active group. */
 export function useRankingAnnual(year: number, enabled: boolean) {
   const groupId = useActiveGroupId();
   return useQuery({

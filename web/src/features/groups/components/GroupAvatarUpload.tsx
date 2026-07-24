@@ -11,9 +11,9 @@ interface GroupAvatarUploadProps {
   onUploaded: (publicUrl: string) => void;
 }
 
-const MAX_INPUT_BYTES = 8 * 1024 * 1024; // 8 MB antes de comprimir
+const MAX_INPUT_BYTES = 8 * 1024 * 1024;
 
-/** Upload da foto do grupo — mesmo padrão do avatar de perfil, path prefixado pelo group_id. */
+/** Uploads the group photo, storing it under a path prefixed by the group id. */
 export function GroupAvatarUpload({ groupId, photoUrl, name, onUploaded }: GroupAvatarUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);

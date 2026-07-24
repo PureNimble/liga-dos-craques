@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { env } from '@/shared/lib/env';
 
-/** Suporte do browser a Web Push (e chave VAPID configurada). */
 export const pushSupported =
   typeof window !== 'undefined' &&
   'serviceWorker' in navigator &&
@@ -23,7 +22,7 @@ async function getRegistration(): Promise<ServiceWorkerRegistration> {
   );
 }
 
-/** Se este browser/dispositivo já tem uma subscrição push ativa. */
+/** Checks whether this device already has an active push subscription. */
 export function usePushSubscriptionStatus() {
   return useQuery({
     queryKey: ['push_subscription_status'],
@@ -36,7 +35,7 @@ export function usePushSubscriptionStatus() {
   });
 }
 
-/** Pede permissão, subscreve neste dispositivo e grava a subscrição no servidor. */
+/** Requests permission, subscribes this device to push, and saves the subscription server-side. */
 export function useEnablePush(userId: string | undefined) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -57,7 +56,6 @@ export function useEnablePush(userId: string | undefined) {
       const json = subscription.toJSON();
       const endpoint = json.endpoint as string;
 
-      // Reinscrever (mesmo endpoint) substitui a linha em vez de falhar por duplicado.
       await supabase.from('push_subscription').delete().eq('endpoint', endpoint);
       const { error } = await supabase.from('push_subscription').insert({
         user_id: userId,
@@ -71,7 +69,7 @@ export function useEnablePush(userId: string | undefined) {
   });
 }
 
-/** Cancela a subscrição push neste dispositivo. */
+/** Unsubscribes this device from push. */
 export function useDisablePush() {
   const queryClient = useQueryClient();
   return useMutation({

@@ -9,6 +9,7 @@ import { I18nProvider } from '@/shared/i18n/I18nProvider';
 import { i18nRegistry } from './lib/i18nRegistry';
 import { router } from './router';
 
+/** Root component: wires theme, i18n, query client, toasts, confirm dialogs, auth and routing. */
 export function App() {
   return (
     <ThemeProvider>

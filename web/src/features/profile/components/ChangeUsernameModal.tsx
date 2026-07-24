@@ -21,7 +21,7 @@ interface ChangeUsernameModalProps {
   onClose: () => void;
 }
 
-/** Modal focado só na troca do nome de utilizador (Definições > Conta). */
+/** Modal focused solely on changing the username (Settings > Account). */
 export function ChangeUsernameModal({ open, currentUsername, onClose }: ChangeUsernameModalProps) {
   const updateUsername = useUpdateUsername();
   const toast = useToast();

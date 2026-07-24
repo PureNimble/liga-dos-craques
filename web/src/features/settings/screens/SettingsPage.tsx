@@ -28,7 +28,7 @@ const THEME_ORDER: ThemeChoice[] = ['system', 'dark', 'light'];
 
 type ActiveSheet = 'appearance' | 'language' | null;
 
-/** Definições da conta: perfil, aparência, idioma, privacidade, ajuda e sessão. */
+/** Account settings: profile, appearance, language, privacy, help, and session. */
 export function SettingsPage() {
   const { user, signOut } = useAuth();
   const { data: profile } = useProfile();

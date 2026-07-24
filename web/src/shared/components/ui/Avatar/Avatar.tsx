@@ -20,6 +20,7 @@ function initials(name?: string | null) {
   return (parts[0]?.[0] ?? '') + (parts.length > 1 ? (parts[parts.length - 1][0] ?? '') : '');
 }
 
+/** Renders a player photo, or initials as a fallback when no `src` is given. */
 export function Avatar({ name, src, size = 'md', className = '' }: AvatarProps) {
   if (src) {
     return (
