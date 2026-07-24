@@ -53,13 +53,14 @@ grant insert (user_id, endpoint, p256dh, auth_key) on public.push_subscription t
 -- -----------------------------------------------------------------------------
 -- Trigger: cada novo aviso dispara o envio do push (assíncrono, via pg_net).
 -- -----------------------------------------------------------------------------
-create extension if not exists pg_net with schema extensions;
+-- pg_net não é relocatable — instala sempre no seu próprio schema `net`.
+create extension if not exists pg_net;
 
 create or replace function public.push_notify_trigger()
 returns trigger
 language plpgsql
 security definer
-set search_path = public, extensions
+set search_path = public
 as $$
 declare
   v_url    text;
