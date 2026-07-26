@@ -9,6 +9,11 @@ on:
       - 'supabase/**'
       - '.github/workflows/deploy.yml'
 
+# GITHUB_TOKEN só precisa de ler o código (checkout); o deploy usa os
+# segredos do Supabase, não a API do GitHub.
+permissions:
+  contents: read
+
 concurrency:
   group: deploy-supabase
   cancel-in-progress: false

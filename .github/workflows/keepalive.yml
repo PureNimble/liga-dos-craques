@@ -8,6 +8,9 @@ on:
     - cron: '0 8,20 * * *' # 08:00 e 20:00 UTC, todos os dias
   workflow_dispatch: {} # permite disparar manualmente para testar
 
+# Não faz checkout nem chama a API do GitHub - GITHUB_TOKEN não é necessário.
+permissions: {}
+
 jobs:
   ping:
     name: Ping ao endpoint de saúde
