@@ -104,9 +104,18 @@ O código vive em `src/features/<domínio>/` (auth, games, teams, events, stats,
 Push para `main`:
 
 - Frontend → a Vercel faz build e publica automaticamente (Root Directory = `web`); PRs geram preview URLs.
-- Alterações em `supabase/**` → `deploy.yml` aplica migrações e faz deploy das Edge Functions.
+- Alterações em `supabase/**` → `deploy.yml` aplica migrações (`supabase db push`) e faz deploy das Edge Functions - a lista de functions é explícita no workflow (`health`, `send-push`); **adicionar uma Edge Function nova exige acrescentar o passo de deploy correspondente**, não é automático a partir de `functions/`.
 
-Workflows: `ci.yml` (lint/typecheck/test/build), `db-check.yml` (pgTAP), `deploy.yml`, `keepalive.yml`, `backup.yml`, `cleanup.yml` (semanal: chama `purge_stale_data()` com a service_role - apaga avisos lidos, tracking com mais de 180 dias, sessões penduradas e sorteios abandonados; nunca toca em histórico). Precisa do segredo `SUPABASE_SERVICE_ROLE_KEY`.
+Workflows (`.github/workflows/`):
+
+- **`ci.yml`** - lint/typecheck/test/build do frontend, em push e PR para `main`; cancela execuções antigas do mesmo ref. O build usa `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` fictícios só para passar a validação de env (não liga a um projeto real).
+- **`db-check.yml`** - em push/PR que tocam `supabase/**`: sobe Supabase local via Docker, `supabase db reset` (todas as migrações + seed numa BD limpa, apanha erros de SQL antes do deploy) e `supabase test db` (pgTAP). Tem também um passo de "drift de tipos" (`supabase gen types` vs `database.ts`) que é **só informativo** (`continue-on-error: true`) - os tipos são mantidos à mão, não gerados no CI.
+- **`deploy.yml`** - só dispara com mudanças em `supabase/**` (ou no próprio workflow); `concurrency.cancel-in-progress: false`, ou seja nunca cancela um deploy a meio, só enfileira o seguinte.
+- **`keepalive.yml`** - cron 08:00/20:00 UTC todos os dias + `workflow_dispatch`, ping à Edge Function `health`; reforçado externamente por um monitor UptimeRobot no mesmo endpoint.
+- **`backup.yml`** - cron semanal (domingo 03:30 UTC) + `workflow_dispatch`, `supabase db dump` (schema + dados em ficheiros separados) como artefacto privado (retenção 90 dias) - rede de segurança porque o plano gratuito não garante recuperação a ponto no tempo.
+- **`cleanup.yml`** - cron semanal (segunda 04:00 UTC) + `workflow_dispatch`, chama a RPC `purge_stale_data()` via REST com a service_role key - apaga avisos lidos, tracking com mais de 180 dias, sessões penduradas e sorteios abandonados; nunca toca em histórico (XP, jogos, eventos, conquistas). Precisa do segredo `SUPABASE_SERVICE_ROLE_KEY` além do `SUPABASE_PROJECT_REF` já usado pelo keep-alive.
+
+Segredos usados no total (GitHub Secrets): `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## Docs
 
