@@ -1,0 +1,48 @@
+.rankingList {
+  display: flex;
+  min-height: 13.75rem; /* 5 rows x 2.75rem, fixed regardless of how many rows there actually are */
+  flex: 1;
+  flex-direction: column;
+}
+.rankingRow {
+  display: flex;
+  flex: 1;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.rankingRow:last-child {
+  border-bottom: none;
+}
+.rankingRowSelf {
+  border-radius: var(--radius-md);
+  background-color: var(--accent-surface-faint);
+}
+.rankingPos {
+  width: 1.25rem;
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-faint);
+  text-align: center;
+}
+.rankingName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+.rankingXp {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}

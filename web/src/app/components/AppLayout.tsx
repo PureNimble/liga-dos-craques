@@ -4,6 +4,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { GroupRail } from './GroupRail';
 import { useProfileSuspense, type FullProfile } from '@/features/profile/hooks/profileHooks';
+import { profileCompletion } from '@/features/profile/lib/profileCompletion';
+import { ProfileOnboardingPage } from '@/features/profile/components/ProfileOnboardingPage';
 import { useMyGroupsSuspense } from '@/features/groups/hooks/groupHooks';
 import { GroupProvider } from '@/features/groups/components/GroupProvider';
 import { useActiveGroup } from '@/features/groups/hooks/useActiveGroup';
@@ -18,6 +20,10 @@ import s from './AppLayout.module.css';
 function AppShell() {
   const { data: profile } = useProfileSuspense();
   const { data: myGroups } = useMyGroupsSuspense();
+
+  if (!profileCompletion(profile).isComplete) {
+    return <ProfileOnboardingPage profile={profile} />;
+  }
 
   if (myGroups.length === 0) {
     return <GroupOnboardingPage />;

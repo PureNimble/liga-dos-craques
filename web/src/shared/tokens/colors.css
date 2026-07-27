@@ -9,17 +9,24 @@
   --gray-300: #cbd5e1;
   --gray-400: #94a3b8;
   --gray-500: #64748b;
-  --gray-700: #31353f;
-  --gray-750: #23262e;
-  --gray-800: #191c22;
-  --gray-850: #131519;
-  --gray-900: #0c0e12;
-  --gray-950: #08090c;
+  /* gray-700..950: superfícies escuras com tom de "navy" (holofotes à noite),
+     não neutros puros - ver colors.css original vs. esta revisão de marca. */
+  --gray-700: #2a3658;
+  --gray-750: #202a48;
+  --gray-800: #182038;
+  --gray-850: #10162b;
+  --gray-900: #0b0f1e;
+  --gray-950: #070912;
   --orange-300: #fdba74;
   --orange-400: #fb923c;
   --orange-600: #ea580c;
-  /* Primitivos: verde (marca) e vermelho (perigo) - 300/400/500 para uso em
-     fundo/decoração escura, 600/700 para texto legível sobre fundo claro. */
+  /* Primitivo: azul claro (accent-soft do tema escuro). O accent principal
+     (dois tons: #0057b8 claro / #3d86ff escuro) vive direto na camada
+     semântica abaixo, não aqui - é a cor "de marca" do produto. */
+  --blue-300: #93c5fd;
+  /* Verde e vermelho - semântica de resultado (vitória/perigo), não a marca.
+     300/400/500 para uso em fundo/decoração escura, 600/700 para texto
+     legível sobre fundo claro. */
   --green-300: #6ee7b7;
   --green-400: #34d399;
   --green-500: #10b981;
@@ -41,6 +48,8 @@
   --amber-700: #b45309;
   --emerald-600: #059669;
   --purple-300: #d8b4fe;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
   --purple-600: #9333ea;
   --white: #ffffff;
 }
@@ -51,32 +60,38 @@
    ========================================================================== */
 :root,
 [data-theme='dark'] {
-  /* Texto */
-  --text-color: var(--gray-100);
-  --text-muted: var(--gray-300);
-  --text-subtle: var(--gray-400);
+  /* Texto - tema escuro "holofotes de estádio à noite", nunca preto puro. */
+  --text-color: #f6f8fb;
+  --text-muted: #c5cfdd;
+  --text-subtle: #92a1b5;
   --text-faint: var(--gray-500);
   --text-on-accent: var(--gray-950);
   --text-placeholder: var(--gray-500);
   --text-error: var(--red-400);
 
   /* Acção / marca */
-  --accent: var(--green-500);
-  --accent-strong: var(--green-400);
-  --accent-soft: var(--green-300);
-  --danger: var(--red-500);
+  --accent: #3d86ff;
+  --accent-strong: #6ba3ff;
+  --accent-soft: var(--blue-300);
+  /* Valor fixo do azul (omissão), imune ao `[data-accent]` ativo - usado no swatch de Definições. */
+  --accent-blue: #3d86ff;
+  --success: #2ec27e;
+  --warning: var(--amber-500);
+  --danger: #e5585c;
   --danger-hover: var(--red-400);
 
   /* Gradientes (cartões de destaque do dashboard) */
   --gradient-emerald: linear-gradient(140deg, var(--green-500), var(--emerald-600));
   --gradient-teal: linear-gradient(140deg, var(--sky-500), var(--green-400));
+  --gradient-hero: linear-gradient(135deg, var(--indigo-600), var(--purple-600));
 
-  /* Superfícies (fundos de "caixa" e de acção) */
-  --surface-page: var(--gray-950);
+  /* Superfícies (fundos de "caixa" e de acção) - arquiteturais, sem glass:
+     opacas, só a borda/sombra as separa do fundo. */
+  --surface-page: #0d1625;
   --surface-glass: rgb(16 18 22 / 0.78); /* barras fixas com desfoque */
   --surface-input: var(--gray-900);
-  --surface-card: rgb(25 28 34 / 0.7); /* gray-800 a 70% */
-  --surface-card-hover: rgb(35 38 46 / 0.7);
+  --surface-card: #172131;
+  --surface-card-hover: #1b2740;
   --surface-translucent: rgb(255 255 255 / 0.04);
   --surface-translucent-hover: rgb(255 255 255 / 0.08);
   --surface-ghost-hover: rgb(255 255 255 / 0.06);
@@ -86,26 +101,27 @@
      sentido no escuro; cada `*.module.css` deve referenciar estas, nunca os
      primitivos `--gray-*` diretamente, para o tema claro poder inverter. */
   --surface-well: var(--gray-900); /* poço recuado (rail de grupos, placeholder de vídeo) */
-  --surface-panel: var(--gray-850); /* painel sólido elevado (modal, faixa de abas) */
-  --surface-panel-hover: var(--gray-800);
+  --surface-panel: #1f2a3d; /* superfície elevada (modal, faixa de abas) */
+  --surface-panel-hover: #263248;
   --surface-chip: var(--gray-750); /* chip/pílula/ícone sólido */
   --surface-chip-strong: var(--gray-700); /* chip em hover/estado ativo */
   --shimmer-highlight: rgb(255 255 255 / 0.05); /* faixa de brilho do skeleton */
 
-  --accent-surface: rgb(16 185 129 / 0.15); /* verde translúcido (ícones/realces) */
-  --accent-surface-faint: rgb(16 185 129 / 0.05);
-  --accent-ring: rgb(16 185 129 / 0.25);
-  --accent-border: rgb(16 185 129 / 0.4);
-  --accent-deep-surface: rgb(6 78 59 / 0.4); /* verde profundo (onboarding) */
+  --accent-surface: rgb(61 134 255 / 0.15); /* azul translúcido (ícones/realces) */
+  --accent-surface-faint: rgb(61 134 255 / 0.05);
+  --accent-ring: rgb(61 134 255 / 0.25);
+  --accent-border: rgb(61 134 255 / 0.4);
+  --accent-deep-surface: rgb(30 58 138 / 0.4); /* azul profundo (onboarding, cartão de jogo) */
+  /* Navy fixo (imune a tema) tingido com a cor de destaque - cabeçalho/rail/
+     banner "de marca" que devem seguir a escolha em Definições sem nunca
+     ficar claros no tema claro. */
+  --surface-brand-dark: color-mix(in srgb, var(--accent) 22%, var(--gray-900));
   --danger-border: rgb(239 68 68 / 0.25);
-  --accent-glow: rgb(16 185 129 / 0.13); /* brilho de relvado (cabeçalho de jogo) */
 
   /* Equipas (A verde, B azul) - reutilizado em cabeçalho, campo e painel */
   --team-a: var(--green-500);
-  --team-a-ring: rgb(16 185 129 / 0.6);
   --team-a-token-ring: rgb(110 231 183 / 0.5);
   --team-b: var(--sky-500);
-  --team-b-ring: rgb(14 165 233 / 0.6);
   --team-b-token-ring: rgb(125 211 252 / 0.5);
 
   /* Campo (slots de arrasto) */
@@ -118,10 +134,12 @@
   --surface-tooltip: rgb(25 28 34 / 0.95);
   --overlay: rgb(0 0 0 / 0.6); /* fundo escurecido atrás de modais */
 
-  /* Bordas */
+  /* Bordas - tema escuro conta com a borda (não a sombra) para separar
+     superfícies; ver `--shadow-sm/md/lg` em shadows.css, quase invisíveis
+     aqui de propósito. */
   --border-input: var(--gray-700);
-  --border-default: var(--gray-700); /* borda sólida mais forte (avatar, spinner, modal) */
-  --border-subtle: var(--gray-750); /* borda sólida mais fraca (separadores, faixas) */
+  --border-default: rgb(255 255 255 / 0.08);
+  --border-subtle: rgb(255 255 255 / 0.05);
   --border-faint: rgb(255 255 255 / 0.07);
   --border-faint-hover: rgb(255 255 255 / 0.12);
   --border-light: rgb(255 255 255 / 0.1);
@@ -217,6 +235,53 @@
 }
 
 /* ==========================================================================
+   Cor de destaque escolhida pelo utilizador (Definições → Aparência).
+   `blue` é a omissão (já definida acima, sem atributo); estes blocos só
+   trocam a família `--accent-*` - o resto da paleta (superfícies, semântica
+   de resultado) mantém-se igual. Ver `AccentProvider`.
+   ========================================================================== */
+[data-accent='green'] {
+  --accent: var(--green-500);
+  --accent-strong: var(--green-400);
+  --accent-soft: var(--green-300);
+  --accent-surface: rgb(16 185 129 / 0.15);
+  --accent-surface-faint: rgb(16 185 129 / 0.05);
+  --accent-ring: rgb(16 185 129 / 0.25);
+  --accent-border: rgb(16 185 129 / 0.4);
+  --accent-deep-surface: rgb(6 78 59 / 0.4);
+}
+[data-accent='red'] {
+  --accent: var(--red-500);
+  --accent-strong: var(--red-400);
+  --accent-soft: var(--red-300);
+  --accent-surface: rgb(239 68 68 / 0.15);
+  --accent-surface-faint: rgb(239 68 68 / 0.05);
+  --accent-ring: rgb(239 68 68 / 0.25);
+  --accent-border: rgb(239 68 68 / 0.4);
+  --accent-deep-surface: rgb(127 29 29 / 0.4);
+}
+[data-accent='purple'] {
+  --accent: var(--purple-500);
+  --accent-strong: var(--purple-400);
+  --accent-soft: var(--purple-300);
+  --accent-surface: rgb(168 85 247 / 0.15);
+  --accent-surface-faint: rgb(168 85 247 / 0.05);
+  --accent-ring: rgb(168 85 247 / 0.25);
+  --accent-border: rgb(168 85 247 / 0.4);
+  --accent-deep-surface: rgb(88 28 135 / 0.4);
+}
+[data-accent='amber'] {
+  --accent: var(--amber-500);
+  --accent-strong: var(--amber-400);
+  --accent-soft: var(--amber-300);
+  --accent-surface: rgb(245 158 11 / 0.15);
+  --accent-surface-faint: rgb(245 158 11 / 0.05);
+  --accent-ring: rgb(245 158 11 / 0.25);
+  --accent-border: rgb(245 158 11 / 0.4);
+  --accent-deep-surface: rgb(120 53 15 / 0.4);
+}
+
+/* ==========================================================================
    Tema claro - só a camada semântica muda; os primitivos são os mesmos.
    `@media` cobre quem não decidiu explicitamente (segue o sistema); o
    seletor de atributo tem mais especificidade e ganha sempre que o utilizador
@@ -227,27 +292,30 @@
    ========================================================================== */
 @media (prefers-color-scheme: light) {
   :root {
-    --text-color: var(--gray-950);
-    --text-muted: var(--gray-700);
-    --text-subtle: var(--gray-500);
+    --text-color: #0f1728;
+    --text-muted: #5b6678;
+    --text-subtle: #8c97a8;
     --text-faint: var(--gray-400);
     --text-on-accent: var(--gray-950);
     --text-placeholder: var(--gray-400);
     --text-error: var(--red-600);
 
-    --accent-soft: var(--green-700);
+    --accent-blue: #0057b8;
+    --success: #26a269;
+    --warning: var(--amber-500);
+    --danger: #d14343;
 
-    --surface-page: var(--gray-50);
+    --surface-page: #f6f7f9;
     --surface-glass: rgb(248 250 252 / 0.85);
     --surface-input: var(--white);
-    --surface-card: rgb(255 255 255 / 0.9);
-    --surface-card-hover: var(--gray-100);
+    --surface-card: #ffffff;
+    --surface-card-hover: #f1f3f6;
     --surface-translucent: rgb(0 0 0 / 0.04);
     --surface-translucent-hover: rgb(0 0 0 / 0.08);
     --surface-ghost-hover: rgb(0 0 0 / 0.06);
 
     --surface-well: var(--gray-200);
-    --surface-panel: var(--white);
+    --surface-panel: #fcfcfd;
     --surface-panel-hover: var(--gray-100);
     --surface-chip: var(--gray-200);
     --surface-chip-strong: var(--gray-300);
@@ -257,9 +325,9 @@
     --surface-sunken: var(--gray-200);
     --surface-tooltip: rgb(255 255 255 / 0.98);
 
-    --border-input: var(--gray-300);
-    --border-default: var(--gray-300);
-    --border-subtle: var(--gray-200);
+    --border-input: #e7eaf0;
+    --border-default: #e7eaf0;
+    --border-subtle: #eef1f5;
     --border-faint: rgb(0 0 0 / 0.14);
     --border-faint-hover: rgb(0 0 0 / 0.22);
     --border-light: rgb(0 0 0 / 0.12);
@@ -291,6 +359,34 @@
     --chart-crosshair: rgb(0 0 0 / 0.18);
     --chart-point-stroke: var(--white);
   }
+
+  /* Escopado a :not([data-accent]) para não sobrepor a escolha do utilizador
+     (mesma especificidade que os blocos [data-accent='X'] abaixo - só um dos
+     dois grupos pode aplicar-se a um dado <html>, nunca competem entre si). */
+  :root:not([data-accent]) {
+    --accent: #0057b8;
+    --accent-strong: #0046a5;
+    --accent-soft: #0046a5;
+    --accent-surface: #eaf2ff;
+    --accent-surface-faint: rgb(0 87 184 / 0.05);
+    --accent-ring: rgb(0 87 184 / 0.25);
+    --accent-border: rgb(0 87 184 / 0.4);
+    /* Azul de omissão no tema claro é escuro o suficiente para precisar de texto claro por cima. */
+    --text-on-accent: var(--white);
+  }
+
+  :root[data-accent='green'] {
+    --accent-soft: var(--green-700);
+  }
+  :root[data-accent='red'] {
+    --accent-soft: var(--red-600);
+  }
+  :root[data-accent='purple'] {
+    --accent-soft: var(--purple-600);
+  }
+  :root[data-accent='amber'] {
+    --accent-soft: var(--amber-700);
+  }
 }
 
 [data-theme='dark'] {
@@ -300,27 +396,30 @@
 [data-theme='light'] {
   color-scheme: light;
 
-  --text-color: var(--gray-950);
-  --text-muted: var(--gray-700);
-  --text-subtle: var(--gray-500);
+  --text-color: #0f1728;
+  --text-muted: #5b6678;
+  --text-subtle: #8c97a8;
   --text-faint: var(--gray-400);
   --text-on-accent: var(--gray-950);
   --text-placeholder: var(--gray-400);
   --text-error: var(--red-600);
 
-  --accent-soft: var(--green-700);
+  --accent-blue: #0057b8;
+  --success: #26a269;
+  --warning: var(--amber-500);
+  --danger: #d14343;
 
-  --surface-page: var(--gray-50);
+  --surface-page: #f6f7f9;
   --surface-glass: rgb(248 250 252 / 0.85);
   --surface-input: var(--white);
-  --surface-card: rgb(255 255 255 / 0.9);
-  --surface-card-hover: var(--gray-100);
+  --surface-card: #ffffff;
+  --surface-card-hover: #f1f3f6;
   --surface-translucent: rgb(0 0 0 / 0.04);
   --surface-translucent-hover: rgb(0 0 0 / 0.08);
   --surface-ghost-hover: rgb(0 0 0 / 0.06);
 
   --surface-well: var(--gray-200);
-  --surface-panel: var(--white);
+  --surface-panel: #fcfcfd;
   --surface-panel-hover: var(--gray-100);
   --surface-chip: var(--gray-200);
   --surface-chip-strong: var(--gray-300);
@@ -330,9 +429,9 @@
   --surface-sunken: var(--gray-200);
   --surface-tooltip: rgb(255 255 255 / 0.98);
 
-  --border-input: var(--gray-300);
-  --border-default: var(--gray-300);
-  --border-subtle: var(--gray-200);
+  --border-input: #e7eaf0;
+  --border-default: #e7eaf0;
+  --border-subtle: #eef1f5;
   --border-faint: rgb(0 0 0 / 0.14);
   --border-faint-hover: rgb(0 0 0 / 0.22);
   --border-light: rgb(0 0 0 / 0.12);
@@ -363,4 +462,31 @@
   --chart-ref: rgb(71 85 105 / 0.35);
   --chart-crosshair: rgb(0 0 0 / 0.18);
   --chart-point-stroke: var(--white);
+}
+
+/* Escopado a :not([data-accent]) para não sobrepor a escolha do utilizador -
+   ver o mesmo padrão no bloco @media (prefers-color-scheme: light) acima. */
+[data-theme='light']:not([data-accent]) {
+  --accent: #0057b8;
+  --accent-strong: #0046a5;
+  --accent-soft: #0046a5;
+  --accent-surface: #eaf2ff;
+  --accent-surface-faint: rgb(0 87 184 / 0.05);
+  --accent-ring: rgb(0 87 184 / 0.25);
+  --accent-border: rgb(0 87 184 / 0.4);
+  /* Azul de omissão no tema claro é escuro o suficiente para precisar de texto claro por cima. */
+  --text-on-accent: var(--white);
+}
+
+[data-theme='light'][data-accent='green'] {
+  --accent-soft: var(--green-700);
+}
+[data-theme='light'][data-accent='red'] {
+  --accent-soft: var(--red-600);
+}
+[data-theme='light'][data-accent='purple'] {
+  --accent-soft: var(--purple-600);
+}
+[data-theme='light'][data-accent='amber'] {
+  --accent-soft: var(--amber-700);
 }

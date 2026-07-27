@@ -1,85 +1,82 @@
-import type { ReactNode } from 'react';
 import { LockOverlay } from '@/shared/components/ui';
-import { NamedIcon } from '@/shared/components/ui/icons';
 import { useT } from '@/shared/i18n/useT';
 import { ratingText } from '@/features/stats/lib/ratingColor';
-import { MIN_GAMES_FOR_STATS, statsLockMessage } from '@/features/stats/hooks/statsHooks';
+import {
+  MIN_GAMES_FOR_STATS,
+  statsLockMessage,
+  type PlayerStats,
+} from '@/features/stats/hooks/statsHooks';
 import s from './PlayerHeader.module.css';
 
+const MOCK_STATS: PlayerStats = {
+  player_id: '',
+  group_id: '',
+  name: '',
+  games: 14,
+  wins: 10,
+  draws: 2,
+  losses: 2,
+  goals: 21,
+  assists: 11,
+  saves: 0,
+  mvps: 7,
+  flops: 0,
+  avg_rating: 8.2,
+  strength_delta: null,
+};
+
 interface PlayerHeaderProps {
-  footLabel?: string | null;
-  avgRating?: number | null;
-  games?: number;
+  stats?: PlayerStats | null;
   own?: boolean;
-  featured?: { icon: string; label: string } | null;
 }
 
-/** Average-rating card (SofaScore-style) shown alongside the player card. */
-export function PlayerHeader({
-  footLabel,
-  avgRating,
-  games,
-  own = false,
-  featured,
-}: PlayerHeaderProps) {
+/** Season-average panel: big rating plus a season stat grid (SofaScore-style). */
+export function PlayerHeader({ stats, own = false }: PlayerHeaderProps) {
   const { t } = useT();
-  if (avgRating == null || (games ?? 0) < MIN_GAMES_FOR_STATS) {
-    return (
-      <LockOverlay locked className={s.lockWrap} message={statsLockMessage(t, own)}>
-        <div className={s.card}>
-          <div aria-hidden className={s.topGlow} />
-          <div className={s.row}>
-            <div className={s.rating}>
-              <span className={`${s.ratingValue} ${ratingText(7.4)}`}>7.4</span>
-              <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
-            </div>
-            <div className={s.divider} />
-            <div className={s.body}>
-              <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
-              <div className={s.chips}>
-                <Chip>{t('profile.header.games', { count: MIN_GAMES_FOR_STATS })}</Chip>
-              </div>
-            </div>
-          </div>
-        </div>
-      </LockOverlay>
-    );
-  }
-  return (
+  const locked = stats == null || stats.avg_rating == null || stats.games < MIN_GAMES_FOR_STATS;
+  const shown = locked ? MOCK_STATS : stats;
+  const perGame = shown.games > 0 ? (shown.goals / shown.games).toFixed(2) : '0';
+  const winRate = shown.games > 0 ? Math.round((shown.wins / shown.games) * 100) : 0;
+
+  const card = (
     <div className={s.card}>
-      <div aria-hidden className={s.topGlow} />
       <div className={s.row}>
         <div className={s.rating}>
-          <span className={`${s.ratingValue} ${ratingText(avgRating)}`}>
-            {avgRating.toFixed(1)}
+          <span className={`${s.ratingValue} ${ratingText(shown.avg_rating)}`}>
+            {(shown.avg_rating ?? 0).toFixed(1)}
           </span>
           <span className={s.ratingLabel}>{t('profile.header.avgRating')}</span>
         </div>
 
         <div className={s.divider} />
 
-        <div className={s.body}>
-          <p className={s.caption}>{t('profile.header.avgRatingCaption')}</p>
-          <div className={s.chips}>
-            {footLabel && <Chip>{t('profile.header.foot', { foot: footLabel })}</Chip>}
-            {games != null && games > 0 && (
-              <Chip>{t('profile.header.games', { count: games })}</Chip>
-            )}
-          </div>
-          {featured && (
-            <div className={s.featured}>
-              <span className={s.featuredIcon} aria-hidden>
-                <NamedIcon name={featured.icon} width={18} height={18} />
-              </span>
-              <span className={s.featuredLabel}>{featured.label}</span>
-            </div>
-          )}
+        <div className={s.grid}>
+          <Stat label={t('stats.games')} value={shown.games} />
+          <Stat label={t('stats.goals')} value={shown.goals} accent />
+          <Stat label={t('stats.assists')} value={shown.assists} />
+          <Stat label={t('stats.mvps')} value={shown.mvps} accent />
+          <Stat label={t('profile.header.goalsPerGame')} value={perGame} />
+          <Stat label={t('stats.winRate')} value={`${winRate}%`} accent />
         </div>
       </div>
     </div>
   );
+
+  if (locked) {
+    return (
+      <LockOverlay locked className={s.lockWrap} message={statsLockMessage(t, own)}>
+        {card}
+      </LockOverlay>
+    );
+  }
+  return card;
 }
 
-function Chip({ children }: { children: ReactNode }) {
-  return <span className={s.chip}>{children}</span>;
+function Stat({ label, value, accent }: { label: string; value: number | string; accent?: boolean }) {
+  return (
+    <div className={s.stat}>
+      <span className={`${s.statValue} ${accent ? s.statValueAccent : ''}`}>{value}</span>
+      <span className={s.statLabel}>{label}</span>
+    </div>
+  );
 }

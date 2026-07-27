@@ -1,0 +1,25 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+.frame {
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-chip);
+}
+.frame:active {
+  cursor: grabbing;
+}
+.frameRound {
+  border-radius: var(--radius-full);
+}
+.zoom {
+  width: 100%;
+  max-width: 260px;
+}

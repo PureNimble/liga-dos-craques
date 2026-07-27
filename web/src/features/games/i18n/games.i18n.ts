@@ -44,6 +44,12 @@ export const gamesTranslations = {
   'games.transition.cancelled': { pt: 'Cancelar jogo', en: 'Cancel game' },
 
   'games.detail.live': { pt: 'Ao vivo', en: 'Live' },
+  'games.detail.vs': { pt: 'vs', en: 'vs' },
+  'games.detail.organizedByLabel': { pt: 'Organizado por', en: 'Organized by' },
+  'games.detail.weatherLabel': { pt: 'Clima previsto', en: 'Forecast' },
+  'games.detail.weatherUnavailable': { pt: 'Sem dados', en: 'No data' },
+  'games.detail.formatLabel': { pt: 'Tipo de jogo', en: 'Game type' },
+  'games.detail.confirmedCount': { pt: '{count}/{max} confirmados', en: '{count}/{max} confirmed' },
   'games.detail.notFound': { pt: 'Jogo não encontrado.', en: 'Game not found.' },
   'games.detail.backToGames': { pt: '← Voltar aos jogos', en: '← Back to games' },
   'games.detail.back': { pt: 'Jogos', en: 'Games' },
@@ -69,28 +75,11 @@ export const gamesTranslations = {
     en: 'The game will be closed and XP awarded. This action is final.',
   },
   'games.detail.closeConfirm': { pt: 'Fechar jogo', en: 'Close game' },
-  'games.detail.closeRegistrationsTitle': {
-    pt: 'Encerrar inscrições?',
-    en: 'Close registrations?',
-  },
-  'games.detail.closeRegistrationsChanged': {
-    pt: '{count} inscritos → o formato desce para {format}. Vou ajustar o jogo e formar equipas equilibradas.',
-    en: '{count} registered → format drops to {format}. I’ll adjust the game and form balanced teams.',
-  },
-  'games.detail.closeRegistrationsSame': {
-    pt: '{count} inscritos · formato {format}. Vou formar equipas equilibradas; os excedentes ficam no banco.',
-    en: '{count} registered · {format} format. I’ll form balanced teams; anyone extra goes to the bench.',
-  },
-  'games.detail.closeRegistrationsConfirm': { pt: 'Encerrar e formar', en: 'Close and form teams' },
   'games.detail.manageTitle': { pt: 'Gerir jogo', en: 'Manage game' },
   'games.detail.editDetails': { pt: 'Editar detalhes', en: 'Edit details' },
   'games.detail.lockedNote': {
     pt: 'O jogo já começou - os detalhes estão bloqueados.',
     en: 'The game has already started - details are locked.',
-  },
-  'games.detail.closeRegistrationsAndForm': {
-    pt: 'Encerrar inscrições e formar equipas',
-    en: 'Close registrations and form teams',
   },
   'games.detail.currentResult': {
     pt: 'Resultado atual (dos eventos)',
@@ -106,6 +95,39 @@ export const gamesTranslations = {
   'games.detail.updateError': {
     pt: 'Não foi possível atualizar o estado.',
     en: "Couldn't update the status.",
+  },
+  'games.detail.tab.geral': { pt: 'Geral', en: 'Overview' },
+  'games.detail.tab.planteis': { pt: 'Plantéis', en: 'Rosters' },
+  'games.detail.tab.eventos': { pt: 'Eventos', en: 'Events' },
+  'games.detail.tab.convites': { pt: 'Convites', en: 'Invites' },
+  'games.detail.tab.estatisticas': { pt: 'Estatísticas', en: 'Stats' },
+  'games.detail.tab.resumo': { pt: 'Resumo', en: 'Summary' },
+  'games.detail.details.title': { pt: 'Detalhes do jogo', en: 'Match details' },
+  'games.detail.details.when': { pt: 'Data', en: 'Date' },
+  'games.detail.details.where': { pt: 'Local', en: 'Location' },
+  'games.detail.details.format': { pt: 'Formato', en: 'Format' },
+  'games.detail.details.notes': { pt: 'Notas', en: 'Notes' },
+  'games.detail.confirmations': { pt: 'Confirmações', en: 'Confirmations' },
+  'games.detail.pendingTitle': { pt: 'Jogadores ainda por confirmar', en: 'Players still to confirm' },
+  'games.detail.pendingTag': { pt: 'Convite pendente', en: 'Invite pending' },
+  'games.detail.morePending': { pt: '+{count} pendentes', en: '+{count} pending' },
+  'games.detail.openInvites': { pt: 'Gerir convites', en: 'Manage invites' },
+  'games.detail.noNotes': { pt: 'Sem notas.', en: 'No notes.' },
+  'games.detail.noPlayersYet': {
+    pt: 'Ainda sem jogadores inscritos.',
+    en: 'No players signed up yet.',
+  },
+  'games.detail.noEventsYet': {
+    pt: 'Os eventos aparecem quando o jogo começar.',
+    en: 'Events show up once the game starts.',
+  },
+  'games.detail.noStatsYet': {
+    pt: 'As estatísticas aparecem depois do apuramento.',
+    en: 'Stats show up after MVP/Flop is resolved.',
+  },
+  'games.detail.noSummaryYet': {
+    pt: 'O resumo aparece quando o jogo for fechado.',
+    en: 'The summary shows up once the game is closed.',
   },
 
   'games.roster.title': { pt: 'Jogadores', en: 'Players' },
@@ -132,11 +154,6 @@ export const gamesTranslations = {
   'games.roster.invite': { pt: 'Convidar', en: 'Invite' },
   'games.roster.alreadyIn': { pt: 'Estás neste jogo.', en: "You're in this game." },
   'games.roster.joinMe': { pt: 'Inscrever-me', en: 'Join' },
-
-  // NextGameTeaser
-  'games.nextGameTeaser.noGames': { pt: 'Sem jogos', en: 'No games' },
-  'games.nextGameTeaser.nextGame': { pt: 'Próximo jogo:', en: 'Next game:' },
-
 } satisfies TranslationDict;
 
 /** Union of all translation keys defined for the `games` feature. */

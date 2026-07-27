@@ -13,6 +13,7 @@ import { xpTranslations } from '@/features/xp/i18n/xp.i18n';
 import { statsTranslations } from '@/features/stats/i18n/stats.i18n';
 import { achievementsTranslations } from '@/features/achievements/i18n/achievements.i18n';
 import { placesTranslations } from '@/features/places/i18n/places.i18n';
+import { calendarTranslations } from '@/features/calendar/i18n/calendar.i18n';
 import { navTranslations } from '../i18n/nav.i18n';
 import { homeTranslations } from '../i18n/home.i18n';
 
@@ -34,4 +35,5 @@ export const i18nRegistry: TranslationDict = {
   ...statsTranslations,
   ...achievementsTranslations,
   ...placesTranslations,
+  ...calendarTranslations,
 };

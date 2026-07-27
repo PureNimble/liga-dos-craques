@@ -1,0 +1,43 @@
+.card {
+  composes: panel from './homePanel.module.css';
+  min-width: 0;
+}
+
+.progressBody {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+.progressFoot {
+  font-size: var(--font-size-sm);
+}
+.progressCount {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  color: var(--text-color);
+  padding-right: var(--space-xs);
+}
+.progressLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}
+.progressTrack {
+  margin-top: var(--space-sm);
+  height: 0.625rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-sunken);
+}
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-image: linear-gradient(to right, var(--accent), var(--accent-strong));
+  box-shadow: var(--shadow-glow);
+  transition: width 500ms ease;
+}

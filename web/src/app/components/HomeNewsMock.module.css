@@ -1,0 +1,40 @@
+.newsItem {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-md);
+}
+.newsThumb {
+  display: flex;
+  height: clamp(2.5rem, 6vw, 4rem);
+  width: clamp(3.75rem, 9vw, 6rem);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-card-sm);
+  background-color: var(--surface-chip);
+  color: var(--text-faint);
+}
+.newsBody {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.newsHeadline {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+}
+.newsDate {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}

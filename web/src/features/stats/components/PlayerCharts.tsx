@@ -9,10 +9,8 @@ import {
   statsLockMessage,
   type GameContribution,
   type RatingPoint,
-  type RecentGame,
 } from '../hooks/statsHooks';
 import { RatingTrend } from './RatingTrend';
-import { RecentMatchesCard } from './RecentMatches';
 import s from './PlayerCharts.module.css';
 
 const MOCK_TREND: RatingPoint[] = [6.2, 7.1, 5.8, 7.6, 6.9, 8.0].map((rating, i) => ({
@@ -34,152 +32,111 @@ const MOCK_XP = [
   { key: 'stats.assists', value: 50 },
   { key: 'achievements.title', value: 30 },
 ];
-const MOCK_RECENT: RecentGame[] = [
-  {
-    gameId: '1',
-    date: '',
-    label: 'J1',
-    rating: 7.2,
-    result: 'V',
-    scoreFor: 3,
-    scoreAgainst: 1,
-    formatLabel: '5v5',
-  },
-  {
-    gameId: '2',
-    date: '',
-    label: 'J2',
-    rating: 6.5,
-    result: 'E',
-    scoreFor: 2,
-    scoreAgainst: 2,
-    formatLabel: '5v5',
-  },
-  {
-    gameId: '3',
-    date: '',
-    label: 'J3',
-    rating: 8.1,
-    result: 'V',
-    scoreFor: 4,
-    scoreAgainst: 0,
-    formatLabel: '5v5',
-  },
-  {
-    gameId: '4',
-    date: '',
-    label: 'J4',
-    rating: 5.9,
-    result: 'D',
-    scoreFor: 1,
-    scoreAgainst: 2,
-    formatLabel: '5v5',
-  },
-  {
-    gameId: '5',
-    date: '',
-    label: 'J5',
-    rating: 7.0,
-    result: 'V',
-    scoreFor: 3,
-    scoreAgainst: 2,
-    formatLabel: '5v5',
-  },
-];
 
-/** Player chart cards (form trend, goals/assists, XP by source), returned as a fragment to fit into a grid. */
-export function PlayerCharts({
-  playerId,
-  games,
-  own = false,
-}: {
+interface ChartCardProps {
   playerId: string;
   games: number;
   own?: boolean;
-}) {
+}
+
+/** Card with the player's recent-form rating line chart. */
+export function FormTrendCard({ playerId, games, own = false }: ChartCardProps) {
   const { t } = useT();
   const { data: trend } = useRatingTrend(playerId);
-  const { data: contrib } = useContributions(playerId);
-  const { data: xp } = useXpBreakdown(playerId);
-
-  const hasContrib = (contrib ?? []).some((c) => c.goals > 0 || c.assists > 0);
 
   if (games < MIN_GAMES_FOR_STATS) {
     return (
-      <LockOverlay locked className={s.lockedWrap} message={statsLockMessage(t, own)}>
-        <div className={s.lockedGrid}>
-          <RecentMatchesCard data={MOCK_RECENT} />
-          <Card className={s.chartCard}>
-            <ChartHead
-              title={t('stats.chart.form')}
-              hint={t('stats.chart.lastGames', { count: MOCK_TREND.length })}
-            />
-            <div className={s.trendRow}>
-              <RatingTrend points={MOCK_TREND} />
-            </div>
-          </Card>
-          <Card>
-            <ChartHead
-              title={t('stats.chart.goalsAssists')}
-              hint={t('stats.chart.perGame')}
-            />
-            <ContributionBars data={MOCK_CONTRIB} t={t} />
-            <div className={s.legend}>
-              <span className={s.legendItem}>
-                <BallIcon width={14} height={14} className={s.iconGoal} /> {t('stats.goals')}
-              </span>
-              <span className={s.legendItem}>
-                <BootIcon width={14} height={14} className={s.iconAssist} />{' '}
-                {t('stats.assistsShort')}
-              </span>
-            </div>
-          </Card>
-          <Card className={s.chartCard}>
-            <ChartHead title={t('stats.chart.xpBySource')} hint={t('stats.chart.xpSourceHint')} />
-            <HBars items={MOCK_XP.map((x) => ({ label: t(x.key), value: x.value }))} suffix=" XP" />
-          </Card>
-        </div>
+      <LockOverlay locked message={statsLockMessage(t, own)}>
+        <Card className={s.chartCard}>
+          <ChartHead
+            title={t('stats.chart.form')}
+            hint={t('stats.chart.lastGames', { count: MOCK_TREND.length })}
+          />
+          <div className={s.trendRow}>
+            <RatingTrend points={MOCK_TREND} />
+          </div>
+        </Card>
       </LockOverlay>
     );
   }
 
-  return (
-    <>
-      {trend && trend.length >= 2 && (
-        <Card className={s.chartCard}>
-          <ChartHead
-            title={t('stats.chart.form')}
-            hint={t('stats.chart.lastGames', { count: trend.length })}
-          />
-          <div className={s.trendRow}>
-            <RatingTrend points={trend} />
-          </div>
-        </Card>
-      )}
+  if (!trend || trend.length < 2) return null;
 
-      {hasContrib && (
+  return (
+    <Card className={s.chartCard}>
+      <ChartHead title={t('stats.chart.form')} hint={t('stats.chart.lastGames', { count: trend.length })} />
+      <div className={s.trendRow}>
+        <RatingTrend points={trend} />
+      </div>
+    </Card>
+  );
+}
+
+/** Card with goals/assists per recent game, as stacked icon bars. */
+export function ContributionsCard({ playerId, games, own = false }: ChartCardProps) {
+  const { t } = useT();
+  const { data: contrib } = useContributions(playerId);
+
+  if (games < MIN_GAMES_FOR_STATS) {
+    return (
+      <LockOverlay locked message={statsLockMessage(t, own)}>
         <Card>
           <ChartHead title={t('stats.chart.goalsAssists')} hint={t('stats.chart.perGame')} />
-          <ContributionBars data={contrib ?? []} t={t} />
-          <div className={s.legend}>
-            <span className={s.legendItem}>
-              <BallIcon width={14} height={14} className={s.iconGoal} /> {t('stats.goals')}
-            </span>
-            <span className={s.legendItem}>
-              <BootIcon width={14} height={14} className={s.iconAssist} />{' '}
-              {t('stats.assistsShort')}
-            </span>
-          </div>
+          <ContributionBars data={MOCK_CONTRIB} t={t} />
+          <Legend t={t} />
         </Card>
-      )}
+      </LockOverlay>
+    );
+  }
 
-      {xp && xp.length > 0 && (
+  const hasContrib = (contrib ?? []).some((c) => c.goals > 0 || c.assists > 0);
+  if (!hasContrib) return null;
+
+  return (
+    <Card>
+      <ChartHead title={t('stats.chart.goalsAssists')} hint={t('stats.chart.perGame')} />
+      <ContributionBars data={contrib ?? []} t={t} />
+      <Legend t={t} />
+    </Card>
+  );
+}
+
+/** Card with the player's total XP broken down by source. */
+export function XpSourceCard({ playerId, games, own = false }: ChartCardProps) {
+  const { t } = useT();
+  const { data: xp } = useXpBreakdown(playerId);
+
+  if (games < MIN_GAMES_FOR_STATS) {
+    return (
+      <LockOverlay locked message={statsLockMessage(t, own)}>
         <Card className={s.chartCard}>
           <ChartHead title={t('stats.chart.xpBySource')} hint={t('stats.chart.xpSourceHint')} />
-          <HBars items={xp.map((x) => ({ label: x.label, value: x.points }))} suffix=" XP" />
+          <HBars items={MOCK_XP.map((x) => ({ label: t(x.key), value: x.value }))} suffix=" XP" />
         </Card>
-      )}
-    </>
+      </LockOverlay>
+    );
+  }
+
+  if (!xp || xp.length === 0) return null;
+
+  return (
+    <Card className={s.chartCard}>
+      <ChartHead title={t('stats.chart.xpBySource')} hint={t('stats.chart.xpSourceHint')} />
+      <HBars items={xp.map((x) => ({ label: x.label, value: x.points }))} suffix=" XP" />
+    </Card>
+  );
+}
+
+function Legend({ t }: { t: (key: string) => string }) {
+  return (
+    <div className={s.legend}>
+      <span className={s.legendItem}>
+        <BallIcon width={14} height={14} className={s.iconGoal} /> {t('stats.goals')}
+      </span>
+      <span className={s.legendItem}>
+        <BootIcon width={14} height={14} className={s.iconAssist} /> {t('stats.assistsShort')}
+      </span>
+    </div>
   );
 }
 

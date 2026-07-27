@@ -1,0 +1,115 @@
+/* Shared panel shell + list-row pattern used by several Home dashboard widgets */
+.panel {
+  display: flex;
+  min-height: var(--panel-min-h, 16rem);
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-panel);
+  padding: var(--panel-pad, var(--space-lg));
+  box-shadow: var(--shadow-sm);
+}
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--panel-head-mb, var(--space-md));
+}
+.panelTitle {
+  font-size: var(--panel-title-fs, var(--font-size-lg));
+  line-height: var(--panel-title-lh, normal);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  font-style: italic;
+  color: var(--text-color);
+}
+.panelLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent-strong);
+}
+.panelLink:hover {
+  color: var(--accent-soft);
+}
+.emptyWrap {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+.emptyIcon {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+  color: var(--text-faint);
+}
+.emptyTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-subtle);
+}
+
+.resultsList {
+  display: flex;
+  min-height: 13.75rem; /* 5 rows x 2.75rem, fixed regardless of how many rows there actually are */
+  flex: 1;
+  flex-direction: column;
+}
+.resultRow {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition);
+}
+.resultRow:last-child {
+  border-bottom: none;
+}
+.resultRow:hover {
+  background-color: var(--surface-ghost-hover);
+}
+.resultRowNext {
+  border-bottom-color: transparent;
+  background-color: var(--accent-surface-faint);
+}
+.resultRowNext:hover {
+  background-color: var(--accent-surface);
+}
+.resultRowNext .resultLabel {
+  color: var(--accent-strong);
+}
+.resultLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+}
+.resultFormat {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

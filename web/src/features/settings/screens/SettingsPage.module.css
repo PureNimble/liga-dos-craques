@@ -19,3 +19,15 @@
 .panel > * + * {
   border-top: 1px solid var(--border-faint);
 }
+
+.accentSwatch {
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  border-radius: var(--radius-full);
+}
+.accentSwatchActive {
+  box-shadow:
+    0 0 0 2px var(--surface-chip),
+    0 0 0 4px var(--text-color);
+}

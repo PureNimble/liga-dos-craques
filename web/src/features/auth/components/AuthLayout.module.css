@@ -9,14 +9,6 @@
   gap: var(--space-xl);
   padding: var(--space-xl);
 }
-.glow {
-  pointer-events: none;
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 16rem;
-  background: radial-gradient(ellipse at top, var(--accent-surface), transparent 70%);
-}
 .header {
   position: relative;
   text-align: center;

@@ -13,8 +13,8 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-md);
-    border-right: 1px solid var(--border-subtle);
-    background-color: var(--surface-well);
+    border-right: 1px solid rgb(255 255 255 / 0.08);
+    background-color: var(--surface-brand-dark);
     padding-block: var(--space-lg);
     padding-top: calc(var(--space-lg) + env(safe-area-inset-top));
   }

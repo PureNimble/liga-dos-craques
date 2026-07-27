@@ -6,10 +6,12 @@ interface PositionPickerProps {
   positions: Position[];
   value: PositionSelection;
   onToggle: (id: number) => void;
+  /** Display-only pitch (no interaction, no help text) - used to show a player's positions. */
+  readOnly?: boolean;
 }
 
 /** Pitch view for picking a player's main position and secondary positions. */
-export function PositionPicker({ positions, value, onToggle }: PositionPickerProps) {
+export function PositionPicker({ positions, value, onToggle, readOnly = false }: PositionPickerProps) {
   return (
     <div className={s.wrap}>
       <div className={s.pitch}>
@@ -25,11 +27,13 @@ export function PositionPicker({ positions, value, onToggle }: PositionPickerPro
           const xy = xyFor(p.code);
           if (!xy) return null;
           const st = stateOf(value, p.id);
+          if (readOnly && st === 'none') return null;
           return (
             <button
               key={p.id}
               type="button"
-              onClick={() => onToggle(p.id)}
+              disabled={readOnly}
+              onClick={readOnly ? undefined : () => onToggle(p.id)}
               aria-pressed={st !== 'none'}
               aria-label={st === 'main' ? `${p.label} (principal)` : p.label}
               title={p.label}
@@ -48,11 +52,13 @@ export function PositionPicker({ positions, value, onToggle }: PositionPickerPro
         })}
       </div>
 
-      <p className={s.help}>
-        Toca para escolher. A primeira fica <strong className={s.helpMain}>principal</strong>; as
-        outras <strong className={s.helpSecondary}>secundárias</strong>. Tocar numa secundária
-        torna-a principal; tocar na principal tira-a.
-      </p>
+      {!readOnly && (
+        <p className={s.help}>
+          Toca para escolher. A primeira fica <strong className={s.helpMain}>principal</strong>; as
+          outras <strong className={s.helpSecondary}>secundárias</strong>. Tocar numa secundária
+          torna-a principal; tocar na principal tira-a.
+        </p>
+      )}
     </div>
   );
 }

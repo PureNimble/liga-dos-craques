@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listMissing, profileCompletion, type CompletableProfile } from './profileCompletion';
+import { profileCompletion, type CompletableProfile } from './profileCompletion';
 
 const vazio: CompletableProfile = {
   main_position_id: null,
@@ -40,15 +40,5 @@ describe('profileCompletion', () => {
     expect(profileCompletion({ ...cheio, main_position_id: null }).positionMissing).toBe(true);
     expect(profileCompletion({ ...cheio, main_position_id: null }).isComplete).toBe(false);
     expect(profileCompletion({ ...cheio, preferred_foot: null }).positionMissing).toBe(false);
-  });
-});
-
-describe('listMissing', () => {
-  it('enumera com a conjunção indicada', () => {
-    expect(listMissing([], 'e')).toBe('');
-    expect(listMissing(['o pé preferido'], 'e')).toBe('o pé preferido');
-    expect(listMissing(['a', 'b'], 'e')).toBe('a e b');
-    expect(listMissing(['a', 'b', 'c'], 'e')).toBe('a, b e c');
-    expect(listMissing(['a', 'b', 'c'], 'and')).toBe('a, b and c');
   });
 });

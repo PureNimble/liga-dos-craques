@@ -1,0 +1,184 @@
+/* Shared photo treatment: real photos fill the frame (cover); the placeholder
+   silhouette is contained and bottom-anchored instead, so it isn't cropped
+   (same fallback ProfileHero uses). */
+.spotlightPhotoPlaceholder {
+  object-fit: contain;
+  object-position: bottom;
+  transform: scale(1.15);
+  transform-origin: bottom;
+}
+
+/* Featured spotlight (player of the week): plain title (same treatment as the
+   other Home panels' .panelTitle) over a two-column body - name/stats on
+   the left, the photo bleeding full-height on the right, card-style. Always
+   side by side, at any width - only the columns' proportions shrink. */
+.spotlightCard {
+  display: flex;
+  min-height: 16rem;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-panel);
+}
+.spotlightHeader {
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+}
+.spotlightHeaderBadge {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  font-style: italic;
+  color: var(--text-color);
+}
+.spotlightBody {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  transition: background-color var(--transition-base);
+}
+.spotlightBody:hover {
+  background-color: var(--surface-panel-hover);
+}
+.spotlightInfo {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-sm) var(--space-md) var(--space-lg);
+}
+.spotlightHead {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+.spotlightPhotoLarge {
+  width: 40%;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center;
+}
+.spotlightNameLarge {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+  color: var(--accent-strong);
+}
+.spotlightPosition {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}
+/* inline-grid with a single implicit column: the track sizes to its widest
+   row (the goals+assists pair) - the rating chip below then stretches
+   (width: 100%) to match that same width instead of just fitting its own
+   content. */
+.spotlightStatsRow {
+  display: inline-grid;
+  align-self: flex-start;
+  gap: var(--space-xs);
+}
+.spotlightStatPair {
+  display: flex;
+  gap: var(--space-xs);
+}
+.spotlightStat {
+  display: flex;
+  min-width: 0;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+  padding: var(--space-2xs) var(--space-sm);
+}
+.spotlightStatRating {
+  width: 100%;
+}
+.spotlightStatIcon {
+  flex-shrink: 0;
+  color: var(--text-faint);
+}
+.spotlightStatValue {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}
+
+/* Compact spotlight (player of the month): photo left, name/position next to
+   it, average rating pushed to the far right. */
+.spotlightCompact {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-md);
+  padding-inline: var(--space-md);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base);
+}
+.spotlightCompact:hover {
+  background-color: var(--surface-ghost-hover);
+}
+.spotlightCompactInfo {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2xs);
+}
+.spotlightName {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+.spotlightSubtitle {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+  color: var(--text-faint);
+}
+.spotlightRatingBox {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+.spotlightRatingValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.spotlightRatingLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}

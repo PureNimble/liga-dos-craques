@@ -1,116 +1,129 @@
 .page {
   display: flex;
+  min-height: 100%;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   padding-block: var(--space-lg);
 }
-.greeting {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-.avatarLink {
-  flex-shrink: 0;
-}
-.welcome {
-  font-size: var(--font-size-sm);
-  color: var(--text-subtle);
-}
-.name {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--tracking-tightest);
-  color: var(--text-color);
-}
 
-.sectionHead {
-  margin-bottom: var(--space-sm);
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+.topRowLeft {
+  container-type: inline-size;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.sectionTitle {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-subtle);
-}
-.seeAll {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--accent-strong);
-}
-.seeAll:hover {
-  color: var(--accent-soft);
-}
-
-.onboardTitle {
-  font-weight: var(--font-weight-bold);
-  color: var(--text-color);
-}
-.onboardText {
-  margin-top: var(--space-xs);
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-}
-.cta {
-  margin-top: var(--space-md);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  border-radius: var(--radius-md);
-  background-color: var(--accent);
-  padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-on-accent);
-  box-shadow: var(--shadow-glow);
-  transition: background-color var(--transition);
-}
-.cta:hover {
-  background-color: var(--accent-strong);
-}
-
-.quick {
-  display: flex;
+  min-width: 0;
   flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--space-lg);
+}
+.matchColumn {
+  min-width: 0;
+}
+.statsRow,
+.newsRow {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--space-sm);
 }
-.action {
+.statsRow > *,
+.newsRow > * {
+  min-width: 0;
+}
+.newsRow {
+  --panel-min-h: clamp(5rem, 10vw, 8rem);
+  --panel-pad: var(--space-md);
+  --panel-head-mb: var(--space-sm);
+}
+@media (min-width: 640px) {
+  .statsRow,
+  .newsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* 3 cards in a 2-up grid leaves progress alone in its own row with an
+     empty column beside it - span it full width instead until there's
+     room for the 3-up desktop layout below. */
+  .newsRow > *:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1024px) {
+  /* Desktop: the left column (greeting + XP + crest + quick actions) is the
+     only in-flow content, so its natural height IS the row's height.
+     matchColumn is taken out of flow and absolutely filled to match it -
+     the match card can never grow the row, only fit inside it. */
+  .topRow {
+    position: relative;
+  }
+  .topRowLeft {
+    width: calc(70% - var(--space-lg) / 2);
+  }
+  .matchColumn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: calc(30% - var(--space-lg) / 2);
+  }
+  .matchColumn > * {
+    height: 100%;
+  }
+  .newsRow {
+    grid-template-columns: repeat(3, minmax(14rem, 1fr));
+  }
+  .newsRow > *:nth-child(3) {
+    grid-column: auto;
+  }
+}
+@media (min-width: 1280px) {
+  /* 4-up only once there's actually room per card - at 1024-1280px this row
+     spans the full page width but 4 columns leaves each card too narrow
+     (panel titles/links wrap awkwardly), so it stays 2-up a bit longer. */
+  .statsRow {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Hero top: name/level card on the left, a dedicated decorative slot (crest)
+   on the right - split 50/50. `heroTopLeft` is the only in-flow child, so its
+   natural content height (greeting + level card) is what defines the row's
+   height; the crest is taken out of flow and absolutely filled to match it,
+   the same "left column drives it" pattern used for the match card above. */
+.heroTop {
+  position: relative;
+  gap: var(--space-lg);
+}
+.heroTopLeft {
   display: flex;
-  align-items: center;
+  min-width: 0;
+  flex-direction: column;
   gap: var(--space-md);
 }
-.actionIcon {
-  display: flex;
-  height: 2.75rem;
-  width: 2.75rem;
-  flex-shrink: 0;
+.heroDecoBox {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(50% - var(--space-lg) / 2);
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
-  background-color: var(--surface-chip);
-  color: var(--accent-strong);
+  pointer-events: none;
 }
-.actionBody {
-  min-width: 0;
-  flex: 1;
+@media (min-width: 1024px) {
+  .heroTopLeft {
+    width: calc(50% - var(--space-lg) / 2);
+  }
+  .heroDecoBox {
+    display: flex;
+  }
 }
-.actionLabel {
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-color);
-}
-.actionHint {
-  font-size: var(--font-size-xs);
-  color: var(--text-subtle);
-}
-.chevron {
-  flex-shrink: 0;
-  color: var(--text-faint);
+.heroDeco {
+  height: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: contain;
 }
 
 @media (min-width: 640px) {

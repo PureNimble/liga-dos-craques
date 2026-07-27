@@ -1,66 +1,217 @@
+/* Header follows the theme (light/dark) like the rest of the app's chrome;
+   only the logo box (below) stays permanently dark. */
 .header {
   position: sticky;
   top: 0;
   z-index: 30;
   padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-subtle);
-  background-color: var(--surface-glass);
-  backdrop-filter: saturate(130%) blur(14px);
-  -webkit-backdrop-filter: saturate(130%) blur(14px);
+  background-color: var(--surface-panel);
 }
 .inner {
   display: flex;
-  align-items: center;
-  gap: var(--space-xl);
-  padding: var(--space-md) var(--space-lg);
-}
-@media (min-width: 640px) {
-  .inner {
-    padding-inline: var(--space-xl);
-  }
-}
-@media (min-width: 1024px) {
-  .inner {
-    padding: var(--space-lg) var(--space-2xl);
-  }
+  min-height: var(--topnav-height);
+  align-items: stretch;
 }
 
+/* Logótipo: só em mobile (< 640px) - no tablet/desktop já vive no topo da GroupRail. */
 .logo {
-  margin-inline-end: auto;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: var(--space-sm);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-black);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-color);
+  align-self: center;
+  padding-inline: var(--space-lg);
+}
+@media (min-width: 640px) {
+  .logo {
+    display: none;
+  }
 }
 .logoMark {
   display: flex;
   height: 2rem;
   width: 2rem;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
   background-color: var(--accent);
   color: var(--text-on-accent);
-  box-shadow: var(--shadow-glow);
+}
+
+/* Marca (ícone + nome): só desktop - o mobile fica só com o ícone (`.logo` acima).
+   Fica sempre escura (não segue o tema), com um corte na extremidade direita -
+   o resto da barra segue o tema. O fundo real é o ::before: um retângulo com os
+   dois cantos direitos arredondados (border-radius a sério, não polígono) que é
+   depois inclinado (skewX) a partir do topo direito - o `.brand` corta (overflow
+   hidden) o que sobra à esquerda, ficando com uma aresta esquerda direita e reta. */
+.brand {
+  position: relative;
+  z-index: 0;
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+  padding: 0 calc(var(--space-2xl) + 1.25rem) 0 var(--space-2xl);
+}
+.brand::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-color: var(--surface-brand-dark);
+  border-radius: 0 0 var(--radius-lg) 0;
+  transform: skewX(-15deg);
+  transform-origin: right top;
+}
+.brandIcon {
+  flex-shrink: 0;
+  color: var(--gray-50);
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gray-50);
+}
+
+@media (min-width: 1024px) {
+  .brand {
+    display: flex;
+  }
+}
+
+/* Resto da barra (ligações + ações), à direita da marca. `align-items: stretch`
+   para que `.links` (e o sublinhado de cada `.link`) chegue à altura toda do
+   cabeçalho - a linha fica sempre encostada à base do header, nunca a meio. */
+.barContent {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-inline: var(--space-lg);
+}
+@media (min-width: 640px) {
+  .barContent {
+    padding-inline: var(--space-xl);
+  }
+}
+@media (min-width: 1024px) {
+  .barContent {
+    padding-inline: var(--space-2xl);
+    padding-left: var(--space-xl);
+  }
+}
+
+/* Ligações de navegação horizontais: só desktop - mobile/tablet usam o NavDrawer.
+   Sem tab ativa: sublinhado sobe em hover; tab ativa: fica sempre sublinhada. */
+.links {
+  display: none;
+  align-items: stretch;
+  gap: var(--space-xl);
+}
+@media (min-width: 1024px) {
+  .links {
+    display: flex;
+  }
+}
+.link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--accent-strong);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
+.linkLabel {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-subtle);
+  transition: color var(--transition-base);
+}
+.link:hover .linkLabel {
+  color: var(--text-color);
+}
+.link:hover::after {
+  transform: scaleX(1);
+}
+.linkActive .linkLabel {
+  color: var(--accent-strong);
+}
+.linkActive::after {
+  transform: scaleX(1);
 }
 
 .actions {
-  /* Sem logótipo (vive no topo da coluna de grupos): avatar + menu ficam à direita. */
-  margin-inline-start: auto;
   display: flex;
+  flex-shrink: 0;
+  align-self: center;
   align-items: center;
   gap: var(--space-sm);
+  margin-left: auto;
 }
+
+/* Sino de notificações: só desktop - a contagem/atalho no mobile vive no hamburger. */
+.bellWrap {
+  position: relative;
+  display: none;
+  align-items: center;
+}
+.bellLink {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--text-subtle);
+  transition: background-color var(--transition-base);
+}
+.bellLink:hover {
+  background-color: var(--surface-ghost-hover);
+  color: var(--text-color);
+}
+
+.accountDesktop {
+  display: none;
+}
+
 .avatarLink {
   display: flex;
+  flex-shrink: 0;
 }
 .menuWrap {
   position: relative;
   display: inline-flex;
 }
+
+@media (min-width: 1024px) {
+  .bellWrap,
+  .accountDesktop {
+    display: flex;
+  }
+  .avatarLink,
+  .menuWrap {
+    display: none;
+  }
+}
+
 .dot {
   position: absolute;
   top: 0.25rem;

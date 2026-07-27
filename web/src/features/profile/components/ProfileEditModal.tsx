@@ -8,6 +8,7 @@ import { useToast } from '@/shared/components/toast/useToast';
 import { AvatarUpload } from './AvatarUpload';
 import { PositionPicker } from './PositionPicker';
 import { togglePosition as toggle } from '../lib/positionPitch';
+import { profileCompletion } from '../lib/profileCompletion';
 import { useUpdateProfile, usePositions, type FullProfile } from '../hooks/profileHooks';
 import {
   profileFormSchema,
@@ -20,14 +21,17 @@ import s from './ProfileEditModal.module.css';
 interface ProfileEditModalProps {
   profile: FullProfile;
   onClose: () => void;
+  /** Onboarding mode: can't be dismissed, and won't save until position/foot/weight/height are filled. */
+  requireCompletion?: boolean;
 }
 
 /** Modal form for editing the current user's full profile (public and private fields). */
-export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
+export function ProfileEditModal({ profile, onClose, requireCompletion }: ProfileEditModalProps) {
   const { data: positions } = usePositions();
   const updateProfile = useUpdateProfile();
   const toast = useToast();
   const [photoUrl, setPhotoUrl] = useState<string | null>(profile.photo_url);
+  const [incompleteError, setIncompleteError] = useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -41,6 +45,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
       locality: profile.locality,
       preferred_foot: profile.preferred_foot,
       main_position_id: profile.main_position_id,
+      jersey_number: profile.jersey_number,
       secondaryPositionIds: profile.secondaryPositionIds,
     },
   });
@@ -64,6 +69,11 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
   }
 
   async function onSubmit(values: ProfileFormValues) {
+    if (requireCompletion && !profileCompletion(values).isComplete) {
+      setIncompleteError(true);
+      return;
+    }
+    setIncompleteError(false);
     await updateProfile.mutateAsync({
       public: {
         name: values.name,
@@ -73,6 +83,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
         locality: values.locality,
         preferred_foot: values.preferred_foot,
         main_position_id: values.main_position_id,
+        jersey_number: values.jersey_number,
       },
       private: {
         birth_date: values.birth_date,
@@ -91,14 +102,17 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     <Modal
       open
       onClose={onClose}
+      dismissible={!requireCompletion}
       variant="sheet"
       size="lg"
-      title="Editar perfil"
+      title={requireCompletion ? 'Completa o teu perfil' : 'Editar perfil'}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
-            Cancelar
-          </Button>
+          {!requireCompletion && (
+            <Button variant="secondary" onClick={onClose}>
+              Cancelar
+            </Button>
+          )}
           <Button
             onClick={form.handleSubmit(onSubmit)}
             loading={form.formState.isSubmitting || updateProfile.isPending}
@@ -110,7 +124,7 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className={s.form}>
         <div className={s.avatarCenter}>
-          <AvatarUpload photoUrl={photoUrl} name={profile.name} onUploaded={setPhotoUrl} />
+          <AvatarUpload name={profile.name} photoUrl={photoUrl} onUploaded={setPhotoUrl} />
         </div>
 
         <Field label="Nome" htmlFor="name" error={form.formState.errors.name?.message}>
@@ -177,6 +191,21 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Field>
         </div>
 
+        <Field
+          label="Número de camisola"
+          htmlFor="jersey_number"
+          hint="Usado nos plantéis dos jogos"
+          error={form.formState.errors.jersey_number?.message}
+        >
+          <Input
+            id="jersey_number"
+            type="number"
+            min={1}
+            max={99}
+            {...form.register('jersey_number')}
+          />
+        </Field>
+
         <fieldset className={s.positions}>
           <legend className={s.legend}>Posições</legend>
           <PositionPicker
@@ -194,6 +223,11 @@ export function ProfileEditModal({ profile, onClose }: ProfileEditModalProps) {
           </Link>
         </div>
 
+        {incompleteError && (
+          <Alert kind="error">
+            Preenche a posição, o pé preferido, o peso e a altura para continuares.
+          </Alert>
+        )}
         {updateProfile.isError && !isUsernameTaken && (
           <Alert kind="error">Não foi possível guardar. Tenta novamente.</Alert>
         )}

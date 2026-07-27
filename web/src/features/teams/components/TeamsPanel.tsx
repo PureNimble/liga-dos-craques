@@ -2,17 +2,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Button, Card, Select } from '@/shared/components/ui';
 import { useT } from '@/shared/i18n/useT';
 import type { GamePlayerWithProfile } from '@/features/games/hooks/gameHooks';
-import type { Team } from '@/types/database';
+import type { PositionCategory, Team } from '@/types/database';
 import {
   usePlayerRatings,
-  useAssignTeams,
+  useAutoBalanceTeams,
   useSetPlayerTeam,
   useAutoFillPositions,
   useAssignLineup,
   useSubstitute,
+  useGameTeams,
 } from '../hooks/teamHooks';
-import { balanceTeams, type BalancePlayer } from '../lib/teamBalancer';
 import { Pitch } from './Pitch';
+import { TeamIdentityEditor } from './TeamIdentityEditor';
 import s from './TeamsPanel.module.css';
 import {
   buildLayout,
@@ -49,7 +50,9 @@ export function TeamsPanel({
   const { t } = useT();
   const ids = players.map((p) => p.player_id);
   const { data: ratings } = usePlayerRatings(ids);
-  const assignTeams = useAssignTeams(gameId);
+  const { data: gameTeams } = useGameTeams(gameId);
+  const nameOf = (team: Team) => gameTeams?.[team]?.name || t('teams.team', { team });
+  const autoBalance = useAutoBalanceTeams(gameId);
   const setPlayerTeam = useSetPlayerTeam(gameId);
   const persist = useAutoFillPositions(gameId);
   const assignLineup = useAssignLineup(gameId);
@@ -57,6 +60,12 @@ export function TeamsPanel({
 
   const ratingOf = (playerId: string) => Math.round(ratings?.get(playerId)?.rating ?? 50);
   const categoryOf = (playerId: string) => ratings?.get(playerId)?.category ?? null;
+  const gamesOf = (playerId: string) => ratings?.get(playerId)?.games ?? 0;
+  const captainOf = (list: GamePlayerWithProfile[]): string | null =>
+    list.length === 0
+      ? null
+      : list.reduce((best, p) => (gamesOf(p.player_id) > gamesOf(best.player_id) ? p : best))
+          .player_id;
 
   const teamA = players.filter((p) => p.team === 'A');
   const teamB = players.filter((p) => p.team === 'B');
@@ -66,12 +75,12 @@ export function TeamsPanel({
   const benchB = teamB.filter((p) => !p.on_field);
   const unassigned = players.filter((p) => !p.team);
   const hasTeams = teamA.length > 0 || teamB.length > 0;
+  const captainA = captainOf(teamA);
+  const captainB = captainOf(teamB);
 
   const sizeA = Math.min(teamA.length, playersPerSide) || 1;
   const sizeB = Math.min(teamB.length, playersPerSide) || 1;
   const sizeOf = (team: Team) => (team === 'A' ? sizeA : sizeB);
-
-  const [selectedTeam, setSelectedTeam] = useState<Team>('A');
 
   const [formNameA, setFormNameA] = useState<string | null>(null);
   const [formNameB, setFormNameB] = useState<string | null>(null);
@@ -108,16 +117,6 @@ export function TeamsPanel({
 
   const sum = (list: GamePlayerWithProfile[]) =>
     list.reduce((acc, p) => acc + ratingOf(p.player_id), 0);
-
-  function generate() {
-    const input: BalancePlayer[] = players.map((p) => ({
-      id: p.player_id,
-      rating: ratings?.get(p.player_id)?.rating ?? 50,
-      category: ratings?.get(p.player_id)?.category ?? null,
-    }));
-    const { a, b } = balanceTeams(input);
-    assignTeams.mutate({ a, b });
-  }
 
   function persistLayout(entries: Map<string, PitchPos>) {
     const next = new Map(override);
@@ -217,112 +216,116 @@ export function TeamsPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canManage, ratings, teamA.length, teamB.length, sizeA, sizeB]);
 
-  const selStarters = selectedTeam === 'A' ? startersA : startersB;
-  const selBench = selectedTeam === 'A' ? benchA : benchB;
-  const selSlots = selectedTeam === 'A' ? slotsA : slotsB;
-  const selSize = sizeOf(selectedTeam);
-  const selFormName = selectedTeam === 'A' ? (formNameA ?? formA.name) : (formNameB ?? formB.name);
-
   return (
     <Card>
       <div className={s.head}>
         <h2 className={s.title}>{t('teams.title')}</h2>
-        {canManage && canGenerate && (
-          <Button variant="secondary" size="sm" onClick={generate} loading={assignTeams.isPending}>
-            {hasTeams ? t('teams.regenerate') : t('teams.generate')}
+        {canManage && canGenerate && hasTeams && (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => autoBalance.mutate()}
+            loading={autoBalance.isPending}
+          >
+            {t('teams.rebalance')}
           </Button>
         )}
       </div>
 
-      {assignTeams.isError && (
+      {autoBalance.isError && (
         <div className={s.errorSlot}>
           <Alert kind="error">{t('teams.generateError')}</Alert>
         </div>
       )}
 
       {!hasTeams ? (
-        <p className={s.empty}>
-          {canManage && canGenerate ? t('teams.emptyManageable') : t('teams.emptyLocked')}
-        </p>
+        <p className={s.empty}>{t('teams.emptyAuto')}</p>
       ) : (
         <div className={s.body}>
-          <div className={s.switch}>
-            {(['A', 'B'] as Team[]).map((team) => {
-              const active = selectedTeam === team;
-              const activeClass = team === 'A' ? s.switchActiveA : s.switchActiveB;
-              return (
-                <button
-                  key={team}
-                  type="button"
-                  onClick={() => setSelectedTeam(team)}
-                  className={`${s.switchBtn} ${active ? activeClass : ''}`}
-                >
-                  {!active && <span className={`${s.dot} ${team === 'A' ? s.dotA : s.dotB}`} />}
-                  {t('teams.team', { team })}
-                  <span className={s.switchSum}>{sum(team === 'A' ? teamA : teamB)}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <Pitch
-            players={selStarters}
-            bench={selBench}
-            layout={layout}
-            slots={selSlots}
-            team={selectedTeam}
-            canManage={canManage}
-            canSubstitute={canSubstitute}
-            onDrop={drop}
-            onSubstitute={doSubstitute}
-          />
-
           {canManage && (
-            <>
-              <div className={s.formRow}>
-                <FormationSelect
-                  label={t('teams.formation', { team: selectedTeam })}
-                  customLabel={t('teams.formationCustom')}
-                  dotClass={selectedTeam === 'A' ? s.dotA : s.dotB}
-                  value={selFormName}
-                  size={selSize}
-                  onChange={(n) => pickFormation(selectedTeam, n)}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={autoFill}
-                  loading={persist.isPending}
-                >
-                  {t('teams.autoFill')}
-                </Button>
-              </div>
-              <p className={s.dragHint}>{t('teams.dragHint')}</p>
-            </>
+            <div className={s.identityRow}>
+              <TeamIdentityEditor
+                gameId={gameId}
+                side="A"
+                team={gameTeams?.A}
+                fallbackName={t('teams.team', { team: 'A' })}
+              />
+              <TeamIdentityEditor
+                gameId={gameId}
+                side="B"
+                team={gameTeams?.B}
+                fallbackName={t('teams.team', { team: 'B' })}
+              />
+            </div>
           )}
 
-          <div className={s.columns}>
+          <div className={s.pitches}>
             <TeamColumn
-              title={t('teams.team', { team: 'A' })}
+              title={nameOf('A')}
               total={sum(teamA)}
               list={teamA}
               ratingOf={ratingOf}
+              categoryOf={categoryOf}
+              captainId={captainA}
               canManage={canManage}
               onMove={(playerId) => setPlayerTeam.mutate({ playerId, team: 'B' })}
               moveLabel="→ B"
               fallbackName={t('teams.fallbackName')}
             />
+            <TeamPitchBlock
+              team="A"
+              name={nameOf('A')}
+              starters={startersA}
+              bench={benchA}
+              layout={layout}
+              slots={slotsA}
+              formName={formNameA ?? formA.name}
+              size={sizeA}
+              captainId={captainA}
+              canManage={canManage}
+              canSubstitute={canSubstitute}
+              onDrop={drop}
+              onSubstitute={doSubstitute}
+              onPickFormation={(n) => pickFormation('A', n)}
+            />
+            <TeamPitchBlock
+              team="B"
+              name={nameOf('B')}
+              starters={startersB}
+              bench={benchB}
+              layout={layout}
+              slots={slotsB}
+              formName={formNameB ?? formB.name}
+              size={sizeB}
+              captainId={captainB}
+              canManage={canManage}
+              canSubstitute={canSubstitute}
+              onDrop={drop}
+              onSubstitute={doSubstitute}
+              onPickFormation={(n) => pickFormation('B', n)}
+            />
             <TeamColumn
-              title={t('teams.team', { team: 'B' })}
+              title={nameOf('B')}
               total={sum(teamB)}
               list={teamB}
               ratingOf={ratingOf}
+              categoryOf={categoryOf}
+              captainId={captainB}
               canManage={canManage}
               onMove={(playerId) => setPlayerTeam.mutate({ playerId, team: 'A' })}
               moveLabel="→ A"
               fallbackName={t('teams.fallbackName')}
             />
           </div>
+
+          {canManage && (
+            <>
+              <Button variant="secondary" size="sm" onClick={autoFill} loading={persist.isPending}>
+                {t('teams.autoFill')}
+              </Button>
+              <p className={s.dragHint}>{t('teams.dragHint')}</p>
+            </>
+          )}
         </div>
       )}
 
@@ -365,6 +368,66 @@ export function TeamsPanel({
   );
 }
 
+function TeamPitchBlock({
+  team,
+  name,
+  starters,
+  bench,
+  layout,
+  slots,
+  formName,
+  size,
+  captainId,
+  canManage,
+  canSubstitute,
+  onDrop,
+  onSubstitute,
+  onPickFormation,
+}: {
+  team: Team;
+  name: string;
+  starters: GamePlayerWithProfile[];
+  bench: GamePlayerWithProfile[];
+  layout: Map<string, PitchPos>;
+  slots: PitchPos[];
+  formName: string;
+  size: number;
+  captainId: string | null;
+  canManage: boolean;
+  canSubstitute: boolean;
+  onDrop: (playerId: string, x: number, y: number) => void;
+  onSubstitute: (inId: string, outId: string) => void;
+  onPickFormation: (name: string) => void;
+}) {
+  const { t } = useT();
+  return (
+    <div className={s.pitchBlock}>
+      {canManage && (
+        <FormationSelect
+          label={`${t('teams.formationPrefix')} ${name}`}
+          customLabel={t('teams.formationCustom')}
+          dotClass={team === 'A' ? s.dotA : s.dotB}
+          value={formName}
+          size={size}
+          onChange={onPickFormation}
+        />
+      )}
+      <Pitch
+        players={starters}
+        bench={bench}
+        layout={layout}
+        slots={slots}
+        team={team}
+        captainId={captainId}
+        canManage={canManage}
+        canSubstitute={canSubstitute}
+        onDrop={onDrop}
+        onSubstitute={onSubstitute}
+      />
+    </div>
+  );
+}
+
 function FormationSelect({
   label,
   customLabel,
@@ -403,6 +466,8 @@ function TeamColumn({
   total,
   list,
   ratingOf,
+  categoryOf,
+  captainId,
   canManage,
   onMove,
   moveLabel,
@@ -412,11 +477,14 @@ function TeamColumn({
   total: number;
   list: GamePlayerWithProfile[];
   ratingOf: (id: string) => number;
+  categoryOf: (id: string) => PositionCategory | null;
+  captainId: string | null;
   canManage: boolean;
   onMove: (playerId: string) => void;
   moveLabel: string;
   fallbackName: string;
 }) {
+  const { t } = useT();
   return (
     <div className={s.column}>
       <div className={s.columnHead}>
@@ -427,7 +495,14 @@ function TeamColumn({
         {list.map((p) => (
           <li key={p.player_id} className={s.row}>
             <span className={s.name}>
+              <span className={s.jerseyNumber}>{p.profile?.jersey_number ?? '–'}</span>
               {p.profile?.name ?? fallbackName}{' '}
+              {categoryOf(p.player_id) === 'GK' && (
+                <span className={s.tag}>{t('teams.goalkeeperAbbr')}</span>
+              )}
+              {p.player_id === captainId && (
+                <span className={s.tag}>{t('teams.captainAbbr')}</span>
+              )}{' '}
               <span className={s.rating}>({ratingOf(p.player_id)})</span>
             </span>
             {canManage && (

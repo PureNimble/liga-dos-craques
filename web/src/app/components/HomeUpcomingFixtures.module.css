@@ -1,0 +1,75 @@
+/* Upcoming fixtures row: date pill, crest, opponent name, home/away badge, time -
+   same row/highlight treatment as homePanel's .resultRow (border, hover, next-game tint). */
+.fixtureRow {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition);
+}
+.fixtureRow:last-child {
+  border-bottom: none;
+}
+.fixtureRow:hover {
+  background-color: var(--surface-ghost-hover);
+}
+.fixtureRowNext {
+  border-bottom-color: transparent;
+  background-color: var(--accent-surface-faint);
+}
+.fixtureRowNext:hover {
+  background-color: var(--accent-surface);
+}
+.fixtureRowNext .fixtureDate {
+  color: var(--accent-strong);
+}
+.fixtureDate {
+  flex-shrink: 0;
+  width: 3.25rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+.fixtureCrest {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+  color: var(--text-faint);
+}
+.fixtureName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+.fixtureBadge {
+  flex-shrink: 0;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent-strong);
+}
+.fixtureTime {
+  flex-shrink: 0;
+  width: 3rem;
+  text-align: right;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+}

@@ -1,6 +1,7 @@
 import {
   BallIcon,
   BellIcon,
+  CalendarIcon,
   HomeIcon,
   PinIcon,
   SettingsIcon,
@@ -23,6 +24,7 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { to: '/', label: 'nav.home', icon: HomeIcon, end: true },
   { to: '/games', label: 'nav.games', icon: BallIcon },
+  { to: '/calendar', label: 'nav.calendar', icon: CalendarIcon },
   { to: '/rankings', label: 'nav.rankings', icon: TrophyIcon },
   { to: '/challenges', label: 'nav.challenges', icon: TargetIcon },
   { to: '/places', label: 'nav.places', icon: PinIcon },

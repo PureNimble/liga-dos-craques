@@ -21,45 +21,18 @@
   gap: var(--space-md);
 }
 
-.switch {
+.pitches {
   display: flex;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-  background-color: var(--surface-input);
-  padding: var(--space-xs);
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-lg);
 }
-.switchBtn {
+.pitchBlock {
   display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
+  flex: 3 1 11rem;
+  flex-direction: column;
   gap: var(--space-sm);
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: none;
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background-color var(--transition);
-}
-.switchBtn:hover {
-  background-color: var(--surface-panel);
-}
-.switchActiveA,
-.switchActiveA:hover {
-  background-color: var(--team-a);
-  color: var(--text-on-accent);
-}
-.switchActiveB,
-.switchActiveB:hover {
-  background-color: var(--team-b);
-  color: var(--text-on-accent);
-}
-.switchSum {
-  font-variant-numeric: tabular-nums;
-  opacity: 0.8;
+  min-width: 0;
 }
 .dot {
   height: 0.5rem;
@@ -85,7 +58,7 @@
   font-size: var(--font-size-xs);
   color: var(--text-faint);
 }
-.columns {
+.identityRow {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-md);
@@ -129,6 +102,23 @@
 .rating {
   color: var(--text-faint);
 }
+.jerseyNumber {
+  display: inline-block;
+  min-width: 1.25rem;
+  margin-right: var(--space-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-subtle);
+}
+.tag {
+  margin-right: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-chip);
+  padding: 0 var(--space-2xs);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--accent-strong);
+}
 .rowActions {
   display: flex;
   flex-shrink: 0;
@@ -159,6 +149,8 @@
 }
 
 .column {
+  flex: 1 1 9rem;
+  min-width: 8rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   background-color: var(--surface-input);

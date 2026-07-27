@@ -1,0 +1,27 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+}
+.introWelcome {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent-strong);
+}
+.introName {
+  margin-top: var(--space-sm);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 2.3rem + 3.5vw, 5.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+.introMeta {
+  margin-top: var(--space-2xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent-strong);
+}

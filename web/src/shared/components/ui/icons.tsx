@@ -207,6 +207,16 @@ export function CalendarIcon(props: IconProps) {
   );
 }
 
+/** Clock icon. */
+export function ClockIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </svg>
+  );
+}
+
 /** Map pin icon. */
 export function PinIcon(props: IconProps) {
   return (
@@ -566,6 +576,46 @@ export function SunIcon(props: IconProps) {
     <svg {...base(props)}>
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" />
+    </svg>
+  );
+}
+
+/** Cloud icon (overcast weather). */
+export function CloudIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M7 18h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.7 1.5A3.5 3.5 0 0 0 7 18Z" />
+    </svg>
+  );
+}
+
+/** Sun-behind-cloud icon (partly cloudy weather). */
+export function CloudSunIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M9 5.5V4M13.5 6.9l1-1M4.5 5.9l1 1" />
+      <circle cx="9" cy="9" r="3" />
+      <path d="M9 19h7a3.5 3.5 0 0 0 .4-7 4.8 4.8 0 0 0-8.6-1.7" />
+    </svg>
+  );
+}
+
+/** Cloud-with-rain icon (rainy weather). */
+export function CloudRainIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M7 15h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.7 1.5A3.5 3.5 0 0 0 7 15Z" />
+      <path d="M9 18.5 8 21M13 18.5l-1 2.5" />
+    </svg>
+  );
+}
+
+/** Mail/envelope icon (pending invite). */
+export function MailIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
+      <path d="m4.5 7 7.5 6 7.5-6" />
     </svg>
   );
 }

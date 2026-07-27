@@ -28,6 +28,9 @@
   width: 13rem;
   padding: 0;
 }
+.tabsSwatch .tabMd {
+  padding: var(--space-sm);
+}
 .tabMd {
   padding: var(--space-sm) var(--space-lg);
 }
@@ -51,4 +54,8 @@
   background-color: var(--accent);
   color: var(--text-on-accent);
   box-shadow: var(--shadow-glow);
+}
+.activeSwatch,
+.activeSwatch:hover {
+  background-color: var(--surface-chip);
 }

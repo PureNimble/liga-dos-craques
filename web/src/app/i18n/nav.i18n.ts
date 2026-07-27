@@ -4,6 +4,7 @@ import type { TranslationDict } from '@/shared/i18n/translations';
 export const navTranslations = {
   'nav.home': { pt: 'Início', en: 'Home' },
   'nav.games': { pt: 'Jogos', en: 'Games' },
+  'nav.calendar': { pt: 'Calendário', en: 'Calendar' },
   'nav.rankings': { pt: 'Rankings', en: 'Rankings' },
   'nav.challenges': { pt: 'Desafios', en: 'Challenges' },
   'nav.places': { pt: 'Campos', en: 'Fields' },
