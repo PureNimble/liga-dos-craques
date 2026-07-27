@@ -116,6 +116,7 @@ export interface Database {
           locality: string | null;
           preferred_foot: PreferredFoot | null;
           main_position_id: number | null;
+          jersey_number: number | null;
           featured_achievement_id: number | null;
           active_group_id: string | null;
           role: UserRole;
@@ -132,6 +133,7 @@ export interface Database {
           locality?: string | null;
           preferred_foot?: PreferredFoot | null;
           main_position_id?: number | null;
+          jersey_number?: number | null;
         };
         Update: {
           name?: string;
@@ -142,6 +144,7 @@ export interface Database {
           locality?: string | null;
           preferred_foot?: PreferredFoot | null;
           main_position_id?: number | null;
+          jersey_number?: number | null;
           featured_achievement_id?: number | null;
         };
         Relationships: [];
@@ -212,6 +215,8 @@ export interface Database {
           voting_closes_at: string | null;
           started_at: string | null;
           notes: string | null;
+          opponent_name: string | null;
+          is_home: boolean | null;
           created_at: string;
           updated_at: string;
         };
@@ -226,6 +231,8 @@ export interface Database {
           max_players: number;
           status?: GameStatus;
           notes?: string | null;
+          opponent_name?: string | null;
+          is_home?: boolean | null;
         };
         Update: {
           scheduled_at?: string;
@@ -239,6 +246,8 @@ export interface Database {
           voting_closes_at?: string | null;
           started_at?: string | null;
           notes?: string | null;
+          opponent_name?: string | null;
+          is_home?: boolean | null;
         };
         Relationships: [];
       };
@@ -270,6 +279,22 @@ export interface Database {
           pos_x?: number | null;
           pos_y?: number | null;
           on_field?: boolean;
+        };
+        Relationships: [];
+      };
+      game_team: {
+        Row: {
+          id: string;
+          game_id: string;
+          side: Team;
+          name: string | null;
+          logo_url: string | null;
+          created_at: string;
+        };
+        Insert: never;
+        Update: {
+          name?: string | null;
+          logo_url?: string | null;
         };
         Relationships: [];
       };
