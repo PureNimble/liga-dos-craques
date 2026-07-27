@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# GITHUB_TOKEN só precisa de ler o código (checkout).
+permissions:
+  contents: read
+
 # Cancela execuções antigas do mesmo ramo/PR.
 concurrency:
   group: ci-${{ github.ref }}
