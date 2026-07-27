@@ -28,6 +28,9 @@ export const profileFormSchema = z.object({
   locality: emptyToNull(z.string().trim().max(120).nullable()),
   preferred_foot: emptyToNull(z.enum(['left', 'right', 'both']).nullable()),
   main_position_id: emptyToNull(z.coerce.number().int().positive().nullable()),
+  jersey_number: emptyToNull(
+    z.coerce.number().int('Usa um número inteiro').min(1, 'Valor inválido').max(99, 'Valor inválido').nullable(),
+  ),
   secondaryPositionIds: z.array(z.number().int().positive()).default([]),
 });
 

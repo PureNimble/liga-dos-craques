@@ -8,28 +8,33 @@ import { HomePage } from './HomePage';
 vi.mock('@/features/auth/hooks/useAuth', () => ({
   useAuth: () => ({ user: { email: 'vasco@example.com' }, session: {}, loading: false }),
 }));
+vi.mock('@/features/games/hooks/gameHooks', () => ({
+  useNextGameSuspense: () => ({ data: null }),
+  useGamePlayers: () => ({ data: [] }),
+  useGames: () => ({ data: [] }),
+}));
+vi.mock('@/features/teams/hooks/teamHooks', () => ({
+  useGameTeams: () => ({ data: undefined }),
+}));
+vi.mock('@/features/rankings/hooks/rankingHooks', () => ({
+  useRankingOverall: () => ({ data: [] }),
+}));
 vi.mock('@/features/stats/hooks/statsHooks', () => ({
-  usePlayerStatsSuspense: () => ({
-    data: {
-      player_id: 'u1',
-      name: 'Vasco',
-      games: 0,
-      wins: 0,
-      draws: 0,
-      losses: 0,
-      goals: 0,
-      assists: 0,
-      saves: 0,
-      mvps: 0,
-      flops: 0,
-      avg_rating: null,
-    },
-  }),
+  useRecentGames: () => ({ data: [] }),
+  useWeeklySpotlight: () => ({ data: null }),
+  useMonthlySpotlight: () => ({ data: null }),
 }));
 vi.mock('@/features/xp/hooks/xpHooks', () => ({
   usePlayerXpSuspense: () => ({
     data: { player_id: 'u1', total_xp: 0, level: 1, level_min_xp: 0, next_level_xp: 50 },
   }),
+}));
+vi.mock('@/features/groups/hooks/useActiveGroup', () => ({
+  useActiveGroup: () => ({ activeGroup: { photo_url: null } }),
+}));
+vi.mock('@/features/achievements/hooks/achievementHooks', () => ({
+  useAchievements: () => ({ data: [] }),
+  usePlayerAchievements: () => ({ data: new Map() }),
 }));
 
 const profile = { id: 'u1', name: 'Vasco', photo_url: null };

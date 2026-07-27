@@ -16,6 +16,11 @@ const ProfilePage = lazyWithReload(() =>
 const PlayerDetailPage = lazyWithReload(() =>
   import('@/features/profile/screens/PlayerDetailPage').then((m) => ({ default: m.PlayerDetailPage })),
 );
+const ComparePlayerPage = lazyWithReload(() =>
+  import('@/features/profile/screens/ComparePlayerPage').then((m) => ({
+    default: m.ComparePlayerPage,
+  })),
+);
 const GamesListPage = lazyWithReload(() =>
   import('@/features/games/screens/GamesListPage').then((m) => ({ default: m.GamesListPage })),
 );
@@ -86,6 +91,9 @@ const AdminSystemPage = lazyWithReload(() =>
 const PlacesMapPage = lazyWithReload(() =>
   import('@/features/places/screens/PlacesMapPage').then((m) => ({ default: m.PlacesMapPage })),
 );
+const CalendarPage = lazyWithReload(() =>
+  import('@/features/calendar/screens/CalendarPage').then((m) => ({ default: m.CalendarPage })),
+);
 const SettingsPage = lazyWithReload(() =>
   import('@/features/settings/screens/SettingsPage').then((m) => ({ default: m.SettingsPage })),
 );
@@ -111,9 +119,11 @@ export const router = createBrowserRouter([
           { path: '/', element: <HomePage /> },
           { path: '/profile', element: <ProfilePage /> },
           { path: '/players/:id', element: <PlayerDetailPage /> },
+          { path: '/players/:id/compare', element: <ComparePlayerPage /> },
           { path: '/games', element: <GamesListPage /> },
           { path: '/games/new', element: <CreateGamePage /> },
           { path: '/games/:id', element: <GameDetailPage /> },
+          { path: '/calendar', element: <CalendarPage /> },
           { path: '/rankings', element: <RankingsPage /> },
           { path: '/challenges', element: <ChallengesPage /> },
           { path: '/challenges/crossbar/new', element: <CrossbarSetupPage /> },

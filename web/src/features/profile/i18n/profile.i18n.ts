@@ -1,6 +1,5 @@
 import type { TranslationDict } from '@/shared/i18n/translations';
 
-/** `PlayerCard` (cardStats.ts) uses FIFA-style abbreviation codes (FIN/ASS/DEF/…) — those are intentional and not meant for translation. */
 export const profileTranslations = {
   'profile.loadError': {
     pt: 'Não foi possível carregar o teu perfil.',
@@ -8,28 +7,50 @@ export const profileTranslations = {
   },
   'profile.editProfile': { pt: 'Editar perfil', en: 'Edit profile' },
   'profile.password': { pt: 'Password', en: 'Password' },
-  'profile.statsTitle': { pt: 'Estatísticas', en: 'Stats' },
+  'profile.statsTitle': { pt: 'Estatísticas gerais', en: 'General stats' },
+  'profile.season.title': { pt: 'Esta época', en: 'This season' },
+  'profile.viewAll': { pt: 'Ver todas', en: 'View all' },
 
-  'profile.overall': { pt: 'Geral', en: 'Overall' },
-  'profile.attributes': { pt: 'Atributos', en: 'Attributes' },
-
-  'profile.attr.fin': { pt: 'Finalização', en: 'Finishing' },
-  'profile.attr.ass': { pt: 'Assistências', en: 'Assists' },
-  'profile.attr.def': { pt: 'Defesas', en: 'Saves' },
-  'profile.attr.vit': { pt: 'Vitórias', en: 'Wins' },
-  'profile.attr.exp': { pt: 'Experiência', en: 'Experience' },
-  'profile.attr.mvp': { pt: 'MVP', en: 'MVP' },
+  'profile.tabs.perfil': { pt: 'Perfil', en: 'Profile' },
+  'profile.tabs.estatisticas': { pt: 'Estatísticas', en: 'Stats' },
+  'profile.tabs.historico': { pt: 'Histórico', en: 'History' },
+  'profile.tabs.conquistas': { pt: 'Conquistas', en: 'Achievements' },
+  'profile.tabs.jogos': { pt: 'Jogos', en: 'Games' },
 
   'profile.header.avgRating': { pt: 'Nota média', en: 'Average rating' },
   'profile.header.avgRatingCaption': {
     pt: 'Média das avaliações por jogo',
     en: 'Average rating per game',
   },
-  'profile.header.games': { pt: '{count} jogos', en: '{count} games' },
-  'profile.header.foot': { pt: 'Pé {foot}', en: '{foot} foot' },
+  'profile.header.goalsPerGame': { pt: 'Golos/jogo', en: 'Goals/game' },
   'profile.foot.left': { pt: 'esquerdo', en: 'left' },
   'profile.foot.right': { pt: 'direito', en: 'right' },
   'profile.foot.both': { pt: 'ambidextro', en: 'ambidextrous' },
+
+  'profile.hero.level': { pt: 'Nível {level}', en: 'Level {level}' },
+  'profile.hero.xpToNext': {
+    pt: '+{count} XP para o nível seguinte',
+    en: '+{count} XP to next level',
+  },
+  'profile.hero.maxLevel': { pt: 'Nível máximo', en: 'Max level' },
+
+  'profile.positions.title': { pt: 'Posições', en: 'Positions' },
+  'profile.positions.main': { pt: 'Posição principal', en: 'Main position' },
+  'profile.positions.secondary': { pt: 'Posições secundárias', en: 'Secondary positions' },
+  'profile.positions.none': { pt: 'Nenhuma', en: 'None' },
+
+  'profile.about.title': { pt: 'Sobre', en: 'About' },
+  'profile.about.fullName': { pt: 'Nome completo', en: 'Full name' },
+  'profile.about.birthDate': { pt: 'Data de nascimento', en: 'Date of birth' },
+  'profile.about.foot': { pt: 'Pé preferido', en: 'Preferred foot' },
+  'profile.about.height': { pt: 'Altura', en: 'Height' },
+  'profile.about.locality': { pt: 'Localidade', en: 'Location' },
+  'profile.about.memberSince': { pt: 'Membro desde', en: 'Member since' },
+
+  'profile.compare.title': { pt: 'Comparar jogador', en: 'Compare player' },
+  'profile.compare.placeholder': { pt: 'Pesquisar jogador…', en: 'Search player…' },
+  'profile.compare.compare': { pt: 'Comparar', en: 'Compare' },
+  'profile.compare.vs': { pt: 'vs', en: 'vs' },
 
   'profile.detail.back': { pt: 'Voltar', en: 'Back' },
   'profile.detail.notFound': { pt: 'Jogador não encontrado.', en: 'Player not found.' },

@@ -1,0 +1,173 @@
+.matchCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-panel);
+  box-shadow: var(--shadow-sm);
+}
+.matchHeader {
+  background-color: var(--surface-brand-dark);
+  padding: var(--space-sm) var(--space-lg);
+}
+.matchBadge {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  font-style: italic;
+  color: var(--gray-50);
+}
+.matchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  padding: var(--space-lg);
+}
+.matchDate {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--text-color);
+}
+.matchDivider {
+  margin-block: var(--space-md);
+  height: 1px;
+  background-color: var(--border-subtle);
+}
+.matchMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.matchMetaItem {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.matchMetaItem svg {
+  flex-shrink: 0;
+  color: var(--accent-strong);
+}
+.matchMetaPrimary {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+.avatarStack {
+  display: flex;
+}
+.stackedAvatar {
+  border: 2px solid var(--surface-panel);
+}
+.stackedAvatar:not(:first-child) {
+  margin-left: -0.5rem;
+}
+.avatarOverflow {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  margin-left: -0.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface-panel);
+  background-color: var(--surface-chip);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-subtle);
+}
+.matchPlayers {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.matchConfirmedText {
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+.matchTeams {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.teamColumn {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.teamColumn img {
+  height: 4rem;
+  width: 4rem;
+}
+.teamBadgeA,
+.teamBadgeB {
+  display: flex;
+  height: 4rem;
+  width: 4rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+}
+.teamBadgeA {
+  background-color: var(--team-a);
+  color: var(--text-on-accent);
+}
+.teamBadgeB {
+  background-color: var(--team-b);
+  color: var(--text-on-accent);
+}
+.teamName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-color);
+}
+.matchVs {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  color: var(--text-subtle);
+}
+.matchCta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 var(--space-lg) var(--space-lg);
+  border-radius: var(--radius-button);
+  background-color: var(--accent);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-on-accent);
+  transition: background-color var(--transition-base);
+}
+.matchCta svg {
+  position: absolute;
+  right: var(--space-lg);
+}
+.matchCta:hover {
+  background-color: var(--accent-strong);
+}

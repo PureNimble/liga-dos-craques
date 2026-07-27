@@ -11,6 +11,7 @@ interface PitchProps {
   layout: Map<string, PitchPos>;
   slots: PitchPos[];
   team: Team;
+  captainId: string | null;
   canManage: boolean;
   canSubstitute?: boolean;
   onDrop: (playerId: string, x: number, y: number) => void;
@@ -38,6 +39,7 @@ export function Pitch({
   layout,
   slots,
   team,
+  captainId,
   canManage,
   canSubstitute = false,
   onDrop,
@@ -165,7 +167,10 @@ export function Pitch({
               } ${dragging ? s.tokenDragging : ''}`}
             >
               <span className={`${s.crest} ${CREST[team]} ${subTarget ? s.crestSub : ''}`}>
-                {codeAt(at.x, at.y)}
+                {p.profile?.jersey_number ?? codeAt(at.x, at.y)}
+                {p.player_id === captainId && (
+                  <span className={s.captainBadge}>{t('teams.captainAbbr')}</span>
+                )}
               </span>
               <span className={s.label}>{firstName(p.profile?.name, t('teams.fallbackName'))}</span>
             </div>

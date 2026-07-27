@@ -1,34 +1,56 @@
 .wrap {
   display: flex;
-  align-items: center;
-  gap: var(--space-lg);
-}
-.avatar {
-  height: 5rem;
-  width: 5rem;
-  overflow: hidden;
-  border-radius: var(--radius-full);
-  background-color: var(--surface-chip);
-}
-.image {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-.fallback {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-muted);
-}
-.controls {
-  display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+}
+.tileWrap {
+  position: relative;
+  display: inline-flex;
+}
+.tile {
+  display: block;
+  position: relative;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+.tile:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.plusBadge {
+  position: absolute;
+  right: -0.25rem;
+  bottom: -0.25rem;
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface-panel);
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+.removeBadge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface-panel);
+  background-color: var(--danger);
+  color: var(--white);
+  cursor: pointer;
+}
+.removeBadge:disabled {
+  cursor: default;
+  opacity: 0.6;
 }
 .hiddenInput {
   display: none;

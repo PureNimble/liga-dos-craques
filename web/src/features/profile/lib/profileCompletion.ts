@@ -35,10 +35,3 @@ export function profileCompletion(profile: CompletableProfile): ProfileCompletio
     total: FIELDS.length,
   };
 }
-
-/** Joins items into a list with `conjunction` before the last one (e.g. "a, b and c"). */
-export function listMissing(missing: string[], conjunction: string): string {
-  if (missing.length === 0) return '';
-  if (missing.length === 1) return missing[0];
-  return `${missing.slice(0, -1).join(', ')} ${conjunction} ${missing[missing.length - 1]}`;
-}

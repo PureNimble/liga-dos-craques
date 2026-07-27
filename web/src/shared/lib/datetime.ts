@@ -49,23 +49,35 @@ export function isoToLocalInput(iso: string): string {
   return local.toISOString().slice(0, 16);
 }
 
-/**
- * Formata data/hora consoante a linguagem selecionata useT (ver i18n/useT.tsx) - para mostrar no ecrã.
- * @param iso Data/hora em ISO (timestamptz)
- * @param lang Código da linguagem ('pt' ou 'en')
- * @returns Data/hora formatada consoante a linguagem
- */
+/** Formats an ISO datetime as just the weekday, long form ("quarta-feira"). */
+export function formatGameWeekdayByLang(iso: string, lang: 'pt' | 'en'): string {
+  const options: Intl.DateTimeFormatOptions = { weekday: 'long', timeZone: TZ };
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(new Date(iso));
+}
 
-export function formatGameDateTimeByLang(iso: string, lang: 'pt' | 'en'): string {
-  const date = new Date(iso);
+/** Formats an ISO datetime as day + long month + year, no weekday ("29 julho 2025"). */
+export function formatGameDayMonthYearByLang(iso: string, lang: 'pt' | 'en'): string {
   const options: Intl.DateTimeFormatOptions = {
-    weekday: 'short',
     day: '2-digit',
-    month: 'short',
+    month: 'long',
+    year: 'numeric',
+    timeZone: TZ,
+  };
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(new Date(iso));
+}
+
+/** Formats an ISO datetime as day + short month, no year ("29 JUL"). */
+export function formatGameDayMonthByLang(iso: string, lang: 'pt' | 'en'): string {
+  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', timeZone: TZ };
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(new Date(iso));
+}
+
+/** Formats an ISO datetime as just the time ("18:00"). */
+export function formatGameTimeByLang(iso: string, lang: 'pt' | 'en'): string {
+  const options: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
     timeZone: TZ,
   };
-
-  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(date);
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-PT' : 'en-US', options).format(new Date(iso));
 }

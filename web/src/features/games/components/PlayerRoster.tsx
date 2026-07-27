@@ -3,6 +3,7 @@ import { Alert, Avatar, Badge, Button, Card, Select, type BadgeTone } from '@/sh
 import { useGroupMembers } from '@/features/groups/hooks/groupHooks';
 import { useT } from '@/shared/i18n/useT';
 import type { GamePlayerStatus } from '@/types/database';
+import { useAutoBalanceTeams } from '@/features/teams/hooks/teamHooks';
 import {
   useAddGamePlayer,
   useRemoveGamePlayer,
@@ -50,6 +51,7 @@ export function PlayerRoster({
   const addPlayer = useAddGamePlayer(gameId);
   const removePlayer = useRemoveGamePlayer(gameId);
   const setStatus = useSetGamePlayerStatus(gameId);
+  const autoBalance = useAutoBalanceTeams(gameId);
   const [selectedId, setSelectedId] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -69,6 +71,7 @@ export function PlayerRoster({
     try {
       await addPlayer.mutateAsync({ playerId, status });
       setSelectedId('');
+      if (status === 'confirmed') autoBalance.mutate();
     } catch {
       setError(t('games.roster.addError'));
     }
@@ -78,6 +81,7 @@ export function PlayerRoster({
     setError(null);
     try {
       await removePlayer.mutateAsync(gamePlayerId);
+      autoBalance.mutate();
     } catch {
       setError(t('games.roster.removeError'));
     }
@@ -123,7 +127,12 @@ export function PlayerRoster({
                 <div className={s.actions}>
                   {editable && isSelf && gp.status !== 'confirmed' && (
                     <button
-                      onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'confirmed' })}
+                      onClick={() =>
+                        setStatus.mutate(
+                          { gamePlayerId: gp.id, status: 'confirmed' },
+                          { onSuccess: () => autoBalance.mutate() },
+                        )
+                      }
                       className={`${s.link} ${s.linkConfirm}`}
                     >
                       {t('games.roster.confirm')}
@@ -131,7 +140,12 @@ export function PlayerRoster({
                   )}
                   {editable && isSelf && gp.status === 'confirmed' && (
                     <button
-                      onClick={() => setStatus.mutate({ gamePlayerId: gp.id, status: 'invited' })}
+                      onClick={() =>
+                        setStatus.mutate(
+                          { gamePlayerId: gp.id, status: 'invited' },
+                          { onSuccess: () => autoBalance.mutate() },
+                        )
+                      }
                       className={`${s.link} ${s.linkNeutral}`}
                     >
                       {t('games.roster.unconfirm')}

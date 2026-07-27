@@ -1,8 +1,17 @@
-/* Raio - escala padrão. */
+/* Raio - escala padrão + aliases semânticos por componente (mesmo valor,
+   nome do uso - ver DESIGN_SYSTEM.md). */
 :root {
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.625rem; /* 10px */
+  --radius-card-sm: 0.75rem; /* 12px - cartões pequenos */
+  --radius-xl: 0.875rem; /* 14px - cartões */
+  --radius-modal: 1rem; /* 16px */
+  --radius-hero: 1.125rem; /* 18px - heros/secções de destaque */
+  --radius-full: 9999px; /* badges/pílulas */
+
+  --radius-button: var(--radius-md);
+  --radius-input: var(--radius-md);
+  --radius-card: var(--radius-xl);
+  --radius-badge: var(--radius-full);
 }

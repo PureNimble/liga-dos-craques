@@ -35,6 +35,8 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
           place_id: game.place_id ?? null,
           format_id: game.format_id,
           notes: game.notes ?? '',
+          opponent_name: game.opponent_name ?? '',
+          is_home: game.is_home === null ? '' : game.is_home ? 'true' : 'false',
         }
       : {},
   });
@@ -75,6 +77,8 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
       format_id: values.format_id,
       max_players: fmt ? fmt.players_per_side * 2 : 10,
       notes: values.notes,
+      opponent_name: values.opponent_name,
+      is_home: values.is_home ? values.is_home === 'true' : null,
     };
     if (game) {
       await updateGame.mutateAsync(payload);
@@ -154,6 +158,26 @@ export function CreateGameForm({ onSuccess, onCancel, game }: CreateGameFormProp
 
       <Field label="Notas" htmlFor="notes" error={form.formState.errors.notes?.message}>
         <Input id="notes" placeholder="Opcional" {...form.register('notes')} />
+      </Field>
+
+      <Field
+        label="Adversário"
+        htmlFor="opponent_name"
+        error={form.formState.errors.opponent_name?.message}
+      >
+        <Input
+          id="opponent_name"
+          placeholder="Opcional - nome do clube adversário"
+          {...form.register('opponent_name')}
+        />
+      </Field>
+
+      <Field label="Casa / Fora" htmlFor="is_home" error={form.formState.errors.is_home?.message}>
+        <Select id="is_home" {...form.register('is_home')}>
+          <option value="">Não indicado</option>
+          <option value="true">Casa</option>
+          <option value="false">Fora</option>
+        </Select>
       </Field>
 
       {(createGame.isError || updateGame.isError) && (

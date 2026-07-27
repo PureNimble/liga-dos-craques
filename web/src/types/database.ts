@@ -111,6 +111,7 @@ export interface Database {
           name: string;
           username: string;
           photo_url: string | null;
+          posing_photo_url: string | null;
           gender: Gender | null;
           locality: string | null;
           preferred_foot: PreferredFoot | null;
@@ -126,6 +127,7 @@ export interface Database {
           name?: string;
           username: string;
           photo_url?: string | null;
+          posing_photo_url?: string | null;
           gender?: Gender | null;
           locality?: string | null;
           preferred_foot?: PreferredFoot | null;
@@ -135,6 +137,7 @@ export interface Database {
           name?: string;
           username?: string;
           photo_url?: string | null;
+          posing_photo_url?: string | null;
           gender?: Gender | null;
           locality?: string | null;
           preferred_foot?: PreferredFoot | null;

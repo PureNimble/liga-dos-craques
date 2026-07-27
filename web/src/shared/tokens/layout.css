@@ -1,0 +1,5 @@
+/* Layout - grelha e dimensões estruturais fixas da casca da app. */
+:root {
+  --topnav-height: 4.5rem; /* 72px */
+  --grid-columns: 12;
+}

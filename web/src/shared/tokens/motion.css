@@ -1,4 +1,9 @@
-/* Movimento - durações/curvas padrão. */
+/* Movimento - durações/curvas padrão. Calmo e premium: usar com moderação. */
 :root {
-  --transition: 150ms ease;
+  --transition: 150ms ease; /* legacy - preferir --transition-base em componentes novos */
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-base: 180ms var(--ease-standard);
+
+  --hover-lift: -2px; /* cartões: translateY no hover */
+  --hover-scale: 1.02; /* botões: scale no hover */
 }

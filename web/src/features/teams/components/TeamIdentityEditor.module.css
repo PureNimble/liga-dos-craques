@@ -1,0 +1,22 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  text-align: center;
+}
+.nameButton {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+  transition: background-color var(--transition);
+}
+.nameButton:hover {
+  background-color: var(--surface-ghost-hover);
+}
+.renameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}

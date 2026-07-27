@@ -13,3 +13,7 @@
   background-color: var(--surface-chip);
   color: var(--text-color);
 }
+.iconButton:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

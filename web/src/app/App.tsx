@@ -5,25 +5,28 @@ import { AuthProvider } from '@/features/auth/components/AuthProvider';
 import { ToastProvider } from '@/shared/components/toast/ToastProvider';
 import { ConfirmProvider } from '@/shared/components/ui/ConfirmDialog';
 import { ThemeProvider } from '@/shared/theme/ThemeProvider';
+import { AccentProvider } from '@/shared/theme/AccentProvider';
 import { I18nProvider } from '@/shared/i18n/I18nProvider';
 import { i18nRegistry } from './lib/i18nRegistry';
 import { router } from './router';
 
-/** Root component: wires theme, i18n, query client, toasts, confirm dialogs, auth and routing. */
+/** Root component: wires theme, accent, i18n, query client, toasts, confirm dialogs, auth and routing. */
 export function App() {
   return (
     <ThemeProvider>
-      <I18nProvider dictionary={i18nRegistry}>
-        <QueryClientProvider client={queryClient}>
-          <ToastProvider>
-            <ConfirmProvider>
-              <AuthProvider>
-                <RouterProvider router={router} />
-              </AuthProvider>
-            </ConfirmProvider>
-          </ToastProvider>
-        </QueryClientProvider>
-      </I18nProvider>
+      <AccentProvider>
+        <I18nProvider dictionary={i18nRegistry}>
+          <QueryClientProvider client={queryClient}>
+            <ToastProvider>
+              <ConfirmProvider>
+                <AuthProvider>
+                  <RouterProvider router={router} />
+                </AuthProvider>
+              </ConfirmProvider>
+            </ToastProvider>
+          </QueryClientProvider>
+        </I18nProvider>
+      </AccentProvider>
     </ThemeProvider>
   );
 }

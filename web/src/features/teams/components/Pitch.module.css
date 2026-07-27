@@ -83,6 +83,7 @@
   transition: none;
 }
 .crest {
+  position: relative;
   display: flex;
   height: clamp(1.4rem, 8.5cqw, 2.25rem);
   width: clamp(1.4rem, 8.5cqw, 2.25rem);
@@ -93,6 +94,21 @@
   font-weight: var(--font-weight-black);
   text-transform: uppercase;
   color: var(--text-on-accent);
+}
+.captainBadge {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
+  display: grid;
+  place-items: center;
+  height: 0.9rem;
+  width: 0.9rem;
+  border-radius: var(--radius-full);
+  background-color: var(--accent);
+  font-size: 0.5rem;
+  font-weight: var(--font-weight-black);
+  color: var(--text-on-accent);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 }
 .crestA {
   background-color: var(--team-a);

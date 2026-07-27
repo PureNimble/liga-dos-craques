@@ -120,6 +120,23 @@ export function useUpdateUsername() {
   });
 }
 
+/** Updates the current user's posing (full-body) photo. */
+export function useUpdatePosingPhoto() {
+  const { user } = useAuth();
+  const userId = user?.id as string;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (posing_photo_url: string | null) => {
+      const { error } = await supabase.from('profile').update({ posing_photo_url }).eq('id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile', userId] });
+    },
+  });
+}
+
 /** Minimal profile fields used to identify a player. */
 export interface ProfileSummary {
   id: string;
@@ -148,6 +165,7 @@ export interface PublicProfile {
   id: string;
   name: string;
   photo_url: string | null;
+  posing_photo_url: string | null;
   locality: string | null;
   preferred_foot: PreferredFoot | null;
   featured_achievement_id: number | null;
@@ -163,7 +181,7 @@ export function usePublicProfile(playerId: string | undefined) {
       const { data, error } = await supabase
         .from('profile')
         .select(
-          'id, name, photo_url, locality, preferred_foot, featured_achievement_id, main_position:main_position_id(code, label, category)',
+          'id, name, photo_url, posing_photo_url, locality, preferred_foot, featured_achievement_id, main_position:main_position_id(code, label, category)',
         )
         .eq('id', playerId as string)
         .single();

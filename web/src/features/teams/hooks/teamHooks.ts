@@ -2,61 +2,68 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useActiveGroupId } from '@/features/groups/hooks/useActiveGroup';
-import type { PositionCategory, Team } from '@/types/database';
+import type { Database, PositionCategory, Team } from '@/types/database';
 import { computeRating } from '../lib/playerRating';
+import { balanceTeams, type BalancePlayer } from '../lib/teamBalancer';
 
-/** A player's computed rating and position category. */
+/** Row type for `game_team` — a game's named/branded side (A/B). */
+export type GameTeam = Database['public']['Tables']['game_team']['Row'];
+
+/** A player's computed rating, position category and games played (within the active group). */
 export interface PlayerRating {
   rating: number;
   category: PositionCategory | null;
+  games: number;
 }
 
-/** Ratings for the given players, derived from their stats and position, as a Map of id to `{ rating, category }`. */
+/** Fetches and computes ratings for the given players, derived from their stats and position. */
+async function fetchPlayerRatings(
+  groupId: string,
+  playerIds: string[],
+): Promise<Map<string, PlayerRating>> {
+  const [profilesRes, statsRes, positionsRes] = await Promise.all([
+    supabase.from('profile').select('id, main_position_id').in('id', playerIds),
+    supabase.from('v_player_stats').select('*').eq('group_id', groupId).in('player_id', playerIds),
+    supabase.from('position').select('id, category'),
+  ]);
+  if (profilesRes.error) throw profilesRes.error;
+  if (statsRes.error) throw statsRes.error;
+  if (positionsRes.error) throw positionsRes.error;
+
+  const categoryById = new Map<number, PositionCategory>(
+    (positionsRes.data ?? []).map((p) => [p.id, p.category]),
+  );
+  const statsById = new Map((statsRes.data ?? []).map((s) => [s.player_id, s]));
+
+  const result = new Map<string, PlayerRating>();
+  for (const profile of profilesRes.data ?? []) {
+    const s = statsById.get(profile.id);
+    const category = profile.main_position_id
+      ? (categoryById.get(profile.main_position_id) ?? null)
+      : null;
+    const rating = computeRating({
+      games: s?.games ?? 0,
+      wins: s?.wins ?? 0,
+      goals: s?.goals ?? 0,
+      assists: s?.assists ?? 0,
+      saves: s?.saves ?? 0,
+      mvps: s?.mvps ?? 0,
+      category,
+      strengthDelta: s?.strength_delta ?? 0,
+    });
+    result.set(profile.id, { rating, category, games: s?.games ?? 0 });
+  }
+  return result;
+}
+
+/** Ratings for the given players, as a Map of id to `{ rating, category }`. */
 export function usePlayerRatings(playerIds: string[]) {
   const groupId = useActiveGroupId();
   const key = [...playerIds].sort().join(',');
   return useQuery({
     queryKey: ['player_ratings', groupId, key],
     enabled: playerIds.length > 0,
-    queryFn: async (): Promise<Map<string, PlayerRating>> => {
-      const [profilesRes, statsRes, positionsRes] = await Promise.all([
-        supabase.from('profile').select('id, main_position_id').in('id', playerIds),
-        supabase
-          .from('v_player_stats')
-          .select('*')
-          .eq('group_id', groupId)
-          .in('player_id', playerIds),
-        supabase.from('position').select('id, category'),
-      ]);
-      if (profilesRes.error) throw profilesRes.error;
-      if (statsRes.error) throw statsRes.error;
-      if (positionsRes.error) throw positionsRes.error;
-
-      const categoryById = new Map<number, PositionCategory>(
-        (positionsRes.data ?? []).map((p) => [p.id, p.category]),
-      );
-      const statsById = new Map((statsRes.data ?? []).map((s) => [s.player_id, s]));
-
-      const result = new Map<string, PlayerRating>();
-      for (const profile of profilesRes.data ?? []) {
-        const s = statsById.get(profile.id);
-        const category = profile.main_position_id
-          ? (categoryById.get(profile.main_position_id) ?? null)
-          : null;
-        const rating = computeRating({
-          games: s?.games ?? 0,
-          wins: s?.wins ?? 0,
-          goals: s?.goals ?? 0,
-          assists: s?.assists ?? 0,
-          saves: s?.saves ?? 0,
-          mvps: s?.mvps ?? 0,
-          category,
-          strengthDelta: s?.strength_delta ?? 0,
-        });
-        result.set(profile.id, { rating, category });
-      }
-      return result;
-    },
+    queryFn: () => fetchPlayerRatings(groupId, playerIds),
     staleTime: 60_000,
   });
 }
@@ -92,6 +99,37 @@ export function useAssignTeams(gameId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['game_players', gameId] });
       queryClient.invalidateQueries({ queryKey: ['game', gameId] });
+    },
+  });
+}
+
+/**
+ * Re-balances A/B teams over every currently-confirmed player, fetched fresh (not from
+ * caller state). Call this after any roster change (confirm/unconfirm/add/remove) so teams
+ * stay filled automatically as people confirm, instead of waiting for a manual "generate" step.
+ */
+export function useAutoBalanceTeams(gameId: string) {
+  const groupId = useActiveGroupId();
+  const assignTeams = useAssignTeams(gameId);
+  return useMutation({
+    mutationFn: async () => {
+      const { data: gps, error } = await supabase
+        .from('game_player')
+        .select('player_id')
+        .eq('game_id', gameId)
+        .in('status', ['confirmed', 'played']);
+      if (error) throw error;
+      const ids = (gps ?? []).map((g) => g.player_id);
+      if (ids.length === 0) return;
+
+      const ratings = await fetchPlayerRatings(groupId, ids);
+      const input: BalancePlayer[] = ids.map((playerId) => ({
+        id: playerId,
+        rating: ratings.get(playerId)?.rating ?? 50,
+        category: ratings.get(playerId)?.category ?? null,
+      }));
+      const { a, b } = balanceTeams(input);
+      await assignTeams.mutateAsync({ a, b });
     },
   });
 }
@@ -235,5 +273,42 @@ export function useSetPlayerTeam(gameId: string) {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['game_players', gameId] }),
+  });
+}
+
+/** A game's two named/branded teams (created automatically with the game), keyed by side. */
+export function useGameTeams(gameId: string | undefined) {
+  return useQuery({
+    queryKey: ['game_teams', gameId],
+    enabled: Boolean(gameId),
+    queryFn: async (): Promise<Record<Team, GameTeam | undefined>> => {
+      const { data, error } = await supabase
+        .from('game_team')
+        .select('*')
+        .eq('game_id', gameId as string);
+      if (error) throw error;
+      const bySide = Object.fromEntries((data ?? []).map((t) => [t.side, t])) as Record<
+        Team,
+        GameTeam | undefined
+      >;
+      return bySide;
+    },
+  });
+}
+
+/** Updates a team's editable fields (name/logo) — organizer or admin only, enforced by RLS. */
+export function useUpdateGameTeam(gameId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { side: Team; name?: string | null; logo_url?: string | null }) => {
+      const { side, ...patch } = input;
+      const { error } = await supabase
+        .from('game_team')
+        .update(patch)
+        .eq('game_id', gameId)
+        .eq('side', side);
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['game_teams', gameId] }),
   });
 }

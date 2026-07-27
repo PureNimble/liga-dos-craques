@@ -1,0 +1,45 @@
+.resultCrest {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+  color: var(--text-faint);
+}
+.resultCrestImg {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+.resultTeamName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-subtle);
+}
+.resultTeamNameMine {
+  font-weight: var(--font-weight-bold);
+  color: var(--accent-strong);
+}
+.resultDate {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+.resultScore {
+  flex-shrink: 0;
+  width: 3.25rem;
+  text-align: center;
+  font-size: var(--font-size-lg);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}

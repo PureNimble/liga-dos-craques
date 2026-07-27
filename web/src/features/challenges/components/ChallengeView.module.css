@@ -1,0 +1,51 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.recordCard {
+  background-image: linear-gradient(to bottom right, var(--surface-panel-hover), var(--surface-panel));
+}
+.recordLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+}
+.recordValue {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+.recordSub {
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--text-subtle);
+}
+.recordEmpty {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-faint);
+}
+.historyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  border-top: 1px solid var(--border-subtle);
+}
+.historyItem:first-child {
+  border-top: 0;
+}
+.historyName {
+  color: var(--text-color);
+}
+.historyMeta {
+  color: var(--text-subtle);
+}
+.historyDate {
+  color: var(--text-faint);
+}

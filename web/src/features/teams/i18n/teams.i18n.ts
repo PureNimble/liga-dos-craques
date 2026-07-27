@@ -2,22 +2,17 @@ import type { TranslationDict } from '@/shared/i18n/translations';
 
 export const teamsTranslations = {
   'teams.title': { pt: 'Equipas', en: 'Teams' },
-  'teams.regenerate': { pt: 'Regenerar', en: 'Regenerate' },
-  'teams.generate': { pt: 'Gerar equipas', en: 'Generate teams' },
+  'teams.rebalance': { pt: 'Rebalancear', en: 'Rebalance' },
   'teams.generateError': {
-    pt: 'Não foi possível gerar as equipas.',
-    en: "Couldn't generate teams.",
+    pt: 'Não foi possível equilibrar as equipas.',
+    en: "Couldn't balance the teams.",
   },
-  'teams.emptyManageable': {
-    pt: 'Ainda não há equipas. Gera equipas equilibradas automaticamente.',
-    en: 'No teams yet. Generate balanced teams automatically.',
-  },
-  'teams.emptyLocked': {
-    pt: 'As equipas ainda não foram geradas.',
-    en: 'Teams haven’t been generated yet.',
+  'teams.emptyAuto': {
+    pt: 'As equipas formam-se automaticamente à medida que a malta confirma presença.',
+    en: 'Teams form automatically as people confirm.',
   },
   'teams.team': { pt: 'Equipa {team}', en: 'Team {team}' },
-  'teams.formation': { pt: 'Formação · Equipa {team}', en: 'Formation · Team {team}' },
+  'teams.formationPrefix': { pt: 'Formação ·', en: 'Formation ·' },
   'teams.formationCustom': { pt: 'Personalizada', en: 'Custom' },
   'teams.autoFill': { pt: 'Auto-preencher', en: 'Auto-fill' },
   'teams.dragHint': {
@@ -33,6 +28,19 @@ export const teamsTranslations = {
     en: 'Pick who comes off (tap a player on the pitch)',
   },
   'teams.subCancel': { pt: 'cancelar', en: 'cancel' },
+  'teams.rename': { pt: 'Renomear equipa', en: 'Rename team' },
+  'teams.renameSave': { pt: 'Guardar', en: 'Save' },
+  'teams.renameCancel': { pt: 'Cancelar', en: 'Cancel' },
+  'teams.logo.change': { pt: 'Mudar logótipo', en: 'Change logo' },
+  'teams.logo.errorType': { pt: 'Escolhe um ficheiro de imagem.', en: 'Pick an image file.' },
+  'teams.logo.errorSize': {
+    pt: 'Imagem demasiado grande (máx. 8 MB).',
+    en: 'Image too large (max 8 MB).',
+  },
+  'teams.logo.errorUpload': { pt: 'Falha no upload.', en: 'Upload failed.' },
+  'teams.captainAbbr': { pt: 'C', en: 'C' },
+  'teams.goalkeeperAbbr': { pt: 'GR', en: 'GK' },
+  'teams.equipment.title': { pt: 'Equipamento', en: 'Equipment' },
 } satisfies TranslationDict;
 
 /** Valid translation keys for the teams feature. */

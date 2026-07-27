@@ -20,6 +20,13 @@ export const settingsTranslations = {
   'settings.appearance.dark': { pt: 'Escuro', en: 'Dark' },
   'settings.appearance.system': { pt: 'Sistema', en: 'System' },
 
+  'settings.appearance.accentTitle': { pt: 'Cor de destaque', en: 'Accent color' },
+  'settings.appearance.accent.blue': { pt: 'Azul', en: 'Blue' },
+  'settings.appearance.accent.green': { pt: 'Verde', en: 'Green' },
+  'settings.appearance.accent.red': { pt: 'Vermelho', en: 'Red' },
+  'settings.appearance.accent.purple': { pt: 'Roxo', en: 'Purple' },
+  'settings.appearance.accent.amber': { pt: 'Âmbar', en: 'Amber' },
+
   'settings.language.title': { pt: 'Idioma', en: 'Language' },
 
   'settings.help.title': { pt: 'Ajuda', en: 'Help' },

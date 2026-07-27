@@ -6,8 +6,6 @@ import s from './AuthLayout.module.css';
 export function AuthLayout({ title, children }: { title: string; children: ReactNode }) {
   return (
     <main className={s.main}>
-      <div aria-hidden className={s.glow} />
-
       <header className={s.header}>
         <span className={s.mark}>
           <BallIcon width={30} height={30} />

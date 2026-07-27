@@ -1,0 +1,57 @@
+.wrap {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  flex-direction: column;
+}
+.tileWrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.preview {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.previewPlaceholder {
+  object-fit: contain;
+  object-position: bottom;
+}
+.actions {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.plusBadge,
+.removeBadge {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface-panel);
+  cursor: pointer;
+}
+.plusBadge {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+.removeBadge {
+  background-color: var(--danger);
+  color: var(--white);
+}
+.plusBadge:disabled,
+.removeBadge:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.hiddenInput {
+  display: none;
+}

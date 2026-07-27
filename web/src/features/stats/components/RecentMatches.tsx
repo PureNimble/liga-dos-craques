@@ -15,8 +15,16 @@ const RESULT_CLASS: Record<MatchResult, string> = {
 };
 
 /** List of a player's most recent games with result and rating (SofaScore-style). */
-export function RecentMatches({ playerId, games }: { playerId: string; games: number }) {
-  const { data } = useRecentGames(playerId, 5);
+export function RecentMatches({
+  playerId,
+  games,
+  limit = 5,
+}: {
+  playerId: string;
+  games: number;
+  limit?: number;
+}) {
+  const { data } = useRecentGames(playerId, limit);
   if (games < MIN_GAMES_FOR_STATS || !data || data.length === 0) return null;
   return <RecentMatchesCard data={data} />;
 }

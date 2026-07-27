@@ -8,8 +8,15 @@
   cursor: pointer;
   transition: all var(--transition);
 }
-.button:active {
-  transform: scale(0.98);
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.button:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .button:disabled {
   cursor: not-allowed;
@@ -33,12 +40,11 @@
 }
 
 .primary {
-  background-image: linear-gradient(to bottom, var(--accent-strong), var(--accent));
+  background-color: var(--accent);
   color: var(--text-on-accent);
-  box-shadow: var(--shadow-glow);
 }
-.primary:hover {
-  background-image: linear-gradient(to bottom, var(--green-300), var(--accent-strong));
+.primary:hover:not(:disabled) {
+  background-color: var(--accent-strong);
 }
 
 .secondary {
@@ -46,14 +52,15 @@
   background-color: var(--surface-translucent);
   color: var(--text-color);
 }
-.secondary:hover {
+.secondary:hover:not(:disabled) {
+  border-color: var(--accent-border);
   background-color: var(--surface-translucent-hover);
 }
 
 .ghost {
   color: var(--text-muted);
 }
-.ghost:hover {
+.ghost:hover:not(:disabled) {
   background-color: var(--surface-ghost-hover);
   color: var(--text-color);
 }
@@ -62,7 +69,7 @@
   background-color: var(--danger);
   color: var(--white);
 }
-.danger:hover {
+.danger:hover:not(:disabled) {
   background-color: var(--danger-hover);
 }
 

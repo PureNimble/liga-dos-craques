@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Alert,
   Button,
-  Card,
   CardSkeleton,
   EmptyState,
   Modal,
@@ -11,17 +10,10 @@ import {
   PageTitle,
   SegmentedTabs,
 } from '@/shared/components/ui';
-import {
-  BallIcon,
-  CalendarIcon,
-  PinIcon,
-  PlusIcon,
-  ChevronRightIcon,
-} from '@/shared/components/ui/icons';
-import { formatGameDateTime } from '@/shared/lib/datetime';
+import { BallIcon, PlusIcon } from '@/shared/components/ui/icons';
 import { useT } from '@/shared/i18n/useT';
-import { useGames, type GameWithFormat } from '../hooks/gameHooks';
-import { StatusBadge } from '../components/StatusBadge';
+import { useGames } from '../hooks/gameHooks';
+import { GameCard } from '../components/GameCard';
 import { UPCOMING_STATUSES } from '../lib/gameStatus';
 import { CreateGameForm } from '../components/CreateGameForm';
 import s from './GamesListPage.module.css';
@@ -112,45 +104,5 @@ export function GamesListPage() {
         />
       </Modal>
     </Page>
-  );
-}
-
-function GameCard({ game }: { game: GameWithFormat }) {
-  const hasScore = game.team_a_score !== null || game.team_b_score !== null;
-  return (
-    <li className={s.item}>
-      <Link to={`/games/${game.id}`} className={s.cardLink}>
-        <Card interactive className={s.card}>
-          <span className={s.icon}>
-            <BallIcon width={22} height={22} />
-          </span>
-
-          <div className={s.info}>
-            <p className={s.date}>{formatGameDateTime(game.scheduled_at)}</p>
-            <p className={s.meta}>
-              <CalendarIcon width={13} height={13} />
-              {game.game_format?.label ?? '-'}
-              {game.location && (
-                <>
-                  <PinIcon width={13} height={13} className={s.metaLoc} />
-                  <span className={s.locText}>{game.location}</span>
-                </>
-              )}
-            </p>
-            {hasScore && (
-              <p className={s.score}>
-                {game.team_a_score ?? 0} <span className={s.scoreDash}>–</span>{' '}
-                {game.team_b_score ?? 0}
-              </p>
-            )}
-          </div>
-
-          <div className={s.side}>
-            <StatusBadge status={game.status} />
-            <ChevronRightIcon width={16} height={16} className={s.chevron} />
-          </div>
-        </Card>
-      </Link>
-    </li>
   );
 }

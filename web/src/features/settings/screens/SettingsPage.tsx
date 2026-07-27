@@ -14,6 +14,8 @@ import { PushNotificationsCard } from '@/features/notifications/components/PushN
 import { pushSupported } from '@/features/notifications/hooks/pushHooks';
 import { useTheme } from '@/shared/theme/useTheme';
 import { type ThemeChoice } from '@/shared/theme/ThemeProvider';
+import { useAccent } from '@/shared/theme/useAccent';
+import { type AccentChoice } from '@/shared/theme/AccentProvider';
 import { useT } from '@/shared/i18n/useT';
 import { LANG_LABELS, type LangCode } from '@/shared/i18n/translations';
 import { SettingsPicker } from '../components/SettingsPicker';
@@ -25,6 +27,7 @@ const LANG_ITEMS: { value: LangCode; label: string }[] = (['pt', 'en'] as const)
   label: LANG_LABELS[value],
 }));
 const THEME_ORDER: ThemeChoice[] = ['system', 'dark', 'light'];
+const ACCENT_ORDER: AccentChoice[] = ['blue', 'green', 'red', 'purple', 'amber'];
 
 type ActiveSheet = 'appearance' | 'language' | null;
 
@@ -41,7 +44,22 @@ export function SettingsPage() {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [activeSheet, setActiveSheet] = useState<ActiveSheet>(null);
   const { theme, setTheme } = useTheme();
+  const { accent, setAccent } = useAccent();
   const { t, lang, setLang } = useT();
+
+  const accentItems: { value: AccentChoice; label: ReactNode; ariaLabel: string }[] =
+    ACCENT_ORDER.map((value) => ({
+      value,
+      label: (
+        <span
+          className={[s.accentSwatch, value === accent ? s.accentSwatchActive : '']
+            .filter(Boolean)
+            .join(' ')}
+          style={{ backgroundColor: value === 'blue' ? 'var(--accent-blue)' : `var(--${value}-500)` }}
+        />
+      ),
+      ariaLabel: t(`settings.appearance.accent.${value}`),
+    }));
 
   const themeItems: { value: ThemeChoice; label: ReactNode; ariaLabel: string }[] = [
     {
@@ -149,6 +167,19 @@ export function SettingsPage() {
             }
             mobileValue={t(`settings.appearance.${theme}`)}
             onMobileTap={() => setActiveSheet('appearance')}
+          />
+
+          <SettingsRow
+            label={t('settings.appearance.accentTitle')}
+            control={
+              <SegmentedTabs<AccentChoice>
+                value={accent}
+                onChange={setAccent}
+                items={accentItems}
+                size="md"
+                variant="swatch"
+              />
+            }
           />
 
           <SettingsRow

@@ -21,6 +21,7 @@
 .main {
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -29,6 +30,7 @@
   display: none;
 }
 .container {
+  height: 100%;
   padding-inline: var(--space-lg);
   padding-bottom: var(--space-2xl);
 }

@@ -1,111 +1,64 @@
-import { useState } from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useActiveGroup } from '@/features/groups/hooks/useActiveGroup';
 import type { FullProfile } from '@/features/profile/hooks/profileHooks';
-import { ProfileEditModal } from '@/features/profile/components/ProfileEditModal';
-import { usePlayerStatsSuspense } from '@/features/stats/hooks/statsHooks';
-import { usePlayerXpSuspense } from '@/features/xp/hooks/xpHooks';
-import { Avatar, Card } from '@/shared/components/ui';
-import { XpBar } from '@/features/xp/components/XpBar';
-import { StatsGrid } from '@/features/stats/components/StatsGrid';
-import { BallIcon, TrophyIcon, ChevronRightIcon } from '@/shared/components/ui/icons';
-import { listMissing, profileCompletion } from '@/features/profile/lib/profileCompletion';
+import { useWeeklySpotlight, useMonthlySpotlight } from '@/features/stats/hooks/statsHooks';
 import { useT } from '@/shared/i18n/useT';
+import { HomeIntro } from '@/app/components/HomeIntro';
+import { HomeSeasonCard } from '@/app/components/HomeSeasonCard';
+import { HomeMatchCard } from '@/app/components/HomeMatchCard';
+import { HomeQuickActions } from '@/app/components/HomeQuickActions';
+import { HomeRankingTable } from '@/app/components/HomeRankingTable';
+import { HomeRecentResults } from '@/app/components/HomeRecentResults';
+import { HomePeriodSpotlight } from '@/app/components/HomePeriodSpotlight';
+import { HomeUpcomingFixtures } from '@/app/components/HomeUpcomingFixtures';
+import { HomeNewsMock } from '@/app/components/HomeNewsMock';
+import { HomeAchievementsProgress } from '@/app/components/HomeAchievementsProgress';
 import s from './HomePage.module.css';
 
-/** Home screen: greeting, XP bar, stats summary, profile completion prompt and quick actions. */
+/** Home screen: greeting/season, next match, quick actions, group ranking, recent results. */
 export function HomePage() {
   const { user } = useAuth();
   const { t } = useT();
-
   const { profile } = useOutletContext<{ profile: FullProfile }>();
-  const { data: stats } = usePlayerStatsSuspense(profile.id);
-  const { data: xp } = usePlayerXpSuspense(profile.id);
+  const { activeGroup } = useActiveGroup();
 
   const displayName = profile.name || user?.email?.split('@')[0] || t('home.fallbackName');
-  const completion = profileCompletion(profile);
-  const [editOpen, setEditOpen] = useState(false);
-
-  const quickActions = [
-    {
-      to: '/games',
-      label: t('home.action.games.label'),
-      hint: t('home.action.games.hint'),
-      icon: BallIcon,
-    },
-    {
-      to: '/rankings',
-      label: t('home.action.rankings.label'),
-      hint: t('home.action.rankings.hint'),
-      icon: TrophyIcon,
-    },
-  ];
+  const { data: weekly } = useWeeklySpotlight();
+  const { data: monthly } = useMonthlySpotlight();
 
   return (
     <div className={s.page}>
-      <header className={s.greeting}>
-        <Link to="/profile" aria-label={t('navbar.viewProfile')} className={s.avatarLink}>
-          <Avatar name={profile.name} src={profile.photo_url} size="lg" />
-        </Link>
-        <div>
-          <p className={s.welcome}>{t('home.welcome')}</p>
-          <h1 className={s.name}>{displayName}</h1>
-        </div>
-      </header>
-
-      <XpBar xp={xp} />
-
-      {stats.games > 0 && (
-        <section>
-          <div className={s.sectionHead}>
-            <h2 className={s.sectionTitle}>{t('home.summaryTitle')}</h2>
-            <Link to="/profile" className={s.seeAll}>
-              {t('home.seeAll')} <ChevronRightIcon width={14} height={14} />
-            </Link>
+      <div className={s.topRow}>
+        <div className={s.topRowLeft}>
+          <div className={s.heroTop}>
+            <div className={s.heroTopLeft}>
+              <HomeIntro welcomeName={displayName} playerId={profile.id} />
+              <HomeSeasonCard playerId={profile.id} />
+            </div>
+            <div className={s.heroDecoBox} aria-hidden="true">
+              <img src={activeGroup.photo_url ?? '/images/badge.svg'} alt="" className={s.heroDeco} />
+            </div>
           </div>
-          <StatsGrid stats={stats} compact />
-        </section>
-      )}
+          <HomeQuickActions />
+        </div>
+        <div className={s.matchColumn}>
+          <HomeMatchCard />
+        </div>
+      </div>
 
-      {!completion.isComplete && (
-        <Card>
-          <h2 className={s.onboardTitle}>{t('home.onboard.title')}</h2>
-          <p className={s.onboardText}>
-            {t('home.onboard.missing', {
-              missing: listMissing(
-                completion.missing.map((key) => t(`home.onboard.field.${key}`)),
-                t('home.onboard.and'),
-              ),
-            })}{' '}
-            {completion.positionMissing
-              ? t('home.onboard.positionHint')
-              : t('home.onboard.genericHint')}
-          </p>
-          <button type="button" className={s.cta} onClick={() => setEditOpen(true)}>
-            {t('home.onboard.cta')} <ChevronRightIcon width={16} height={16} />
-          </button>
-        </Card>
-      )}
+      <div className={s.statsRow}>
+        <HomeRankingTable playerId={profile.id} />
+        <HomeRecentResults playerId={profile.id} />
+        <HomePeriodSpotlight titleKey="home.spotlight.week.title" data={weekly} featured />
+        <HomeUpcomingFixtures />
+      </div>
 
-      {editOpen && <ProfileEditModal profile={profile} onClose={() => setEditOpen(false)} />}
-
-      <section className={s.quick}>
-        <h2 className={s.sectionTitle}>{t('home.quickAccess')}</h2>
-        {quickActions.map((a) => (
-          <Link key={a.to} to={a.to}>
-            <Card interactive className={s.action}>
-              <span className={s.actionIcon}>
-                <a.icon width={22} height={22} />
-              </span>
-              <div className={s.actionBody}>
-                <p className={s.actionLabel}>{a.label}</p>
-                <p className={s.actionHint}>{a.hint}</p>
-              </div>
-              <ChevronRightIcon width={18} height={18} className={s.chevron} />
-            </Card>
-          </Link>
-        ))}
-      </section>
+      <div className={s.newsRow}>
+        <HomeNewsMock />
+        <HomePeriodSpotlight titleKey="home.spotlight.month.title" data={monthly} />
+        <HomeAchievementsProgress playerId={profile.id} />
+      </div>
     </div>
   );
 }

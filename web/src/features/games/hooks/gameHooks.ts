@@ -15,31 +15,12 @@ export type GamePlayer = Database['public']['Tables']['game_player']['Row'];
 /** A game with its format joined in. */
 export interface GameWithFormat extends Game {
   game_format: Pick<GameFormat, 'code' | 'label' | 'players_per_side'> | null;
+  place: Pick<Database['public']['Tables']['place']['Row'], 'latitude' | 'longitude'> | null;
 }
 
 /** A game player row with the player's profile joined in. */
 export interface GamePlayerWithProfile extends GamePlayer {
-  profile: { id: string; name: string; photo_url: string | null } | null;
-}
-
-/** Picks the format whose players-per-side is closest to half the given player count. */
-export function pickFormatForCount(count: number, formats: GameFormat[]): GameFormat | null {
-  if (formats.length === 0) return null;
-  const target = count / 2;
-  const sorted = [...formats].sort((a, b) => a.players_per_side - b.players_per_side);
-  let best = sorted[0];
-  let bestDiff = Infinity;
-  for (const f of sorted) {
-    const diff = Math.abs(f.players_per_side - target);
-    if (
-      diff < bestDiff - 1e-9 ||
-      (Math.abs(diff - bestDiff) < 1e-9 && f.players_per_side > best.players_per_side)
-    ) {
-      bestDiff = diff;
-      best = f;
-    }
-  }
-  return best;
+  profile: { id: string; name: string; photo_url: string | null; jersey_number: number | null } | null;
 }
 
 /** Lists available game formats (2v2 and up). */
@@ -67,7 +48,7 @@ export function useGames() {
     queryFn: async (): Promise<GameWithFormat[]> => {
       const { data, error } = await supabase
         .from('game')
-        .select('*, game_format(code, label, players_per_side)')
+        .select('*, game_format(code, label, players_per_side), place:place_id(latitude, longitude)')
         .eq('group_id', groupId)
         .order('scheduled_at', { ascending: false });
       if (error) throw error;
@@ -104,7 +85,7 @@ export function useGame(gameId: string | undefined) {
     queryFn: async (): Promise<GameWithFormat> => {
       const { data, error } = await supabase
         .from('game')
-        .select('*, game_format(code, label, players_per_side)')
+        .select('*, game_format(code, label, players_per_side), place:place_id(latitude, longitude)')
         .eq('id', gameId as string)
         .single();
       if (error) throw error;
@@ -121,7 +102,7 @@ export function useGamePlayers(gameId: string | undefined) {
     queryFn: async (): Promise<GamePlayerWithProfile[]> => {
       const { data, error } = await supabase
         .from('game_player')
-        .select('*, profile:player_id(id, name, photo_url)')
+        .select('*, profile:player_id(id, name, photo_url, jersey_number)')
         .eq('game_id', gameId as string)
         .order('added_at');
       if (error) throw error;
@@ -138,6 +119,8 @@ export interface CreateGameInput {
   format_id: number;
   max_players: number;
   notes: string | null;
+  opponent_name: string | null;
+  is_home: boolean | null;
 }
 
 /** Creates a game in the active group, open for sign-ups. */

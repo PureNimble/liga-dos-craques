@@ -1,0 +1,54 @@
+.steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.dot {
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-chip);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-faint);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+.dotActive {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+.dotDone {
+  background-color: var(--accent-surface);
+  color: var(--accent-strong);
+}
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}
+.labelActive {
+  color: var(--text-color);
+}
+.connector {
+  height: 2px;
+  width: 2rem;
+  border-radius: var(--radius-full);
+  background-color: var(--border-default);
+}
+.connectorDone {
+  background-color: var(--accent-strong);
+}

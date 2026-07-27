@@ -1,26 +1,29 @@
 import { useRef, useState } from 'react';
-import { supabase } from '@/shared/lib/supabase';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { Alert, Button } from '@/shared/components/ui';
-import { compressImage } from '../lib/imageCompression';
+import { Alert, Avatar } from '@/shared/components/ui';
+import { CloseIcon, PlusIcon } from '@/shared/components/ui/icons';
+import { removeProfilePhoto, uploadProfilePhoto } from '../lib/photoUpload';
+import { ImageCropper } from './ImageCropper';
 import s from './AvatarUpload.module.css';
 
 interface AvatarUploadProps {
-  photoUrl: string | null;
   name: string;
-  onUploaded: (publicUrl: string) => void;
+  photoUrl: string | null;
+  onUploaded: (publicUrl: string | null) => void;
 }
 
 const MAX_INPUT_BYTES = 8 * 1024 * 1024;
+const FILENAME = 'avatar.webp';
 
-/** Avatar image picker: compresses and uploads the chosen photo, then reports the new URL. */
-export function AvatarUpload({ photoUrl, name, onUploaded }: AvatarUploadProps) {
+/** Avatar image picker: a + badge over the avatar - click to crop and upload, or remove the current photo. */
+export function AvatarUpload({ name, photoUrl, onUploaded }: AvatarUploadProps) {
   const { user } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleFile(file: File) {
+  function handleFile(file: File) {
     setError(null);
     if (!file.type.startsWith('image/')) {
       setError('Escolhe um ficheiro de imagem.');
@@ -30,60 +33,88 @@ export function AvatarUpload({ photoUrl, name, onUploaded }: AvatarUploadProps) 
       setError('Imagem demasiado grande (máx. 8 MB).');
       return;
     }
+    setCropFile(file);
+  }
 
-    setUploading(true);
+  async function handleCropped(blob: Blob) {
+    setCropFile(null);
+    setBusy(true);
     try {
-      const blob = await compressImage(file);
-      const path = `${user!.id}/avatar.webp`;
-      const { error: upErr } = await supabase.storage.from('avatars').upload(path, blob, {
-        upsert: true,
-        contentType: 'image/webp',
-        cacheControl: '3600',
-      });
-      if (upErr) throw upErr;
-
-      const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-      onUploaded(`${data.publicUrl}?v=${Date.now()}`);
+      const url = await uploadProfilePhoto(user!.id, FILENAME, blob);
+      onUploaded(url);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Falha no upload.');
     } finally {
-      setUploading(false);
+      setBusy(false);
     }
   }
 
-  const initial = name.trim().charAt(0).toUpperCase() || '?';
+  async function handleRemove() {
+    setError(null);
+    setBusy(true);
+    try {
+      await removeProfilePhoto(user!.id, FILENAME);
+      onUploaded(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Falha ao remover.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <div className={s.wrap}>
-      <div className={s.avatar}>
-        {photoUrl ? (
-          <img src={photoUrl} alt="Foto de perfil" className={s.image} />
-        ) : (
-          <div className={s.fallback}>{initial}</div>
+      <div className={s.tileWrap}>
+        <button
+          type="button"
+          className={s.tile}
+          disabled={busy}
+          onClick={() => inputRef.current?.click()}
+          aria-label={photoUrl ? 'Mudar foto de perfil' : 'Adicionar foto de perfil'}
+        >
+          <Avatar name={name} src={photoUrl} size="xl" />
+          <span className={s.plusBadge}>
+            <PlusIcon width={14} height={14} />
+          </span>
+        </button>
+
+        {photoUrl && (
+          <button
+            type="button"
+            className={s.removeBadge}
+            disabled={busy}
+            onClick={handleRemove}
+            aria-label="Remover foto de perfil"
+          >
+            <CloseIcon width={12} height={12} />
+          </button>
         )}
       </div>
-      <div className={s.controls}>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          className={s.hiddenInput}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void handleFile(file);
-            e.target.value = '';
-          }}
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className={s.hiddenInput}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) handleFile(file);
+          e.target.value = '';
+        }}
+      />
+      {error && <Alert kind="error">{error}</Alert>}
+
+      {cropFile && (
+        <ImageCropper
+          file={cropFile}
+          aspect={1}
+          outputWidth={480}
+          round
+          title="Ajustar foto de perfil"
+          onCancel={() => setCropFile(null)}
+          onConfirm={handleCropped}
         />
-        <Button
-          type="button"
-          variant="secondary"
-          loading={uploading}
-          onClick={() => inputRef.current?.click()}
-        >
-          Mudar foto
-        </Button>
-        {error && <Alert kind="error">{error}</Alert>}
-      </div>
+      )}
     </div>
   );
 }
