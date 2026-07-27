@@ -7,6 +7,11 @@ on:
     - cron: '30 3 * * 0' # Domingos, 03:30 UTC
   workflow_dispatch: {}
 
+# GITHUB_TOKEN só precisa de ler o código (checkout); o upload de artefactos
+# não passa pelo GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   dump:
     name: Dump semanal da base de dados

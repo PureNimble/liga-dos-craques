@@ -13,6 +13,10 @@ on:
       - 'supabase/**'
       - '.github/workflows/db-check.yml'
 
+# GITHUB_TOKEN só precisa de ler o código (checkout).
+permissions:
+  contents: read
+
 concurrency:
   group: db-check-${{ github.ref }}
   cancel-in-progress: true
