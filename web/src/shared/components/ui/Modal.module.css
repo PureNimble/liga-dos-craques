@@ -52,13 +52,11 @@
   max-height: 90dvh;
   border-top-left-radius: var(--radius-lg);
   border-top-right-radius: var(--radius-lg);
-  padding-bottom: env(safe-area-inset-bottom);
   animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @media (min-width: 640px) {
   .sheet {
     border-radius: var(--radius-lg);
-    padding-bottom: 0;
     animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .sm {
@@ -144,7 +142,15 @@
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.sheet .body {
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+}
+.sheet .footer {
+  padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
 }
 
 .footer {

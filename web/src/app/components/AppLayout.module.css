@@ -23,6 +23,7 @@
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -32,7 +33,7 @@
 .container {
   height: 100%;
   padding-inline: var(--space-lg);
-  padding-bottom: var(--space-2xl);
+  padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
 }
 @media (min-width: 640px) {
   .container {
