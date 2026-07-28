@@ -142,6 +142,7 @@
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 0 var(--space-lg) var(--space-lg);
 }
 

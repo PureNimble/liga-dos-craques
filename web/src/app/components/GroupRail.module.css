@@ -56,6 +56,7 @@
   align-items: center;
   gap: var(--space-sm);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .chip {

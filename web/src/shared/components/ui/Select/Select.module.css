@@ -63,6 +63,7 @@
   max-height: min(320px, 60vh);
   max-height: min(320px, 60dvh);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   background-color: var(--surface-tooltip);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
