@@ -32,7 +32,7 @@
 .container {
   height: 100%;
   padding-inline: var(--space-lg);
-  padding-bottom: var(--space-2xl);
+  padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
 }
 @media (min-width: 640px) {
   .container {
