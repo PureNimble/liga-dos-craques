@@ -61,6 +61,7 @@
   padding: var(--space-xs);
   list-style: none;
   max-height: min(320px, 60vh);
+  max-height: min(320px, 60dvh);
   overflow-y: auto;
   background-color: var(--surface-tooltip);
   border: 1px solid var(--border-light);
